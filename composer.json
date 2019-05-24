@@ -19,7 +19,8 @@
         "psr-15",
         "zf",
         "zendframework",
-        "zend-expressive"
+        "zend-expressive", 
+        "laminas"
     ],
     "config": {
         "sort-packages": true
