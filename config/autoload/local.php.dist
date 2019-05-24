@@ -1,0 +1,62 @@
+<?php
+/**
+ * Local configuration.
+ *
+ * Copy this file to `local.php` and change its settings as required.
+ * `local.php` is ignored by git and safe to use for local and sensitive data like usernames and passwords.
+ */
+
+declare(strict_types=1);
+
+$database = [
+    'host' => 'localhost',
+    'dbname' => '',
+    'user' => 'root',
+    'password' => '',
+    'port' => 3306,
+    'charset' => 'utf8',
+    'collate' => 'utf8mb4_general_ci',
+];
+
+return [
+    'authentication' => [
+        'private_key'    => getcwd() . '/data/oauth/private.key',
+        'public_key'     => getcwd() . '/data/oauth/public.key',
+        'encryption_key' => require getcwd() . '/data/oauth/encryption.key',
+        'access_token_expire'  => 'P1D',
+        'refresh_token_expire' => 'P1M',
+        'auth_code_expire'     => 'PT10M',
+        'pdo' => [
+            'dsn' => 'mysql:host=' . $database['host'] . ';dbname=' . $database['dbname'],
+            'username' => $database['user'],
+            'password' => $database['password']
+        ]
+    ],
+
+    'doctrine' => [
+        'connection' => [
+            'orm_default' => [
+                'params' => $database
+            ]
+        ]
+    ],
+
+    'uploads' => [
+        'user' => [
+            'url'  => 'http://dotkernel.api.local/uploads/user',
+            'path' => \realpath(__DIR__ . '/../../public/uploads/user'),
+        ]
+    ],
+
+    'cors' => [
+        'origin' => ['*'],
+        'methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+        'headers.allow' => ['Accept', 'Content-Type', 'Authorization'],
+        'headers.expose' => [],
+        'credentials' => false,
+        'cache' => 0,
+        'error' => [
+            \App\Cors\Factory\CorsFactory::class, 'error'
+        ]
+    ],
+];
