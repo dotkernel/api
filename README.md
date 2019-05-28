@@ -3,26 +3,39 @@ DotKernel's PSR-15 API built around the Zend Expressive API skeleton.
 
 
 ## Getting Started
+Step 1: Install project dependencies by running:
 ```bash
 $ composer install
 ```
 
-Next:
-* create a new MySQL database, then import in it the following files: `data/schema.sql` and `data/data.sql`
+Step 2: Prepare config files:
+* duplicate `config/autoload/db.local.php.dist` as `config/autoload/db.local.php`
 * duplicate `config/autoload/local.php.dist` as `config/autoload/local.php`
-* fill in database connection details in `config/autoload/local.php` in the already existing `$database` array
+* duplicate `config/autoload/authorization.local.php.dist` as `config/autoload/authorization.local.php`
 
-After the project has been successfully installed, make sure you create a new OAuth2 client and generate it's own secret.
+Step 3: Setup database:
+* create a new MySQL database - set collation to `utf8mb4_general_ci`
+* fill out the database connection params in `config/autoload/db.local.php`
+* run the database migrations by using the following command:
+```bash
+$ vendor/bin/doctrine-migrations migrate
+```
+
+After the project has been successfully installed, you should modify the default OAuth2 client and it's secret phrase.
 
 
 ## Using the CLI interface:
-A complete list of the commands available in Zend Expressive can be accessed by issuing the following command:
+You can access Zend Expressive's CLI by using the following command:
 ```bash
 $ composer expressive
 ```
-A complete list of the commands available via Doctrine's CLI can be accessed by issuing the following command:
+You can access Doctrine's CLI by using the following command:
 ```bash
 $ php vendor/doctrine/orm/bin/doctrine
+```
+You can access Doctrine's migration tools by using the following command:
+```bash
+$ vendor/bin/doctrine-migrations
 ```
 
 
@@ -64,7 +77,11 @@ $ php -S 0.0.0.0:8080 -t public
 To test the application, visit the [test page](http://localhost:8080/test). You should get the following message:
 ```json
 {
-    "message": "Welcome to DotKernel API!"
+  "message": "Welcome to DotKernel API!",
+  "debug": {
+    "database": "connected",
+    "php": "7.x.x"
+  }
 }
 ```
 If the request is successful, you can delete this endpoint from `src/App/RoutesDelegator.php`

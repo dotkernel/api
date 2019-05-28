@@ -1,0 +1,17 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'database' => [
+        'host' => 'localhost',
+        'dbname' => '',
+        'user' => '',
+        'password' => '',
+        'port' => 3306,
+        'driver' => 'pdo_mysql',
+        'charset' => 'utf8',
+        'collate' => 'utf8mb4_general_ci',
+    ]
+    // add more database connection params
+];

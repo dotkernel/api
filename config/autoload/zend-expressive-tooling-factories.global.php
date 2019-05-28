@@ -12,8 +12,9 @@ declare(strict_types=1);
 return [
     'dependencies' => [
         'factories' => [
-            App\User\Handler\UserHandler::class => App\User\Factory\UserHandlerFactory::class,
+            App\Test\Handler\TestHandler::class => App\Test\Factory\TestHandlerFactory::class,
             App\User\Handler\UserAvatarHandler::class => App\User\Factory\UserAvatarHandlerFactory::class,
+            App\User\Handler\UserHandler::class => App\User\Factory\UserHandlerFactory::class,
         ],
     ],
 ];

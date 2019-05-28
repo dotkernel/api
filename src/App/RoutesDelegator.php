@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App;
 
 use App\Auth\Middleware\AuthMiddleware;
+use App\Test\Handler\TestHandler;
 use App\User\Handler\UserAvatarHandler;
 use App\User\Handler\UserHandler;
 use Fig\Http\Message\RequestMethodInterface as RequestMethod;
 use Psr\Container\ContainerInterface;
-use Zend\Diactoros\Response\JsonResponse;
 use Zend\Expressive\Application;
 use Zend\Expressive\Authentication\AuthenticationMiddleware;
 use Zend\Expressive\Authentication\OAuth2\TokenEndpointHandler;
@@ -35,11 +35,7 @@ class RoutesDelegator
         $app = $callback();
 
         // Test endpoint
-        $app->get('/test', function () {
-            return new JsonResponse([
-                'message' => 'Welcome to DotKernel API!'
-            ]);
-        }, 'test');
+        $app->get('/test', TestHandler::class, 'test');
 
         // OAuth2 token route
         $app->post('/oauth', [
