@@ -10,7 +10,7 @@ return [
         'password' => '',
         'port' => 3306,
         'driver' => 'pdo_mysql',
-        'charset' => 'utf8',
+        'charset' => 'utf8mb4',
         'collate' => 'utf8mb4_general_ci',
     ]
     // add more database connection params

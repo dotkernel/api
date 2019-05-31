@@ -177,8 +177,8 @@ class UserHandler implements RequestHandlerInterface
 
         try {
             $user = $this->userService->createUser(
-                $this->userCreateInputFilter->getValues(),
-                $this->userService->getRole(UserRoleEntity::ROLE_MEMBER)
+                $this->userService->getRole(UserRoleEntity::ROLE_MEMBER),
+                $this->userCreateInputFilter->getValues()
             );
         } catch (Exception $exception) {
             return $this->errorResponse($exception->getMessage());

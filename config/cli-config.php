@@ -36,7 +36,7 @@ $configuration->setMigrationsTableName('migrations');
 $configuration->setMigrationsColumnName('version');
 $configuration->setMigrationsColumnLength(14);
 $configuration->setMigrationsExecutedAtColumnName('executedAt');
-$configuration->setMigrationsDirectory('data/doctrine');
+$configuration->setMigrationsDirectory('data/doctrine/migrations');
 $configuration->setAllOrNothing(true);
 
 $ehm = new EntityManagerHelper(

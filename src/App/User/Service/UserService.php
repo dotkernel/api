@@ -58,13 +58,13 @@ class UserService
     }
 
     /**
-     * @param array $data
      * @param UserRoleEntity $role
+     * @param array $data
      * @return UserEntity
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function createUser(array $data = [], UserRoleEntity $role)
+    public function createUser(UserRoleEntity $role, array $data = [])
     {
         if ($this->exists($data['email'])) {
             throw new ORMException('An account with this email address already exists.');
@@ -145,27 +145,31 @@ class UserService
      */
     public function updateUser(UserEntity $user, array $data = [])
     {
-        if (!empty($data['email']) && $this->exists($data['email'], $user->getUuid()->toString())) {
-            throw new ORMException('An account with this email address already exists.');
-        }
-
-        if (!empty($data['email'])) {
+        if (!is_null($data['email'])) {
+            if ($this->exists($data['email'], $user->getUuid()->toString())) {
+                throw new ORMException('An account with this email address already exists.');
+            }
             $user->setEmail($data['email']);
         }
-        if (!empty($data['password'])) {
+
+        if (!is_null($data['password'])) {
             $user->setPassword(
                 password_hash($data['password'], PASSWORD_DEFAULT)
             );
         }
+
         if (!empty($data['status']) && in_array($data['status'], $user->getStatuses())) {
-            $user->setEmail($data['status']);
+            $user->setStatus($data['status']);
         }
-        if (!empty($data['firstname'])) {
+
+        if (!is_null($data['firstname'])) {
             $user->getDetail()->setFirstname($data['firstname']);
         }
-        if (!empty($data['lastname'])) {
+
+        if (!is_null($data['lastname'])) {
             $user->getDetail()->setLastname($data['lastname']);
         }
+
         if (!empty($data['avatar'])) {
             if ($name = $this->uploadAvatar($user, $data['avatar'])) {
                 if (is_null($user->getAvatar())) {

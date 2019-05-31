@@ -43,7 +43,7 @@ final class Version20190527142111 extends AbstractMigration
             updated_at DATETIME DEFAULT NULL, 
             expires_at DATETIME DEFAULT NULL, 
             INDEX idx1_oauth_access_tokens (user_id), 
-            PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB COMMENT = \'\' '
+            PRIMARY KEY(id)) DEFAULT CHARSET=utf8mb4 ENGINE = InnoDB COMMENT = \'\' '
         );
 
         $this->addSql('CREATE TABLE oauth_auth_codes (
@@ -53,7 +53,7 @@ final class Version20190527142111 extends AbstractMigration
             scopes TEXT DEFAULT NULL COLLATE utf8mb4_general_ci, 
             revoked TINYINT(1) DEFAULT NULL, 
             expires_at DATETIME DEFAULT NULL, 
-            PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB COMMENT = \'\' '
+            PRIMARY KEY(id)) DEFAULT CHARSET=utf8mb4 ENGINE = InnoDB COMMENT = \'\' '
         );
 
         $this->addSql('CREATE TABLE oauth_clients (
@@ -67,7 +67,7 @@ final class Version20190527142111 extends AbstractMigration
             created_at DATETIME DEFAULT NULL, 
             updated_at DATETIME DEFAULT NULL, 
             INDEX idx1_oauth_clients (user_id), 
-            PRIMARY KEY(name)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB COMMENT = \'\' '
+            PRIMARY KEY(name)) DEFAULT CHARSET=utf8mb4 ENGINE = InnoDB COMMENT = \'\' '
         );
 
         $this->addSql('CREATE TABLE oauth_personal_access_clients (
@@ -75,7 +75,7 @@ final class Version20190527142111 extends AbstractMigration
             created_at DATETIME DEFAULT NULL, 
             updated_at DATETIME DEFAULT NULL, 
             INDEX idx1_oauth_personal_access_clients (client_id)) 
-            DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB COMMENT = \'\' '
+            DEFAULT CHARSET=utf8mb4 ENGINE = InnoDB COMMENT = \'\' '
         );
 
         $this->addSql('CREATE TABLE oauth_refresh_tokens (
@@ -84,12 +84,12 @@ final class Version20190527142111 extends AbstractMigration
             revoked TINYINT(1) DEFAULT NULL, 
             expires_at DATETIME DEFAULT NULL, 
             INDEX idx1_oauth_refresh_tokens (access_token_id), 
-            PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB COMMENT = \'\' '
+            PRIMARY KEY(id)) DEFAULT CHARSET=utf8mb4 ENGINE = InnoDB COMMENT = \'\' '
         );
 
         $this->addSql('CREATE TABLE oauth_scopes (
             id VARCHAR(30) NOT NULL COLLATE utf8mb4_general_ci, 
-            PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB COMMENT = \'\' '
+            PRIMARY KEY(id)) DEFAULT CHARSET=utf8mb4 ENGINE = InnoDB COMMENT = \'\' '
         );
 
         $this->addSql('CREATE TABLE user (
@@ -103,7 +103,7 @@ final class Version20190527142111 extends AbstractMigration
             updated DATETIME DEFAULT NULL, 
             INDEX FK__user__user_avatar (avatarUuid), 
             UNIQUE INDEX username (username), INDEX FK__user__user_detail (detailUuid), 
-            PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB COMMENT = \'\' '
+            PRIMARY KEY(uuid)) DEFAULT CHARSET=utf8mb4 ENGINE = InnoDB COMMENT = \'\' '
         );
 
         $this->addSql('CREATE TABLE user_avatar (
@@ -111,7 +111,7 @@ final class Version20190527142111 extends AbstractMigration
             name VARCHAR(255) NOT NULL COLLATE utf8mb4_general_ci, 
             created DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, 
             updated DATETIME DEFAULT NULL, 
-            PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB COMMENT = \'\' '
+            PRIMARY KEY(uuid)) DEFAULT CHARSET=utf8mb4 ENGINE = InnoDB COMMENT = \'\' '
         );
 
         $this->addSql('CREATE TABLE user_detail (
@@ -120,7 +120,7 @@ final class Version20190527142111 extends AbstractMigration
             lastname VARCHAR(255) DEFAULT NULL COLLATE utf8mb4_general_ci, 
             created DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, 
             updated DATETIME DEFAULT NULL, 
-            PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB COMMENT = \'\' '
+            PRIMARY KEY(uuid)) DEFAULT CHARSET=utf8mb4 ENGINE = InnoDB COMMENT = \'\' '
         );
 
         $this->addSql('CREATE TABLE user_role (
@@ -129,7 +129,7 @@ final class Version20190527142111 extends AbstractMigration
             created DATETIME DEFAULT CURRENT_TIMESTAMP, 
             updated DATETIME DEFAULT NULL, 
             UNIQUE INDEX name (name), 
-            PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB COMMENT = \'\' '
+            PRIMARY KEY(uuid)) DEFAULT CHARSET=utf8mb4 ENGINE = InnoDB COMMENT = \'\' '
         );
 
         $this->addSql('CREATE TABLE user_roles (
@@ -137,7 +137,7 @@ final class Version20190527142111 extends AbstractMigration
             roleUuid BINARY(16) NOT NULL, 
             INDEX FK__user_roles__user (userUuid), 
             INDEX FK__user_roles__user_role (roleUuid)) 
-            DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB COMMENT = \'\' '
+            DEFAULT CHARSET=utf8mb4 ENGINE = InnoDB COMMENT = \'\' '
         );
     }
 
