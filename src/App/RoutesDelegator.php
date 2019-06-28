@@ -35,13 +35,19 @@ class RoutesDelegator
         $app = $callback();
 
         // Test endpoint
-        $app->get('/test', TestHandler::class, 'test');
+        $app->get('/', TestHandler::class, 'test');
 
-        // OAuth2 token route
-        $app->post('/oauth', [
+        // Generate OAuth2 token
+        $app->post('/oauth/generate', [
             BodyParamsMiddleware::class,
             TokenEndpointHandler::class
-        ], 'oauth-token');
+        ], 'oauth');
+
+        // Refresh OAuth2 token
+        $app->post('/oauth/refresh', [
+            BodyParamsMiddleware::class,
+            TokenEndpointHandler::class
+        ], 'refresh');
 
         $app->get('/users', [
             BodyParamsMiddleware::class,

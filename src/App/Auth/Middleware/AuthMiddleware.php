@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Auth\Middleware;
 
 use App\User\Entity\UserEntity;
+use App\User\Entity\UserIdentity;
 use App\User\Entity\UserRoleEntity;
 use App\User\Service\UserService;
 use Psr\Http\Message\ResponseInterface;
@@ -62,7 +63,7 @@ class AuthMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        /** @var UserInterface $defaultUser */
+        /** @var UserIdentity $defaultUser */
         $defaultUser = $request->getAttribute(UserInterface::class);
 
         $user = $this->getUserService()->identify($defaultUser->getIdentity());

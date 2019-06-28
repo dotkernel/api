@@ -21,6 +21,11 @@ Step 3: Setup database:
 $ vendor/bin/doctrine-migrations migrate
 ```
 
+Step 4: Enable development mode:
+```bash
+$ composer development-enable
+```
+
 After the project has been successfully installed, you should modify the default OAuth2 client and it's secret phrase.
 
 
@@ -74,7 +79,7 @@ A good practice is storing all related entities in the same directory `Entity`, 
 ```bash
 $ php -S 0.0.0.0:8080 -t public
 ```
-To test the application, visit the [test page](http://localhost:8080/test). You should get the following message:
+To test the application, visit the [home page](http://localhost:8080/). You should get the following message:
 ```json
 {
   "message": "Welcome to DotKernel API!",

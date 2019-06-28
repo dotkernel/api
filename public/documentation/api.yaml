@@ -1,29 +1,25 @@
 openapi: 3.0.0
 info:
+  version: 1.0.0
   title: DotKernel API
   description: DotKernel API documentation
   contact:
     name: Support
     url: https://github.com/dotkernel/api
     email: support@dotkernel.com
-  version: '0.1'
 servers:
   -
     url: http://localhost:8080
     description: development
   -
     url: http://api.dotkernel.local
-    description: development
+    description: custom development endpoint
 paths:
-  /oauth:
+  /oauth/generate:
     post:
       tags:
-        - Users
+        - Security
       summary: Get authorization token.
-      consumes:
-        - application/json
-      produces:
-        - application/json
       requestBody:
         content:
           application/json:
@@ -58,20 +54,62 @@ paths:
                 $ref: '#/components/schemas/Oauth'
         '500':
           $ref: '#/components/schemas/_ResponseCode500'
+  /oauth/refresh:
+    post:
+      tags:
+        - Security
+      summary: Refresh authorization token.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - properties:
+                    grant_type:
+                      type: string
+                      enum: [refresh_token]
+                      default: refresh_token
+                    client_id:
+                      type: string
+                      example: dotkernel
+                    client_secret:
+                      type: string
+                      example: secret
+                    scope:
+                      type: string
+                      example: api
+                    refresh_token:
+                      type: string
+                  type: object
+      responses:
+        '200':
+          description: Authorization token has been successfully refreshed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Oauth'
+        '500':
+          $ref: '#/components/schemas/_ResponseCode500'
   /users:
     get:
       tags:
         - Users
       summary: List users.
-      consumes:
-        - application/json
-      produces:
-        - application/json
       parameters:
         -
-          $ref: '#/components/schemas/_QueryOffset'
+          in: query
+          name: offset
+          required: false
+          schema:
+            type: integer
+            example: '0'
         -
-          $ref: '#/components/schemas/_QueryLimit'
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            example: 10
       responses:
         '200':
           description: List users.
@@ -93,10 +131,6 @@ paths:
       tags:
         - Users
       summary: Delete user.
-      consumes:
-        - application/json
-      produces:
-        - application/json
       parameters:
         -
           in: path
@@ -122,10 +156,6 @@ paths:
       tags:
         - Users
       summary: View user data.
-      consumes:
-        - application/json
-      produces:
-        - application/json
       parameters:
         -
           in: path
@@ -155,10 +185,6 @@ paths:
       tags:
         - Users
       summary: Update user data.
-      consumes:
-        - application/json
-      produces:
-        - application/json
       parameters:
         -
           in: path
@@ -190,10 +216,6 @@ paths:
       tags:
         - Users
       summary: Create user.
-      consumes:
-        - application/json
-      produces:
-        - application/json
       requestBody:
         required: true
         content:
@@ -365,20 +387,6 @@ components:
                 href:
                   type: string
                   example: 'http://localhost:8080/users?offset=0&limit=10'
-    _QueryOffset:
-      name: offset
-      in: query
-      required: false
-      schema:
-        type: integer
-        example: '0'
-    _QueryLimit:
-      name: limit
-      in: query
-      required: false
-      schema:
-        type: integer
-        example: 10
     _TypeDatetime:
       allOf:
         -
@@ -402,19 +410,6 @@ components:
       description: 'Error: Not Found.'
     _ResponseCode500:
       description: Internal server error.
-      content:
-        application/json:
-          schema:
-            allOf:
-              -
-                properties:
-                  error:
-                    properties:
-                      messages:
-                        type: array
-                        items:
-                          type: string
-                          example: Internal server error.
   securitySchemes:
     auth:
       type: http
@@ -424,5 +419,8 @@ components:
       scheme: bearer
 tags:
   -
+    name: Security
+    description: 'Manage security'
+  -
     name: Users
-    description: 'User Management'
+    description: 'Manage users'
