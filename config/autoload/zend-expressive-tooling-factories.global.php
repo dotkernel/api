@@ -6,15 +6,18 @@
  * removing factory definitions; other dependency types may be overwritten
  * when regenerating this file via zend-expressive-tooling commands.
  */
- 
+
 declare(strict_types=1);
 
 return [
     'dependencies' => [
         'factories' => [
-            App\Test\Handler\TestHandler::class => App\Test\Factory\TestHandlerFactory::class,
-            App\User\Handler\UserAvatarHandler::class => App\User\Factory\UserAvatarHandlerFactory::class,
-            App\User\Handler\UserHandler::class => App\User\Factory\UserHandlerFactory::class,
+            Api\User\Handler\AccountActivateHandler::class => Api\User\Factory\AccountActivateHandlerFactory::class,
+            Api\User\Handler\AccountAvatarHandler::class => Api\User\Factory\AccountAvatarHandlerFactory::class,
+            Api\User\Handler\AccountHandler::class => Api\User\Factory\AccountHandlerFactory::class,
+            Api\User\Handler\UserActivateHandler::class => Api\User\Factory\UserActivateHandlerFactory::class,
+            Api\User\Handler\UserAvatarHandler::class => Api\User\Factory\UserAvatarHandlerFactory::class,
+            Api\User\Handler\UserHandler::class => Api\User\Factory\UserHandlerFactory::class,
         ],
     ],
 ];

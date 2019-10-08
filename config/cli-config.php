@@ -8,10 +8,10 @@ use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Symfony\Component\Console\Helper\HelperSet;
 
 $container = require __DIR__ . '/container.php';
-$dbParams = require __DIR__ . '/autoload/db.local.php';
+$config = $container->get('config');
 
 try {
-    $connection = DriverManager::getConnection($dbParams['database']);
+    $connection = DriverManager::getConnection($config['databases']['default']);
 } catch (Exception $exception) {
     exit($exception->getMessage());
 }

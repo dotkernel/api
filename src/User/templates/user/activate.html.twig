@@ -1,0 +1,3 @@
+Hi {{ user.name }},<br /><br />
+
+You can activate your {{ config.application.name }} account using <a href="{{ url('account:activate', {'hash': user.hash}) }}" target="_blank">this link</a>.

@@ -13,8 +13,8 @@ return [
         // key is the alias name, the value is the service to which it points.
         'aliases' => [
             Dot\ErrorHandler\ErrorHandlerInterface::class => Dot\ErrorHandler\LogErrorHandler::class,
-            League\OAuth2\Server\Repositories\UserRepositoryInterface::class => App\Common\OauthUserRepository::class,
-            Expressive\Authentication\UserInterface::class => App\User\Entity\UserIdentity::class,
+            League\OAuth2\Server\Repositories\UserRepositoryInterface::class => Api\App\Common\OauthUserRepository::class,
+            Expressive\Authentication\UserInterface::class => Api\User\Entity\UserIdentity::class,
             Expressive\Authorization\AuthorizationInterface::class => Expressive\Authorization\Rbac\ZendRbac::class
         ],
         // Use 'invokables' for constructor-less services, or services that do
@@ -25,9 +25,9 @@ return [
         ],
         // Use 'factories' for services provided by callbacks/factory classes.
         'factories'  => [
-            App\Common\OauthUserRepository::class => App\Common\OauthUserRepositoryFactory::class,
-            App\User\Entity\UserIdentity::class => App\User\Factory\UserIdentityFactory::class,
-            Tuupola\Middleware\CorsMiddleware::class => App\Cors\Factory\CorsFactory::class
+            Api\App\Common\OauthUserRepository::class => Api\App\Common\OauthUserRepositoryFactory::class,
+            Api\User\Entity\UserIdentity::class => Api\User\Factory\UserIdentityFactory::class,
+            Tuupola\Middleware\CorsMiddleware::class => Api\App\Cors\Factory\CorsFactory::class
         ],
     ],
 ];

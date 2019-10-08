@@ -13,30 +13,31 @@ $cacheConfig = [
 ];
 
 $aggregator = new ConfigAggregator([
-    \Zend\Expressive\Authorization\Acl\ConfigProvider::class,
-    \Zend\Expressive\Authorization\Rbac\ConfigProvider::class,
-    \Zend\Expressive\Authentication\ConfigProvider::class,
-    \Zend\Expressive\Authentication\OAuth2\ConfigProvider::class,
-    \Zend\InputFilter\ConfigProvider::class,
-    \Zend\Filter\ConfigProvider::class,
-    \Zend\Validator\ConfigProvider::class,
-    \Zend\Hydrator\ConfigProvider::class,
-    \Zend\Paginator\ConfigProvider::class,
-    \Zend\Expressive\Hal\ConfigProvider::class,
-    \Zend\ProblemDetails\ConfigProvider::class,
-    \Zend\Db\ConfigProvider::class,
-    \Zend\Expressive\Router\FastRouteRouter\ConfigProvider::class,
-    \Zend\HttpHandlerRunner\ConfigProvider::class,
+    Zend\Expressive\Authorization\Acl\ConfigProvider::class,
+    Zend\Expressive\Authorization\Rbac\ConfigProvider::class,
+    Zend\Expressive\Authentication\ConfigProvider::class,
+    Zend\Expressive\Authentication\OAuth2\ConfigProvider::class,
+    Zend\InputFilter\ConfigProvider::class,
+    Zend\Filter\ConfigProvider::class,
+    Zend\Validator\ConfigProvider::class,
+    Zend\Hydrator\ConfigProvider::class,
+    Zend\Paginator\ConfigProvider::class,
+    Zend\Expressive\Hal\ConfigProvider::class,
+    Zend\ProblemDetails\ConfigProvider::class,
+    Zend\Db\ConfigProvider::class,
+    Zend\Expressive\Router\FastRouteRouter\ConfigProvider::class,
+    Zend\HttpHandlerRunner\ConfigProvider::class,
     // Include cache configuration
     new ArrayProvider($cacheConfig),
-    \Zend\Expressive\Helper\ConfigProvider::class,
-    \Zend\Expressive\ConfigProvider::class,
-    \Zend\Expressive\Router\ConfigProvider::class,
+    Zend\Expressive\Helper\ConfigProvider::class,
+    Zend\Expressive\ConfigProvider::class,
+    Zend\Expressive\Router\ConfigProvider::class,
     // DK packages
-    \Dot\Log\ConfigProvider::class,
-    \Dot\ErrorHandler\ConfigProvider::class,
+    Dot\Log\ConfigProvider::class,
+    Dot\ErrorHandler\ConfigProvider::class,
     // Default App module config
-    App\ConfigProvider::class,
+    Api\App\ConfigProvider::class,
+    Api\User\ConfigProvider::class,
     // Load application config in a pre-defined order in such a way that local settings
     // overwrite global settings. (Loaded as first to last):
     //   - `global.php`

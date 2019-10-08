@@ -20,13 +20,13 @@ return [
             'orm_default' => [
                 'class' => MappingDriverChain::class,
                 'drivers' => [
-                    'App\\User\\Entity' => 'UserEntities'
+                    'Api\\User\\Entity' => 'UserEntities'
                 ]
             ],
             'UserEntities' => [
                 'class' => AnnotationDriver::class,
                 'cache' => 'array',
-                'paths' => __DIR__ . '/../../src/App/User/Entity',
+                'paths' => __DIR__ . '/../../src/User/src/Entity',
             ]
         ],
         'types' => [

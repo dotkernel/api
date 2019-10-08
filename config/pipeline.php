@@ -7,6 +7,7 @@ use Psr\Container\ContainerInterface;
 use Tuupola\Middleware\CorsMiddleware;
 use Zend\Expressive\Application;
 use Zend\Expressive\Handler\NotFoundHandler;
+use Zend\Expressive\Helper\BodyParams\BodyParamsMiddleware;
 use Zend\Expressive\Helper\ServerUrlMiddleware;
 use Zend\Expressive\Helper\UrlHelperMiddleware;
 use Zend\Expressive\MiddlewareFactory;
@@ -29,6 +30,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // Always use Problem Details format for calls to the API.
     $app->pipe('/api', ProblemDetailsMiddleware::class);
 
+    $app->pipe(BodyParamsMiddleware::class);
     $app->pipe(ServerUrlMiddleware::class);
     $app->pipe(CorsMiddleware::class);
 

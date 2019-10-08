@@ -8,41 +8,61 @@
 
 declare(strict_types=1);
 
-$dbParams = require __DIR__ . '/db.local.php';
+$databases = [
+    'default' => [
+        'host' => 'localhost',
+        'dbname' => '',
+        'user' => '',
+        'password' => '',
+        'port' => 3306,
+        'driver' => 'pdo_mysql',
+        'charset' => 'utf8mb4',
+        'collate' => 'utf8mb4_general_ci'
+    ]
+    // add more database connections below
+];
 
 return [
+    'application' => [
+        'name' => 'DotKernel API'
+    ],
     'authentication' => [
         'private_key'    => [
             'key_or_path' => getcwd() . '/data/oauth/private.key',
             'key_permissions_check' => false
         ],
-        'public_key'     => getcwd() . '/data/oauth/public.key',
+        'public_key'    => [
+            'key_or_path' => getcwd() . '/data/oauth/public.key',
+            'key_permissions_check' => false
+        ],
         'encryption_key' => require getcwd() . '/data/oauth/encryption.key',
         'access_token_expire'  => 'P1D',
         'refresh_token_expire' => 'P1M',
         'auth_code_expire'     => 'PT10M',
         'pdo' => [
-            'dsn' => 'mysql:host=' . $dbParams['database']['host'] . ';dbname=' . $dbParams['database']['dbname'],
-            'username' => $dbParams['database']['user'],
-            'password' => $dbParams['database']['password']
+            'dsn' => sprintf('mysql:host=%s;port=%d;dbname=%s',
+                $databases['default']['host'],
+                $databases['default']['port'],
+                $databases['default']['dbname']
+            ),
+            'username' => $databases['default']['user'],
+            'password' => $databases['default']['password']
         ]
     ],
-
+    'databases' => $databases,
     'doctrine' => [
         'connection' => [
             'orm_default' => [
-                'params' => $dbParams['database']
+                'params' => $databases['default']
             ]
         ]
     ],
-
     'uploads' => [
         'user' => [
             'url'  => 'http://localhost:8080/uploads/user',
             'path' => \realpath(__DIR__ . '/../../public/uploads/user'),
         ]
     ],
-
     'cors' => [
         'origin' => ['*'],
         'methods' => ['DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT'],
@@ -51,7 +71,7 @@ return [
         'credentials' => false,
         'cache' => 0,
         'error' => [
-            \App\Cors\Factory\CorsFactory::class, 'error'
+            Api\App\Cors\Factory\CorsFactory::class, 'error'
         ]
     ],
 ];
