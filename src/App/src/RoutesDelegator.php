@@ -38,8 +38,8 @@ class RoutesDelegator
         /**
          * OAuth authentication
          */
-        $app->post('/oauth/generate', [TokenEndpointHandler::class], 'oauth');
-        $app->post('/oauth/refresh', [TokenEndpointHandler::class], 'refresh');
+        $app->post('/oauth2/generate', [TokenEndpointHandler::class], 'oauth');
+        $app->post('/oauth2/refresh', [TokenEndpointHandler::class], 'refresh');
 
         return $app;
     }

@@ -1,0 +1,166 @@
+{
+  "paths": {
+    "/my-account": {
+      "delete": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Users mark their account as deleted.",
+        "responses": {
+          "200": {
+            "description": "User account has been marked as deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserEntity"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/schemas/_ResponseCode401"
+          },
+          "403": {
+            "$ref": "#/components/schemas/_ResponseCode403"
+          },
+          "404": {
+            "$ref": "#/components/schemas/_ResponseCode404"
+          },
+          "500": {
+            "$ref": "#/components/schemas/_ResponseCode500"
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Users view their account.",
+        "responses": {
+          "200": {
+            "description": "User account has been returned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserEntity"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/schemas/_ResponseCode401"
+          },
+          "403": {
+            "$ref": "#/components/schemas/_ResponseCode403"
+          },
+          "404": {
+            "$ref": "#/components/schemas/_ResponseCode404"
+          },
+          "500": {
+            "$ref": "#/components/schemas/_ResponseCode500"
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Users update their account.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAccount"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated user account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserEntity"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/schemas/_ResponseCode401"
+          },
+          "403": {
+            "$ref": "#/components/schemas/_ResponseCode403"
+          },
+          "404": {
+            "$ref": "#/components/schemas/_ResponseCode404"
+          },
+          "500": {
+            "$ref": "#/components/schemas/_ResponseCode500"
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    },
+    "/my-account/avatar": {
+      "post": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Users set their own avatar.",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserAvatar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User avatar has been successfully set.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserEntity"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/schemas/_ResponseCode400"
+          },
+          "401": {
+            "$ref": "#/components/schemas/_ResponseCode401"
+          },
+          "403": {
+            "$ref": "#/components/schemas/_ResponseCode403"
+          },
+          "500": {
+            "$ref": "#/components/schemas/_ResponseCode500"
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    }
+  }
+}

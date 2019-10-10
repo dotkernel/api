@@ -1,0 +1,174 @@
+{
+  "paths": {
+    "/account/activate": {
+      "post": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Users request account activation email.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivateAccount"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User account activation mail has been (re)sent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserEntity"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/schemas/_ResponseCode400"
+          },
+          "500": {
+            "$ref": "#/components/schemas/_ResponseCode500"
+          }
+        }
+      }
+    },
+    "/account/activate/{hash}": {
+      "get": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Users activate their account.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User account has been successfully activated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserEntity"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/schemas/_ResponseCode401"
+          },
+          "403": {
+            "$ref": "#/components/schemas/_ResponseCode403"
+          },
+          "404": {
+            "$ref": "#/components/schemas/_ResponseCode404"
+          },
+          "500": {
+            "$ref": "#/components/schemas/_ResponseCode500"
+          }
+        }
+      }
+    },
+    "/account/register": {
+      "post": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Guests register a new account.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAccount"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User account has been created (status=pending).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserEntity"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/schemas/_ResponseCode400"
+          },
+          "500": {
+            "$ref": "#/components/schemas/_ResponseCode500"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ActivateAccount": {
+        "allOf": [
+          {
+            "properties": {
+              "email": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "CreateAccount": {
+        "allOf": [
+          {
+            "properties": {
+              "email": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "passwordConfirm": {
+                "type": "string"
+              },
+              "detail": {
+                "$ref": "#/components/schemas/CreateUserDetail"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "UpdateAccount": {
+        "allOf": [
+          {
+            "properties": {
+              "email": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "passwordConfirm": {
+                "type": "string"
+              },
+              "detail": {
+                "$ref": "#/components/schemas/UpdateUserDetail"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      }
+    }
+  }
+}

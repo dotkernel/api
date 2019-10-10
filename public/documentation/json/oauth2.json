@@ -1,0 +1,161 @@
+{
+  "paths": {
+    "/oauth2/generate": {
+      "post": {
+        "tags": [
+          "Oauth2"
+        ],
+        "summary": "Get authorization token.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Oauth2Generate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authorization token has been successfully generated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Oauth2Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/schemas/_ResponseCode500"
+          }
+        }
+      }
+    },
+    "/oauth2/refresh": {
+      "post": {
+        "tags": [
+          "Oauth2"
+        ],
+        "summary": "Refresh authorization token.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Oauth2Refresh"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authorization token has been successfully refreshed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Oauth2Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/schemas/_ResponseCode500"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Oauth2Generate": {
+        "allOf": [
+          {
+            "properties": {
+              "grant_type": {
+                "type": "string",
+                "enum": [
+                  "password"
+                ],
+                "default": "password"
+              },
+              "client_id": {
+                "type": "string",
+                "example": "dotkernel"
+              },
+              "client_secret": {
+                "type": "string",
+                "example": "secret"
+              },
+              "scope": {
+                "type": "string",
+                "example": "api"
+              },
+              "username": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "Oauth2Response": {
+        "allOf": [
+          {
+            "properties": {
+              "token_type": {
+                "type": "string",
+                "example": "Bearer"
+              },
+              "expires_in": {
+                "type": "int",
+                "example": 86400
+              },
+              "access_token": {
+                "type": "string",
+                "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImI1YTE5OWQ0YzM2ZGQ4OTdlOGQyZmZhNGM2ODAwNGMxOTAwMmFmYzAwYzE2NDc5NWVkMjg3ZjE5YzkxYzFhZDA5MGZkMTZiNWQwZGJkNGM0In0.eyJhdWQiOiJkb3RrZXJuZWwiLCJqdGkiOiJiNWExOTlkNGMzNmRkODk3ZThkMmZmYTRjNjgwMDRjMTkwMDJhZmMwMGMxNjQ3OTVlZDI4N2YxOWM5MWMxYWQwOTBmZDE2YjVkMGRiZDRjNCIsImlhdCI6MTU1ODM2MDU1NCwibmJmIjoxNTU4MzYwNTU0LCJleHAiOjE1NTg0NDY5NTQsInN1YiI6ImFAYS5jb20iLCJzY29wZXMiOltdfQ.JwhmVAYbAZ-SLlbX3T1wh0O__7OlChOOgZIvLa2h6mgQZe0HYH1OEskI7f7zbf-H-qMQAseHVacsKCf8ySbFKVyk760EqHV14J8HqeSb5pGaPXtvEzXJnIhEhM9b33IfUGBrRiHhqIXOTjTmDSc7A-edVP3GWjcDyk7s_Vrl1XVvz7u2pMxF3zMqgNBWo0cNS8oeH4slpW475UAA2WrT7s3mF1YQqsKlD2ba3DavGx_I8ohs6rrzIamHNgKwI_el3XIrcY-Oj7nIVjd-ri71PwwkuW6swNyOUuaoKBR6ViNYPV079LPrLV_PCaIoIU9XZ9slv1yB_A7HX0m3y9jYWw"
+              },
+              "refresh_token": {
+                "type": "string",
+                "example": "def5020058e03bbf7f4488eeb52f9216e6ddf1dd1e309621d502b3cebb372840a043524ae31dbd0b2e0cb560250859868593634b17fbacf0b9fc2aae0554e0bb1ad08af8f7c354ab4b481fd6124af9b6b695f150d5fca487690fd5da3095a8d33e46f180081481088af693fa76334d2e5bed4e46f0fd2753cf7b0af0d0f1e344f4b9f0c6eee592773ae9af5920da9826988f0b79222942597c69f6659a1989a67a6efc79540997b6a9ee69d74a964a8cbd2bf209c101bcf8f2d25e5c4adba937f198892d0ba02d48917fdba23c35055f7c0be86477f695296a267b444ebc9f01f405529e0c578bcc39fa43963410180aefd2cc914f33ff6930bb0e5a71d02cf722a5b2b44341f279e972d3817f5944e38ed0904d087e6252a8cc34cab47d974ef40f9a9c3b8d5c778ad20c4357a59743772cce1496367f9d795613a594a9dc5cf96d5aa5c8cf8de150f5543f03b3fb89a8ace075d3cdcec7a3723793d1d4846293efa174ae6db5604ac0bf1e4facfa2b9a"
+              }
+            }
+          }
+        ]
+      },
+      "Oauth2Refresh": {
+        "allOf": [
+          {
+            "properties": {
+              "grant_type": {
+                "type": "string",
+                "enum": [
+                  "refresh_token"
+                ],
+                "default": "refresh_token"
+              },
+              "client_id": {
+                "type": "string",
+                "example": "dotkernel"
+              },
+              "client_secret": {
+                "type": "string",
+                "example": "secret"
+              },
+              "scope": {
+                "type": "string",
+                "example": "api"
+              },
+              "refresh_token": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -73,9 +73,9 @@ class RoutesDelegator
             'my-account:avatar'
         );
 
-        $app->post('/register', AccountHandler::class, 'account:register');
+        $app->post('/account/register', AccountHandler::class, 'account:register');
 
-        $app->route('/activate[/{hash}]', AccountActivateHandler::class,
+        $app->route('/account/activate[/{hash}]', AccountActivateHandler::class,
             [RequestMethod::METHOD_GET, RequestMethod::METHOD_POST],
             'account:activate'
         );
