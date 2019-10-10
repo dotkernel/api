@@ -80,7 +80,7 @@ return [
          * - true: loaded from cacheTarget
          * - false: generated on the fly
          */
-        'cacheConfig' => true,
+        'cacheConfig' => false,
         /**
          * cacheTarget: specifies where the documentation config cache is stored
          */
