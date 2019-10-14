@@ -3,7 +3,7 @@
     "/my-account": {
       "delete": {
         "tags": [
-          "Accounts"
+          "My Account"
         ],
         "summary": "Users mark their account as deleted.",
         "responses": {
@@ -38,7 +38,7 @@
       },
       "get": {
         "tags": [
-          "Accounts"
+          "My Account"
         ],
         "summary": "Users view their account.",
         "responses": {
@@ -73,7 +73,7 @@
       },
       "patch": {
         "tags": [
-          "Accounts"
+          "My Account"
         ],
         "summary": "Users update their account.",
         "requestBody": {
@@ -119,7 +119,7 @@
     "/my-account/avatar": {
       "post": {
         "tags": [
-          "Accounts"
+          "My Account"
         ],
         "summary": "Users set their own avatar.",
         "requestBody": {

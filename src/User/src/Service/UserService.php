@@ -188,6 +188,19 @@ class UserService
     }
 
     /**
+     * @param string|null $hash
+     * @return UserEntity|null
+     */
+    public function findByResetPasswordHash(?string $hash): ?UserEntity
+    {
+        if (empty($hash)) {
+            return null;
+        }
+
+        return $this->userRepository->findByResetPasswordHash($hash);
+    }
+
+    /**
      * @param array $params
      * @return UserEntity|null
      */
@@ -230,6 +243,44 @@ class UserService
             ])
         );
         $this->mailService->setSubject('Welcome to ' . $this->config['application']['name']);
+        $this->mailService->getMessage()->addTo($user->getEmail(), $user->getName());
+
+        return $this->mailService->send()->isValid();
+    }
+
+    /**
+     * @param UserEntity $user
+     * @return bool
+     * @throws MailException
+     */
+    public function sendResetPasswordRequestedMail(UserEntity $user)
+    {
+        $this->mailService->setBody(
+            $this->templateRenderer->render('user::reset-password-requested', [
+                'config' => $this->config,
+                'user' => $user
+            ])
+        );
+        $this->mailService->setSubject('Reset your ' . $this->config['application']['name'] . ' password');
+        $this->mailService->getMessage()->addTo($user->getEmail(), $user->getName());
+
+        return $this->mailService->send()->isValid();
+    }
+
+    /**
+     * @param UserEntity $user
+     * @return bool
+     * @throws MailException
+     */
+    public function sendResetPasswordCompletedMail(UserEntity $user)
+    {
+        $this->mailService->setBody(
+            $this->templateRenderer->render('user::reset-password-completed', [
+                'config' => $this->config,
+                'user' => $user
+            ])
+        );
+        $this->mailService->setSubject('Reset your ' . $this->config['application']['name'] . ' password');
         $this->mailService->getMessage()->addTo($user->getEmail(), $user->getName());
 
         return $this->mailService->send()->isValid();

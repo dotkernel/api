@@ -88,6 +88,9 @@
           }
         ]
       },
+      "_ResponseCode201": {
+        "description": "Created."
+      },
       "_ResponseCode400": {
         "description": "Error: Bad Request."
       },
@@ -117,15 +120,16 @@
   "tags": [
     {
       "name": "Oauth2",
-      "description": "Manage access via Oauth2 token"
-    },
-    {
-      "name": "Users",
-      "description": "Admins manage user accounts"
-    },
-    {
-      "name": "Accounts",
-      "description": "Users manage their own accounts"
+      "description": "Manage access via Oauth2 token."
+    }, {
+      "name": "Account",
+      "description": "Unauthorized users manage their accounts."
+    }, {
+      "name": "My Account",
+      "description": "Authorized users manage their accounts."
+    }, {
+      "name": "User",
+      "description": "Admins manage user accounts."
     }
   ]
 }

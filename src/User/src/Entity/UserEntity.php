@@ -13,7 +13,6 @@ use Exception;
 
 use function array_map;
 use function bin2hex;
-use function is_null;
 use function random_bytes;
 
 /**
@@ -45,7 +44,7 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
     protected $password;
 
     /**
-     * @ORM\Column(name="status", type="string", columnDefinition="ENUM('pending', 'active')"))
+     * @ORM\Column(name="status", type="string", nullable=false)
      * @var string $status
      */
     protected $status = self::STATUS_PENDING;
@@ -77,6 +76,13 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
     protected $detail;
 
     /**
+     * @ORM\OneToMany(targetEntity="UserResetPasswordEntity",
+     *     cascade={"persist", "remove"}, mappedBy="user", fetch="EXTRA_LAZY")
+     * @var UserResetPasswordEntity[] $resetPassword
+     */
+    protected $resetPasswords;
+
+    /**
      * @ORM\ManyToMany(targetEntity="UserRoleEntity", fetch="EAGER")
      * @ORM\JoinTable(
      *     name="user_roles",
@@ -95,6 +101,7 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
         parent::__construct();
 
         $this->roles = new ArrayCollection();
+        $this->resetPasswords = new ArrayCollection();
 
         $this->renewHash();
     }
@@ -285,6 +292,69 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
     }
 
     /**
+     * @param UserResetPasswordEntity $resetPassword
+     */
+    public function addResetPassword(UserResetPasswordEntity $resetPassword)
+    {
+        $this->resetPasswords->add($resetPassword);
+    }
+
+    /**
+     * @return $this
+     */
+    public function createResetPassword()
+    {
+        $resetPassword = new UserResetPasswordEntity();
+        $resetPassword->setHash($this->generateHash());
+        $resetPassword->setUser($this);
+
+        $this->resetPasswords->add($resetPassword);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getResetPasswords()
+    {
+        return $this->resetPasswords;
+    }
+
+    /**
+     * @param UserResetPasswordEntity $resetPassword
+     * @return bool
+     */
+    public function hasResetPassword(UserResetPasswordEntity $resetPassword)
+    {
+        return $this->resetPasswords->contains($resetPassword);
+    }
+
+    /**
+     * @param UserResetPasswordEntity $resetPassword
+     * @return $this
+     */
+    public function removeResetPassword(UserResetPasswordEntity $resetPassword)
+    {
+        $this->resetPasswords->removeElement($resetPassword);
+
+        return $this;
+    }
+
+    /**
+     * @param array $resetPasswords
+     * @return $this
+     */
+    public function setResetPasswords(array $resetPasswords)
+    {
+        foreach ($resetPasswords as $resetPassword) {
+            $this->resetPasswords->add($resetPassword);
+        }
+
+        return $this;
+    }
+
+    /**
      * Helper methods
      */
 
@@ -380,11 +450,14 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
             'email' => $this->getEmail(),
             'status' => $this->getStatus(),
             'isDeleted' => $this->isDeleted(),
-            'avatar' => is_null($this->getAvatar()) ? null : $this->getAvatar()->getArrayCopy(),
-            'detail' => is_null($this->getDetail()) ? null : $this->getDetail()->getArrayCopy(),
+            'avatar' => ($this->getAvatar() instanceof UserAvatarEntity) ? $this->getAvatar()->getArrayCopy() : null,
+            'detail' => ($this->getDetail() instanceof UserDetailEntity) ? $this->getDetail()->getArrayCopy() : null,
             'roles' => array_map(function (UserRoleEntity $role) {
                 return $role->getArrayCopy();
             }, $this->getRoles()->getIterator()->getArrayCopy()),
+            'resetPasswords' => array_map(function (UserResetPasswordEntity $resetPassword) {
+                return $resetPassword->getArrayCopy();
+            }, $this->getResetPasswords()->getIterator()->getArrayCopy()),
             'created' => $this->getCreated(),
             'updated' => $this->getUpdated()
         ];

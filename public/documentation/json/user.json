@@ -3,7 +3,7 @@
     "/user": {
       "get": {
         "tags": [
-          "Users"
+          "User"
         ],
         "summary": "List user accounts.",
         "parameters": [
@@ -110,7 +110,7 @@
       },
       "post": {
         "tags": [
-          "Users"
+          "User"
         ],
         "summary": "Create user account.",
         "requestBody": {
@@ -150,7 +150,7 @@
     "/user/{uuid}": {
       "delete": {
         "tags": [
-          "Users"
+          "User"
         ],
         "summary": "Delete / Mark as deleted user account.",
         "parameters": [
@@ -209,7 +209,7 @@
       },
       "get": {
         "tags": [
-          "Users"
+          "User"
         ],
         "summary": "View user account.",
         "parameters": [
@@ -254,7 +254,7 @@
       },
       "patch": {
         "tags": [
-          "Users"
+          "User"
         ],
         "summary": "Update user account.",
         "parameters": [
@@ -310,7 +310,7 @@
     "/user/avatar/{uuid}": {
       "post": {
         "tags": [
-          "Users"
+          "User"
         ],
         "summary": "Set user avatar.",
         "parameters": [
@@ -366,7 +366,7 @@
     "/user/activate/{uuid}": {
       "post": {
         "tags": [
-          "Users"
+          "User"
         ],
         "summary": "(Re)Send user account activation email (if user.status is pending).",
         "parameters": [
@@ -611,7 +611,7 @@
               },
               "_embedded": {
                 "properties": {
-                  "users": {
+                  "User": {
                     "type": "array",
                     "items": {
                       "$ref": "#/components/schemas/UserEntity"

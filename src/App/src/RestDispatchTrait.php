@@ -79,6 +79,24 @@ trait RestDispatchTrait
     }
 
     /**
+     * @param array $messages
+     * @param int $status
+     * @return JsonResponse
+     */
+    public function infoResponse($messages = [], int $status = Response::STATUS_CODE_200)
+    {
+        if (!empty($messages) && !is_array($messages)) {
+            $messages = [$messages];
+        }
+
+        return $this->restResponse([
+            'info' => [
+                'messages' => $messages
+            ]
+        ], $status);
+    }
+
+    /**
      * @param array|string $messages
      * @return JsonResponse
      */

@@ -36,8 +36,9 @@ final class Version20191007122229 extends AbstractMigration
      */
     public function down(Schema $schema) : void
     {
-        $this->addSql('TRUNCATE TABLE oauth_clients');
-        $this->addSql('TRUNCATE TABLE oauth_scopes');
-        $this->addSql('TRUNCATE TABLE user_role');
+        $this->addSql("DELETE FROM `oauth_clients` WHERE `oauth_clients`.`name` = 'dotkernel'");
+        $this->addSql("DELETE FROM `oauth_scopes` WHERE `id` = 'api'");
+        $this->addSql("DELETE FROM `user_role` WHERE `user_role`.`uuid` = CAST(0x11e9e6a81f24525e9cbbb8ca3aa0178d AS BINARY)");
+        $this->addSql("DELETE FROM `user_role` WHERE `user_role`.`uuid` = CAST(0x11e9e6a8238faa8ca090b8ca3aa0178d AS BINARY)");
     }
 }

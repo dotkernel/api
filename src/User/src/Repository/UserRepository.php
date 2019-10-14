@@ -80,6 +80,24 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * @param string $hash
+     * @return UserEntity|null
+     */
+    public function findByResetPasswordHash(string $hash): ?UserEntity
+    {
+        try {
+            $qb = $this->getEntityManager()->createQueryBuilder();
+            $qb->select(['user', 'resetPasswords'])->from(UserEntity::class, 'user')
+                ->leftJoin('user.resetPasswords', 'resetPasswords')
+                ->andWhere('resetPasswords.hash = :hash')->setParameter('hash', $hash);
+
+            return $qb->getQuery()->getSingleResult();
+        } catch (Exception $exception) {
+            return null;
+        }
+    }
+
+    /**
      * @param array $filters
      * @return UserCollection
      */

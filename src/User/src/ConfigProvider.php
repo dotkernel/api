@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User;
 
+use Api\User\Entity\UserResetPasswordEntity;
 use Api\User\Middleware\AuthMiddleware;
 use Api\User\Factory\AuthMiddlewareFactory;
 use Api\User\Collection\UserCollection;
@@ -68,6 +69,13 @@ class ConfigProvider
                 '__class__' => RouteBasedResourceMetadata::class,
                 'resource_class' => UserEntity::class,
                 'route' => 'user:delete,view,update',
+                'extractor' => ArraySerializable::class,
+                'resource_identifier' => 'uuid',
+                'route_identifier_placeholder' => 'uuid'
+            ], [
+                '__class__' => RouteBasedResourceMetadata::class,
+                'resource_class' => UserResetPasswordEntity::class,
+                'route' => 'account:reset-password',
                 'extractor' => ArraySerializable::class,
                 'resource_identifier' => 'uuid',
                 'route_identifier_placeholder' => 'uuid'
