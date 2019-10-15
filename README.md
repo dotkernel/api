@@ -70,3 +70,8 @@ To test the application, visit the [home page](http://localhost:8080/). You shou
 
 ## Documentation
 Visit [this link](http://localhost:8080/documentation) to access the application's documentation.
+Here, you can request an access token using the /oauth2/generate endpoint using the following credentials:
+```
+username: test@dotkernel.com
+password: dotkernel
+```
