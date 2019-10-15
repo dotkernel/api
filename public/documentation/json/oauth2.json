@@ -84,7 +84,7 @@
               },
               "client_secret": {
                 "type": "string",
-                "example": "secret"
+                "example": "dotkernel"
               },
               "scope": {
                 "type": "string",
@@ -142,7 +142,7 @@
               },
               "client_secret": {
                 "type": "string",
-                "example": "secret"
+                "example": "dotkernel"
               },
               "scope": {
                 "type": "string",

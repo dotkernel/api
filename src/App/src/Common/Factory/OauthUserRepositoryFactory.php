@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Api\App\Common;
+namespace Api\App\Common\Factory;
 
+use Api\App\Common\OauthUserRepository;
 use Psr\Container\ContainerInterface;
 use Zend\Expressive\Authentication\OAuth2\Repository\Pdo\PdoService;
 

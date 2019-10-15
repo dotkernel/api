@@ -9,6 +9,7 @@ use Api\User\Entity\UserIdentity;
 use Api\User\Entity\UserRoleEntity;
 use Api\User\Service\UserService;
 use Api\App\Common\Message;
+use Dot\AnnotatedServices\Annotation\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -17,6 +18,8 @@ use Zend\Diactoros\Response\JsonResponse;
 use Zend\Expressive\Authentication\UserInterface;
 use Zend\Expressive\Authorization\AuthorizationInterface;
 use Zend\Http\Response;
+
+use function array_map;
 
 /**
  * Class IdentityMiddleware
@@ -34,6 +37,8 @@ class AuthMiddleware implements MiddlewareInterface
      * IdentityMiddleware constructor.
      * @param UserService $userService
      * @param AuthorizationInterface $authorization
+     *
+     * @Inject({UserService::class, AuthorizationInterface::class})
      */
     public function __construct(UserService $userService, AuthorizationInterface $authorization)
     {

@@ -9,14 +9,14 @@ use Api\App\RestDispatchTrait;
 use Api\User\Entity\UserEntity;
 use Api\User\Form\InputFilter\UpdateUserInputFilter;
 use Api\User\Service\UserService;
+use Dot\AnnotatedServices\Annotation\Inject;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Expressive\Hal\HalResponseFactory;
 use Zend\Expressive\Hal\ResourceGenerator;
-use Exception;
 
-use function array_merge;
 use function sprintf;
 
 /**
@@ -35,6 +35,8 @@ class UserAvatarHandler implements RequestHandlerInterface
      * @param HalResponseFactory $halResponseFactory
      * @param ResourceGenerator $resourceGenerator
      * @param UserService $userService
+     *
+     * @Inject({HalResponseFactory::class, ResourceGenerator::class, UserService::class})
      */
     public function __construct(
         HalResponseFactory $halResponseFactory,

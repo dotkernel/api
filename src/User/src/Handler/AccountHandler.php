@@ -9,12 +9,13 @@ use Api\User\Entity\UserEntity;
 use Api\User\Form\InputFilter\CreateAccountInputFilter;
 use Api\User\Form\InputFilter\UpdateAccountInputFilter;
 use Api\User\Service\UserService;
+use Dot\AnnotatedServices\Annotation\Inject;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Expressive\Hal\HalResponseFactory;
 use Zend\Expressive\Hal\ResourceGenerator;
-use Exception;
 
 /**
  * Class AccountHandler
@@ -32,6 +33,8 @@ class AccountHandler implements RequestHandlerInterface
      * @param HalResponseFactory $halResponseFactory
      * @param ResourceGenerator $resourceGenerator
      * @param UserService $userService
+     *
+     * @Inject({HalResponseFactory::class, ResourceGenerator::class, UserService::class})
      */
     public function __construct(
         HalResponseFactory $halResponseFactory,

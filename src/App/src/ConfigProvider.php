@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Api\App;
 
+use Api\App\Common\Factory\AnnotationsCacheFactory;
 use ContainerInteropDoctrine\EntityManagerFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Dot\AnnotatedServices\Factory\AbstractAnnotatedFactory;
 use Dot\Mail\Factory\MailOptionsAbstractFactory;
 use Dot\Mail\Factory\MailServiceAbstractFactory;
 use Dot\Mail\Service\MailService;
@@ -59,6 +61,7 @@ class ConfigProvider
                 'doctrine.entity_manager.orm_default' => EntityManagerFactory::class,
                 'dot-mail.options.default' => MailOptionsAbstractFactory::class,
                 'dot-mail.service.default' => MailServiceAbstractFactory::class,
+                AbstractAnnotatedFactory::CACHE_SERVICE => AnnotationsCacheFactory::class,
                 Environment::class => TwigEnvironmentFactory::class,
                 TwigExtension::class => TwigExtensionFactory::class,
                 TwigRenderer::class => TwigRendererFactory::class,

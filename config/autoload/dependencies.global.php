@@ -13,9 +13,9 @@ return [
         // key is the alias name, the value is the service to which it points.
         'aliases' => [
             Dot\ErrorHandler\ErrorHandlerInterface::class => Dot\ErrorHandler\LogErrorHandler::class,
-            League\OAuth2\Server\Repositories\UserRepositoryInterface::class => Api\App\Common\OauthUserRepository::class,
             Expressive\Authentication\UserInterface::class => Api\User\Entity\UserIdentity::class,
-            Expressive\Authorization\AuthorizationInterface::class => Expressive\Authorization\Rbac\ZendRbac::class
+            Expressive\Authorization\AuthorizationInterface::class => Expressive\Authorization\Rbac\ZendRbac::class,
+            League\OAuth2\Server\Repositories\UserRepositoryInterface::class => Api\App\Common\OauthUserRepository::class,
         ],
         // Use 'invokables' for constructor-less services, or services that do
         // not require arguments to the constructor. Map a service name to the
@@ -25,7 +25,7 @@ return [
         ],
         // Use 'factories' for services provided by callbacks/factory classes.
         'factories'  => [
-            Api\App\Common\OauthUserRepository::class => Api\App\Common\OauthUserRepositoryFactory::class,
+            Api\App\Common\OauthUserRepository::class => Api\App\Common\Factory\OauthUserRepositoryFactory::class,
             Api\User\Entity\UserIdentity::class => Api\User\Factory\UserIdentityFactory::class,
             Tuupola\Middleware\CorsMiddleware::class => Api\App\Cors\Factory\CorsFactory::class
         ],

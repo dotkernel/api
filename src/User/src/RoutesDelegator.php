@@ -38,7 +38,8 @@ class RoutesDelegator
          * Admins manage users' accounts
          */
 
-        $app->route('/user', [AuthenticationMiddleware::class, AuthMiddleware::class, UserHandler::class],
+        $app->route('/user',
+            [AuthenticationMiddleware::class, AuthMiddleware::class, UserHandler::class],
             [RequestMethod::METHOD_GET, RequestMethod::METHOD_POST],
             'user:list,create'
         );
@@ -76,12 +77,14 @@ class RoutesDelegator
 
         $app->post('/account/register', AccountHandler::class, 'account:register');
 
-        $app->route('/account/reset-password[/{hash}]', AccountResetPasswordHandler::class,
+        $app->route('/account/reset-password[/{hash}]',
+            AccountResetPasswordHandler::class,
             [RequestMethod::METHOD_GET, RequestMethod::METHOD_PATCH, RequestMethod::METHOD_POST],
             'account:reset-password'
         );
 
-        $app->route('/account/activate[/{hash}]', AccountActivateHandler::class,
+        $app->route('/account/activate[/{hash}]',
+            AccountActivateHandler::class,
             [RequestMethod::METHOD_GET, RequestMethod::METHOD_POST],
             'account:activate'
         );

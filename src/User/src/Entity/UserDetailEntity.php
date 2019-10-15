@@ -18,6 +18,13 @@ use Zend\Stdlib\ArraySerializableInterface;
 class UserDetailEntity extends AbstractEntity implements ArraySerializableInterface
 {
     /**
+     * @ORM\OneToOne(targetEntity="UserEntity", inversedBy="detail")
+     * @ORM\JoinColumn(name="userUuid", referencedColumnName="uuid", nullable=false)
+     * @var UserEntity $user
+     */
+    protected $user;
+
+    /**
      * @ORM\Column(name="firstname", type="string", length=255)
      * @var $firstname
      */
@@ -35,6 +42,25 @@ class UserDetailEntity extends AbstractEntity implements ArraySerializableInterf
     public function __construct()
     {
         parent::__construct();
+    }
+
+    /**
+     * @return UserEntity
+     */
+    public function getUser(): UserEntity
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param UserEntity $user
+     * @return $this
+     */
+    public function setUser(UserEntity $user)
+    {
+        $this->user = $user;
+
+        return $this;
     }
 
     /**

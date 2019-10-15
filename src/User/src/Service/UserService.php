@@ -12,8 +12,10 @@ use Api\User\Entity\UserDetailEntity;
 use Api\User\Entity\UserEntity;
 use Api\User\Entity\UserRoleEntity;
 use Api\User\Repository\UserRepository;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
+use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\Mail\Service\MailService;
 use Dot\Mail\Exception\MailException;
 use Exception;
@@ -57,20 +59,23 @@ class UserService
 
     /**
      * UserService constructor.
-     * @param UserRepository $userRepository
+     * @param EntityManager $entityManager
      * @param UserRoleService $userRoleService
      * @param MailService $mailService
      * @param TemplateRendererInterface $templateRenderer
      * @param array $config
+     *
+     * @Inject({EntityManager::class, UserRoleService::class, MailService::class, TemplateRendererInterface::class,
+     *     "config"})
      */
     public function __construct(
-        UserRepository $userRepository,
+        EntityManager $entityManager,
         UserRoleService $userRoleService,
         MailService $mailService,
         TemplateRendererInterface $templateRenderer,
         array $config = []
     ) {
-        $this->userRepository = $userRepository;
+        $this->userRepository = $entityManager->getRepository(UserEntity::class);
         $this->userRoleService = $userRoleService;
         $this->mailService = $mailService;
         $this->templateRenderer = $templateRenderer;
@@ -103,13 +108,13 @@ class UserService
             throw new ORMException(Message::DUPLICATE_EMAIL);
         }
 
-        $detail = new UserDetailEntity();
-        $detail->exchangeArray($data['detail']);
-
         $user = new UserEntity();
-        $user->setPassword(password_hash($data['password'], PASSWORD_DEFAULT))
-            ->setDetail($detail)
-            ->setEmail($data['email']);
+        $user->setPassword(password_hash($data['password'], PASSWORD_DEFAULT))->setEmail($data['email']);
+
+        $detail = new UserDetailEntity();
+        $detail->setUser($user)->setFirstname($data['detail']['firstname'])->setLastname($data['detail']['lastname']);
+
+        $user->setDetail($detail);
 
         if (!empty($data['status'])) {
             $user->setStatus($data['status']);
@@ -288,6 +293,25 @@ class UserService
 
     /**
      * @param UserEntity $user
+     * @return bool
+     * @throws MailException
+     */
+    public function sendWelcomeMail(UserEntity $user)
+    {
+        $this->mailService->setBody(
+            $this->templateRenderer->render('user::welcome', [
+                'config' => $this->config,
+                'user' => $user
+            ])
+        );
+        $this->mailService->setSubject('Welcome to ' . $this->config['application']['name']);
+        $this->mailService->getMessage()->addTo($user->getEmail(), $user->getName());
+
+        return $this->mailService->send()->isValid();
+    }
+
+    /**
+     * @param UserEntity $user
      * @return UserEntity
      * @throws ORMException
      * @throws ORM\OptimisticLockException
@@ -383,6 +407,7 @@ class UserService
             $this->deleteAvatarFile($path . $avatar->getName());
         } else {
             $avatar = new UserAvatarEntity();
+            $avatar->setUser($user);
         }
         $fileName = sprintf('avatar-%s.%s',
             UuidOrderedTimeGenerator::generateUuid(),

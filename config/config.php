@@ -2,17 +2,13 @@
 
 declare(strict_types=1);
 
-use Zend\ConfigAggregator\ArrayProvider;
-use Zend\ConfigAggregator\ConfigAggregator;
-use Zend\ConfigAggregator\PhpFileProvider;
-
 // To enable or disable caching, set the `ConfigAggregator::ENABLE_CACHE` boolean in
 // `config/autoload/local.php`.
 $cacheConfig = [
     'config_cache_path' => 'data/cache/config-cache.php',
 ];
 
-$aggregator = new ConfigAggregator([
+$aggregator = new Zend\ConfigAggregator\ConfigAggregator([
     Zend\Expressive\Authorization\Acl\ConfigProvider::class,
     Zend\Expressive\Authorization\Rbac\ConfigProvider::class,
     Zend\Expressive\Authentication\ConfigProvider::class,
@@ -28,13 +24,14 @@ $aggregator = new ConfigAggregator([
     Zend\Expressive\Router\FastRouteRouter\ConfigProvider::class,
     Zend\HttpHandlerRunner\ConfigProvider::class,
     // Include cache configuration
-    new ArrayProvider($cacheConfig),
+    new Zend\ConfigAggregator\ArrayProvider($cacheConfig),
     Zend\Expressive\Helper\ConfigProvider::class,
     Zend\Expressive\ConfigProvider::class,
     Zend\Expressive\Router\ConfigProvider::class,
     // DK packages
     Dot\Log\ConfigProvider::class,
     Dot\ErrorHandler\ConfigProvider::class,
+    Dot\AnnotatedServices\ConfigProvider::class,
     // Default App module config
     Api\App\ConfigProvider::class,
     Api\User\ConfigProvider::class,
@@ -44,9 +41,9 @@ $aggregator = new ConfigAggregator([
     //   - `*.global.php`
     //   - `local.php`
     //   - `*.local.php`
-    new PhpFileProvider(realpath(__DIR__) . '/autoload/{{,*.}global,{,*.}local}.php'),
+    new Zend\ConfigAggregator\PhpFileProvider(realpath(__DIR__) . '/autoload/{{,*.}global,{,*.}local}.php'),
     // Load development config if it exists
-    new PhpFileProvider(realpath(__DIR__) . '/development.config.php'),
+    new Zend\ConfigAggregator\PhpFileProvider(realpath(__DIR__) . '/development.config.php'),
 ], $cacheConfig['config_cache_path']);
 
 return $aggregator->getMergedConfig();

@@ -5,14 +5,19 @@ declare(strict_types=1);
 namespace Api\User;
 
 use Api\User\Entity\UserResetPasswordEntity;
+use Api\User\Handler\AccountActivateHandler;
+use Api\User\Handler\AccountAvatarHandler;
+use Api\User\Handler\AccountHandler;
+use Api\User\Handler\AccountResetPasswordHandler;
+use Api\User\Handler\UserActivateHandler;
+use Api\User\Handler\UserAvatarHandler;
+use Api\User\Handler\UserHandler;
 use Api\User\Middleware\AuthMiddleware;
-use Api\User\Factory\AuthMiddlewareFactory;
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\UserEntity;
-use Api\User\Factory\UserRoleServiceFactory;
-use Api\User\Factory\UserServiceFactory;
 use Api\User\Service\UserRoleService;
 use Api\User\Service\UserService;
+use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
 use Zend\Expressive\Hal\Metadata\MetadataMap;
 use Zend\Expressive\Hal\Metadata\RouteBasedCollectionMetadata;
 use Zend\Expressive\Hal\Metadata\RouteBasedResourceMetadata;
@@ -47,9 +52,16 @@ class ConfigProvider
     {
         return [
             'factories'  => [
-                UserService::class => UserServiceFactory::class,
-                UserRoleService::class => UserRoleServiceFactory::class,
-                AuthMiddleware::class => AuthMiddlewareFactory::class,
+                AccountActivateHandler::class => AnnotatedServiceFactory::class,
+                AccountAvatarHandler::class => AnnotatedServiceFactory::class,
+                AccountHandler::class => AnnotatedServiceFactory::class,
+                AccountResetPasswordHandler::class => AnnotatedServiceFactory::class,
+                AuthMiddleware::class => AnnotatedServiceFactory::class,
+                UserActivateHandler::class => AnnotatedServiceFactory::class,
+                UserAvatarHandler::class => AnnotatedServiceFactory::class,
+                UserHandler::class => AnnotatedServiceFactory::class,
+                UserService::class => AnnotatedServiceFactory::class,
+                UserRoleService::class => AnnotatedServiceFactory::class,
             ]
         ];
     }

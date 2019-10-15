@@ -116,10 +116,10 @@ class UserRepository extends EntityRepository
         }
         if (isset($filters['deleted'])) {
             switch ($filters['deleted']) {
-                case 'yes':
+                case 'true':
                     $qb->andWhere('user.isDeleted = :isDeleted')->setParameter('isDeleted', true);
                     break;
-                case 'no':
+                case 'false':
                     $qb->andWhere('user.isDeleted = :isDeleted')->setParameter('isDeleted', false);
                     break;
             }

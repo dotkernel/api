@@ -62,15 +62,13 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
     protected $hash;
 
     /**
-     * @ORM\OneToOne(targetEntity="UserAvatarEntity", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="avatarUuid", referencedColumnName="uuid", nullable=true, onDelete="CASCADE")
+     * @ORM\OneToOne(targetEntity="UserAvatarEntity", cascade={"persist", "remove"}, mappedBy="user")
      * @var UserAvatarEntity $avatar
      */
     protected $avatar;
 
     /**
-     * @ORM\OneToOne(targetEntity="UserDetailEntity", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="detailUuid", referencedColumnName="uuid", nullable=true, onDelete="CASCADE")
+     * @ORM\OneToOne(targetEntity="UserDetailEntity", cascade={"persist", "remove"}, mappedBy="user")
      * @var UserDetailEntity $detail
      */
     protected $detail;
@@ -305,7 +303,7 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
     public function createResetPassword()
     {
         $resetPassword = new UserResetPasswordEntity();
-        $resetPassword->setHash($this->generateHash());
+        $resetPassword->setHash(self::generateHash());
         $resetPassword->setUser($this);
 
         $this->resetPasswords->add($resetPassword);
@@ -377,7 +375,7 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
     /**
      * @return string
      */
-    public function generateHash(): string
+    public static function generateHash(): string
     {
         try {
             $bytes = random_bytes(32);
@@ -419,7 +417,7 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
      */
     public function renewHash()
     {
-        $this->hash = $this->generateHash();
+        $this->hash = self::generateHash();
 
         return $this;
     }

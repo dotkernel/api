@@ -18,6 +18,13 @@ use Zend\Stdlib\ArraySerializableInterface;
 class UserAvatarEntity extends AbstractEntity implements ArraySerializableInterface
 {
     /**
+     * @ORM\OneToOne(targetEntity="UserEntity", inversedBy="avatar")
+     * @ORM\JoinColumn(name="userUuid", referencedColumnName="uuid", nullable=false)
+     * @var UserEntity $user
+     */
+    protected $user;
+
+    /**
      * @ORM\Column(name="name", type="string", length=255)
      * @var $name
      */
@@ -29,6 +36,25 @@ class UserAvatarEntity extends AbstractEntity implements ArraySerializableInterf
     public function __construct()
     {
         parent::__construct();
+    }
+
+    /**
+     * @return UserEntity
+     */
+    public function getUser(): UserEntity
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param UserEntity $user
+     * @return $this
+     */
+    public function setUser(UserEntity $user)
+    {
+        $this->user = $user;
+
+        return $this;
     }
 
     /**
@@ -51,6 +77,22 @@ class UserAvatarEntity extends AbstractEntity implements ArraySerializableInterf
     }
 
     /**
+     * Helper methods
+     */
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return sprintf('%s/%s/%s',
+            USER_UPLOADS_URL,
+            $this->getUser()->getUuid()->toString(),
+            $this->getName()
+        );
+    }
+
+    /**
      * Return an array representation of the object
      *
      * @return array
@@ -60,7 +102,7 @@ class UserAvatarEntity extends AbstractEntity implements ArraySerializableInterf
         return [
             'uuid' => $this->getUuid()->toString(),
             'name' => $this->getName(),
-            'url' => null,
+            'url' => $this->getUrl(),
             'created' => $this->getCreated(),
             'updated' => $this->getUpdated()
         ];

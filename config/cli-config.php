@@ -1,35 +1,23 @@
 <?php
 
-use Doctrine\Migrations\Configuration\Configuration;
-use Doctrine\Migrations\Tools\Console\Helper\ConfigurationHelper;
-use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
+use Doctrine\Migrations\Configuration\Configuration;
+use Doctrine\Migrations\Tools\Console\Helper\ConfigurationHelper;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Symfony\Component\Console\Helper\HelperSet;
 
 $container = require __DIR__ . '/container.php';
-$config = $container->get('config');
 
 try {
-    $connection = DriverManager::getConnection($config['databases']['default']);
-} catch (Exception $exception) {
-    exit($exception->getMessage());
-}
-
-/**
- * Fix for the following Doctrine error:
- * Unknown database type enum requested, Doctrine\DBAL\Platforms\MySqlPlatform may not support it.
- *
- * Solution: mapping enum types to string type
- */
-$dbPlatform = $connection->getSchemaManager()->getDatabasePlatform();
-try {
-    $dbPlatform->registerDoctrineTypeMapping('enum', 'string');
+    $connection = DriverManager::getConnection($container->get('config')['databases']['default'] ?? null);
 } catch (Exception $exception) {
     exit($exception->getMessage());
 }
 
 $configuration = new Configuration($connection);
+$configuration->setCheckDatabasePlatform(false);
 $configuration->setName('DotKernel API Migrations');
 $configuration->setMigrationsNamespace('DotKernelApi\Migrations');
 $configuration->setMigrationsTableName('migrations');
@@ -39,12 +27,8 @@ $configuration->setMigrationsExecutedAtColumnName('executedAt');
 $configuration->setMigrationsDirectory('data/doctrine/migrations');
 $configuration->setAllOrNothing(true);
 
-$ehm = new EntityManagerHelper(
-    $container->get('doctrine.entity_manager.orm_default')
-);
-
 $helperSet = new HelperSet();
-$helperSet->set($ehm, 'em');
+$helperSet->set((new EntityManagerHelper($container->get(EntityManager::class))), 'em');
 $helperSet->set((new ConnectionHelper($connection)), 'db');
 $helperSet->set((new ConfigurationHelper($connection, $configuration)));
 

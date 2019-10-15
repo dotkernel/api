@@ -18,7 +18,7 @@ class Message
     const NOT_FOUND_BY_UUID = 'Unable to find %s identified by uuid: %s';
     const RESET_PASSWORD_EXPIRED = 'Password reset request for hash: \'%s\' is invalid (expired).';
     const RESET_PASSWORD_NOT_FOUND = 'Could not find password reset request for hash: \'%s\'';
-    const RESET_PASSWORD_USED = 'Password reset request for hash: \'%s\' is invalid (already completed).';
+    const RESET_PASSWORD_USED = 'Password reset request for hash: \'%s\' is invalid (completed).';
     const RESET_PASSWORD_VALID = 'Password reset request for hash: \'%s\' exists and is valid.';
     const RESOURCE_NOT_ALLOWED = 'You are not allowed to access this resource.';
     const RESTRICTION_IMAGE = 'File must be an image (jpg, png).';
