@@ -12,9 +12,9 @@ class Message
 {
     const DUPLICATE_EMAIL = 'An account with this email address already exists.';
     const INVALID_ACTIVATION_CODE = 'Invalid activation code.';
-    const INVALID_VALUE = 'The value specified for %s is invalid.';
+    const INVALID_VALUE = 'The value specified for \'%s\' is invalid.';
     const MAIL_SENT_RESET_PASSWORD = 'Password reset mail has been successfully sent to \'%s\'';
-    const MISSING_PARAMETER = 'Missing parameter: %s';
+    const MISSING_PARAMETER = 'Missing parameter: \'%s\'';
     const NOT_FOUND_BY_UUID = 'Unable to find %s identified by uuid: %s';
     const RESET_PASSWORD_EXPIRED = 'Password reset request for hash: \'%s\' is invalid (expired).';
     const RESET_PASSWORD_NOT_FOUND = 'Could not find password reset request for hash: \'%s\'';

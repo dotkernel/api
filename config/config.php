@@ -29,11 +29,13 @@ $aggregator = new Zend\ConfigAggregator\ConfigAggregator([
     Zend\Expressive\ConfigProvider::class,
     Zend\Expressive\Router\ConfigProvider::class,
     // DK packages
+    Dot\Console\ConfigProvider::class,
     Dot\Log\ConfigProvider::class,
     Dot\ErrorHandler\ConfigProvider::class,
     Dot\AnnotatedServices\ConfigProvider::class,
     // Default App module config
     Api\App\ConfigProvider::class,
+    Api\Console\ConfigProvider::class,
     Api\User\ConfigProvider::class,
     // Load application config in a pre-defined order in such a way that local settings
     // overwrite global settings. (Loaded as first to last):

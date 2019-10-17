@@ -6,7 +6,6 @@ namespace Api\User\Form\InputFilter;
 
 use Api\App\Common\Message;
 use Api\User\Entity\UserEntity;
-use Api\User\Entity\UserRoleEntity;
 use Zend\Filter\StringTrim;
 use Zend\Filter\StripTags;
 use Zend\InputFilter\CollectionInputFilter;
@@ -135,7 +134,7 @@ class CreateUserInputFilter implements InputFilterAwareInterface
                         'break_chain_on_failure' => true,
                         'options' => [
                             'haystack' => UserEntity::STATUSES,
-                            'message' => sprintf(Message::INVALID_VALUE, var_export('status', true))
+                            'message' => sprintf(Message::INVALID_VALUE, 'status')
                         ]
                     ]
                 ]

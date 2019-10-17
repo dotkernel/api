@@ -101,7 +101,7 @@ class AccountActivateHandler implements RequestHandlerInterface
         $user = $this->userService->findOneBy($inputFilter->getValues());
         if (!($user instanceof UserEntity)) {
             return $this->notFoundResponse(
-                sprintf(Message::USER_NOT_FOUND_BY_EMAIL, var_export($inputFilter->getValues()['email'], true))
+                sprintf(Message::USER_NOT_FOUND_BY_EMAIL, $inputFilter->getValue('email'))
             );
         }
 

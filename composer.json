@@ -30,6 +30,7 @@
         "dasprid/container-interop-doctrine": "^1.1",
         "doctrine/migrations": "^2.0",
         "dotkernel/dot-annotated-services": "^1.1",
+        "dotkernel/dot-console": "^0.1.1",
         "dotkernel/dot-errorhandler": "^1.0",
         "dotkernel/dot-mail": "^1.0",
         "moontoast/math": "^1.1",
@@ -57,7 +58,8 @@
         "zendframework/zend-paginator": "^2.8.1",
         "zendframework/zend-problem-details": "^1.0",
         "zendframework/zend-servicemanager": "^3.3",
-        "zendframework/zend-stdlib": "^3.1"
+        "zendframework/zend-stdlib": "^3.1",
+        "zendframework/zend-text": "^2.7"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.0.1",
@@ -68,6 +70,7 @@
     "autoload": {
         "psr-4": {
             "Api\\App\\": "src/App/src/",
+            "Api\\Console\\": "src/Console/src/",
             "Api\\User\\": "src/User/src/"
         }
     },

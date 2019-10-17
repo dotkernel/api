@@ -125,7 +125,7 @@ class UpdateUserInputFilter implements InputFilterAwareInterface
                         'break_chain_on_failure' => true,
                         'options' => [
                             'haystack' => UserEntity::STATUSES,
-                            'message' => sprintf(Message::INVALID_VALUE, var_export('status', true))
+                            'message' => sprintf(Message::INVALID_VALUE, 'status')
                         ]
                     ]
                 ]
@@ -142,7 +142,7 @@ class UpdateUserInputFilter implements InputFilterAwareInterface
                         'break_chain_on_failure' => true,
                         'options' => [
                             'haystack' => ['false', 'true'],
-                            'message' => sprintf(Message::INVALID_VALUE, var_export('isDeleted', true))
+                            'message' => sprintf(Message::INVALID_VALUE, 'isDeleted')
                         ]
                     ]
                 ]

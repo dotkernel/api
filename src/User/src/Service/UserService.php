@@ -36,7 +36,7 @@ use function unlink;
  */
 class UserService
 {
-    protected $extensions = [
+    const EXTENSIONS = [
         'image/jpg' => 'jpg',
         'image/jpeg' => 'jpg',
         'image/png' => 'png'
@@ -411,7 +411,7 @@ class UserService
         }
         $fileName = sprintf('avatar-%s.%s',
             UuidOrderedTimeGenerator::generateUuid(),
-            $this->extensions[$uploadedFile->getClientMediaType()]
+            self::EXTENSIONS[$uploadedFile->getClientMediaType()]
         );
         $avatar->setName($fileName);
 
