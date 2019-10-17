@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Entity;
 
-use Api\App\Common\AbstractEntity;
-use Doctrine\Common\Collections\ArrayCollection;
+use Api\App\Common\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Stdlib\ArraySerializableInterface;
 

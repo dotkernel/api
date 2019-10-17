@@ -2,8 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Api\App\Common;
+namespace Api\App\Common\Entity;
 
+use Api\App\Common\TimestampAwareInterface;
+use Api\App\Common\TimestampAwareTrait;
+use Api\App\Common\UuidAwareInterface;
+use Api\App\Common\UuidAwareTrait;
+use Api\App\Common\UuidOrderedTimeGenerator;
 use DateTime;
 
 /**

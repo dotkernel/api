@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Entity;
 
-use Api\App\Common\AbstractEntity;
+use Api\App\Common\Entity\AbstractEntity;
 use Api\App\Common\UuidOrderedTimeGenerator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
