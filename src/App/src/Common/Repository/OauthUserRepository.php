@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Api\App\Common;
+namespace Api\App\Common\Repository;
 
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
