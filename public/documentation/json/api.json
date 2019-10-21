@@ -1,0 +1,135 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "DotKernel API",
+    "description": "DotKernel API documentation",
+    "contact": {
+      "name": "Support",
+      "url": "https://github.com/dotkernel/api",
+      "email": "support@dotkernel.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "development"
+    }
+  ],
+  "paths": {
+  },
+  "components": {
+    "schemas": {
+      "_MetadataList": {
+        "allOf": [
+          {
+            "properties": {
+              "first": {
+                "properties": {
+                  "href": {
+                    "type": "string",
+                    "example": "http://example.com/entity?page=1"
+                  }
+                }
+              },
+              "prev": {
+                "properties": {
+                  "href": {
+                    "type": "string",
+                    "example": "http://example.com/entity?page=4"
+                  }
+                }
+              },
+              "self": {
+                "properties": {
+                  "href": {
+                    "type": "string",
+                    "example": "http://example.com/entity?page=5"
+                  }
+                }
+              },
+              "next": {
+                "properties": {
+                  "href": {
+                    "type": "string",
+                    "example": "http://example.com/entity?page=6"
+                  }
+                }
+              },
+              "last": {
+                "properties": {
+                  "href": {
+                    "type": "string",
+                    "example": "http://example.com/entity?page=9"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "_TypeDatetime": {
+        "allOf": [
+          {
+            "properties": {
+              "date": {
+                "type": "string",
+                "example": "2000-01-01 00:00:00.000000"
+              },
+              "timezone_type": {
+                "type": "int",
+                "example": 3
+              },
+              "timezone": {
+                "type": "string",
+                "example": "Europe/Berlin"
+              }
+            }
+          }
+        ]
+      },
+      "_ResponseCode201": {
+        "description": "Created."
+      },
+      "_ResponseCode400": {
+        "description": "Error: Bad Request."
+      },
+      "_ResponseCode401": {
+        "description": "Error: Unauthorized."
+      },
+      "_ResponseCode403": {
+        "description": "Error: Forbidden."
+      },
+      "_ResponseCode404": {
+        "description": "Error: Not Found."
+      },
+      "_ResponseCode500": {
+        "description": "Internal server error."
+      }
+    },
+    "securitySchemes": {
+      "auth": {
+        "type": "http",
+        "description": "Use the login route and copy the bearer token",
+        "name": "Authorization",
+        "in": "header",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Oauth2",
+      "description": "Manage access via Oauth2 token."
+    }, {
+      "name": "Account",
+      "description": "Unauthorized users manage their accounts."
+    }, {
+      "name": "My Account",
+      "description": "Authorized users manage their accounts."
+    }, {
+      "name": "User",
+      "description": "Admins manage user accounts."
+    }
+  ]
+}

@@ -1,0 +1,711 @@
+{
+  "paths": {
+    "/user": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "List user accounts.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "pending"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "deleted",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                true,
+                false
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "search",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "order",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "user.uuid",
+                "user.email",
+                "user.created",
+                "user.updated",
+                "detail.firstname",
+                "detail.lastname"
+              ],
+              "default": "user.created"
+            }
+          },
+          {
+            "in": "query",
+            "name": "dir",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List user accounts.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserCollection"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/schemas/_ResponseCode400"
+          },
+          "401": {
+            "$ref": "#/components/schemas/_ResponseCode401"
+          },
+          "403": {
+            "$ref": "#/components/schemas/_ResponseCode403"
+          },
+          "500": {
+            "$ref": "#/components/schemas/_ResponseCode500"
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Create user account.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User account has been created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserEntity"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/schemas/_ResponseCode400"
+          },
+          "500": {
+            "$ref": "#/components/schemas/_ResponseCode500"
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    },
+    "/user/{uuid}": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Delete / Mark as deleted user account.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "delete",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                true
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Marked user account as deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserEntity"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Deleted user account."
+          },
+          "401": {
+            "$ref": "#/components/schemas/_ResponseCode401"
+          },
+          "403": {
+            "$ref": "#/components/schemas/_ResponseCode403"
+          },
+          "404": {
+            "$ref": "#/components/schemas/_ResponseCode404"
+          },
+          "500": {
+            "$ref": "#/components/schemas/_ResponseCode500"
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "View user account.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Received user account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserEntity"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/schemas/_ResponseCode401"
+          },
+          "403": {
+            "$ref": "#/components/schemas/_ResponseCode403"
+          },
+          "404": {
+            "$ref": "#/components/schemas/_ResponseCode404"
+          },
+          "500": {
+            "$ref": "#/components/schemas/_ResponseCode500"
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update user account.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated user account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserEntity"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/schemas/_ResponseCode401"
+          },
+          "403": {
+            "$ref": "#/components/schemas/_ResponseCode403"
+          },
+          "404": {
+            "$ref": "#/components/schemas/_ResponseCode404"
+          },
+          "500": {
+            "$ref": "#/components/schemas/_ResponseCode500"
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    },
+    "/user/avatar/{uuid}": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Set user avatar.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserAvatar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Create user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserEntity"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/schemas/_ResponseCode400"
+          },
+          "401": {
+            "$ref": "#/components/schemas/_ResponseCode401"
+          },
+          "403": {
+            "$ref": "#/components/schemas/_ResponseCode403"
+          },
+          "500": {
+            "$ref": "#/components/schemas/_ResponseCode500"
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    },
+    "/user/activate/{uuid}": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "(Re)Send user account activation email (if user.status is pending).",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivateUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User account activation email has been (re)sent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserEntity"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/schemas/_ResponseCode400"
+          },
+          "401": {
+            "$ref": "#/components/schemas/_ResponseCode401"
+          },
+          "403": {
+            "$ref": "#/components/schemas/_ResponseCode403"
+          },
+          "500": {
+            "$ref": "#/components/schemas/_ResponseCode500"
+          }
+        },
+        "security": [
+          {
+            "auth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ActivateUser": {
+        "allOf": [
+          {
+            "properties": [],
+            "type": "object"
+          }
+        ]
+      },
+      "CreateUser": {
+        "allOf": [
+          {
+            "properties": {
+              "email": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "passwordConfirm": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "active"
+                ],
+                "example": "pending"
+              },
+              "detail": {
+                "$ref": "#/components/schemas/CreateUserDetail"
+              },
+              "roles": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "uuid": {
+                      "type": "string",
+                      "example": "4b91fe62-1e6d-11e9-9e6b-00219bfc8d4d"
+                    }
+                  }
+                }
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "CreateUserAvatar": {
+        "allOf": [
+          {
+            "properties": {
+              "avatar": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "CreateUserDetail": {
+        "allOf": [
+          {
+            "properties": {
+              "firstname": {
+                "type": "string"
+              },
+              "lastname": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "UpdateUser": {
+        "allOf": [
+          {
+            "properties": {
+              "email": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "passwordConfirm": {
+                "type": "string"
+              },
+              "detail": {
+                "$ref": "#/components/schemas/UpdateUserDetail"
+              },
+              "roles": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "uuid": {
+                      "type": "string",
+                      "example": "4b91fe62-1e6d-11e9-9e6b-00219bfc8d4d"
+                    }
+                  }
+                }
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "UpdateUserDetail": {
+        "allOf": [
+          {
+            "properties": {
+              "firstname": {
+                "type": "string"
+              },
+              "lastname": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "UserAvatarEntity": {
+        "allOf": [
+          {
+            "properties": {
+              "uuid": {
+                "type": "string",
+                "example": "4b91fe62-1e6d-11e9-9e6b-00219bfc8d4d"
+              },
+              "name": {
+                "type": "string",
+                "example": "avatar-d57d2e7e-e917-11e9-9f97-b8ca3aa0178d.jpg"
+              },
+              "url": {
+                "type": "string",
+                "example": "http://example.com/uploads/user/4b91fe62-1e6d-11e9-9e6b-00219bfc8d4d/avatar-d57d2e7e-e917-11e9-9f97-b8ca3aa0178d.jpg"
+              },
+              "created": {
+                "$ref": "#/components/schemas/_TypeDatetime"
+              },
+              "updated": {
+                "$ref": "#/components/schemas/_TypeDatetime"
+              }
+            }
+          }
+        ]
+      },
+      "UserDetailEntity": {
+        "allOf": [
+          {
+            "properties": {
+              "firstname": {
+                "type": "string",
+                "example": "Firstname"
+              },
+              "lastname": {
+                "type": "string",
+                "example": "Lastname"
+              },
+              "created": {
+                "$ref": "#/components/schemas/_TypeDatetime"
+              },
+              "updated": {
+                "$ref": "#/components/schemas/_TypeDatetime"
+              }
+            }
+          }
+        ]
+      },
+      "UserCollection": {
+        "allOf": [
+          {
+            "properties": {
+              "_total_items": {
+                "type": "int",
+                "example": 85
+              },
+              "_links": {
+                "$ref": "#/components/schemas/_MetadataList"
+              },
+              "_embedded": {
+                "properties": {
+                  "User": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/UserEntity"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "UserEntity": {
+        "allOf": [
+          {
+            "properties": {
+              "uuid": {
+                "type": "string",
+                "example": "4b91fe62-1e6d-11e9-9e6b-00219bfc8d4d"
+              },
+              "hash": {
+                "type": "string",
+                "example": "3e26522ced99e7d5ed4d948b348f17837ad8d32b714e729420a01dc31488ba71"
+              },
+              "email": {
+                "type": "string",
+                "example": "user@example.com"
+              },
+              "status": {
+                "type": "string",
+                "example": "active"
+              },
+              "isDeleted": {
+                "type": "boolean",
+                "example": false
+              },
+              "avatar": {
+                "$ref": "#/components/schemas/UserAvatarEntity"
+              },
+              "detail": {
+                "$ref": "#/components/schemas/UserDetailEntity"
+              },
+              "roles": {
+                "$ref": "#/components/schemas/UserRoleCollection"
+              },
+              "created": {
+                "$ref": "#/components/schemas/_TypeDatetime"
+              },
+              "updated": {
+                "$ref": "#/components/schemas/_TypeDatetime"
+              },
+              "_links": {
+                "properties": {
+                  "self": {
+                    "properties": {
+                      "href": {
+                        "type": "string",
+                        "example": "http://example.com/user/4b91fe62-1e6d-11e9-9e6b-00219bfc8d4d"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "UserRoleCollection": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/UserRoleEntity"
+        }
+      },
+      "UserRoleEntity": {
+        "allOf": [
+          {
+            "properties": {
+              "uuid": {
+                "type": "string",
+                "example": "4b91fe62-1e6d-11e9-9e6b-00219bfc8d4d"
+              },
+              "name": {
+                "type": "string",
+                "example": "member"
+              },
+              "created": {
+                "$ref": "#/components/schemas/_TypeDatetime"
+              },
+              "updated": {
+                "$ref": "#/components/schemas/_TypeDatetime"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

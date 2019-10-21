@@ -1,0 +1,98 @@
+<?php
+/**
+ * Local configuration.
+ *
+ * Copy this file to `local.php` and change its settings as required.
+ * `local.php` is ignored by git and safe to use for local and sensitive data like usernames and passwords.
+ */
+
+declare(strict_types=1);
+
+define('USER_UPLOADS_URL', 'http://localhost:8080/uploads/user');
+
+$databases = [
+    'default' => [
+        'host' => 'localhost',
+        'dbname' => '',
+        'user' => '',
+        'password' => '',
+        'port' => 3306,
+        'driver' => 'pdo_mysql',
+        'charset' => 'utf8mb4',
+        'collate' => 'utf8mb4_general_ci'
+    ]
+    // add more database connections below
+];
+
+return [
+    'annotations_cache_dir' => getcwd() . '/data/cache/annotations',
+    'application' => [
+        'name' => 'DotKernel API'
+    ],
+    'authentication' => [
+        'private_key'    => [
+            'key_or_path' => getcwd() . '/data/oauth/private.key',
+            'key_permissions_check' => false
+        ],
+        'public_key'    => [
+            'key_or_path' => getcwd() . '/data/oauth/public.key',
+            'key_permissions_check' => false
+        ],
+        'encryption_key' => require getcwd() . '/data/oauth/encryption.key',
+        'access_token_expire'  => 'P1D',
+        'refresh_token_expire' => 'P1M',
+        'auth_code_expire'     => 'PT10M',
+        'pdo' => [
+            'dsn' => sprintf('mysql:host=%s;port=%d;dbname=%s',
+                $databases['default']['host'],
+                $databases['default']['port'],
+                $databases['default']['dbname']
+            ),
+            'username' => $databases['default']['user'],
+            'password' => $databases['default']['password']
+        ]
+    ],
+    'cors' => [
+        'origin' => ['*'],
+        'methods' => ['DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT'],
+        'headers.allow' => ['Accept', 'Content-Type', 'Authorization'],
+        'headers.expose' => [],
+        'credentials' => false,
+        'cache' => 0,
+        'error' => [
+            Api\App\Cors\Factory\CorsFactory::class, 'error'
+        ]
+    ],
+    'databases' => $databases,
+    'doctrine' => [
+        'connection' => [
+            'orm_default' => [
+                'params' => $databases['default']
+            ]
+        ]
+    ],
+    'documentation' => [
+        /**
+         * showMarker: displays a marker informing whether the documentation displayed is based the cached/live config
+         * - true: (for development environment) marker is shown
+         * - false: (for production environment) marker is hidden
+         */
+        'showMarker'  => true,
+        /**
+         * cacheConfig: toggle that enables switching between the cached/live version of config
+         * - true: loaded from cacheTarget
+         * - false: generated on the fly
+         */
+        'cacheConfig' => false,
+        /**
+         * cacheTarget: specifies where the documentation config cache is stored
+         */
+        'cacheTarget' => getcwd() . '/data/cache/documentation.php'
+    ],
+    'uploads' => [
+        'user' => [
+            'url'  => 'http://localhost:8080/uploads/user',
+            'path' => \realpath(__DIR__ . '/../../public/uploads/user'),
+        ]
+    ],
+];
