@@ -3,8 +3,17 @@
 declare(strict_types=1);
 
 use Api\App\Common\Factory\AccessTokenRepositoryFactory;
+use Api\App\Common\Factory\ErrorResponseGeneratorFactory;
+use Api\App\Common\Factory\OauthUserRepositoryFactory;
 use Api\App\Common\Repository\AccessTokenRepository;
+use Api\App\Common\Repository\OauthUserRepository;
+use Api\App\Cors\Factory\CorsFactory;
+use Api\User\Entity\UserIdentity;
+use Api\User\Factory\UserIdentityFactory;
+use Dot\ErrorHandler\ErrorHandlerInterface;
+use Dot\ErrorHandler\LogErrorHandler;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
+use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use Zend\Expressive as Expressive;
 
 return [
@@ -16,11 +25,10 @@ return [
         // key is the alias name, the value is the service to which it points.
         'aliases' => [
             AccessTokenRepositoryInterface::class => AccessTokenRepository::class,
-            Dot\ErrorHandler\ErrorHandlerInterface::class => Dot\ErrorHandler\LogErrorHandler::class,
-            Expressive\Authentication\UserInterface::class => Api\User\Entity\UserIdentity::class,
+            ErrorHandlerInterface::class => LogErrorHandler::class,
+            Expressive\Authentication\UserInterface::class => UserIdentity::class,
             Expressive\Authorization\AuthorizationInterface::class => Expressive\Authorization\Rbac\ZendRbac::class,
-            League\OAuth2\Server\Repositories\UserRepositoryInterface::class =>
-                Api\App\Common\Repository\OauthUserRepository::class,
+            UserRepositoryInterface::class => OauthUserRepository::class,
         ],
         // Use 'invokables' for constructor-less services, or services that do
         // not require arguments to the constructor. Map a service name to the
@@ -30,11 +38,11 @@ return [
         ],
         // Use 'factories' for services provided by callbacks/factory classes.
         'factories'  => [
+            Expressive\Middleware\ErrorResponseGenerator::class => ErrorResponseGeneratorFactory::class,
             AccessTokenRepository::class => AccessTokenRepositoryFactory::class,
-            Api\App\Common\Repository\OauthUserRepository::class =>
-                Api\App\Common\Factory\OauthUserRepositoryFactory::class,
-            Api\User\Entity\UserIdentity::class => Api\User\Factory\UserIdentityFactory::class,
-            Tuupola\Middleware\CorsMiddleware::class => Api\App\Cors\Factory\CorsFactory::class
+            OauthUserRepository::class => OauthUserRepositoryFactory::class,
+            UserIdentity::class => UserIdentityFactory::class,
+            Tuupola\Middleware\CorsMiddleware::class => CorsFactory::class
         ],
     ],
 ];

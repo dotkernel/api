@@ -8,6 +8,8 @@
 
 declare(strict_types=1);
 
+define('USER_UPLOADS_URL', 'http://localhost:8080/uploads/user');
+
 $databases = [
     'default' => [
         'host' => 'localhost',
