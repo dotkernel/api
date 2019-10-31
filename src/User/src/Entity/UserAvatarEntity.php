@@ -101,7 +101,6 @@ class UserAvatarEntity extends AbstractEntity implements ArraySerializableInterf
     {
         return [
             'uuid' => $this->getUuid()->toString(),
-            'name' => $this->getName(),
             'url' => $this->getUrl(),
             'created' => $this->getCreated(),
             'updated' => $this->getUpdated()

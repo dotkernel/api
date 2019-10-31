@@ -9,9 +9,11 @@ use Api\User\Handler\AccountActivateHandler;
 use Api\User\Handler\AccountAvatarHandler;
 use Api\User\Handler\AccountHandler;
 use Api\User\Handler\AccountResetPasswordHandler;
+use Api\User\Handler\AccountSubscriptionHandler;
 use Api\User\Handler\UserActivateHandler;
 use Api\User\Handler\UserAvatarHandler;
 use Api\User\Handler\UserHandler;
+use Api\User\Handler\UserSubscriptionHandler;
 use Api\User\Middleware\AuthMiddleware;
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\UserEntity;
@@ -56,12 +58,14 @@ class ConfigProvider
                 AccountAvatarHandler::class => AnnotatedServiceFactory::class,
                 AccountHandler::class => AnnotatedServiceFactory::class,
                 AccountResetPasswordHandler::class => AnnotatedServiceFactory::class,
+                AccountSubscriptionHandler::class => AnnotatedServiceFactory::class,
                 AuthMiddleware::class => AnnotatedServiceFactory::class,
                 UserActivateHandler::class => AnnotatedServiceFactory::class,
                 UserAvatarHandler::class => AnnotatedServiceFactory::class,
                 UserHandler::class => AnnotatedServiceFactory::class,
                 UserService::class => AnnotatedServiceFactory::class,
                 UserRoleService::class => AnnotatedServiceFactory::class,
+                UserSubscriptionHandler::class => AnnotatedServiceFactory::class,
             ]
         ];
     }

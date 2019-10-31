@@ -121,6 +121,6 @@ class AccountActivateHandler implements RequestHandlerInterface
             return $this->errorResponse($exception->getMessage());
         }
 
-        return $this->responseFactory->createResponse($request, $this->resourceGenerator->fromObject($user, $request));
+        return $this->infoResponse(sprintf(Message::MAIL_SENT_USER_ACTIVATION, $user->getEmail()));
     }
 }

@@ -65,12 +65,12 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
             );
         }
 
-        /** @var UserResetPasswordEntity $resetPaswordRequest */
-        $resetPaswordRequest = $user->getResetPasswords()->current();
-        if (!$resetPaswordRequest->isValid()) {
+        /** @var UserResetPasswordEntity $resetPasswordRequest */
+        $resetPasswordRequest = $user->getResetPasswords()->current();
+        if (!$resetPasswordRequest->isValid()) {
             return $this->errorResponse(sprintf(Message::RESET_PASSWORD_EXPIRED, $hash));
         }
-        if ($resetPaswordRequest->isCompleted()) {
+        if ($resetPasswordRequest->isCompleted()) {
             return $this->errorResponse(sprintf(Message::RESET_PASSWORD_USED, $hash));
         }
 
@@ -91,12 +91,12 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
             );
         }
 
-        /** @var UserResetPasswordEntity $resetPaswordRequest */
-        $resetPaswordRequest = $user->getResetPasswords()->current();
-        if (!$resetPaswordRequest->isValid()) {
+        /** @var UserResetPasswordEntity $resetPasswordRequest */
+        $resetPasswordRequest = $user->getResetPasswords()->current();
+        if (!$resetPasswordRequest->isValid()) {
             return $this->errorResponse(sprintf(Message::RESET_PASSWORD_EXPIRED, $hash));
         }
-        if ($resetPaswordRequest->isCompleted()) {
+        if ($resetPasswordRequest->isCompleted()) {
             return $this->errorResponse(sprintf(Message::RESET_PASSWORD_USED, $hash));
         }
 
@@ -108,7 +108,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
 
         try {
             $this->userService->updateUser(
-                $resetPaswordRequest->markAsCompleted()->getUser(),
+                $resetPasswordRequest->markAsCompleted()->getUser(),
                 $inputFilter->getValues()
             );
         } catch (Exception $exception) {
@@ -122,7 +122,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
         }
 
         return $this->responseFactory->createResponse($request,
-            $this->resourceGenerator->fromObject($resetPaswordRequest, $request)
+            $this->resourceGenerator->fromObject($resetPasswordRequest, $request)
         );
     }
 
