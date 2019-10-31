@@ -91,10 +91,12 @@
                 "example": "api"
               },
               "username": {
-                "type": "string"
+                "type": "string",
+                "example": "test@dotkernel.com"
               },
               "password": {
-                "type": "string"
+                "type": "string",
+                "example": "dotkernel"
               }
             },
             "type": "object"

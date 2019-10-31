@@ -17,14 +17,7 @@
         },
         "responses": {
           "200": {
-            "description": "User account activation email has been (re)sent.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserEntity"
-                }
-              }
-            }
+            "description": "Account activation email has been sent to the user."
           },
           "400": {
             "$ref": "#/components/schemas/_ResponseCode400"

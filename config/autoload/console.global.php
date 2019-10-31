@@ -17,6 +17,7 @@ return [
         'name' => 'DotKernel API Console',
         'commands' => [
             [
+                // command: php bin/console.php list-users
                 'name' => 'list-users',
                 'route' => '[--page=] [--search=] [--status=] [--deleted=]',
                 'description' => 'List all users based on a set of optional filters.',

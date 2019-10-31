@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace Api\App;
 
 use Api\App\Common\Factory\AnnotationsCacheFactory;
+use Api\App\MailChimp\Factory\MailChimpFactory;
+use Api\App\MailChimp\Service\MailChimpService;
 use ContainerInteropDoctrine\EntityManagerFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Dot\AnnotatedServices\Factory\AbstractAnnotatedFactory;
+use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
 use Dot\Mail\Factory\MailOptionsAbstractFactory;
 use Dot\Mail\Factory\MailServiceAbstractFactory;
 use Dot\Mail\Service\MailService;
+use DrewM\MailChimp\MailChimp;
 use Twig\Environment;
 use Zend\Expressive\Application;
 use Zend\Expressive\Authentication;
@@ -62,6 +66,8 @@ class ConfigProvider
                 'dot-mail.options.default' => MailOptionsAbstractFactory::class,
                 'dot-mail.service.default' => MailServiceAbstractFactory::class,
                 AbstractAnnotatedFactory::CACHE_SERVICE => AnnotationsCacheFactory::class,
+                MailChimp::class => MailChimpFactory::class,
+                MailChimpService::class => AnnotatedServiceFactory::class,
                 Environment::class => TwigEnvironmentFactory::class,
                 TwigExtension::class => TwigExtensionFactory::class,
                 TwigRenderer::class => TwigRendererFactory::class,

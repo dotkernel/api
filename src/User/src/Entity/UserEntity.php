@@ -57,7 +57,7 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
 
     /**
      * @ORM\Column(name="hash", type="string", nullable=false)
-     * @var string $status
+     * @var string $hash
      */
     protected $hash;
 

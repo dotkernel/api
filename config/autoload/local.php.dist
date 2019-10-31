@@ -8,8 +8,6 @@
 
 declare(strict_types=1);
 
-define('USER_UPLOADS_URL', 'http://localhost:8080/uploads/user');
-
 $databases = [
     'default' => [
         'host' => 'localhost',
@@ -21,8 +19,10 @@ $databases = [
         'charset' => 'utf8mb4',
         'collate' => 'utf8mb4_general_ci'
     ]
-    // add more database connections below
+    // you can add more database connections in this array
 ];
+
+define('USER_UPLOADS_URL', 'http://localhost:8080/uploads/user');
 
 return [
     'annotations_cache_dir' => getcwd() . '/data/cache/annotations',
@@ -89,9 +89,12 @@ return [
          */
         'cacheTarget' => getcwd() . '/data/cache/documentation.php'
     ],
+    'mailChimp' => [
+        'apiKey' => ''
+    ],
     'uploads' => [
         'user' => [
-            'url'  => 'http://localhost:8080/uploads/user',
+            'url'  => USER_UPLOADS_URL,
             'path' => \realpath(__DIR__ . '/../../public/uploads/user'),
         ]
     ],

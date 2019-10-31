@@ -40,7 +40,7 @@ class UserResetPasswordEntity extends AbstractEntity implements ArraySerializabl
 
     /**
      * @ORM\Column(name="hash", type="string", length=255, unique=true)
-     * @var $firstname
+     * @var $hash
      */
     protected $hash;
 

@@ -20,12 +20,13 @@ Step 3: Setup database:
 $ vendor/bin/doctrine-migrations migrate
 ```
 
-Step 4: (Optional) Enable development mode:
+Step 4: Optional steps:
+* Enable development mode using this command:
 ```bash
 $ composer development-enable
 ```
-
-After the project has been successfully installed, you should modify the default OAuth2 client and it's secret phrase.
+* Configure SMTP by adding setting your account params in `config/autoload/mail.local.php` under `dot_mail -> default -> smtp_options`
+* Configure MailChimp by adding your API key to `config/autoload/local.php` under `mailChimp -> apiKey`
 
 
 ## Using the CLI interface:
@@ -41,19 +42,6 @@ You can access Doctrine's migration tools by using the following command:
 ```bash
 $ vendor/bin/doctrine-migrations
 ```
-
-
-## Creating an endpoint
-Routes can be created in one of the following locations:
-* `config/routes.php`
-* `src/{module-name}/RoutesDelegator.php` (First, make sure you registered it in `src/App/ConfigProvider.php`'s `getDependencies` method, under the `delegators` key). By using this method, if you want to move a module between projects, you will automatically move the related endpoints as well.
-
-
-## Working with entities
-A good practice is storing all related entities in the same directory `Entity`, next to the module's `Handler` directory. For example:
-* `src/Module/src/Example/Entity/ExampleEntity.php`
-* `src/Module/src/Example/Entity/ExampleDetailEntity.php`
-* `src/Module/src/Example/Entity/ExampleCategoryEntity.php`
 
 
 ## Running the application

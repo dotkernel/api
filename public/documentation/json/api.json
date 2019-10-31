@@ -91,6 +91,9 @@
       "_ResponseCode201": {
         "description": "Created."
       },
+      "_ResponseCode204": {
+        "description": "No Content."
+      },
       "_ResponseCode400": {
         "description": "Error: Bad Request."
       },

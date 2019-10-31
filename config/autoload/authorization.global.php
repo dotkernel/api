@@ -27,10 +27,12 @@ return [
                 'user:avatar',
                 'user:list,create',
                 'user:delete,view,update',
+                'user:subscription',
             ],
             UserRoleEntity::ROLE_MEMBER => [
                 'my-account:avatar',
                 'my-account:me',
+                'my-account:subscription',
             ],
         ],
     ]

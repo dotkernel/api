@@ -56,10 +56,16 @@ class AuthMiddleware implements MiddlewareInterface
         /** @var UserIdentity $defaultUser */
         $defaultUser = $request->getAttribute(UserInterface::class);
 
-        $user = $this->userService->findOneBy([
-            'email' => $defaultUser->getIdentity(),
-            'isDeleted' => false
-        ]);
+        $user = $this->userService->findOneBy(['email' => $defaultUser->getIdentity(), 'isDeleted' => false]);
+        if ($user->getStatus() !== UserEntity::STATUS_ACTIVE) {
+            return new JsonResponse([
+                'error' => [
+                    'messages' => [
+                        Message::USER_NOT_ACTIVATED
+                    ]
+                ]
+            ], Response::STATUS_CODE_403);
+        }
 
         $defaultUser->setRoles(array_map(function (UserRoleEntity $role) {
             return $role->getName();

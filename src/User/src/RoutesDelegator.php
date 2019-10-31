@@ -8,9 +8,11 @@ use Api\User\Handler\AccountActivateHandler;
 use Api\User\Handler\AccountAvatarHandler;
 use Api\User\Handler\AccountHandler;
 use Api\User\Handler\AccountResetPasswordHandler;
+use Api\User\Handler\AccountSubscriptionHandler;
 use Api\User\Handler\UserActivateHandler;
 use Api\User\Handler\UserAvatarHandler;
 use Api\User\Handler\UserHandler;
+use Api\User\Handler\UserSubscriptionHandler;
 use Api\User\Middleware\AuthMiddleware;
 use Fig\Http\Message\RequestMethodInterface as RequestMethod;
 use Psr\Container\ContainerInterface;
@@ -50,6 +52,12 @@ class RoutesDelegator
             'user:delete,view,update'
         );
 
+        $app->route('/user/' . \Api\App\RoutesDelegator::REGEXP_UUID . '/subscription/{list}[/status/{status}]',
+            [AuthenticationMiddleware::class, AuthMiddleware::class, UserSubscriptionHandler::class],
+            [RequestMethod::METHOD_DELETE, RequestMethod::METHOD_PUT],
+            'user:subscription'
+        );
+
         $app->post('/user/activate/' . \Api\App\RoutesDelegator::REGEXP_UUID,
             [AuthenticationMiddleware::class, AuthMiddleware::class, UserActivateHandler::class],
             'user:activate'
@@ -73,6 +81,12 @@ class RoutesDelegator
         $app->post('/my-account/avatar',
             [AuthenticationMiddleware::class, AuthMiddleware::class, AccountAvatarHandler::class],
             'my-account:avatar'
+        );
+
+        $app->route('/my-account/subscription/{list}[/status/{status}]',
+            [AuthenticationMiddleware::class, AuthMiddleware::class, AccountSubscriptionHandler::class],
+            [RequestMethod::METHOD_DELETE, RequestMethod::METHOD_PUT],
+            'my-account:subscription'
         );
 
         $app->post('/account/register', AccountHandler::class, 'account:register');
