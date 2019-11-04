@@ -25,7 +25,7 @@ class UserRoleEntity extends AbstractEntity implements ArraySerializableInterfac
     ];
 
     /**
-     * @ORM\Column(name="name", type="string", nullable=false)
+     * @ORM\Column(name="name", type="string", length=20, nullable=false, unique=true)
      * @var string $name
      */
     protected $name;

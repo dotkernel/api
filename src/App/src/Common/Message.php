@@ -16,7 +16,6 @@ class Message
     const MAIL_SENT_RESET_PASSWORD = 'Password reset mail has been successfully sent to \'%s\'';
     const MAIL_SENT_USER_ACTIVATION = 'User activation mail has been successfully sent to \'%s\'';
     const MISSING_PARAMETER = 'Missing parameter: \'%s\'';
-    const NEWSLETTER_SUBSCRIPTION_UPDATED = 'Newsletter subscription has been updated.';
     const NOT_FOUND_BY_UUID = 'Unable to find %s identified by uuid: %s';
     const RESET_PASSWORD_EXPIRED = 'Password reset request for hash: \'%s\' is invalid (expired).';
     const RESET_PASSWORD_NOT_FOUND = 'Could not find password reset request for hash: \'%s\'';

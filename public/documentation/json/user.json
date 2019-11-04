@@ -307,111 +307,6 @@
         ]
       }
     },
-    "/user/{uuid}/subscription/{list}": {
-      "delete": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Delete a user's newsletter subscription.",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "uuid",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }, {
-            "in": "path",
-            "name": "list",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Newsletter subscription has been deleted."
-          },
-          "400": {
-            "$ref": "#/components/schemas/_ResponseCode400"
-          },
-          "401": {
-            "$ref": "#/components/schemas/_ResponseCode401"
-          },
-          "403": {
-            "$ref": "#/components/schemas/_ResponseCode403"
-          },
-          "500": {
-            "$ref": "#/components/schemas/_ResponseCode500"
-          }
-        },
-        "security": [
-          {
-            "auth": []
-          }
-        ]
-      }
-    },
-    "/user/{uuid}/subscription/{list}/status/{status}": {
-      "put": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Subscribe a user to OR unsubscribe from a newsletter list.",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "uuid",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }, {
-            "in": "path",
-            "name": "list",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }, {
-            "in": "path",
-            "name": "status",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "subscribed",
-                "unsubscribed"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Newsletter subscription has been updated."
-          },
-          "400": {
-            "$ref": "#/components/schemas/_ResponseCode400"
-          },
-          "401": {
-            "$ref": "#/components/schemas/_ResponseCode401"
-          },
-          "403": {
-            "$ref": "#/components/schemas/_ResponseCode403"
-          },
-          "500": {
-            "$ref": "#/components/schemas/_ResponseCode500"
-          }
-        },
-        "security": [
-          {
-            "auth": []
-          }
-        ]
-      }
-    },
     "/user/avatar/{uuid}": {
       "post": {
         "tags": [
@@ -662,10 +557,6 @@
               "uuid": {
                 "type": "string",
                 "example": "4b91fe62-1e6d-11e9-9e6b-00219bfc8d4d"
-              },
-              "name": {
-                "type": "string",
-                "example": "avatar-d57d2e7e-e917-11e9-9f97-b8ca3aa0178d.jpg"
               },
               "url": {
                 "type": "string",

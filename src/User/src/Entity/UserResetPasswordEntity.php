@@ -39,13 +39,13 @@ class UserResetPasswordEntity extends AbstractEntity implements ArraySerializabl
     protected $expires;
 
     /**
-     * @ORM\Column(name="hash", type="string", length=255, unique=true)
+     * @ORM\Column(name="hash", type="string", length=64, nullable=false, unique=true)
      * @var $hash
      */
     protected $hash;
 
     /**
-     * @ORM\Column(name="status", type="string", nullable=false)
+     * @ORM\Column(name="status", type="string", length=20, nullable=false)
      * @var string $status
      */
     protected $status = self::STATUS_REQUESTED;

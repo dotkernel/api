@@ -89,9 +89,6 @@ return [
          */
         'cacheTarget' => getcwd() . '/data/cache/documentation.php'
     ],
-    'mailChimp' => [
-        'apiKey' => ''
-    ],
     'uploads' => [
         'user' => [
             'url'  => USER_UPLOADS_URL,

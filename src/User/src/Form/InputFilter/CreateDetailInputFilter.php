@@ -6,10 +6,10 @@ namespace Api\User\Form\InputFilter;
 
 use Zend\Filter\StringTrim;
 use Zend\Filter\StripTags;
-use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterAwareTrait;
 use Zend\InputFilter\InputFilterInterface;
+use Zend\InputFilter\OptionalInputFilter;
 
 /**
  * Class CreateDetailInputFilter
@@ -25,7 +25,7 @@ class CreateDetailInputFilter implements InputFilterAwareInterface
     public function getInputFilter()
     {
         if (empty($this->inputFilter)) {
-            $this->inputFilter = new InputFilter();
+            $this->inputFilter = new OptionalInputFilter();
             $this->inputFilter->add([
                 'name' => 'firstname',
                 'required' => false,

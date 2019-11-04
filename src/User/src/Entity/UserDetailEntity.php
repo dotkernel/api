@@ -25,13 +25,13 @@ class UserDetailEntity extends AbstractEntity implements ArraySerializableInterf
     protected $user;
 
     /**
-     * @ORM\Column(name="firstname", type="string", length=255)
+     * @ORM\Column(name="firstname", type="string", length=191, nullable=true)
      * @var $firstname
      */
     protected $firstname;
 
     /**
-     * @ORM\Column(name="lastname", type="string", length=255)
+     * @ORM\Column(name="lastname", type="string", length=191, nullable=true)
      * @var $lastname
      */
     protected $lastname;

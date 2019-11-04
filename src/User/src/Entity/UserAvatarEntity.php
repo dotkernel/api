@@ -25,7 +25,7 @@ class UserAvatarEntity extends AbstractEntity implements ArraySerializableInterf
     protected $user;
 
     /**
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=191, nullable=false)
      * @var $name
      */
     protected $name;
@@ -85,11 +85,7 @@ class UserAvatarEntity extends AbstractEntity implements ArraySerializableInterf
      */
     public function getUrl()
     {
-        return sprintf('%s/%s/%s',
-            USER_UPLOADS_URL,
-            $this->getUser()->getUuid()->toString(),
-            $this->getName()
-        );
+        return sprintf('%s/%s/%s', USER_UPLOADS_URL, $this->getUser()->getUuid()->toString(), $this->getName());
     }
 
     /**
