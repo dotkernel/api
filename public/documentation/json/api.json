@@ -133,6 +133,9 @@
     }, {
       "name": "User",
       "description": "Admins manage user accounts."
+    }, {
+      "name": "Device",
+      "description": "Get information about user's device."
     }
   ]
 }

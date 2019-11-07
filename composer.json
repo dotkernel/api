@@ -34,6 +34,7 @@
         "dotkernel/dot-errorhandler": "^1.0",
         "dotkernel/dot-mail": "^1.0",
         "moontoast/math": "^1.1",
+        "piwik/device-detector": "^3.12",
         "ramsey/uuid-doctrine": "^1.5",
         "roave/security-advisories": "dev-master",
         "swagger-api/swagger-ui": "^3.22",
@@ -71,6 +72,7 @@
         "psr-4": {
             "Api\\App\\": "src/App/src/",
             "Api\\Console\\": "src/Console/src/",
+            "Api\\Device\\": "src/Device/src/",
             "Api\\User\\": "src/User/src/"
         }
     },

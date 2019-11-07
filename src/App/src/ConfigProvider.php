@@ -31,11 +31,7 @@ use Zend\Expressive\Twig\TwigRendererFactory;
 class ConfigProvider
 {
     /**
-     * Returns the configuration array
-     *
-     * To add a bit of a structure, each section is defined in a separate
-     * method which returns an array with its configuration.
-     *
+     * @return array
      */
     public function __invoke() : array
     {
@@ -47,7 +43,7 @@ class ConfigProvider
     }
 
     /**
-     * Returns the container dependencies
+     * @return array
      */
     public function getDependencies() : array
     {
@@ -55,7 +51,8 @@ class ConfigProvider
             'delegators' => [
                 Application::class => [
                     \Api\App\RoutesDelegator::class,
-                    \Api\User\RoutesDelegator::class
+                    \Api\Device\RoutesDelegator::class,
+                    \Api\User\RoutesDelegator::class,
                 ]
             ],
             'factories'  => [

@@ -1,0 +1,127 @@
+{
+  "paths": {
+    "/device/user-agent": {
+      "put": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "Get device details from user agent.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceUserAgentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Got device details from user agent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceUserAgentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/schemas/_ResponseCode400"
+          },
+          "500": {
+            "$ref": "#/components/schemas/_ResponseCode500"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DeviceUserAgentRequest": {
+        "allOf": [
+          {
+            "properties": {
+              "userAgent": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "DeviceUserAgentResponse": {
+        "allOf": [
+          {
+            "properties": {
+              "userAgent": {
+                "type": "string",
+                "example": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/78.0.3904.84 Mobile/15E148 Safari/604.1"
+              },
+              "device": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "smartphone"
+                  },
+                  "brand": {
+                    "type": "string",
+                    "example": "Apple"
+                  },
+                  "model": {
+                    "type": "string",
+                    "example": "iPhone"
+                  },
+                  "isMobile": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                }
+              },
+              "os": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "iOS"
+                  },
+                  "version": {
+                    "type": "string",
+                    "example": "13.2"
+                  },
+                  "platform": {
+                    "type": "string",
+                    "example": "x64"
+                  }
+                }
+              },
+              "client": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "browser"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Chrome Mobile iOS"
+                  },
+                  "engine": {
+                    "type": "string",
+                    "example": "WebKit"
+                  },
+                  "version": {
+                    "type": "string",
+                    "example": "78.0"
+                  }
+                }
+              }
+            },
+            "type": "object"
+          }
+        ]
+      }
+    }
+  }
+}
