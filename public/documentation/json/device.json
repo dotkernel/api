@@ -123,5 +123,11 @@
         ]
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "Device",
+      "description": "Get information about user's device."
+    }
+  ]
 }

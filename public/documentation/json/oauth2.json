@@ -159,5 +159,11 @@
         ]
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "Oauth2",
+      "description": "Manage access via Oauth2 token."
+    }
+  ]
 }

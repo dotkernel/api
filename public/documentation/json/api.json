@@ -10,14 +10,8 @@
       "email": "support@dotkernel.com"
     }
   },
-  "servers": [
-    {
-      "url": "http://localhost:8080",
-      "description": "development"
-    }
-  ],
-  "paths": {
-  },
+  "servers": [],
+  "paths": {},
   "components": {
     "schemas": {
       "_MetadataList": {
@@ -120,22 +114,5 @@
       }
     }
   },
-  "tags": [
-    {
-      "name": "Oauth2",
-      "description": "Manage access via Oauth2 token."
-    }, {
-      "name": "Account",
-      "description": "Unauthorized users manage their accounts."
-    }, {
-      "name": "My Account",
-      "description": "Authorized users manage their accounts."
-    }, {
-      "name": "User",
-      "description": "Admins manage user accounts."
-    }, {
-      "name": "Device",
-      "description": "Get information about user's device."
-    }
-  ]
+  "tags": []
 }

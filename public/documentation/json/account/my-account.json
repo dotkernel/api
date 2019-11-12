@@ -162,5 +162,11 @@
         ]
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "My Account",
+      "description": "Authorized users manage their accounts."
+    }
+  ]
 }

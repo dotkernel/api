@@ -341,5 +341,11 @@
         ]
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "Account",
+      "description": "Unauthorized users manage their accounts."
+    }
+  ]
 }

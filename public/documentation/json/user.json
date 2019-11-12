@@ -703,5 +703,11 @@
         ]
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "User",
+      "description": "Admins manage user accounts."
+    }
+  ]
 }

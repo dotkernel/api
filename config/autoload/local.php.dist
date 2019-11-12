@@ -8,6 +8,8 @@
 
 declare(strict_types=1);
 
+$baseUrl = 'http://localhost:8080';
+
 $databases = [
     'default' => [
         'host' => 'localhost',
@@ -19,15 +21,14 @@ $databases = [
         'charset' => 'utf8mb4',
         'collate' => 'utf8mb4_general_ci'
     ]
-    // you can add more database connections in this array
+    // you can add more database connections into this array
 ];
-
-define('USER_UPLOADS_URL', 'http://localhost:8080/uploads/user');
 
 return [
     'annotations_cache_dir' => getcwd() . '/data/cache/annotations',
     'application' => [
-        'name' => 'DotKernel API'
+        'name' => 'DotKernel API',
+        'url' => $baseUrl
     ],
     'authentication' => [
         'private_key'    => [
@@ -79,19 +80,25 @@ return [
          */
         'showMarker'  => true,
         /**
-         * cacheConfig: toggle that enables switching between the cached/live version of config
+         * loadFromCache: toggle that enables switching between the cached/live version of config
          * - true: loaded from cacheTarget
          * - false: generated on the fly
          */
-        'cacheConfig' => false,
+        'loadFromCache' => false,
         /**
-         * cacheTarget: specifies where the documentation config cache is stored
+         * cacheFile: specifies the path to the cache file
          */
-        'cacheTarget' => getcwd() . '/data/cache/documentation.php'
+        'cacheFile' => getcwd() . '/data/cache/documentation.php',
+        'servers' => [
+            [
+                'url' => $baseUrl,
+                'description' => 'development'
+            ]
+        ]
     ],
     'uploads' => [
         'user' => [
-            'url'  => USER_UPLOADS_URL,
+            'url'  => $baseUrl . '/uploads/user',
             'path' => \realpath(__DIR__ . '/../../public/uploads/user'),
         ]
     ],
