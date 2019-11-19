@@ -26,7 +26,6 @@ Step 4: Optional steps:
 $ composer development-enable
 ```
 * Configure SMTP by adding setting your account params in `config/autoload/mail.local.php` under `dot_mail -> default -> smtp_options`
-* Configure MailChimp by adding your API key to `config/autoload/local.php` under `mailChimp -> apiKey`
 
 
 ## Using the CLI interface:

@@ -12,23 +12,29 @@ require 'vendor/autoload.php';
 
 /** @var ContainerInterface $container */
 $container = require 'config/container.php';
-$config = $container->get('config')['documentation'] ?? [];
+$config = $container->get('config');
+$loadFromCache = $config['documentation']['loadFromCache'] ?? false;
+$showMarker = $config['documentation']['showMarker'] ?? false;
+$cacheFile = $config['documentation']['cacheFile'] ?? null;
 
 switch ($_GET['action'] ?? 'display') {
     case 'generate':
-        if (empty($config['cacheConfig']) || !file_exists($config['cacheTarget'])) {
+        if (!$loadFromCache || !file_exists($cacheFile)) {
             $aggregator = new ConfigAggregator([
-                new ZendConfigProvider('public/documentation/json/*.{json}'),
-                new ZendConfigProvider('public/documentation/json/*/*.{json}'),
+                new ZendConfigProvider('./public/documentation/json/*.{json}'),
+                new ZendConfigProvider('./public/documentation/json/*/*.{json}'),
                 // you can tell the aggregator to look for more nested folders by adding:
-                // new ZendConfigProvider('public/documentation/json/*/*/*.{json}'),
+                // new ZendConfigProvider('./public/documentation/json/*/*/*.{json}'),
             ]);
             $documentation = $aggregator->getMergedConfig();
+            $documentation['servers'] = $config['documentation']['servers'] ?? [];
+            $documentation['info']['title'] = $config['application']['name'] . ' Documentation';
+            $documentation['info']['description'] = $config['application']['name'] . ' Documentation';
 
             $writer = new PhpArray();
-            $writer->toFile($config['cacheTarget'], $documentation);
+            $writer->toFile($cacheFile, $documentation);
         } else {
-            $documentation = require $config['cacheTarget'];
+            $documentation = require $cacheFile;
         }
         ksort($documentation['components']['schemas']);
 
@@ -37,29 +43,31 @@ switch ($_GET['action'] ?? 'display') {
         break;
 
     case 'display':
-        $cacheInfo['class'] = $config['cacheConfig'] ? 'cached' : 'live';
-        $cacheInfo['visibility'] = $config['showMarker'] ? '' : 'hidden';
+        $baseUrl = $config['application']['url'];
+        $documentationUrl = $baseUrl . '/documentation';
+        $cacheInfo['class'] = $loadFromCache ? ' cached' : ' live';
+        $cacheInfo['visibility'] = $showMarker ? '' : ' hidden';
         echo <<<MARKUP
 <!-- HTML for static distribution bundle build -->
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>DotKernel API</title>
-        <link rel="stylesheet" type="text/css" href="//{$_SERVER['HTTP_HOST']}/documentation/swagger-ui.css" />
-        <link rel="stylesheet" type="text/css" href="//{$_SERVER['HTTP_HOST']}/documentation/styles.css" />
-        <link rel="icon" type="image/png" href="//{$_SERVER['HTTP_HOST']}/favicon.ico" sizes="16x16" />
-        <script src="//{$_SERVER['HTTP_HOST']}/documentation/swagger-ui-bundle.js"></script>
-        <script src="//{$_SERVER['HTTP_HOST']}/documentation/swagger-ui-standalone-preset.js"></script>
+        <title>{$config['application']['name']} - Documentation</title>
+        <link rel="icon" type="image/png" href="{$baseUrl}/favicon.ico" />
+        <link rel="stylesheet" type="text/css" href="{$documentationUrl}/css/swagger-ui.css" />
+        <link rel="stylesheet" type="text/css" href="{$documentationUrl}/css/styles.css" />
     </head>
     <body>
-        <div class="cacheInfo {$cacheInfo['class']} {$cacheInfo['visibility']}"></div>
+        <div class="cacheInfo{$cacheInfo['class']}{$cacheInfo['visibility']}"></div>
         <div id="swagger-ui"></div>
+        <script src="{$documentationUrl}/js/swagger-ui-bundle.js"></script>
+        <script src="{$documentationUrl}/js/swagger-ui-standalone-preset.js"></script>
         <script>
             window.onload = function() {
                 // Begin Swagger UI call region
                 window.ui = SwaggerUIBundle({
-                    url: "//{$_SERVER['HTTP_HOST']}/documentation/index.php?action=generate",
+                    url: "{$documentationUrl}/index.php?action=generate",
                     dom_id: '#swagger-ui',
                     deepLinking: true,
                     presets: [
@@ -69,8 +77,8 @@ switch ($_GET['action'] ?? 'display') {
                     plugins: [
                         SwaggerUIBundle.plugins.DownloadUrl
                     ],
-                    // layout: "StandaloneLayout",
-                    supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch']
+                    layout: "StandaloneLayout",
+                    supportedSubmitMethods: ['delete', 'get', 'patch', 'post', 'put']
                 });
                 // End Swagger UI call region
             }

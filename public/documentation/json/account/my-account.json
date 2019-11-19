@@ -161,97 +161,12 @@
           }
         ]
       }
-    },
-    "/my-account/subscription/{list}": {
-      "delete": {
-        "tags": [
-          "My Account"
-        ],
-        "summary": "Users delete their newsletter subscription.",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "list",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Newsletter subscription has been deleted."
-          },
-          "400": {
-            "$ref": "#/components/schemas/_ResponseCode400"
-          },
-          "401": {
-            "$ref": "#/components/schemas/_ResponseCode401"
-          },
-          "403": {
-            "$ref": "#/components/schemas/_ResponseCode403"
-          },
-          "500": {
-            "$ref": "#/components/schemas/_ResponseCode500"
-          }
-        },
-        "security": [
-          {
-            "auth": []
-          }
-        ]
-      }
-    },
-    "/my-account/subscription/{list}/status/{status}": {
-      "put": {
-        "tags": [
-          "My Account"
-        ],
-        "summary": "Users manage their newsletter subscription.",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "list",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }, {
-            "in": "path",
-            "name": "status",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "subscribed",
-                "unsubscribed"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Newsletter subscription has been updated."
-          },
-          "400": {
-            "$ref": "#/components/schemas/_ResponseCode400"
-          },
-          "401": {
-            "$ref": "#/components/schemas/_ResponseCode401"
-          },
-          "403": {
-            "$ref": "#/components/schemas/_ResponseCode403"
-          },
-          "500": {
-            "$ref": "#/components/schemas/_ResponseCode500"
-          }
-        },
-        "security": [
-          {
-            "auth": []
-          }
-        ]
-      }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "My Account",
+      "description": "Authorized users manage their accounts."
+    }
+  ]
 }

@@ -13,6 +13,7 @@ use Zend\Stdlib\ArraySerializableInterface;
  * @ORM\Entity()
  * @ORM\Table(name="user_avatar")
  * @ORM\HasLifecycleCallbacks()
+ * @ORM\EntityListeners({Api\User\EventListener\UserAvatarEventListener::class})
  * @package Api\User\Entity
  */
 class UserAvatarEntity extends AbstractEntity implements ArraySerializableInterface
@@ -25,10 +26,13 @@ class UserAvatarEntity extends AbstractEntity implements ArraySerializableInterf
     protected $user;
 
     /**
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=191, nullable=false)
      * @var $name
      */
     protected $name;
+
+    /** @var string $url */
+    protected $url;
 
     /**
      * UserAvatarEntity constructor.
@@ -85,11 +89,18 @@ class UserAvatarEntity extends AbstractEntity implements ArraySerializableInterf
      */
     public function getUrl()
     {
-        return sprintf('%s/%s/%s',
-            USER_UPLOADS_URL,
-            $this->getUser()->getUuid()->toString(),
-            $this->getName()
-        );
+        return $this->url;
+    }
+
+    /**
+     * @param string $url
+     * @return $this
+     */
+    public function setUrl(string $url)
+    {
+        $this->url = $url;
+
+        return $this;
     }
 
     /**

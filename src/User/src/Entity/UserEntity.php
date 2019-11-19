@@ -32,36 +32,6 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
     ];
 
     /**
-     * @ORM\Column(name="username", type="string", length=255, nullable=false)
-     * @var string $email
-     */
-    protected $email;
-
-    /**
-     * @ORM\Column(name="password", type="string", length=255, nullable=false)
-     * @var string $password
-     */
-    protected $password;
-
-    /**
-     * @ORM\Column(name="status", type="string", nullable=false)
-     * @var string $status
-     */
-    protected $status = self::STATUS_PENDING;
-
-    /**
-     * @ORM\Column(name="isDeleted", type="boolean")
-     * @var bool $isDeleted
-     */
-    protected $isDeleted = false;
-
-    /**
-     * @ORM\Column(name="hash", type="string", nullable=false)
-     * @var string $hash
-     */
-    protected $hash;
-
-    /**
      * @ORM\OneToOne(targetEntity="UserAvatarEntity", cascade={"persist", "remove"}, mappedBy="user")
      * @var UserAvatarEntity $avatar
      */
@@ -90,6 +60,36 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
      * @var UserRoleEntity[] $roles
      */
     protected $roles;
+
+    /**
+     * @ORM\Column(name="username", type="string", length=191, nullable=false, unique=true)
+     * @var string $email
+     */
+    protected $email;
+
+    /**
+     * @ORM\Column(name="password", type="string", length=191, nullable=false)
+     * @var string $password
+     */
+    protected $password;
+
+    /**
+     * @ORM\Column(name="status", type="string", length=20, nullable=false)
+     * @var string $status
+     */
+    protected $status = self::STATUS_PENDING;
+
+    /**
+     * @ORM\Column(name="isDeleted", type="boolean")
+     * @var bool $isDeleted
+     */
+    protected $isDeleted = false;
+
+    /**
+     * @ORM\Column(name="hash", type="string", length=64, nullable=false, unique=true)
+     * @var string $hash
+     */
+    protected $hash;
 
     /**
      * UserEntity constructor.

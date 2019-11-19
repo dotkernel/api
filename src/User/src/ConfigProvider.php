@@ -9,11 +9,9 @@ use Api\User\Handler\AccountActivateHandler;
 use Api\User\Handler\AccountAvatarHandler;
 use Api\User\Handler\AccountHandler;
 use Api\User\Handler\AccountResetPasswordHandler;
-use Api\User\Handler\AccountSubscriptionHandler;
 use Api\User\Handler\UserActivateHandler;
 use Api\User\Handler\UserAvatarHandler;
 use Api\User\Handler\UserHandler;
-use Api\User\Handler\UserSubscriptionHandler;
 use Api\User\Middleware\AuthMiddleware;
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\UserEntity;
@@ -32,11 +30,7 @@ use Zend\Hydrator\ArraySerializable;
 class ConfigProvider
 {
     /**
-     * Returns the configuration array
-     *
-     * To add a bit of a structure, each section is defined in a separate
-     * method which returns an array with its configuration.
-     *
+     * @return array
      */
     public function __invoke() : array
     {
@@ -48,24 +42,22 @@ class ConfigProvider
     }
 
     /**
-     * Returns the container dependencies
+     * @return array
      */
     public function getDependencies() : array
     {
         return [
-            'factories'  => [
+            'factories' => [
                 AccountActivateHandler::class => AnnotatedServiceFactory::class,
                 AccountAvatarHandler::class => AnnotatedServiceFactory::class,
                 AccountHandler::class => AnnotatedServiceFactory::class,
                 AccountResetPasswordHandler::class => AnnotatedServiceFactory::class,
-                AccountSubscriptionHandler::class => AnnotatedServiceFactory::class,
                 AuthMiddleware::class => AnnotatedServiceFactory::class,
                 UserActivateHandler::class => AnnotatedServiceFactory::class,
                 UserAvatarHandler::class => AnnotatedServiceFactory::class,
                 UserHandler::class => AnnotatedServiceFactory::class,
                 UserService::class => AnnotatedServiceFactory::class,
                 UserRoleService::class => AnnotatedServiceFactory::class,
-                UserSubscriptionHandler::class => AnnotatedServiceFactory::class,
             ]
         ];
     }

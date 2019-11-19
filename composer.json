@@ -33,7 +33,6 @@
         "dotkernel/dot-console": "^0.1.1",
         "dotkernel/dot-errorhandler": "^1.0",
         "dotkernel/dot-mail": "^1.0",
-        "drewm/mailchimp-api": "^2.5",
         "moontoast/math": "^1.1",
         "ramsey/uuid-doctrine": "^1.5",
         "roave/security-advisories": "dev-master",

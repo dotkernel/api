@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Api\App;
 
 use Api\App\Common\Factory\AnnotationsCacheFactory;
-use Api\App\MailChimp\Factory\MailChimpFactory;
-use Api\App\MailChimp\Service\MailChimpService;
 use ContainerInteropDoctrine\EntityManagerFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,7 +13,6 @@ use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
 use Dot\Mail\Factory\MailOptionsAbstractFactory;
 use Dot\Mail\Factory\MailServiceAbstractFactory;
 use Dot\Mail\Service\MailService;
-use DrewM\MailChimp\MailChimp;
 use Twig\Environment;
 use Zend\Expressive\Application;
 use Zend\Expressive\Authentication;
@@ -34,11 +31,7 @@ use Zend\Expressive\Twig\TwigRendererFactory;
 class ConfigProvider
 {
     /**
-     * Returns the configuration array
-     *
-     * To add a bit of a structure, each section is defined in a separate
-     * method which returns an array with its configuration.
-     *
+     * @return array
      */
     public function __invoke() : array
     {
@@ -50,7 +43,7 @@ class ConfigProvider
     }
 
     /**
-     * Returns the container dependencies
+     * @return array
      */
     public function getDependencies() : array
     {
@@ -58,7 +51,7 @@ class ConfigProvider
             'delegators' => [
                 Application::class => [
                     \Api\App\RoutesDelegator::class,
-                    \Api\User\RoutesDelegator::class
+                    \Api\User\RoutesDelegator::class,
                 ]
             ],
             'factories'  => [
@@ -66,8 +59,6 @@ class ConfigProvider
                 'dot-mail.options.default' => MailOptionsAbstractFactory::class,
                 'dot-mail.service.default' => MailServiceAbstractFactory::class,
                 AbstractAnnotatedFactory::CACHE_SERVICE => AnnotationsCacheFactory::class,
-                MailChimp::class => MailChimpFactory::class,
-                MailChimpService::class => AnnotatedServiceFactory::class,
                 Environment::class => TwigEnvironmentFactory::class,
                 TwigExtension::class => TwigExtensionFactory::class,
                 TwigRenderer::class => TwigRendererFactory::class,

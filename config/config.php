@@ -35,6 +35,7 @@ $aggregator = new Zend\ConfigAggregator\ConfigAggregator([
     Dot\AnnotatedServices\ConfigProvider::class,
     // Default App module config
     Api\App\ConfigProvider::class,
+    Api\App\Doctrine\ConfigProvider::class,
     Api\Console\ConfigProvider::class,
     Api\User\ConfigProvider::class,
     // Load application config in a pre-defined order in such a way that local settings
