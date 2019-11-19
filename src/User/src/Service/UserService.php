@@ -32,7 +32,7 @@ use function unlink;
 
 /**
  * Class UserService
- * @package Api\App\User\Service
+ * @package Api\User\Service
  */
 class UserService
 {

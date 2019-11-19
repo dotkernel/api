@@ -51,7 +51,6 @@ class ConfigProvider
             'delegators' => [
                 Application::class => [
                     \Api\App\RoutesDelegator::class,
-                    \Api\Device\RoutesDelegator::class,
                     \Api\User\RoutesDelegator::class,
                 ]
             ],
