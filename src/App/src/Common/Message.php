@@ -13,7 +13,8 @@ class Message
     const DUPLICATE_EMAIL = 'An account with this email address already exists.';
     const INVALID_ACTIVATION_CODE = 'Invalid activation code.';
     const INVALID_VALUE = 'The value specified for \'%s\' is invalid.';
-    const MAIL_SENT_RESET_PASSWORD = 'Password reset mail has been successfully sent to \'%s\'';
+    const MAIL_SENT_RESET_PASSWORD = 'If the provided email identifies an account in our system, ' .
+    'you will receive an email with further instructions on resetting your account\'s password.';
     const MAIL_SENT_USER_ACTIVATION = 'User activation mail has been successfully sent to \'%s\'';
     const MISSING_PARAMETER = 'Missing parameter: \'%s\'';
     const NOT_FOUND_BY_UUID = 'Unable to find %s identified by uuid: %s';
