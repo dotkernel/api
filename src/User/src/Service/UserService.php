@@ -266,7 +266,9 @@ class UserService
                 'user' => $user
             ])
         );
-        $this->mailService->setSubject('Reset your ' . $this->config['application']['name'] . ' password');
+        $this->mailService->setSubject(
+            'Reset password instructions for your ' . $this->config['application']['name'] . ' account'
+        );
         $this->mailService->getMessage()->addTo($user->getEmail(), $user->getName());
 
         return $this->mailService->send()->isValid();
@@ -285,7 +287,9 @@ class UserService
                 'user' => $user
             ])
         );
-        $this->mailService->setSubject('Reset your ' . $this->config['application']['name'] . ' password');
+        $this->mailService->setSubject(
+            'You have successfully reset the password for you' . $this->config['application']['name'] . ' account'
+        );
         $this->mailService->getMessage()->addTo($user->getEmail(), $user->getName());
 
         return $this->mailService->send()->isValid();

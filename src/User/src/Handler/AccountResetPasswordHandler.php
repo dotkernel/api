@@ -140,9 +140,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
 
         $user = $this->userService->findOneBy(['email' => $inputFilter->getValue('email')]);
         if (!($user instanceof UserEntity)) {
-            return $this->notFoundResponse(
-                sprintf(Message::USER_NOT_FOUND_BY_EMAIL, $inputFilter->getValue('email'))
-            );
+            return $this->infoResponse(Message::MAIL_SENT_RESET_PASSWORD);
         }
 
         try {
@@ -157,9 +155,6 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
             return $this->errorResponse($exception->getMessage());
         }
 
-        return $this->infoResponse(
-            sprintf(Message::MAIL_SENT_RESET_PASSWORD, $user->getEmail()),
-            Response::STATUS_CODE_201
-        );
+        return $this->infoResponse(Message::MAIL_SENT_RESET_PASSWORD);
     }
 }

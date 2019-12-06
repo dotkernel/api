@@ -4,19 +4,26 @@ declare(strict_types=1);
 
 namespace Api\Console\User\Handler;
 
+use Api\App\Common\Message;
 use Api\User\Entity\UserEntity;
 use Api\User\Entity\UserRoleEntity;
 use Api\User\Service\UserService;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\AnnotatedServices\Annotation\Service;
 use Dot\Console\Command\AbstractCommand;
+use Exception;
 use Zend\Console\Adapter\AdapterInterface;
+use Zend\Filter\StringTrim;
+use Zend\Filter\StripTags;
 use Zend\Text\Table\Table;
+use Zend\Validator\Digits;
+use Zend\Validator\InArray;
 use ZF\Console\Route;
 
 use function array_map;
 use function implode;
 use function min;
+use function sprintf;
 
 /**
  * Class ListUsersCommand
@@ -42,10 +49,11 @@ class ListUsersHandler extends AbstractCommand
     /**
      * @param Route $route
      * @param AdapterInterface $console
+     * @throws Exception
      */
     public function __invoke(Route $route, AdapterInterface $console)
     {
-        $params = $route->getMatches();
+        $params = $this->validateParams($route->getMatches());
 
         $users = $this->userService->getUsers($params);
         if ($users->count() == 0) {
@@ -79,5 +87,41 @@ class ListUsersHandler extends AbstractCommand
             $users->count()
         ));
         $console->write($table->render());
+    }
+
+    /**
+     * @param array $params
+     * @return array
+     * @throws Exception
+     */
+    private function validateParams(array $params): array
+    {
+        $validator = new Digits();
+        if (!$validator->isValid($params['page'])) {
+            throw new Exception(sprintf(Message::INVALID_VALUE, 'page'));
+        }
+
+        if (!empty($params['search'])) {
+            $params['search'] = (new StringTrim())->filter($params['search']);
+            $params['search'] = (new StripTags())->filter($params['search']);
+        }
+
+        if (!empty($params['status'])) {
+            $validator = new InArray();
+            $validator->setHaystack(UserEntity::STATUSES);
+            if (!$validator->isValid($params['status'])) {
+                throw new Exception(sprintf(Message::INVALID_VALUE, 'status'));
+            }
+        }
+
+        if (!empty($params['deleted'])) {
+            $validator = new InArray();
+            $validator->setHaystack(['true', 'false']);
+            if (!$validator->isValid($params['deleted'])) {
+                throw new Exception(sprintf(Message::INVALID_VALUE, 'deleted'));
+            }
+        }
+
+        return $params;
     }
 }
