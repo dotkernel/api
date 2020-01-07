@@ -19,8 +19,8 @@ use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\Mail\Service\MailService;
 use Dot\Mail\Exception\MailException;
 use Exception;
-use Zend\Diactoros\UploadedFile;
-use Zend\Expressive\Template\TemplateRendererInterface;
+use Laminas\Diactoros\UploadedFile;
+use Mezzio\Template\TemplateRendererInterface;
 
 use function file_exists;
 use function is_null;
@@ -161,21 +161,14 @@ class UserService
 
     /**
      * @param UserEntity $user
-     * @param array $params
      * @return UserEntity|null
      * @throws ORMException
      * @throws ORM\OptimisticLockException
      */
-    public function deleteUser(UserEntity $user, array $params = [])
+    public function deleteUser(UserEntity $user)
     {
-        $email = $user->getEmail();
-        if (!empty($params['delete']) && $params['delete'] === 'true') {
-            $user = $this->userRepository->deleteUser($user);
-            $this->userRepository->deleteAccessTokens($email);
-        } else {
-            $user = $this->markAsDeleted($user);
-            $this->userRepository->revokeAccessTokens($email);
-        }
+        $this->userRepository->saveUser($user->markAsDeleted());
+        $this->userRepository->revokeAccessTokens($user->getEmail());
 
         return $user;
     }
@@ -288,7 +281,7 @@ class UserService
             ])
         );
         $this->mailService->setSubject(
-            'You have successfully reset the password for you' . $this->config['application']['name'] . ' account'
+            'You have successfully reset the password for your ' . $this->config['application']['name'] . ' account'
         );
         $this->mailService->getMessage()->addTo($user->getEmail(), $user->getName());
 
@@ -312,19 +305,6 @@ class UserService
         $this->mailService->getMessage()->addTo($user->getEmail(), $user->getName());
 
         return $this->mailService->send()->isValid();
-    }
-
-    /**
-     * @param UserEntity $user
-     * @return UserEntity
-     * @throws ORMException
-     * @throws ORM\OptimisticLockException
-     */
-    public function markAsDeleted(UserEntity $user)
-    {
-        $this->userRepository->saveUser($user->markAsDeleted());
-
-        return $user;
     }
 
     /**

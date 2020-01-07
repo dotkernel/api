@@ -1,5 +1,6 @@
 <?php
 
+use Api\Console\App\Handler\RoutesHandler;
 use Api\Console\User\Handler\ListUsersHandler;
 use Api\User\Entity\UserEntity;
 
@@ -11,8 +12,8 @@ return [
         'name' => 'DotKernel API Console',
         'commands' => [
             [
-                // command: php bin/console.php list-users
-                'name' => 'list-users',
+                // php bin/console.php user:list
+                'name' => 'user:list',
                 'route' => '[--page=] [--search=] [--status=] [--deleted=]',
                 'description' => 'List all users based on a set of optional filters.',
                 'short_description' => 'List users.',
@@ -24,6 +25,13 @@ return [
                 ],
                 'defaults' => ['page' => 1, 'search' => null, 'status' => null, 'deleted' => null],
                 'handler' => ListUsersHandler::class
+            ],
+            [
+                // php bin/console.php route:list
+                'name' => 'route:list',
+                'description' => 'List all routes in alphabetical order.',
+                'short_description' => 'List routes.',
+                'handler' => RoutesHandler::class
             ]
         ]
     ]

@@ -6,7 +6,7 @@ namespace Api\App\Common\Factory;
 
 use Api\App\Common\Repository\AccessTokenRepository;
 use Psr\Container\ContainerInterface;
-use Zend\Expressive\Authentication\OAuth2\Repository\Pdo\PdoService;
+use Mezzio\Authentication\OAuth2\Repository\Pdo\PdoService;
 
 /**
  * Class AccessTokenRepositoryFactory

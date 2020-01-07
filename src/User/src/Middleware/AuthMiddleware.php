@@ -14,10 +14,10 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Diactoros\Response\JsonResponse;
-use Zend\Expressive\Authentication\UserInterface;
-use Zend\Expressive\Authorization\AuthorizationInterface;
-use Zend\Http\Response;
+use Laminas\Diactoros\Response\JsonResponse;
+use Mezzio\Authentication\UserInterface;
+use Mezzio\Authorization\AuthorizationInterface;
+use Laminas\Http\Response;
 
 use function array_map;
 

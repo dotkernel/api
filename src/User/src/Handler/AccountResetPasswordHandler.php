@@ -16,9 +16,9 @@ use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Expressive\Hal\HalResponseFactory;
-use Zend\Expressive\Hal\ResourceGenerator;
-use Zend\Http\Response;
+use Mezzio\Hal\HalResponseFactory;
+use Mezzio\Hal\ResourceGenerator;
+use Laminas\Http\Response;
 
 use function sprintf;
 

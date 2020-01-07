@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Api\User\Form\InputFilter;
 
 use Api\App\Common\Message;
-use Zend\Filter\StringTrim;
-use Zend\Filter\StripTags;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterAwareInterface;
-use Zend\InputFilter\InputFilterAwareTrait;
-use Zend\InputFilter\InputFilterInterface;
-use Zend\Validator\NotEmpty;
+use Laminas\Filter\StringTrim;
+use Laminas\Filter\StripTags;
+use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilterAwareInterface;
+use Laminas\InputFilter\InputFilterAwareTrait;
+use Laminas\InputFilter\InputFilterInterface;
+use Laminas\Validator\NotEmpty;
 
 /**
  * Class ActivateAccountInputFilter

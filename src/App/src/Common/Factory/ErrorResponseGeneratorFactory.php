@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Api\App\Common\Factory;
 
 use Psr\Container\ContainerInterface;
-use Zend\Expressive\Middleware\ErrorResponseGenerator;
+use Mezzio\Middleware\ErrorResponseGenerator;
 
 /**
  * Class ErrorResponseGeneratorFactory

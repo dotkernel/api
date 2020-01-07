@@ -6,20 +6,20 @@ namespace Api\User\Form\InputFilter;
 
 use Api\App\Common\Message;
 use Api\User\Entity\UserEntity;
-use Zend\Filter\StringTrim;
-use Zend\Filter\StripTags;
-use Zend\InputFilter\CollectionInputFilter;
-use Zend\InputFilter\FileInput;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterAwareInterface;
-use Zend\InputFilter\InputFilterAwareTrait;
-use Zend\InputFilter\InputFilterInterface;
-use Zend\Validator\File\IsImage;
-use Zend\Validator\File\UploadFile;
-use Zend\Validator\Identical;
-use Zend\Validator\InArray;
-use Zend\Validator\NotEmpty;
-use Zend\Validator\StringLength;
+use Laminas\Filter\StringTrim;
+use Laminas\Filter\StripTags;
+use Laminas\InputFilter\CollectionInputFilter;
+use Laminas\InputFilter\FileInput;
+use Laminas\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilterAwareInterface;
+use Laminas\InputFilter\InputFilterAwareTrait;
+use Laminas\InputFilter\InputFilterInterface;
+use Laminas\Validator\File\IsImage;
+use Laminas\Validator\File\UploadFile;
+use Laminas\Validator\Identical;
+use Laminas\Validator\InArray;
+use Laminas\Validator\NotEmpty;
+use Laminas\Validator\StringLength;
 
 use function sprintf;
 

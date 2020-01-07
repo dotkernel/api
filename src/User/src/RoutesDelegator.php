@@ -14,8 +14,8 @@ use Api\User\Handler\UserHandler;
 use Api\User\Middleware\AuthMiddleware;
 use Fig\Http\Message\RequestMethodInterface as RequestMethod;
 use Psr\Container\ContainerInterface;
-use Zend\Expressive\Application;
-use Zend\Expressive\Authentication\AuthenticationMiddleware;
+use Mezzio\Application;
+use Mezzio\Authentication\AuthenticationMiddleware;
 
 /**
  * Class RoutesDelegator

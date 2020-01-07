@@ -6,7 +6,7 @@ namespace Api\User\Factory;
 
 use Api\User\Entity\UserIdentity;
 use Psr\Container\ContainerInterface;
-use Zend\Expressive\Authentication\UserInterface;
+use Mezzio\Authentication\UserInterface;
 
 /**
  * Class UserIdentityFactory

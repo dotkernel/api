@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\App\Common\Repository;
 
-use Zend\Expressive\Authentication\OAuth2\Repository\Pdo\AccessTokenRepository as AccessTokenRepositoryAlias;
+use Mezzio\Authentication\OAuth2\Repository\Pdo\AccessTokenRepository as AccessTokenRepositoryAlias;
 
 /**
  * Class AccessTokenRepository

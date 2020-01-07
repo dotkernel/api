@@ -5,11 +5,11 @@ namespace Api\App;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response\JsonResponse;
-use Zend\Expressive\Hal\HalResponseFactory;
-use Zend\Expressive\Hal\ResourceGenerator;
-use Zend\Expressive\Hal\ResourceGenerator\Exception\OutOfBoundsException;
-use Zend\Http\Response;
+use Laminas\Diactoros\Response\JsonResponse;
+use Mezzio\Hal\HalResponseFactory;
+use Mezzio\Hal\ResourceGenerator;
+use Mezzio\Hal\ResourceGenerator\Exception\OutOfBoundsException;
+use Laminas\Http\Response;
 
 /**
  * Trait RestDispatchTrait

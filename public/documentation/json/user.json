@@ -161,17 +161,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "in": "query",
-            "name": "delete",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                true
-              ]
-            }
           }
         ],
         "responses": {

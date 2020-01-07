@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Api\App;
 
 use Psr\Container\ContainerInterface;
-use Zend\Diactoros\Response\JsonResponse;
-use Zend\Expressive\Application;
-use Zend\Expressive\Authentication\OAuth2\TokenEndpointHandler;
+use Laminas\Diactoros\Response\JsonResponse;
+use Mezzio\Application;
+use Mezzio\Authentication\OAuth2\TokenEndpointHandler;
 
 /**
  * Class RoutesDelegator

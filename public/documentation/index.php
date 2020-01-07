@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Psr\Container\ContainerInterface;
-use Zend\Config\Writer\PhpArray;
-use Zend\ConfigAggregator\ConfigAggregator;
-use Zend\ConfigAggregator\ZendConfigProvider;
+use Laminas\Config\Writer\PhpArray;
+use Laminas\ConfigAggregator\ConfigAggregator;
+use Laminas\ConfigAggregator\LaminasConfigProvider;
 
 chdir(dirname(dirname(__DIR__)));
 require 'vendor/autoload.php';
@@ -21,10 +21,10 @@ switch ($_GET['action'] ?? 'display') {
     case 'generate':
         if (!$loadFromCache || !file_exists($cacheFile)) {
             $aggregator = new ConfigAggregator([
-                new ZendConfigProvider('./public/documentation/json/*.{json}'),
-                new ZendConfigProvider('./public/documentation/json/*/*.{json}'),
+                new LaminasConfigProvider('./public/documentation/json/*.{json}'),
+                new LaminasConfigProvider('./public/documentation/json/*/*.{json}'),
                 // you can tell the aggregator to look for more nested folders by adding:
-                // new ZendConfigProvider('./public/documentation/json/*/*/*.{json}'),
+                // new LaminasConfigProvider('./public/documentation/json/*/*/*.{json}'),
             ]);
             $documentation = $aggregator->getMergedConfig();
             $documentation['servers'] = $config['documentation']['servers'] ?? [];

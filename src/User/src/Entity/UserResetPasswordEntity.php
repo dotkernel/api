@@ -7,7 +7,7 @@ namespace Api\User\Entity;
 use Api\App\Common\Entity\AbstractEntity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Zend\Stdlib\ArraySerializableInterface;
+use Laminas\Stdlib\ArraySerializableInterface;
 
 /**
  * Class UserResetPasswordEntity

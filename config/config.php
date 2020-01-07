@@ -8,26 +8,26 @@ $cacheConfig = [
     'config_cache_path' => 'data/cache/config-cache.php',
 ];
 
-$aggregator = new Zend\ConfigAggregator\ConfigAggregator([
-    Zend\Expressive\Authorization\Acl\ConfigProvider::class,
-    Zend\Expressive\Authorization\Rbac\ConfigProvider::class,
-    Zend\Expressive\Authentication\ConfigProvider::class,
-    Zend\Expressive\Authentication\OAuth2\ConfigProvider::class,
-    Zend\InputFilter\ConfigProvider::class,
-    Zend\Filter\ConfigProvider::class,
-    Zend\Validator\ConfigProvider::class,
-    Zend\Hydrator\ConfigProvider::class,
-    Zend\Paginator\ConfigProvider::class,
-    Zend\Expressive\Hal\ConfigProvider::class,
-    Zend\ProblemDetails\ConfigProvider::class,
-    Zend\Db\ConfigProvider::class,
-    Zend\Expressive\Router\FastRouteRouter\ConfigProvider::class,
-    Zend\HttpHandlerRunner\ConfigProvider::class,
+$aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
+    Mezzio\Authorization\Acl\ConfigProvider::class,
+    Mezzio\Authorization\Rbac\ConfigProvider::class,
+    Mezzio\Authentication\ConfigProvider::class,
+    Mezzio\Authentication\OAuth2\ConfigProvider::class,
+    Laminas\InputFilter\ConfigProvider::class,
+    Laminas\Filter\ConfigProvider::class,
+    Laminas\Validator\ConfigProvider::class,
+    Laminas\Hydrator\ConfigProvider::class,
+    Laminas\Paginator\ConfigProvider::class,
+    Mezzio\Hal\ConfigProvider::class,
+    Mezzio\ProblemDetails\ConfigProvider::class,
+    Laminas\Db\ConfigProvider::class,
+    Mezzio\Router\FastRouteRouter\ConfigProvider::class,
+    Laminas\HttpHandlerRunner\ConfigProvider::class,
     // Include cache configuration
-    new Zend\ConfigAggregator\ArrayProvider($cacheConfig),
-    Zend\Expressive\Helper\ConfigProvider::class,
-    Zend\Expressive\ConfigProvider::class,
-    Zend\Expressive\Router\ConfigProvider::class,
+    new Laminas\ConfigAggregator\ArrayProvider($cacheConfig),
+    Mezzio\Helper\ConfigProvider::class,
+    Mezzio\ConfigProvider::class,
+    Mezzio\Router\ConfigProvider::class,
     // DK packages
     Dot\Console\ConfigProvider::class,
     Dot\Log\ConfigProvider::class,
@@ -44,9 +44,9 @@ $aggregator = new Zend\ConfigAggregator\ConfigAggregator([
     //   - `*.global.php`
     //   - `local.php`
     //   - `*.local.php`
-    new Zend\ConfigAggregator\PhpFileProvider(realpath(__DIR__) . '/autoload/{{,*.}global,{,*.}local}.php'),
+    new Laminas\ConfigAggregator\PhpFileProvider(realpath(__DIR__) . '/autoload/{{,*.}global,{,*.}local}.php'),
     // Load development config if it exists
-    new Zend\ConfigAggregator\PhpFileProvider(realpath(__DIR__) . '/development.config.php'),
-], $cacheConfig['config_cache_path']);
+    new Laminas\ConfigAggregator\PhpFileProvider(realpath(__DIR__) . '/development.config.php'),
+], $cacheConfig['config_cache_path'], [\Laminas\ZendFrameworkBridge\ConfigPostProcessor::class]);
 
 return $aggregator->getMergedConfig();

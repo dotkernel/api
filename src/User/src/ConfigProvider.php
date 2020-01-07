@@ -18,10 +18,10 @@ use Api\User\Entity\UserEntity;
 use Api\User\Service\UserRoleService;
 use Api\User\Service\UserService;
 use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
-use Zend\Expressive\Hal\Metadata\MetadataMap;
-use Zend\Expressive\Hal\Metadata\RouteBasedCollectionMetadata;
-use Zend\Expressive\Hal\Metadata\RouteBasedResourceMetadata;
-use Zend\Hydrator\ArraySerializable;
+use Mezzio\Hal\Metadata\MetadataMap;
+use Mezzio\Hal\Metadata\RouteBasedCollectionMetadata;
+use Mezzio\Hal\Metadata\RouteBasedResourceMetadata;
+use Laminas\Hydrator\ArraySerializable;
 
 /**
  * Class ConfigProvider
