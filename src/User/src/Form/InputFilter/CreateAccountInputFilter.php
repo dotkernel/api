@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Api\User\Form\InputFilter;
 
-use Zend\InputFilter\InputFilterAwareInterface;
-use Zend\InputFilter\InputFilterAwareTrait;
-use Zend\InputFilter\InputFilterInterface;
+use Laminas\InputFilter\InputFilterAwareInterface;
+use Laminas\InputFilter\InputFilterAwareTrait;
+use Laminas\InputFilter\InputFilterInterface;
 
 /**
  * Class CreateAccountInputFilter

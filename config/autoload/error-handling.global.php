@@ -1,7 +1,7 @@
 <?php
 
-use Zend\Log\Logger;
-use Zend\Log\Formatter\Json;
+use Laminas\Log\Logger;
+use Laminas\Log\Formatter\Json;
 
 return [
     'dot-errorhandler' => [

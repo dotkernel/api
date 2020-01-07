@@ -9,8 +9,8 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
-use Zend\Expressive\Authentication\OAuth2\Repository\Pdo\AbstractRepository;
-use Zend\Expressive\Authentication\OAuth2\Entity\UserEntity;
+use Mezzio\Authentication\OAuth2\Repository\Pdo\AbstractRepository;
+use Mezzio\Authentication\OAuth2\Entity\UserEntity;
 
 use function password_verify;
 

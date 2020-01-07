@@ -16,7 +16,7 @@ return [
      * B has A as a parent. That means A inherits the permissions of B.
      * C has B as a parent. That means C inherits the permissions of B, and A inherits the permissions of C.
      */
-    'zend-expressive-authorization-rbac' => [
+    'mezzio-authorization-rbac' => [
         'roles' => [
             UserRoleEntity::ROLE_ADMIN  => [],
             UserRoleEntity::ROLE_MEMBER => [UserRoleEntity::ROLE_ADMIN]

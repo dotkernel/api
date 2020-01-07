@@ -16,18 +16,18 @@ return [
 
             /**
              * the mail transport to use
-             * can be any class implementing Zend\Mail\Transport\TransportInterface
+             * can be any class implementing Laminas\Mail\Transport\TransportInterface
              *
              * for standard mail transports, you can use these aliases
-             * - sendmail => Zend\Mail\Transport\Sendmail
-             * - smtp => Zend\Mail\Transport\Smtp
-             * - file => Zend\Mail\Transport\File
-             * - in_memory => Zend\Mail\Transport\InMemory
+             * - sendmail => Laminas\Mail\Transport\Sendmail
+             * - smtp => Laminas\Mail\Transport\Smtp
+             * - file => Laminas\Mail\Transport\File
+             * - in_memory => Laminas\Mail\Transport\InMemory
              *
              * defaults to sendmail
              **/
 
-            'transport' => \Zend\Mail\Transport\Smtp::class,
+            'transport' => \Laminas\Mail\Transport\Smtp::class,
 
             //message configuration
             'message_options' => [
@@ -75,7 +75,7 @@ return [
                 ],
             ],
 
-            //options that will be used only if Zend\Mail\Transport\Smtp adapter is used
+            //options that will be used only if Laminas\Mail\Transport\Smtp adapter is used
             'smtp_options' => [
 
                 //hostname or IP address of the mail server
@@ -102,14 +102,14 @@ return [
                 ]
             ],
 
-            //file options that will be used only if the adapter is Zend\Mail\Transport\File
+            //file options that will be used only if the adapter is Laminas\Mail\Transport\File
             /*'file_options' => [
 
                 //this is the folder where the file is going to be saved
                 //default value is 'data/mail/output'
                 'path' => 'data/mail/output',
 
-                //a callable that will get the Zend\Mail\Transport\File object as an argument and should return the filename
+                //a callable that will get the Laminas\Mail\Transport\File object as an argument and should return the filename
                 //if null is used, and empty callable will be used
                 //'callback' => null,
             ],*/

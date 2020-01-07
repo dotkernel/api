@@ -12,12 +12,12 @@ use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\AnnotatedServices\Annotation\Service;
 use Dot\Console\Command\AbstractCommand;
 use Exception;
-use Zend\Console\Adapter\AdapterInterface;
-use Zend\Filter\StringTrim;
-use Zend\Filter\StripTags;
-use Zend\Text\Table\Table;
-use Zend\Validator\Digits;
-use Zend\Validator\InArray;
+use Laminas\Console\Adapter\AdapterInterface;
+use Laminas\Filter\StringTrim;
+use Laminas\Filter\StripTags;
+use Laminas\Text\Table\Table;
+use Laminas\Validator\Digits;
+use Laminas\Validator\InArray;
 use ZF\Console\Route;
 
 use function array_map;

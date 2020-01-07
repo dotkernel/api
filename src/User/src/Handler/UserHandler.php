@@ -15,8 +15,8 @@ use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Expressive\Hal\HalResponseFactory;
-use Zend\Expressive\Hal\ResourceGenerator;
+use Mezzio\Hal\HalResponseFactory;
+use Mezzio\Hal\ResourceGenerator;
 
 use function is_null;
 use function sprintf;
@@ -75,19 +75,12 @@ class UserHandler implements RequestHandlerInterface
         }
 
         try {
-            $user = $this->userService->deleteUser($user, $request->getQueryParams());
+            $this->userService->deleteUser($user);
         } catch (Exception $exception) {
             return $this->errorResponse($exception->getMessage());
         }
 
-        if ($user instanceof UserEntity) {
-            return $this->responseFactory->createResponse(
-                $request,
-                $this->resourceGenerator->fromObject($user, $request)
-            );
-        } else {
-            return $this->restResponse(null, 204);
-        }
+        return $this->restResponse(null, 204);
     }
 
     /**

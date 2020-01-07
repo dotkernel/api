@@ -8,7 +8,7 @@ use Api\App\Common\Entity\AbstractEntity;
 use Api\App\Common\UuidOrderedTimeGenerator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Zend\Stdlib\ArraySerializableInterface;
+use Laminas\Stdlib\ArraySerializableInterface;
 use Exception;
 
 use function array_map;

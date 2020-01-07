@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Entity;
 
-use Zend\Expressive\Authentication\UserInterface;
+use Mezzio\Authentication\UserInterface;
 
 /**
  * Class UserIdentity

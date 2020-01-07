@@ -14,15 +14,15 @@ use Dot\Mail\Factory\MailOptionsAbstractFactory;
 use Dot\Mail\Factory\MailServiceAbstractFactory;
 use Dot\Mail\Service\MailService;
 use Twig\Environment;
-use Zend\Expressive\Application;
-use Zend\Expressive\Authentication;
-use Zend\Expressive\Hal\Metadata\MetadataMap;
-use Zend\Expressive\Template\TemplateRendererInterface;
-use Zend\Expressive\Twig\TwigEnvironmentFactory;
-use Zend\Expressive\Twig\TwigExtension;
-use Zend\Expressive\Twig\TwigExtensionFactory;
-use Zend\Expressive\Twig\TwigRenderer;
-use Zend\Expressive\Twig\TwigRendererFactory;
+use Mezzio\Application;
+use Mezzio\Authentication;
+use Mezzio\Hal\Metadata\MetadataMap;
+use Mezzio\Template\TemplateRendererInterface;
+use Mezzio\Twig\TwigEnvironmentFactory;
+use Mezzio\Twig\TwigExtension;
+use Mezzio\Twig\TwigExtensionFactory;
+use Mezzio\Twig\TwigRenderer;
+use Mezzio\Twig\TwigRendererFactory;
 
 /**
  * Class ConfigProvider

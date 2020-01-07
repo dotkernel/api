@@ -7,9 +7,9 @@ namespace Api\Console\App\Handler;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\AnnotatedServices\Annotation\Service;
 use Dot\Console\Command\AbstractCommand;
-use Zend\Console\Adapter\AdapterInterface;
-use Zend\Expressive\Application;
-use Zend\Text\Table\Table;
+use Laminas\Console\Adapter\AdapterInterface;
+use Mezzio\Application;
+use Laminas\Text\Table\Table;
 use ZF\Console\Route;
 
 use function array_values;

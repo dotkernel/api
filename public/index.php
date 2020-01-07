@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Psr\Container\ContainerInterface;
-use Zend\Expressive\Application;
+use Mezzio\Application;
 
 // Delegate static file requests back to the PHP built-in webserver
 if (PHP_SAPI === 'cli-server' && $_SERVER['SCRIPT_FILENAME'] !== __FILE__) {
@@ -22,7 +22,7 @@ require 'vendor/autoload.php';
 
     /** @var Application $app */
     $app = $container->get(Application::class);
-    $factory = $container->get(\Zend\Expressive\MiddlewareFactory::class);
+    $factory = $container->get(\Mezzio\MiddlewareFactory::class);
 
     // Execute programmatic/declarative middleware pipeline and routing
     // configuration statements

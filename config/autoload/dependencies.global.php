@@ -14,7 +14,7 @@ use Dot\ErrorHandler\ErrorHandlerInterface;
 use Dot\ErrorHandler\LogErrorHandler;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
-use Zend\Expressive as Expressive;
+use Mezzio as Expressive;
 
 return [
     // Provides application-wide services.
@@ -26,8 +26,8 @@ return [
         'aliases' => [
             AccessTokenRepositoryInterface::class => AccessTokenRepository::class,
             ErrorHandlerInterface::class => LogErrorHandler::class,
-            Expressive\Authentication\UserInterface::class => UserIdentity::class,
-            Expressive\Authorization\AuthorizationInterface::class => Expressive\Authorization\Rbac\ZendRbac::class,
+            Mezzio\Authentication\UserInterface::class => UserIdentity::class,
+            Mezzio\Authorization\AuthorizationInterface::class => Mezzio\Authorization\Rbac\LaminasRbac::class,
             UserRepositoryInterface::class => OauthUserRepository::class,
         ],
         // Use 'invokables' for constructor-less services, or services that do
@@ -38,7 +38,7 @@ return [
         ],
         // Use 'factories' for services provided by callbacks/factory classes.
         'factories'  => [
-            Expressive\Middleware\ErrorResponseGenerator::class => ErrorResponseGeneratorFactory::class,
+            Mezzio\Middleware\ErrorResponseGenerator::class => ErrorResponseGeneratorFactory::class,
             AccessTokenRepository::class => AccessTokenRepositoryFactory::class,
             OauthUserRepository::class => OauthUserRepositoryFactory::class,
             UserIdentity::class => UserIdentityFactory::class,
