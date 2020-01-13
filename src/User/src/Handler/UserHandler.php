@@ -105,10 +105,14 @@ class UserHandler implements RequestHandlerInterface
                 $this->resourceGenerator->fromObject($user, $request)
             );
         } else {
-            return $this->responseFactory->createResponse(
-                $request,
-                $this->resourceGenerator->fromObject($this->userService->getUsers($request->getQueryParams()), $request)
-            );
+            try {
+                return $this->responseFactory->createResponse(
+                    $request,
+                    $this->resourceGenerator->fromObject($this->userService->getUsers($request->getQueryParams()), $request)
+                );
+            } catch (Exception $exception) {
+                return $this->errorResponse($exception->getMessage());
+            }
         }
     }
 
