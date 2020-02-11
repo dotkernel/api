@@ -44,14 +44,13 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
     protected $detail;
 
     /**
-     * @ORM\OneToMany(targetEntity="UserResetPasswordEntity",
-     *     cascade={"persist", "remove"}, mappedBy="user", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="UserResetPasswordEntity", cascade={"persist", "remove"}, mappedBy="user")
      * @var UserResetPasswordEntity[] $resetPassword
      */
     protected $resetPasswords;
 
     /**
-     * @ORM\ManyToMany(targetEntity="UserRoleEntity", fetch="EAGER")
+     * @ORM\ManyToMany(targetEntity="UserRoleEntity")
      * @ORM\JoinTable(
      *     name="user_roles",
      *     joinColumns={@ORM\JoinColumn(name="userUuid", referencedColumnName="uuid")},
