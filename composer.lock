@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c0d2f21f9c69bb40f828f6eec6a02cde",
+    "content-hash": "829f2e4366343c11963cdf86673cb319",
     "packages": [
         {
             "name": "brick/math",
-            "version": "0.8.8",
+            "version": "0.8.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/math.git",
-                "reference": "b77bf303449ac66e46d521e5022cedd1663ab6bd"
+                "reference": "ea9a095b902f5d42126aba4455a64476f5528241"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/math/zipball/b77bf303449ac66e46d521e5022cedd1663ab6bd",
-                "reference": "b77bf303449ac66e46d521e5022cedd1663ab6bd",
+                "url": "https://api.github.com/repos/brick/math/zipball/ea9a095b902f5d42126aba4455a64476f5528241",
+                "reference": "ea9a095b902f5d42126aba4455a64476f5528241",
                 "shasum": ""
             },
             "require": {
@@ -25,7 +25,8 @@
             },
             "require-dev": {
                 "php-coveralls/php-coveralls": "2.*",
-                "phpunit/phpunit": "7.*"
+                "phpunit/phpunit": "7.*",
+                "vimeo/psalm": "3.*"
             },
             "type": "library",
             "autoload": {
@@ -44,10 +45,11 @@
                 "BigRational",
                 "arithmetic",
                 "bigdecimal",
+                "bignum",
                 "brick",
                 "math"
             ],
-            "time": "2019-04-25T14:55:49+00:00"
+            "time": "2020-01-27T13:00:05+00:00"
         },
         {
             "name": "container-interop/container-interop",
@@ -80,45 +82,6 @@
             "homepage": "https://github.com/container-interop/container-interop",
             "abandoned": "psr/container",
             "time": "2017-02-14T19:40:03+00:00"
-        },
-        {
-            "name": "dasprid/container-interop-doctrine",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/DASPRiD/container-interop-doctrine.git",
-                "reference": "b9f3afc00ce997e469d7fdd6fed7b8d400763290"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/DASPRiD/container-interop-doctrine/zipball/b9f3afc00ce997e469d7fdd6fed7b8d400763290",
-                "reference": "b9f3afc00ce997e469d7fdd6fed7b8d400763290",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/common": "^2.6",
-                "doctrine/dbal": "^2.5",
-                "doctrine/orm": "^2.5",
-                "php": "^5.5|^7.0",
-                "psr/container": "^1.0.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8",
-                "squizlabs/php_codesniffer": "^2.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "ContainerInteropDoctrine\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-2-Clause"
-            ],
-            "description": "Doctrine factories for container-interop",
-            "homepage": "https://github.com/DASPRiD/container-interop-doctrine",
-            "time": "2018-01-24T23:25:49+00:00"
         },
         {
             "name": "defuse/php-encryption",
@@ -405,16 +368,16 @@
         },
         {
             "name": "doctrine/common",
-            "version": "v2.11.0",
+            "version": "2.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/common.git",
-                "reference": "b8ca1dcf6b0dc8a2af7a09baac8d0c48345df4ff"
+                "reference": "2053eafdf60c2172ee1373d1b9289ba1db7f1fc6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/common/zipball/b8ca1dcf6b0dc8a2af7a09baac8d0c48345df4ff",
-                "reference": "b8ca1dcf6b0dc8a2af7a09baac8d0c48345df4ff",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/2053eafdf60c2172ee1373d1b9289ba1db7f1fc6",
+                "reference": "2053eafdf60c2172ee1373d1b9289ba1db7f1fc6",
                 "shasum": ""
             },
             "require": {
@@ -484,7 +447,7 @@
                 "doctrine",
                 "php"
             ],
-            "time": "2019-09-10T10:10:14+00:00"
+            "time": "2020-01-10T15:49:25+00:00"
         },
         {
             "name": "doctrine/dbal",
@@ -841,16 +804,16 @@
         },
         {
             "name": "doctrine/migrations",
-            "version": "2.2.0",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/migrations.git",
-                "reference": "8e124252d2f6be1124017d746d5994dd4095d66f"
+                "reference": "a3987131febeb0e9acb3c47ab0df0af004588934"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/8e124252d2f6be1124017d746d5994dd4095d66f",
-                "reference": "8e124252d2f6be1124017d746d5994dd4095d66f",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/a3987131febeb0e9acb3c47ab0df0af004588934",
+                "reference": "a3987131febeb0e9acb3c47ab0df0af004588934",
                 "shasum": ""
             },
             "require": {
@@ -919,7 +882,7 @@
                 "migrations",
                 "php"
             ],
-            "time": "2019-11-13T11:06:31+00:00"
+            "time": "2019-12-04T06:09:14+00:00"
         },
         {
             "name": "doctrine/orm",
@@ -1006,16 +969,16 @@
         },
         {
             "name": "doctrine/persistence",
-            "version": "1.3.3",
+            "version": "1.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/persistence.git",
-                "reference": "99b196bbd4715a94fa100fac664a351ffa46d6a5"
+                "reference": "5dd3ac5eebef2d0b074daa4440bb18f93132dee4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/persistence/zipball/99b196bbd4715a94fa100fac664a351ffa46d6a5",
-                "reference": "99b196bbd4715a94fa100fac664a351ffa46d6a5",
+                "url": "https://api.github.com/repos/doctrine/persistence/zipball/5dd3ac5eebef2d0b074daa4440bb18f93132dee4",
+                "reference": "5dd3ac5eebef2d0b074daa4440bb18f93132dee4",
                 "shasum": ""
             },
             "require": {
@@ -1023,7 +986,7 @@
                 "doctrine/cache": "^1.0",
                 "doctrine/collections": "^1.0",
                 "doctrine/event-manager": "^1.0",
-                "doctrine/reflection": "^1.0",
+                "doctrine/reflection": "^1.1",
                 "php": "^7.1"
             },
             "conflict": {
@@ -1085,20 +1048,20 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2019-12-13T10:43:02+00:00"
+            "time": "2020-01-16T22:06:23+00:00"
         },
         {
             "name": "doctrine/reflection",
-            "version": "v1.0.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/reflection.git",
-                "reference": "02538d3f95e88eb397a5f86274deb2c6175c2ab6"
+                "reference": "bc420ead87fdfe08c03ecc3549db603a45b06d4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/reflection/zipball/02538d3f95e88eb397a5f86274deb2c6175c2ab6",
-                "reference": "02538d3f95e88eb397a5f86274deb2c6175c2ab6",
+                "url": "https://api.github.com/repos/doctrine/reflection/zipball/bc420ead87fdfe08c03ecc3549db603a45b06d4c",
+                "reference": "bc420ead87fdfe08c03ecc3549db603a45b06d4c",
                 "shasum": ""
             },
             "require": {
@@ -1106,13 +1069,15 @@
                 "ext-tokenizer": "*",
                 "php": "^7.1"
             },
+            "conflict": {
+                "doctrine/common": "<2.9"
+            },
             "require-dev": {
-                "doctrine/coding-standard": "^4.0",
-                "doctrine/common": "^2.8",
-                "phpstan/phpstan": "^0.9.2",
-                "phpstan/phpstan-phpunit": "^0.9.4",
-                "phpunit/phpunit": "^7.0",
-                "squizlabs/php_codesniffer": "^3.0"
+                "doctrine/coding-standard": "^5.0",
+                "doctrine/common": "^2.10",
+                "phpstan/phpstan": "^0.11.0",
+                "phpstan/phpstan-phpunit": "^0.11.0",
+                "phpunit/phpunit": "^7.0"
             },
             "type": "library",
             "extra": {
@@ -1131,16 +1096,16 @@
             ],
             "authors": [
                 {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
                     "name": "Roman Borschel",
                     "email": "roman@code-factory.org"
                 },
                 {
                     "name": "Benjamin Eberlei",
                     "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
                 },
                 {
                     "name": "Jonathan Wage",
@@ -1155,32 +1120,34 @@
                     "email": "ocramius@gmail.com"
                 }
             ],
-            "description": "Doctrine Reflection component",
+            "description": "The Doctrine Reflection project is a simple library used by the various Doctrine projects which adds some additional functionality on top of the reflection functionality that comes with PHP. It allows you to get the reflection information about classes, methods and properties statically.",
             "homepage": "https://www.doctrine-project.org/projects/reflection.html",
             "keywords": [
-                "reflection"
+                "reflection",
+                "static"
             ],
-            "time": "2018-06-14T14:45:07+00:00"
+            "time": "2020-01-08T19:53:19+00:00"
         },
         {
             "name": "dotkernel/dot-annotated-services",
-            "version": "v1.1.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dotkernel/dot-annotated-services.git",
-                "reference": "7b30427edf0e5d3fc340e5e174f97e98bb54cc55"
+                "reference": "25b2b3444b2f9674672141faa56d159155cc1e2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dotkernel/dot-annotated-services/zipball/7b30427edf0e5d3fc340e5e174f97e98bb54cc55",
-                "reference": "7b30427edf0e5d3fc340e5e174f97e98bb54cc55",
+                "url": "https://api.github.com/repos/dotkernel/dot-annotated-services/zipball/25b2b3444b2f9674672141faa56d159155cc1e2e",
+                "reference": "25b2b3444b2f9674672141faa56d159155cc1e2e",
                 "shasum": ""
             },
             "require": {
                 "doctrine/annotations": "^1.6",
                 "doctrine/cache": "^1.7",
-                "php": "^7.1",
-                "zendframework/zend-servicemanager": "^3.3"
+                "laminas/laminas-dependency-plugin": "^1.0",
+                "laminas/laminas-servicemanager": "^3.3",
+                "php": "^7.2"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.7",
@@ -1192,8 +1159,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1-dev",
-                    "dev-develop": "1.2-dev"
+                    "dev-master": "2.0-dev",
+                    "dev-develop": "2.1-dev"
                 }
             },
             "autoload": {
@@ -1211,7 +1178,7 @@
                     "email": "team@dotkernel.com"
                 }
             ],
-            "description": "DotKernel service creation component through zend-servicemanager and annotations",
+            "description": "DotKernel service creation component through laminas-servicemanager and annotations",
             "keywords": [
                 "annotations",
                 "container",
@@ -1221,25 +1188,26 @@
                 "zf2",
                 "zf3"
             ],
-            "time": "2018-05-03T12:19:03+00:00"
+            "time": "2020-01-30T12:22:50+00:00"
         },
         {
             "name": "dotkernel/dot-console",
-            "version": "v0.1.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dotkernel/dot-console.git",
-                "reference": "37a2cb4bbeb864c0183decc81af4e3d0ca01b9d1"
+                "reference": "f901db79cba9bfd632ef363db03f4b946a828623"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dotkernel/dot-console/zipball/37a2cb4bbeb864c0183decc81af4e3d0ca01b9d1",
-                "reference": "37a2cb4bbeb864c0183decc81af4e3d0ca01b9d1",
+                "url": "https://api.github.com/repos/dotkernel/dot-console/zipball/f901db79cba9bfd632ef363db03f4b946a828623",
+                "reference": "f901db79cba9bfd632ef363db03f4b946a828623",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1",
-                "zendframework/zend-servicemanager": "^3.3",
+                "laminas/laminas-dependency-plugin": "^1.0",
+                "laminas/laminas-servicemanager": "^3.3",
+                "php": "^7.2",
                 "zfcampus/zf-console": "^1.4"
             },
             "require-dev": {
@@ -1249,8 +1217,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.1-dev",
-                    "dev-develop": "0.2-dev"
+                    "dev-master": "2.0-dev",
+                    "dev-develop": "2.1-dev"
                 }
             },
             "autoload": {
@@ -1273,28 +1241,29 @@
                 "console",
                 "dotkernel"
             ],
-            "time": "2018-05-03T13:52:03+00:00"
+            "time": "2020-01-30T12:31:49+00:00"
         },
         {
             "name": "dotkernel/dot-errorhandler",
-            "version": "v1.0.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dotkernel/dot-errorhandler.git",
-                "reference": "d3cc9b3157165a95b8fa88bd03fadff7d02b50a3"
+                "reference": "f7d05dbae141a9fe1dee45bfac6cb408c8341f0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dotkernel/dot-errorhandler/zipball/d3cc9b3157165a95b8fa88bd03fadff7d02b50a3",
-                "reference": "d3cc9b3157165a95b8fa88bd03fadff7d02b50a3",
+                "url": "https://api.github.com/repos/dotkernel/dot-errorhandler/zipball/f7d05dbae141a9fe1dee45bfac6cb408c8341f0c",
+                "reference": "f7d05dbae141a9fe1dee45bfac6cb408c8341f0c",
                 "shasum": ""
             },
             "require": {
-                "dotkernel/dot-log": "^1.0",
+                "dotkernel/dot-log": "^2.0",
+                "laminas/laminas-dependency-plugin": "^1.0",
+                "laminas/laminas-log": "^2.10",
+                "mezzio/mezzio": "^3.0",
                 "psr/container": "^1.0",
-                "psr/http-message": "^1.0",
-                "zendframework/zend-expressive": "^3.0",
-                "zendframework/zend-log": "^2.10"
+                "psr/http-message": "^1.0"
             },
             "type": "library",
             "autoload": {
@@ -1313,27 +1282,28 @@
                 }
             ],
             "description": "Logging Error Handler for Middleware Applications",
-            "time": "2018-11-27T11:51:28+00:00"
+            "time": "2020-01-30T12:41:47+00:00"
         },
         {
             "name": "dotkernel/dot-event",
-            "version": "v0.2.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dotkernel/dot-event.git",
-                "reference": "1ae8721be850acafe11804331a05a9d32eaf3950"
+                "reference": "5cfcbdfb4908bbc5781c4ae033c41ae5c1627d46"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dotkernel/dot-event/zipball/1ae8721be850acafe11804331a05a9d32eaf3950",
-                "reference": "1ae8721be850acafe11804331a05a9d32eaf3950",
+                "url": "https://api.github.com/repos/dotkernel/dot-event/zipball/5cfcbdfb4908bbc5781c4ae033c41ae5c1627d46",
+                "reference": "5cfcbdfb4908bbc5781c4ae033c41ae5c1627d46",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1",
-                "psr/http-message": "^1.0",
-                "zendframework/zend-eventmanager": "^3.2",
-                "zendframework/zend-servicemanager": "^3.3"
+                "laminas/laminas-dependency-plugin": "^1.0",
+                "laminas/laminas-eventmanager": "^3.2",
+                "laminas/laminas-servicemanager": "^3.3",
+                "php": "^7.2",
+                "psr/http-message": "^1.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8",
@@ -1342,8 +1312,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.2-dev",
-                    "dev-develop": "0.3-dev"
+                    "dev-master": "2.0-dev",
+                    "dev-develop": "2.1-dev"
                 }
             },
             "autoload": {
@@ -1361,39 +1331,40 @@
                     "email": "team@dotkernel.com"
                 }
             ],
-            "description": "DotKernel event component extending and customizing zend-eventmanager",
-            "time": "2018-05-04T15:35:25+00:00"
+            "description": "DotKernel event component extending and customizing laminas-eventmanager",
+            "time": "2020-01-30T11:13:56+00:00"
         },
         {
             "name": "dotkernel/dot-log",
-            "version": "v1.1.2",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dotkernel/dot-log.git",
-                "reference": "65faf7bec14fc0e52197352c3fd9f7ca27ca9c5a"
+                "reference": "a1535f35023f1728f6308d60845c2db5aa9acf4f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dotkernel/dot-log/zipball/65faf7bec14fc0e52197352c3fd9f7ca27ca9c5a",
-                "reference": "65faf7bec14fc0e52197352c3fd9f7ca27ca9c5a",
+                "url": "https://api.github.com/repos/dotkernel/dot-log/zipball/a1535f35023f1728f6308d60845c2db5aa9acf4f",
+                "reference": "a1535f35023f1728f6308d60845c2db5aa9acf4f",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1",
-                "psr/http-message": "^1.0",
-                "zendframework/zend-log": "^2.9.0",
-                "zendframework/zend-servicemanager": "^3.3.0"
+                "laminas/laminas-dependency-plugin": "^1.0",
+                "laminas/laminas-log": "^2.9.0",
+                "laminas/laminas-servicemanager": "^3.3.0",
+                "php": "^7.2",
+                "psr/http-message": "^1.0"
             },
             "require-dev": {
-                "dotkernel/dot-mail": "^1.0",
+                "dotkernel/dot-mail": "^2.0",
                 "phpunit/phpunit": "^4.8",
                 "squizlabs/php_codesniffer": "^2.3"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1-dev",
-                    "dev-develop": "1.2-dev"
+                    "dev-master": "2.0-dev",
+                    "dev-develop": "2.1-dev"
                 }
             },
             "autoload": {
@@ -1411,28 +1382,29 @@
                     "email": "team@dotkernel.com"
                 }
             ],
-            "description": "DotKernel log component extending and customizing zend-log",
-            "time": "2018-11-13T15:58:33+00:00"
+            "description": "DotKernel log component extending and customizing laminas-log",
+            "time": "2020-01-30T12:46:31+00:00"
         },
         {
             "name": "dotkernel/dot-mail",
-            "version": "1.0.0",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dotkernel/dot-mail.git",
-                "reference": "e833117b1cdcf13084fa1920add7d966d68536e6"
+                "reference": "9dde4f5a538ac4b83127018c7d2fb4e2616fa78b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dotkernel/dot-mail/zipball/e833117b1cdcf13084fa1920add7d966d68536e6",
-                "reference": "e833117b1cdcf13084fa1920add7d966d68536e6",
+                "url": "https://api.github.com/repos/dotkernel/dot-mail/zipball/9dde4f5a538ac4b83127018c7d2fb4e2616fa78b",
+                "reference": "9dde4f5a538ac4b83127018c7d2fb4e2616fa78b",
                 "shasum": ""
             },
             "require": {
-                "dotkernel/dot-event": "^0.2.1",
-                "php": "^7.1",
-                "zendframework/zend-mail": "^2.9",
-                "zendframework/zend-servicemanager": "^3.3"
+                "dotkernel/dot-event": "^2.0",
+                "laminas/laminas-dependency-plugin": "^1.0",
+                "laminas/laminas-mail": "^2.9",
+                "laminas/laminas-servicemanager": "^3.3",
+                "php": "^7.2"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8",
@@ -1441,8 +1413,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1-dev",
-                    "dev-develop": "2.0-dev"
+                    "dev-master": "2.0-dev",
+                    "dev-develop": "2.1-dev"
                 }
             },
             "autoload": {
@@ -1460,26 +1432,28 @@
                     "email": "team@dotkernel.com"
                 }
             ],
-            "description": "DotKernel mail component based on zend-mail",
-            "time": "2018-10-05T11:59:57+00:00"
+            "description": "DotKernel mail component based on laminas-mail",
+            "time": "2020-01-30T12:49:48+00:00"
         },
         {
             "name": "fig/http-message-util",
-            "version": "1.1.3",
+            "version": "1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message-util.git",
-                "reference": "35b19404371b31b3a43823c755398c48c9966db4"
+                "reference": "3242caa9da7221a304b8f84eb9eaddae0a7cf422"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message-util/zipball/35b19404371b31b3a43823c755398c48c9966db4",
-                "reference": "35b19404371b31b3a43823c755398c48c9966db4",
+                "url": "https://api.github.com/repos/php-fig/http-message-util/zipball/3242caa9da7221a304b8f84eb9eaddae0a7cf422",
+                "reference": "3242caa9da7221a304b8f84eb9eaddae0a7cf422",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.3 || ^7.0",
-                "psr/http-message": "^1.0"
+                "php": "^5.3 || ^7.0"
+            },
+            "suggest": {
+                "psr/http-message": "The package containing the PSR-7 interfaces"
             },
             "type": "library",
             "extra": {
@@ -1511,7 +1485,7 @@
                 "request",
                 "response"
             ],
-            "time": "2018-11-19T16:19:58+00:00"
+            "time": "2020-02-05T20:36:27+00:00"
         },
         {
             "name": "laminas/laminas-code",
@@ -1811,16 +1785,16 @@
         },
         {
             "name": "laminas/laminas-db",
-            "version": "2.11.0",
+            "version": "2.11.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-db.git",
-                "reference": "26422b5469ed894b916ea6b8377a7332206178cc"
+                "reference": "76f9527da996c2fef32ef1f3a939e18ca5e9d962"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-db/zipball/26422b5469ed894b916ea6b8377a7332206178cc",
-                "reference": "26422b5469ed894b916ea6b8377a7332206178cc",
+                "url": "https://api.github.com/repos/laminas/laminas-db/zipball/76f9527da996c2fef32ef1f3a939e18ca5e9d962",
+                "reference": "76f9527da996c2fef32ef1f3a939e18ca5e9d962",
                 "shasum": ""
             },
             "require": {
@@ -1869,20 +1843,20 @@
                 "db",
                 "laminas"
             ],
-            "time": "2019-12-31T19:56:10+00:00"
+            "time": "2020-01-14T13:07:26+00:00"
         },
         {
             "name": "laminas/laminas-dependency-plugin",
-            "version": "1.0.0",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-dependency-plugin.git",
-                "reference": "1e0e1dab486afd40b879fa5783055fc4f114f7be"
+                "reference": "f269716dc584cd7b69e7f6e8ac1092d645ab56d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-dependency-plugin/zipball/1e0e1dab486afd40b879fa5783055fc4f114f7be",
-                "reference": "1e0e1dab486afd40b879fa5783055fc4f114f7be",
+                "url": "https://api.github.com/repos/laminas/laminas-dependency-plugin/zipball/f269716dc584cd7b69e7f6e8ac1092d645ab56d5",
+                "reference": "f269716dc584cd7b69e7f6e8ac1092d645ab56d5",
                 "shasum": ""
             },
             "require": {
@@ -1915,20 +1889,20 @@
                 "BSD-3-Clause"
             ],
             "description": "Replace zendframework and zfcampus packages with their Laminas Project equivalents.",
-            "time": "2019-12-31T21:06:56+00:00"
+            "time": "2020-01-14T19:36:52+00:00"
         },
         {
             "name": "laminas/laminas-diactoros",
-            "version": "1.8.7",
+            "version": "1.8.7p1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-diactoros.git",
-                "reference": "1c2dce9d2822030d5dcfd50b709708830429c89a"
+                "reference": "56a9aca1f89231763d24d2ae13531b97fa5f4029"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-diactoros/zipball/1c2dce9d2822030d5dcfd50b709708830429c89a",
-                "reference": "1c2dce9d2822030d5dcfd50b709708830429c89a",
+                "url": "https://api.github.com/repos/laminas/laminas-diactoros/zipball/56a9aca1f89231763d24d2ae13531b97fa5f4029",
+                "reference": "56a9aca1f89231763d24d2ae13531b97fa5f4029",
                 "shasum": ""
             },
             "require": {
@@ -1990,7 +1964,7 @@
                 "psr",
                 "psr-7"
             ],
-            "time": "2019-12-31T16:41:30+00:00"
+            "time": "2020-01-07T19:25:17+00:00"
         },
         {
             "name": "laminas/laminas-escaper",
@@ -2101,16 +2075,16 @@
         },
         {
             "name": "laminas/laminas-filter",
-            "version": "2.9.2",
+            "version": "2.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-filter.git",
-                "reference": "4d8c0c25e40836bd617335e744009c2c950c4ad5"
+                "reference": "52b5cdbef8902280996e687e7352a648a8e22f31"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-filter/zipball/4d8c0c25e40836bd617335e744009c2c950c4ad5",
-                "reference": "4d8c0c25e40836bd617335e744009c2c950c4ad5",
+                "url": "https://api.github.com/repos/laminas/laminas-filter/zipball/52b5cdbef8902280996e687e7352a648a8e22f31",
+                "reference": "52b5cdbef8902280996e687e7352a648a8e22f31",
                 "shasum": ""
             },
             "require": {
@@ -2166,7 +2140,7 @@
                 "filter",
                 "laminas"
             ],
-            "time": "2019-12-31T16:54:29+00:00"
+            "time": "2020-01-07T20:43:53+00:00"
         },
         {
             "name": "laminas/laminas-http",
@@ -2950,16 +2924,16 @@
         },
         {
             "name": "laminas/laminas-stratigility",
-            "version": "3.2.0",
+            "version": "3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-stratigility.git",
-                "reference": "7e36f4b6b9d3461c6e35bb7cbfa0c14f90e14f74"
+                "reference": "2776cc08e1dd820bb68e17cd59605bdc9e5807b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-stratigility/zipball/7e36f4b6b9d3461c6e35bb7cbfa0c14f90e14f74",
-                "reference": "7e36f4b6b9d3461c6e35bb7cbfa0c14f90e14f74",
+                "url": "https://api.github.com/repos/laminas/laminas-stratigility/zipball/2776cc08e1dd820bb68e17cd59605bdc9e5807b5",
+                "reference": "2776cc08e1dd820bb68e17cd59605bdc9e5807b5",
                 "shasum": ""
             },
             "require": {
@@ -3020,7 +2994,7 @@
                 "psr-15",
                 "psr-7"
             ],
-            "time": "2019-12-31T17:51:56+00:00"
+            "time": "2020-01-07T21:13:38+00:00"
         },
         {
             "name": "laminas/laminas-text",
@@ -3127,16 +3101,16 @@
         },
         {
             "name": "laminas/laminas-validator",
-            "version": "2.13.0",
+            "version": "2.13.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-validator.git",
-                "reference": "2a03c207d5ae038259f0abb588f64851cebdcb1a"
+                "reference": "36702f033486bf1953e254f5299aad205302e79d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-validator/zipball/2a03c207d5ae038259f0abb588f64851cebdcb1a",
-                "reference": "2a03c207d5ae038259f0abb588f64851cebdcb1a",
+                "url": "https://api.github.com/repos/laminas/laminas-validator/zipball/36702f033486bf1953e254f5299aad205302e79d",
+                "reference": "36702f033486bf1953e254f5299aad205302e79d",
                 "shasum": ""
             },
             "require": {
@@ -3160,7 +3134,7 @@
                 "laminas/laminas-servicemanager": "^2.7.5 || ^3.0.3",
                 "laminas/laminas-session": "^2.8",
                 "laminas/laminas-uri": "^2.5",
-                "phpunit/phpunit": "^6.0.8 || ^5.7.15",
+                "phpunit/phpunit": "^7.5.20 || ^8.5.2",
                 "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.0"
@@ -3202,20 +3176,20 @@
                 "laminas",
                 "validator"
             ],
-            "time": "2019-12-31T17:57:49+00:00"
+            "time": "2020-01-15T09:59:30+00:00"
         },
         {
             "name": "laminas/laminas-zendframework-bridge",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-zendframework-bridge.git",
-                "reference": "32d7095e436a31b8d98e485a5c63d70df74915a8"
+                "reference": "0fb9675b84a1666ab45182b6c5b29956921e818d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/32d7095e436a31b8d98e485a5c63d70df74915a8",
-                "reference": "32d7095e436a31b8d98e485a5c63d70df74915a8",
+                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/0fb9675b84a1666ab45182b6c5b29956921e818d",
+                "reference": "0fb9675b84a1666ab45182b6c5b29956921e818d",
                 "shasum": ""
             },
             "require": {
@@ -3254,7 +3228,7 @@
                 "laminas",
                 "zf"
             ],
-            "time": "2019-12-31T15:24:03+00:00"
+            "time": "2020-01-07T22:58:31+00:00"
         },
         {
             "name": "lcobucci/jwt",
@@ -3605,16 +3579,16 @@
         },
         {
             "name": "mezzio/mezzio-authentication-oauth2",
-            "version": "1.3.0",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mezzio/mezzio-authentication-oauth2.git",
-                "reference": "83e4910edaf7c616406f84793e4b3bac48e3139b"
+                "reference": "a5b3ced02e462215edfc461a02f66c1b68b184e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mezzio/mezzio-authentication-oauth2/zipball/83e4910edaf7c616406f84793e4b3bac48e3139b",
-                "reference": "83e4910edaf7c616406f84793e4b3bac48e3139b",
+                "url": "https://api.github.com/repos/mezzio/mezzio-authentication-oauth2/zipball/a5b3ced02e462215edfc461a02f66c1b68b184e8",
+                "reference": "a5b3ced02e462215edfc461a02f66c1b68b184e8",
                 "shasum": ""
             },
             "require": {
@@ -3671,7 +3645,7 @@
                 "oauth2",
                 "psr-7"
             ],
-            "time": "2019-12-31T15:43:12+00:00"
+            "time": "2020-02-10T20:45:51+00:00"
         },
         {
             "name": "mezzio/mezzio-authorization",
@@ -3742,16 +3716,16 @@
         },
         {
             "name": "mezzio/mezzio-authorization-acl",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mezzio/mezzio-authorization-acl.git",
-                "reference": "cb1dbefa047bc3ae8cd155f2ce18e230162c56e6"
+                "reference": "07eefea9f8384281388315f758c6bfccde31960c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mezzio/mezzio-authorization-acl/zipball/cb1dbefa047bc3ae8cd155f2ce18e230162c56e6",
-                "reference": "cb1dbefa047bc3ae8cd155f2ce18e230162c56e6",
+                "url": "https://api.github.com/repos/mezzio/mezzio-authorization-acl/zipball/07eefea9f8384281388315f758c6bfccde31960c",
+                "reference": "07eefea9f8384281388315f758c6bfccde31960c",
                 "shasum": ""
             },
             "require": {
@@ -3764,7 +3738,8 @@
                 "psr/http-message": "^1.0.1"
             },
             "conflict": {
-                "container-interop/container-interop": "<1.2.0"
+                "container-interop/container-interop": "<1.2.0",
+                "phpspec/prophecy": "<1.10.2"
             },
             "replace": {
                 "zendframework/zend-expressive-authorization-acl": "self.version"
@@ -3772,7 +3747,7 @@
             "require-dev": {
                 "laminas/laminas-coding-standard": "~1.0.0",
                 "laminas/laminas-servicemanager": "^3.3",
-                "phpunit/phpunit": "^7.0.2"
+                "phpunit/phpunit": "^7.5.20 || ^8.5.2"
             },
             "type": "library",
             "extra": {
@@ -3803,20 +3778,20 @@
                 "middleware",
                 "psr-7"
             ],
-            "time": "2019-12-31T15:43:31+00:00"
+            "time": "2020-01-24T20:30:16+00:00"
         },
         {
             "name": "mezzio/mezzio-authorization-rbac",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mezzio/mezzio-authorization-rbac.git",
-                "reference": "fcad0ebc7cfb98509073592bb82b37ee420221a8"
+                "reference": "57b7eebb086a014f0556374ec63a8b456c99c491"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mezzio/mezzio-authorization-rbac/zipball/fcad0ebc7cfb98509073592bb82b37ee420221a8",
-                "reference": "fcad0ebc7cfb98509073592bb82b37ee420221a8",
+                "url": "https://api.github.com/repos/mezzio/mezzio-authorization-rbac/zipball/57b7eebb086a014f0556374ec63a8b456c99c491",
+                "reference": "57b7eebb086a014f0556374ec63a8b456c99c491",
                 "shasum": ""
             },
             "require": {
@@ -3829,7 +3804,8 @@
                 "psr/http-message": "^1.0.1"
             },
             "conflict": {
-                "container-interop/container-interop": "<1.2.0"
+                "container-interop/container-interop": "<1.2.0",
+                "phpspec/prophecy": "<1.10.2"
             },
             "replace": {
                 "zendframework/zend-expressive-authorization-rbac": "self.version"
@@ -3837,7 +3813,7 @@
             "require-dev": {
                 "laminas/laminas-coding-standard": "~1.0.0",
                 "laminas/laminas-servicemanager": "^3.3",
-                "phpunit/phpunit": "^7.0.2"
+                "phpunit/phpunit": "^7.5.20 || ^8.5.2"
             },
             "type": "library",
             "extra": {
@@ -3867,7 +3843,7 @@
                 "psr-7",
                 "rbac"
             ],
-            "time": "2019-12-31T15:43:36+00:00"
+            "time": "2020-01-24T20:36:29+00:00"
         },
         {
             "name": "mezzio/mezzio-fastroute",
@@ -5036,29 +5012,28 @@
         },
         {
             "name": "ramsey/uuid-doctrine",
-            "version": "1.5.0",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid-doctrine.git",
-                "reference": "2a56db8e68bff487508244f5a2008075279d0255"
+                "reference": "9facc4689547e72e03c1e18df4a0ee162b2778b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid-doctrine/zipball/2a56db8e68bff487508244f5a2008075279d0255",
-                "reference": "2a56db8e68bff487508244f5a2008075279d0255",
+                "url": "https://api.github.com/repos/ramsey/uuid-doctrine/zipball/9facc4689547e72e03c1e18df4a0ee162b2778b0",
+                "reference": "9facc4689547e72e03c1e18df4a0ee162b2778b0",
                 "shasum": ""
             },
             "require": {
                 "doctrine/orm": "^2.5",
-                "php": "^5.4 || ^7.0",
-                "ramsey/uuid": "^3.0"
+                "php": "^5.4 | ^7 | ^8",
+                "ramsey/uuid": "^3.5 | ^4"
             },
             "require-dev": {
-                "jakub-onderka/php-parallel-lint": "^1.0",
-                "mockery/mockery": "^0.9 || ^1.1",
-                "php-coveralls/php-coveralls": "^1.1 || ^2.1",
-                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5",
-                "squizlabs/php_codesniffer": "^3.3"
+                "jakub-onderka/php-parallel-lint": "^1",
+                "mockery/mockery": "^0.9 | ^1",
+                "phpunit/phpunit": "^4.8.36 | ^5.7 | ^6.5 | ^7",
+                "squizlabs/php_codesniffer": "^3.5"
             },
             "type": "library",
             "autoload": {
@@ -5070,26 +5045,71 @@
             "license": [
                 "MIT"
             ],
-            "authors": [
-                {
-                    "name": "Marijn Huizendveld",
-                    "email": "marijn.huizendveld@gmail.com"
-                },
-                {
-                    "name": "Ben Ramsey",
-                    "email": "ben@benramsey.com",
-                    "homepage": "http://benramsey.com"
-                }
-            ],
-            "description": "Allow the use of a ramsey/uuid UUID as Doctrine field type.",
+            "description": "Allow the use of ramsey/uuid as a Doctrine field type.",
             "homepage": "https://github.com/ramsey/uuid-doctrine",
             "keywords": [
+                "database",
                 "doctrine",
                 "guid",
                 "identifier",
                 "uuid"
             ],
-            "time": "2018-08-11T21:01:22+00:00"
+            "time": "2020-01-27T05:09:17+00:00"
+        },
+        {
+            "name": "roave/psr-container-doctrine",
+            "version": "2.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Roave/psr-container-doctrine.git",
+                "reference": "b7bc3566e5990b3c52f402d546840ced7a7c459f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Roave/psr-container-doctrine/zipball/b7bc3566e5990b3c52f402d546840ced7a7c459f",
+                "reference": "b7bc3566e5990b3c52f402d546840ced7a7c459f",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/common": "^2.6",
+                "doctrine/dbal": "^2.5",
+                "doctrine/orm": "^2.5",
+                "php": ">=7.3.0,<7.5.0",
+                "psr/container": "^1.0.0"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^7.0",
+                "phpunit/phpunit": "^8.5",
+                "psalm/plugin-phpunit": "^0.8.1",
+                "vimeo/psalm": "^3.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Roave\\PsrContainerDoctrine\\": "src/"
+                },
+                "files": [
+                    "bc-namespace-shim.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ben Scholzen",
+                    "homepage": "https://github.com/dasprid"
+                },
+                {
+                    "name": "James Titcumb",
+                    "email": "james@asgrim.com",
+                    "homepage": "https://github.com/asgrim"
+                }
+            ],
+            "description": "Doctrine Factories for PSR-11 Containers",
+            "homepage": "https://github.com/Roave/psr-container-doctrine",
+            "time": "2020-02-10T14:23:44+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -5097,12 +5117,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "67ac6ea8f4a078c3c9b7aec5d7ae70f098c37389"
+                "reference": "0365bf26eddd4a8be9980d7dabf05ceb2aba2f02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/67ac6ea8f4a078c3c9b7aec5d7ae70f098c37389",
-                "reference": "67ac6ea8f4a078c3c9b7aec5d7ae70f098c37389",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0365bf26eddd4a8be9980d7dabf05ceb2aba2f02",
+                "reference": "0365bf26eddd4a8be9980d7dabf05ceb2aba2f02",
                 "shasum": ""
             },
             "conflict": {
@@ -5114,11 +5134,14 @@
                 "api-platform/core": ">=2.2,<2.2.10|>=2.3,<2.3.6",
                 "asymmetricrypt/asymmetricrypt": ">=0,<9.9.99",
                 "aws/aws-sdk-php": ">=3,<3.2.1",
+                "bagisto/bagisto": "<0.1.5",
+                "bolt/bolt": "<3.6.10",
                 "brightlocal/phpwhois": "<=4.2.5",
                 "bugsnag/bugsnag-laravel": ">=2,<2.0.2",
                 "cakephp/cakephp": ">=1.3,<1.3.18|>=2,<2.4.99|>=2.5,<2.5.99|>=2.6,<2.6.12|>=2.7,<2.7.6|>=3,<3.5.18|>=3.6,<3.6.15|>=3.7,<3.7.7",
                 "cart2quote/module-quotation": ">=4.1.6,<=4.4.5|>=5,<5.4.4",
                 "cartalyst/sentry": "<=2.1.6",
+                "cesnet/simplesamlphp-module-proxystatistics": "<3.1",
                 "codeigniter/framework": "<=3.0.6",
                 "composer/composer": "<=1-alpha.11",
                 "contao-components/mediaelement": ">=2.14.2,<2.21.1",
@@ -5136,12 +5159,18 @@
                 "doctrine/mongodb-odm": ">=1,<1.0.2",
                 "doctrine/mongodb-odm-bundle": ">=2,<3.0.1",
                 "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1",
+                "dolibarr/dolibarr": "<=10.0.6",
                 "dompdf/dompdf": ">=0.6,<0.6.2",
                 "drupal/core": ">=7,<7.69|>=8,<8.7.11|>=8.8,<8.8.1",
                 "drupal/drupal": ">=7,<7.69|>=8,<8.7.11|>=8.8,<8.8.1",
                 "endroid/qr-code-bundle": "<3.4.2",
+                "enshrined/svg-sanitize": "<0.12",
                 "erusev/parsedown": "<1.7.2",
-                "ezsystems/ezplatform-admin-ui": ">=1.3,<1.3.5|>=1.4,<1.4.4",
+                "ezsystems/ezfind-ls": ">=5.3,<5.3.6.1|>=5.4,<5.4.11.1|>=2017.12,<2017.12.0.1",
+                "ezsystems/ezplatform": ">=1.7,<1.7.9.1|>=1.13,<1.13.5.1|>=2.5,<2.5.4",
+                "ezsystems/ezplatform-admin-ui": ">=1.3,<1.3.5|>=1.4,<1.4.6",
+                "ezsystems/ezplatform-admin-ui-assets": ">=4,<4.2",
+                "ezsystems/ezplatform-user": ">=1,<1.0.1",
                 "ezsystems/ezpublish-kernel": ">=5.3,<5.3.12.1|>=5.4,<5.4.13.1|>=6,<6.7.9.1|>=6.8,<6.13.5.1|>=7,<7.2.4.1|>=7.3,<7.3.2.1",
                 "ezsystems/ezpublish-legacy": ">=5.3,<5.3.12.6|>=5.4,<5.4.12.3|>=2011,<2017.12.4.3|>=2018.6,<2018.6.1.4|>=2018.9,<2018.9.1.3",
                 "ezsystems/repository-forms": ">=2.3,<2.3.2.1",
@@ -5152,6 +5181,7 @@
                 "friendsofsymfony/rest-bundle": ">=1.2,<1.2.2",
                 "friendsofsymfony/user-bundle": ">=1.2,<1.3.5",
                 "fuel/core": "<1.8.1",
+                "getgrav/grav": "<1.7-beta.8",
                 "gree/jose": "<=2.2",
                 "gregwar/rst": "<1.0.3",
                 "guzzlehttp/guzzle": ">=4-rc.2,<4.2.4|>=5,<5.3.1|>=6,<6.2.1",
@@ -5169,12 +5199,15 @@
                 "laravel/framework": ">=4,<4.0.99|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.42|>=5.6,<5.6.30",
                 "laravel/socialite": ">=1,<1.0.99|>=2,<2.0.10",
                 "league/commonmark": "<0.18.3",
+                "librenms/librenms": "<1.53",
+                "magento/community-edition": ">=2,<2.2.10|>=2.3,<2.3.3",
                 "magento/magento1ce": "<1.9.4.3",
                 "magento/magento1ee": ">=1,<1.14.4.3",
                 "magento/product-community-edition": ">=2,<2.2.10|>=2.3,<2.3.2-p.2",
                 "monolog/monolog": ">=1.8,<1.12",
                 "namshi/jose": "<2.2",
                 "onelogin/php-saml": "<2.10.4",
+                "oneup/uploader-bundle": ">=1,<1.9.3|>=2,<2.1.5",
                 "openid/php-openid": "<2.3",
                 "oro/crm": ">=1.7,<1.7.4",
                 "oro/platform": ">=1.7,<1.7.4",
@@ -5183,44 +5216,60 @@
                 "paragonie/random_compat": "<2",
                 "paypal/merchant-sdk-php": "<3.12",
                 "pear/archive_tar": "<1.4.4",
+                "phpfastcache/phpfastcache": ">=5,<5.0.13",
                 "phpmailer/phpmailer": ">=5,<5.2.27|>=6,<6.0.6",
-                "phpoffice/phpexcel": "<=1.8.1",
-                "phpoffice/phpspreadsheet": "<=1.5",
+                "phpmyadmin/phpmyadmin": "<4.9.2",
+                "phpoffice/phpexcel": "<1.8.2",
+                "phpoffice/phpspreadsheet": "<1.8",
                 "phpunit/phpunit": ">=4.8.19,<4.8.28|>=5.0.10,<5.6.3",
                 "phpwhois/phpwhois": "<=4.2.5",
                 "phpxmlrpc/extras": "<0.6.1",
+                "pimcore/pimcore": "<6.3",
+                "prestashop/autoupgrade": ">=4,<4.10.1",
+                "prestashop/gamification": "<2.3.2",
+                "prestashop/ps_facetedsearch": "<3.4.1",
+                "privatebin/privatebin": "<1.2.2|>=1.3,<1.3.2",
                 "propel/propel": ">=2-alpha.1,<=2-alpha.7",
                 "propel/propel1": ">=1,<=1.7.1",
                 "pusher/pusher-php-server": "<2.2.1",
-                "robrichards/xmlseclibs": ">=1,<3.0.4",
+                "robrichards/xmlseclibs": "<3.0.4",
                 "sabre/dav": ">=1.6,<1.6.99|>=1.7,<1.7.11|>=1.8,<1.8.9",
                 "scheb/two-factor-bundle": ">=0,<3.26|>=4,<4.11",
                 "sensiolabs/connect": "<4.2.3",
                 "serluck/phpwhois": "<=4.2.6",
                 "shopware/shopware": "<5.3.7",
-                "silverstripe/cms": ">=3,<=3.0.11|>=3.1,<3.1.11",
+                "silverstripe/admin": ">=1.0.3,<1.0.4|>=1.1,<1.1.1",
+                "silverstripe/assets": ">=1,<1.3.5",
+                "silverstripe/cms": "<4.3.6|>=4.4,<4.4.4",
+                "silverstripe/comments": ">=1.3,<1.9.99|>=2,<2.9.99|>=3,<3.1.1",
                 "silverstripe/forum": "<=0.6.1|>=0.7,<=0.7.3",
-                "silverstripe/framework": ">=3,<3.6.7|>=3.7,<3.7.3|>=4,<4.4",
+                "silverstripe/framework": "<4.4.4",
                 "silverstripe/graphql": ">=2,<2.0.5|>=3,<3.1.2",
                 "silverstripe/registry": ">=2.1,<2.1.2|>=2.2,<2.2.1",
                 "silverstripe/restfulserver": ">=1,<1.0.9|>=2,<2.0.4",
+                "silverstripe/subsites": ">=2,<2.1.1",
+                "silverstripe/taxonomy": ">=1.3,<1.3.1|>=2,<2.0.1",
                 "silverstripe/userforms": "<3",
                 "simple-updates/phpwhois": "<=1",
                 "simplesamlphp/saml2": "<1.10.6|>=2,<2.3.8|>=3,<3.1.4",
-                "simplesamlphp/simplesamlphp": "<1.17.8",
+                "simplesamlphp/simplesamlphp": "<1.18.4",
                 "simplesamlphp/simplesamlphp-module-infocard": "<1.0.1",
+                "simplito/elliptic-php": "<1.0.6",
                 "slim/slim": "<2.6",
                 "smarty/smarty": "<3.1.33",
                 "socalnick/scn-social-auth": "<1.15.2",
                 "spoonity/tcpdf": "<6.2.22",
                 "squizlabs/php_codesniffer": ">=1,<2.8.1|>=3,<3.0.1",
                 "stormpath/sdk": ">=0,<9.9.99",
-                "studio-42/elfinder": "<2.1.48",
+                "studio-42/elfinder": "<2.1.49",
                 "swiftmailer/swiftmailer": ">=4,<5.4.5",
                 "sylius/admin-bundle": ">=1,<1.0.17|>=1.1,<1.1.9|>=1.2,<1.2.2",
                 "sylius/grid": ">=1,<1.1.19|>=1.2,<1.2.18|>=1.3,<1.3.13|>=1.4,<1.4.5|>=1.5,<1.5.1",
                 "sylius/grid-bundle": ">=1,<1.1.19|>=1.2,<1.2.18|>=1.3,<1.3.13|>=1.4,<1.4.5|>=1.5,<1.5.1",
-                "sylius/sylius": ">=1,<1.1.18|>=1.2,<1.2.17|>=1.3,<1.3.12|>=1.4,<1.4.4",
+                "sylius/resource-bundle": "<1.3.13|>=1.4,<1.4.6|>=1.5,<1.5.1|>=1.6,<1.6.3",
+                "sylius/sylius": "<1.3.16|>=1.4,<1.4.12|>=1.5,<1.5.9|>=1.6,<1.6.5",
+                "symbiote/silverstripe-multivaluefield": ">=3,<3.0.99",
+                "symbiote/silverstripe-versionedfiles": "<=2.0.3",
                 "symfony/cache": ">=3.1,<3.4.35|>=4,<4.2.12|>=4.3,<4.3.8",
                 "symfony/dependency-injection": ">=2,<2.0.17|>=2.7,<2.7.51|>=2.8,<2.8.50|>=3,<3.4.26|>=4,<4.1.12|>=4.2,<4.2.7",
                 "symfony/form": ">=2.3,<2.3.35|>=2.4,<2.6.12|>=2.7,<2.7.50|>=2.8,<2.8.49|>=3,<3.4.20|>=4,<4.0.15|>=4.1,<4.1.9|>=4.2,<4.2.1",
@@ -5260,8 +5309,11 @@
                 "typo3/neos": ">=1.1,<1.1.3|>=1.2,<1.2.13|>=2,<2.0.4",
                 "typo3/phar-stream-wrapper": ">=1,<2.1.1|>=3,<3.1.1",
                 "ua-parser/uap-php": "<3.8",
+                "usmanhalalit/pixie": "<1.0.3|>=2,<2.0.2",
+                "verot/class.upload.php": "<1.0.3|>=2,<2.0.4",
                 "wallabag/tcpdf": "<6.2.22",
                 "willdurand/js-translation-bundle": "<2.1.1",
+                "yii2mod/yii2-cms": "<1.9.2",
                 "yiisoft/yii": ">=1.1.14,<1.1.15",
                 "yiisoft/yii2": "<2.0.15",
                 "yiisoft/yii2-bootstrap": "<2.0.4",
@@ -5270,6 +5322,7 @@
                 "yiisoft/yii2-gii": "<2.0.4",
                 "yiisoft/yii2-jui": "<2.0.4",
                 "yiisoft/yii2-redis": "<2.0.8",
+                "yourls/yourls": "<1.7.4",
                 "zendframework/zend-cache": ">=2.4,<2.4.8|>=2.5,<2.5.3",
                 "zendframework/zend-captcha": ">=2,<2.4.9|>=2.5,<2.5.2",
                 "zendframework/zend-crypt": ">=2,<2.4.9|>=2.5,<2.5.2",
@@ -5306,10 +5359,15 @@
                     "name": "Marco Pivetta",
                     "email": "ocramius@gmail.com",
                     "role": "maintainer"
+                },
+                {
+                    "name": "Ilya Tribusean",
+                    "email": "slash3b@gmail.com",
+                    "role": "maintainer"
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2020-01-06T19:16:46+00:00"
+            "time": "2020-02-10T16:13:40+00:00"
         },
         {
             "name": "spatie/array-to-xml",
@@ -5363,16 +5421,16 @@
         },
         {
             "name": "swagger-api/swagger-ui",
-            "version": "v3.24.3",
+            "version": "v3.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swagger-api/swagger-ui.git",
-                "reference": "94e101924b84435585896f4ea7c4092182a91f23"
+                "reference": "e8a451a4cb1d774c62492ef44211f7589649e529"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swagger-api/swagger-ui/zipball/94e101924b84435585896f4ea7c4092182a91f23",
-                "reference": "94e101924b84435585896f4ea7c4092182a91f23",
+                "url": "https://api.github.com/repos/swagger-api/swagger-ui/zipball/e8a451a4cb1d774c62492ef44211f7589649e529",
+                "reference": "e8a451a4cb1d774c62492ef44211f7589649e529",
                 "shasum": ""
             },
             "type": "library",
@@ -5416,20 +5474,20 @@
                 "swagger",
                 "ui"
             ],
-            "time": "2019-11-18T00:04:23+00:00"
+            "time": "2020-01-17T21:39:28+00:00"
         },
         {
             "name": "symfony/console",
-            "version": "v5.0.2",
+            "version": "v5.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "fe6e3cd889ca64172d7a742a2eb058541404ef47"
+                "reference": "91c294166c38d8c0858a86fad76d8c14dc1144c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/fe6e3cd889ca64172d7a742a2eb058541404ef47",
-                "reference": "fe6e3cd889ca64172d7a742a2eb058541404ef47",
+                "url": "https://api.github.com/repos/symfony/console/zipball/91c294166c38d8c0858a86fad76d8c14dc1144c8",
+                "reference": "91c294166c38d8c0858a86fad76d8c14dc1144c8",
                 "shasum": ""
             },
             "require": {
@@ -5492,7 +5550,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2019-12-17T13:20:22+00:00"
+            "time": "2020-01-25T15:56:29+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -5729,16 +5787,16 @@
         },
         {
             "name": "symfony/stopwatch",
-            "version": "v5.0.2",
+            "version": "v5.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stopwatch.git",
-                "reference": "d410282956706e0b08681a5527447a8e6b6f421e"
+                "reference": "5d9add8034135b9a5f7b101d1e42c797e7f053e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/d410282956706e0b08681a5527447a8e6b6f421e",
-                "reference": "d410282956706e0b08681a5527447a8e6b6f421e",
+                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/5d9add8034135b9a5f7b101d1e42c797e7f053e4",
+                "reference": "5d9add8034135b9a5f7b101d1e42c797e7f053e4",
                 "shasum": ""
             },
             "require": {
@@ -5775,7 +5833,7 @@
             ],
             "description": "Symfony Stopwatch Component",
             "homepage": "https://symfony.com",
-            "time": "2019-11-18T17:27:11+00:00"
+            "time": "2020-01-04T14:08:26+00:00"
         },
         {
             "name": "true/punycode",
@@ -5994,16 +6052,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v3.0.1",
+            "version": "v3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "28f856a4c57eeb24485916e8a68403f41a133616"
+                "reference": "5e6df0763a83dab0b73c1e803342fc0315f63ff5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/28f856a4c57eeb24485916e8a68403f41a133616",
-                "reference": "28f856a4c57eeb24485916e8a68403f41a133616",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/5e6df0763a83dab0b73c1e803342fc0315f63ff5",
+                "reference": "5e6df0763a83dab0b73c1e803342fc0315f63ff5",
                 "shasum": ""
             },
             "require": {
@@ -6052,7 +6110,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2019-12-28T07:17:28+00:00"
+            "time": "2020-02-11T06:03:57+00:00"
         },
         {
             "name": "willdurand/negotiation",
@@ -6157,6 +6215,7 @@
                 "console",
                 "zf"
             ],
+            "abandoned": true,
             "time": "2017-11-27T17:17:19+00:00"
         }
     ],
@@ -6378,16 +6437,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.9.4",
+            "version": "1.9.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "579bb7356d91f9456ccd505f24ca8b667966a0a7"
+                "reference": "b2c28789e80a97badd14145fda39b545d83ca3ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/579bb7356d91f9456ccd505f24ca8b667966a0a7",
-                "reference": "579bb7356d91f9456ccd505f24ca8b667966a0a7",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/b2c28789e80a97badd14145fda39b545d83ca3ef",
+                "reference": "b2c28789e80a97badd14145fda39b545d83ca3ef",
                 "shasum": ""
             },
             "require": {
@@ -6422,7 +6481,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2019-12-15T19:12:40+00:00"
+            "time": "2020-01-17T21:11:47+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -6580,41 +6639,38 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "4.3.4",
+            "version": "5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "da3fd972d6bafd628114f7e7e036f45944b62e9c"
+                "reference": "a48807183a4b819072f26e347bbd0b5199a9d15f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/da3fd972d6bafd628114f7e7e036f45944b62e9c",
-                "reference": "da3fd972d6bafd628114f7e7e036f45944b62e9c",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/a48807183a4b819072f26e347bbd0b5199a9d15f",
+                "reference": "a48807183a4b819072f26e347bbd0b5199a9d15f",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0",
-                "phpdocumentor/reflection-common": "^1.0.0 || ^2.0.0",
-                "phpdocumentor/type-resolver": "~0.4 || ^1.0.0",
-                "webmozart/assert": "^1.0"
+                "ext-filter": "^7.1",
+                "php": "^7.2",
+                "phpdocumentor/reflection-common": "^2.0",
+                "phpdocumentor/type-resolver": "^1.0",
+                "webmozart/assert": "^1"
             },
             "require-dev": {
-                "doctrine/instantiator": "^1.0.5",
-                "mockery/mockery": "^1.0",
-                "phpdocumentor/type-resolver": "0.4.*",
-                "phpunit/phpunit": "^6.4"
+                "doctrine/instantiator": "^1",
+                "mockery/mockery": "^1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.x-dev"
+                    "dev-master": "5.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "phpDocumentor\\Reflection\\": [
-                        "src/"
-                    ]
+                    "phpDocumentor\\Reflection\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -6625,10 +6681,14 @@
                 {
                     "name": "Mike van Riel",
                     "email": "me@mikevanriel.com"
+                },
+                {
+                    "name": "Jaap van Otterdijk",
+                    "email": "account@ijaap.nl"
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2019-12-28T18:55:12+00:00"
+            "time": "2020-02-09T09:16:15+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -6679,24 +6739,24 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.10.1",
+            "version": "v1.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "cbe1df668b3fe136bcc909126a0f529a78d4cbbc"
+                "reference": "b4400efc9d206e83138e2bb97ed7f5b14b831cd9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/cbe1df668b3fe136bcc909126a0f529a78d4cbbc",
-                "reference": "cbe1df668b3fe136bcc909126a0f529a78d4cbbc",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/b4400efc9d206e83138e2bb97ed7f5b14b831cd9",
+                "reference": "b4400efc9d206e83138e2bb97ed7f5b14b831cd9",
                 "shasum": ""
             },
             "require": {
                 "doctrine/instantiator": "^1.0.2",
                 "php": "^5.3|^7.0",
                 "phpdocumentor/reflection-docblock": "^2.0|^3.0.2|^4.0|^5.0",
-                "sebastian/comparator": "^1.2.3|^2.0|^3.0",
-                "sebastian/recursion-context": "^1.0|^2.0|^3.0"
+                "sebastian/comparator": "^1.2.3|^2.0|^3.0|^4.0",
+                "sebastian/recursion-context": "^1.0|^2.0|^3.0|^4.0"
             },
             "require-dev": {
                 "phpspec/phpspec": "^2.5 || ^3.2",
@@ -6738,7 +6798,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2019-12-22T21:05:45+00:00"
+            "time": "2020-01-20T15:57:02+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -6994,16 +7054,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.5.19",
+            "version": "7.5.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "4263f76a3fc65385e242ef7357b99f3bed36707e"
+                "reference": "9467db479d1b0487c99733bb1e7944d32deded2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/4263f76a3fc65385e242ef7357b99f3bed36707e",
-                "reference": "4263f76a3fc65385e242ef7357b99f3bed36707e",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/9467db479d1b0487c99733bb1e7944d32deded2c",
+                "reference": "9467db479d1b0487c99733bb1e7944d32deded2c",
                 "shasum": ""
             },
             "require": {
@@ -7074,7 +7134,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2020-01-06T16:53:05+00:00"
+            "time": "2020-01-08T08:45:45+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",

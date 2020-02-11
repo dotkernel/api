@@ -100,15 +100,18 @@ class UserHandler implements RequestHandlerInterface
                 return $this->notFoundResponse(sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid));
             }
 
-            return $this->responseFactory->createResponse(
-                $request,
-                $this->resourceGenerator->fromObject($user, $request)
-            );
+            return $this->responseFactory
+                ->createResponse($request, $this->resourceGenerator->fromObject($user, $request));
         } else {
-            return $this->responseFactory->createResponse(
-                $request,
-                $this->resourceGenerator->fromObject($this->userService->getUsers($request->getQueryParams()), $request)
-            );
+            try {
+                return $this->responseFactory->createResponse(
+                    $request,
+                    $this->resourceGenerator
+                        ->fromObject($this->userService->getUsers($request->getQueryParams()), $request)
+                );
+            } catch (Exception $exception) {
+                return $this->errorResponse($exception->getMessage());
+            }
         }
     }
 

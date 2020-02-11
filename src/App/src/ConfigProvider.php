@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Api\App;
 
 use Api\App\Common\Factory\AnnotationsCacheFactory;
-use ContainerInteropDoctrine\EntityManagerFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Dot\AnnotatedServices\Factory\AbstractAnnotatedFactory;
-use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
 use Dot\Mail\Factory\MailOptionsAbstractFactory;
 use Dot\Mail\Factory\MailServiceAbstractFactory;
 use Dot\Mail\Service\MailService;
+use Roave\PsrContainerDoctrine\EntityManagerFactory;
 use Twig\Environment;
 use Mezzio\Application;
 use Mezzio\Authentication;
