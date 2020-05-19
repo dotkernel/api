@@ -66,8 +66,7 @@ class UserRepository extends EntityRepository
 
         $qb->select('user')
             ->from(UserEntity::class, 'user')
-            ->andWhere('user.email = :email')->setParameter('email', $email)
-            ->andWhere('user.isDeleted = 0');
+            ->andWhere('user.email = :email')->setParameter('email', $email);
         if (!empty($uuid)) {
             $qb->andWhere('user.uuid != :uuid')->setParameter('uuid', $uuid, UuidBinaryOrderedTimeType::NAME);
         }
