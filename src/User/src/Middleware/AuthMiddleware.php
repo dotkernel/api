@@ -18,11 +18,12 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authorization\AuthorizationInterface;
 use Laminas\Http\Response;
+use Exception;
 
 use function array_map;
 
 /**
- * Class IdentityMiddleware
+ * Class AuthMiddleware
  * @package Api\User\Middleware
  */
 class AuthMiddleware implements MiddlewareInterface
@@ -34,7 +35,7 @@ class AuthMiddleware implements MiddlewareInterface
     protected $authorization;
 
     /**
-     * IdentityMiddleware constructor.
+     * AuthMiddleware constructor.
      * @param UserService $userService
      * @param AuthorizationInterface $authorization
      *
@@ -50,6 +51,7 @@ class AuthMiddleware implements MiddlewareInterface
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
      * @return ResponseInterface
+     * @throws Exception
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
