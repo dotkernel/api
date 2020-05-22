@@ -167,6 +167,16 @@ class UserService
      */
     public function deleteUser(UserEntity $user)
     {
+        $user = $user->markAsDeleted();
+
+        // make user anonymous
+        $user->setEmail('anonymous' . date('dmYHis') . '@dotkernel.com');
+        $userDetails = $user->getDetail();
+        $userDetails->setFirstName('anonymous' . date('dmYHis'));
+        $userDetails->setLastName('anonymous' . date('dmYHis'));
+
+        $user->setDetail($userDetails);
+
         $this->userRepository->saveUser($user->markAsDeleted());
         $this->userRepository->revokeAccessTokens($user->getEmail());
 
