@@ -1,7 +1,7 @@
 # DotKernel API
 DotKernel's PSR-15 API built around the Mezzio API skeleton.
 
-Based on Enrico Zimule's Zend Expressive API skeleton proposal.https://github.com/ezimuel/zend-expressive-api
+Based on Enrico Zimuel's Zend Expressive API skeleton proposal.https://github.com/ezimuel/zend-expressive-api
 
 
 ## Getting Started
