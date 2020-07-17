@@ -61,10 +61,10 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
     protected $roles;
 
     /**
-     * @ORM\Column(name="username", type="string", length=191, nullable=false, unique=true)
-     * @var string $email
+     * @ORM\Column(name="identity", type="string", length=191, nullable=false, unique=true)
+     * @var string $identity
      */
-    protected $email;
+    protected $identity;
 
     /**
      * @ORM\Column(name="password", type="string", length=191, nullable=false)
@@ -106,19 +106,18 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
     /**
      * @return mixed
      */
-    public function getEmail()
+    public function getIdentity()
     {
-        return $this->email;
+        return $this->identity;
     }
 
     /**
-     * @param $email
+     * @param string $identity
      * @return $this
      */
-    public function setEmail($email)
+    public function setIdentity(string $identity): self
     {
-        $this->email = $email;
-
+        $this->identity = $identity;
         return $this;
     }
 
@@ -423,6 +422,7 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
 
     /**
      * @return $this
+     * @throws Exception
      */
     public function resetRoles()
     {
@@ -444,7 +444,7 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
         return [
             'uuid' => $this->getUuid()->toString(),
             'hash' => $this->getHash(),
-            'email' => $this->getEmail(),
+            'identity' => $this->getIdentity(),
             'status' => $this->getStatus(),
             'isDeleted' => $this->isDeleted(),
             'avatar' => ($this->getAvatar() instanceof UserAvatarEntity) ? $this->getAvatar()->getArrayCopy() : null,
