@@ -54,7 +54,7 @@ final class Version20191007122229 extends AbstractMigration
             'redirect' => '/',
             'personal_access_client' => true,
             'password_client' => true,
-            'revoked' => false,
+            'revoked' => 0,
             'created_at' => $now
         ]);
 
@@ -65,10 +65,10 @@ final class Version20191007122229 extends AbstractMigration
         $userUuid = UuidOrderedTimeGenerator::generateUuid()->getBytes();
         $this->connection->insert(self::TABLE_USER, [
             'uuid' => $userUuid,
-            'username' => 'test@dotkernel.com',
+            'identity' => 'test@dotkernel.com',
             'password' => password_hash('dotkernel', PASSWORD_DEFAULT),
             'status' => UserEntity::STATUS_ACTIVE,
-            'isDeleted' => false,
+            'isDeleted' => 0,
             'hash' => UserEntity::generateHash(),
             'created' => $now
         ]);

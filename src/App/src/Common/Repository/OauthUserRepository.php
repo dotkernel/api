@@ -21,7 +21,7 @@ use function password_verify;
 class OauthUserRepository extends AbstractRepository implements UserRepositoryInterface
 {
     /**
-     * @param string $username
+     * @param string $identity
      * @param string $password
      * @param string $grantType
      * @param ClientEntityInterface $clientEntity
@@ -29,16 +29,16 @@ class OauthUserRepository extends AbstractRepository implements UserRepositoryIn
      * @throws OAuthServerException
      */
     public function getUserEntityByUserCredentials(
-        $username,
+        $identity,
         $password,
         $grantType,
         ClientEntityInterface $clientEntity
     ) {
-        $sth = $this->pdo->prepare('SELECT password, status FROM user WHERE username = :username AND isDeleted = 0');
-        $sth->bindParam(':username', $username);
+        $sth = $this->pdo->prepare('SELECT password, status FROM user WHERE identity = :identity AND isDeleted = 0');
+        $sth->bindParam(':identity', $identity);
 
-        if (false === $sth->execute()) {
-            return;
+        if (! $sth->execute()) {
+            throw new OAuthServerException($sth->errorInfo()[2], $sth->errorInfo()[1], 'general_error', 500);
         }
 
         $row = $sth->fetch();
@@ -54,6 +54,6 @@ class OauthUserRepository extends AbstractRepository implements UserRepositoryIn
             throw new OAuthServerException(Message::USER_NOT_ACTIVATED, 6, 'inactive_user', 401);
         }
 
-        return new UserEntity($username);
+        return new UserEntity($identity);
     }
 }
