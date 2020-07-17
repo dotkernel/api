@@ -435,9 +435,8 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
     }
 
     /**
-     * Return an array representation of the object
-     *
      * @return array
+     * @throws Exception
      */
     public function getArrayCopy()
     {
