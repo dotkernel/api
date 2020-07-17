@@ -6,7 +6,6 @@ use Dot\ErrorHandler\ErrorHandlerInterface;
 use Psr\Container\ContainerInterface;
 use Tuupola\Middleware\CorsMiddleware;
 use Mezzio\Application;
-use Mezzio\Handler\NotFoundHandler;
 use Mezzio\Helper\BodyParams\BodyParamsMiddleware;
 use Mezzio\Helper\ServerUrlMiddleware;
 use Mezzio\Helper\UrlHelperMiddleware;
@@ -17,7 +16,7 @@ use Mezzio\Router\Middleware\ImplicitOptionsMiddleware;
 use Mezzio\Router\Middleware\MethodNotAllowedMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
 use Mezzio\ProblemDetails\ProblemDetailsMiddleware;
-use Laminas\Stratigility\Middleware\ErrorHandler;
+use Api\App\Common\Handler\NotFoundHandler;
 
 /**
  * Setup middleware pipeline:
