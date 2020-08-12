@@ -39,4 +39,7 @@ return [
             ],
         ],
     ],
+    'error-report' => [
+        'filePath' => sprintf('%s/../../log/error-report-endpoint-log.log', __DIR__)
+    ]
 ];
