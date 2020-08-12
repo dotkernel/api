@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Api\App;
 
+use Api\App\Log\Handler\ErrorReportHandler;
+use Mezzio\Helper\BodyParams\BodyParamsMiddleware;
 use Psr\Container\ContainerInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 use Mezzio\Application;
@@ -40,6 +42,11 @@ class RoutesDelegator
          */
         $app->post('/oauth2/generate', [TokenEndpointHandler::class], 'oauth');
         $app->post('/oauth2/refresh', [TokenEndpointHandler::class], 'refresh');
+
+        $app->post('/error-report', [
+            BodyParamsMiddleware::class,
+            ErrorReportHandler::class
+        ], 'error-report');
 
         return $app;
     }
