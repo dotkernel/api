@@ -48,9 +48,19 @@ final class Version20191007122229 extends AbstractMigration
 
         $now = (new \DateTime())->format('Y-m-d H:i:s');
         $this->connection->insert(self::TABLE_OAUTH_CLIENTS, [
-            'name' => 'dotkernel',
+            'name' => 'frontend',
             'user_id' => null,
-            'secret' => password_hash('dotkernel', PASSWORD_DEFAULT),
+            'secret' => password_hash('frontend', PASSWORD_DEFAULT),
+            'redirect' => '/',
+            'personal_access_client' => true,
+            'password_client' => true,
+            'revoked' => 0,
+            'created_at' => $now
+        ]);
+        $this->connection->insert(self::TABLE_OAUTH_CLIENTS, [
+            'name' => 'admin',
+            'user_id' => null,
+            'secret' => password_hash('admin', PASSWORD_DEFAULT),
             'redirect' => '/',
             'personal_access_client' => true,
             'password_client' => true,

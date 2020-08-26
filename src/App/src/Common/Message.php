@@ -12,6 +12,7 @@ class Message
 {
     const DUPLICATE_EMAIL = 'An account with this email address already exists.';
     const INVALID_ACTIVATION_CODE = 'Invalid activation code.';
+    const INVALID_CLIENT_ID = 'Invalid client_id.';
     const INVALID_VALUE = 'The value specified for \'%s\' is invalid.';
     const MAIL_SENT_RESET_PASSWORD = 'If the provided email identifies an account in our system, ' .
         'you will receive an email with further instructions on resetting your account\'s password.';
