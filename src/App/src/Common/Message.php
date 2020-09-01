@@ -12,6 +12,7 @@ class Message
 {
     const ADMIN_NOT_ACTIVATED = 'This account is deactivated.';
     const DUPLICATE_EMAIL = 'An account with this email address already exists.';
+    const DUPLICATE_IDENTITY = 'An admin with this identity already exists.';
     const INVALID_ACTIVATION_CODE = 'Invalid activation code.';
     const INVALID_CLIENT_ID = 'Invalid client_id.';
     const INVALID_VALUE = 'The value specified for \'%s\' is invalid.';

@@ -8,6 +8,7 @@ use Api\User\Handler\AccountActivateHandler;
 use Api\User\Handler\AccountAvatarHandler;
 use Api\User\Handler\AccountHandler;
 use Api\User\Handler\AccountResetPasswordHandler;
+use Api\User\Handler\AdminAccountHandler;
 use Api\User\Handler\UserActivateHandler;
 use Api\User\Handler\UserAvatarHandler;
 use Api\User\Handler\UserHandler;
@@ -88,6 +89,18 @@ class RoutesDelegator
             [RequestMethod::METHOD_GET, RequestMethod::METHOD_POST],
             'account:activate'
         );
+
+        /**
+         * Admins manage their own accounts
+         */
+
+        $app->route('/admin/my-account',
+            [AuthenticationMiddleware::class, AuthMiddleware::class, AdminAccountHandler::class],
+            [RequestMethod::METHOD_GET, RequestMethod::METHOD_PATCH],
+            'admin-my-account:me'
+        );
+
+        $app->post('/admin', AdminAccountHandler::class, 'admin:register');
 
         return $app;
     }

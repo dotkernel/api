@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
+use Dot\AnnotatedServices\Annotation\Inject;
 use Api\User\Entity\AdminRole;
 use Api\User\Repository\AdminRoleRepository;
 use Doctrine\ORM\EntityManager;

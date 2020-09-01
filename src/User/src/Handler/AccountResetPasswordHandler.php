@@ -34,7 +34,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
     protected $userService;
 
     /**
-     * AccountHandler constructor.
+     * AccountResetPasswordHandler constructor.
      * @param HalResponseFactory $halResponseFactory
      * @param ResourceGenerator $resourceGenerator
      * @param UserService $userService

@@ -25,12 +25,15 @@ return [
             UserRole::ROLE_GUEST => [UserRole::ROLE_USER]
         ],
         'permissions' => [
-            AdminRole::ROLE_SUPERUSER => [],
+            AdminRole::ROLE_SUPERUSER => [
+                'admin:register'
+            ],
             AdminRole::ROLE_ADMIN => [
                 'user:activate',
                 'user:avatar',
                 'user:list,create',
                 'user:delete,view,update',
+                'admin-my-account:me'
             ],
             UserRole::ROLE_USER => [
                 'my-account:avatar',

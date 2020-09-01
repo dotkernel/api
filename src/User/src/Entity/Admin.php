@@ -217,4 +217,18 @@ class Admin extends AbstractEntity
 
         return $this;
     }
+
+    /**
+     * @return $this
+     * @throws \Exception
+     */
+    public function resetRoles()
+    {
+        foreach ($this->roles->getIterator()->getArrayCopy() as $role) {
+            $this->removeRole($role);
+        }
+        $this->roles = new ArrayCollection();
+
+        return $this;
+    }
 }

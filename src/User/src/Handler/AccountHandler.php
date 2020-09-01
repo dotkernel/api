@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
+use Dot\AnnotatedServices\Annotation\Inject;
 use Api\App\RestDispatchTrait;
-use Api\User\Entity\Admin;
 use Api\User\Entity\User;
 use Api\User\Form\InputFilter\CreateAccountInputFilter;
 use Api\User\Form\InputFilter\UpdateAccountInputFilter;
 use Api\User\Service\UserService;
-use Dot\AnnotatedServices\Annotation\Inject;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -70,14 +69,9 @@ class AccountHandler implements RequestHandlerInterface
      */
     public function get(ServerRequestInterface $request) : ResponseInterface
     {
-        $user = $request->getAttribute(User::class, null);
-        $admin = $request->getAttribute(Admin::class, null);
-
-        $result = (!is_null($user)) ? $user : $admin;
-
-        return $this->responseFactory->createResponse(
+       return $this->responseFactory->createResponse(
             $request,
-            $this->resourceGenerator->fromObject($result, $request)
+            $this->resourceGenerator->fromObject($request->getAttribute(User::class, null), $request)
         );
     }
 
