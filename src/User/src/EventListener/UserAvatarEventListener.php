@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\EventListener;
 
-use Api\User\Entity\UserAvatarEntity;
+use Api\User\Entity\UserAvatar;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\AnnotatedServices\Annotation\Service;
@@ -32,33 +32,33 @@ class UserAvatarEventListener
     }
 
     /**
-     * @param UserAvatarEntity $avatar
+     * @param UserAvatar $avatar
      */
-    public function postLoad(UserAvatarEntity $avatar)
+    public function postLoad(UserAvatar $avatar)
     {
         $this->setAvatarUrl($avatar);
     }
 
     /**
-     * @param UserAvatarEntity $avatar
+     * @param UserAvatar $avatar
      */
-    public function postPersist(UserAvatarEntity $avatar)
+    public function postPersist(UserAvatar $avatar)
     {
         $this->setAvatarUrl($avatar);
     }
 
     /**
-     * @param UserAvatarEntity $avatar
+     * @param UserAvatar $avatar
      */
-    public function postUpdate(UserAvatarEntity $avatar)
+    public function postUpdate(UserAvatar $avatar)
     {
         $this->setAvatarUrl($avatar);
     }
 
     /**
-     * @param UserAvatarEntity $avatar
+     * @param UserAvatar $avatar
      */
-    private function setAvatarUrl(UserAvatarEntity $avatar)
+    private function setAvatarUrl(UserAvatar $avatar)
     {
         $avatar->setUrl(
             sprintf(

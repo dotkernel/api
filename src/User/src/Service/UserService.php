@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
+use Dot\AnnotatedServices\Annotation\Inject;
 use Api\App\Common\Message;
 use Api\App\Common\UuidOrderedTimeGenerator;
 use Api\User\Collection\UserCollection;
-use Api\User\Entity\UserAvatarEntity;
-use Api\User\Entity\UserDetailEntity;
-use Api\User\Entity\UserEntity;
-use Api\User\Entity\UserRoleEntity;
+use Api\User\Entity\UserAvatar;
+use Api\User\Entity\UserDetail;
+use Api\User\Entity\User;
+use Api\User\Entity\UserRole;
 use Api\User\Repository\UserRepository;
 use Doctrine\ORM;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
-use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\Mail\Service\MailService;
 use Dot\Mail\Exception\MailException;
 use Exception;
@@ -75,7 +75,7 @@ class UserService
         TemplateRendererInterface $templateRenderer,
         array $config = []
     ) {
-        $this->userRepository = $entityManager->getRepository(UserEntity::class);
+        $this->userRepository = $entityManager->getRepository(User::class);
         $this->userRoleService = $userRoleService;
         $this->mailService = $mailService;
         $this->templateRenderer = $templateRenderer;
@@ -83,12 +83,12 @@ class UserService
     }
 
     /**
-     * @param UserEntity $user
-     * @return UserEntity
+     * @param User $user
+     * @return User
      * @throws ORMException
      * @throws ORM\OptimisticLockException
      */
-    public function activateUser(UserEntity $user)
+    public function activateUser(User $user)
     {
         $this->userRepository->saveUser($user->activate());
 
@@ -97,7 +97,7 @@ class UserService
 
     /**
      * @param array $data
-     * @return UserEntity
+     * @return User
      * @throws Exception
      * @throws ORMException
      * @throws ORM\OptimisticLockException
@@ -108,10 +108,10 @@ class UserService
             throw new ORMException(Message::DUPLICATE_EMAIL);
         }
 
-        $user = new UserEntity();
+        $user = new User();
         $user->setPassword(password_hash($data['password'], PASSWORD_DEFAULT))->setEmail($data['email']);
 
-        $detail = new UserDetailEntity();
+        $detail = new UserDetail();
         $detail->setUser($user)->setFirstname($data['detail']['firstname'])->setLastname($data['detail']['lastname']);
 
         $user->setDetail($detail);
@@ -123,13 +123,13 @@ class UserService
         if (!empty($data['roles'])) {
             foreach ($data['roles'] as $roleData) {
                 $role = $this->userRoleService->findOneBy(['uuid' => $roleData['uuid']]);
-                if ($role instanceof UserRoleEntity) {
+                if ($role instanceof UserRole) {
                     $user->addRole($role);
                 }
             }
         } else {
-            $role = $this->userRoleService->findOneBy(['name' => UserRoleEntity::ROLE_MEMBER]);
-            if ($role instanceof UserRoleEntity) {
+            $role = $this->userRoleService->findOneBy(['name' => UserRole::ROLE_USER]);
+            if ($role instanceof UserRole) {
                 $user->addRole($role);
             }
         }
@@ -160,12 +160,12 @@ class UserService
     }
 
     /**
-     * @param UserEntity $user
-     * @return UserEntity|null
+     * @param User $user
+     * @return User|null
      * @throws ORMException
      * @throws ORM\OptimisticLockException
      */
-    public function deleteUser(UserEntity $user)
+    public function deleteUser(User $user)
     {
         $user = $user->markAsDeleted();
 
@@ -197,9 +197,9 @@ class UserService
 
     /**
      * @param string|null $hash
-     * @return UserEntity|null
+     * @return User|null
      */
-    public function findByResetPasswordHash(?string $hash): ?UserEntity
+    public function findByResetPasswordHash(?string $hash): ?User
     {
         if (empty($hash)) {
             return null;
@@ -210,15 +210,15 @@ class UserService
 
     /**
      * @param array $params
-     * @return UserEntity|null
+     * @return User|null
      */
-    public function findOneBy(array $params = []): ?UserEntity
+    public function findOneBy(array $params = []): ?User
     {
         if (empty($params)) {
             return null;
         }
 
-        /** @var UserEntity $user */
+        /** @var User $user */
         $user = $this->userRepository->findOneBy($params);
 
         return $user;
@@ -234,11 +234,11 @@ class UserService
     }
 
     /**
-     * @param UserEntity $user
+     * @param User $user
      * @return bool
      * @throws MailException
      */
-    public function sendActivationMail(UserEntity $user)
+    public function sendActivationMail(User $user)
     {
         if ($user->isActive()) {
             return false;
@@ -257,11 +257,11 @@ class UserService
     }
 
     /**
-     * @param UserEntity $user
+     * @param User $user
      * @return bool
      * @throws MailException
      */
-    public function sendResetPasswordRequestedMail(UserEntity $user)
+    public function sendResetPasswordRequestedMail(User $user)
     {
         $this->mailService->setBody(
             $this->templateRenderer->render('user::reset-password-requested', [
@@ -278,11 +278,11 @@ class UserService
     }
 
     /**
-     * @param UserEntity $user
+     * @param User $user
      * @return bool
      * @throws MailException
      */
-    public function sendResetPasswordCompletedMail(UserEntity $user)
+    public function sendResetPasswordCompletedMail(User $user)
     {
         $this->mailService->setBody(
             $this->templateRenderer->render('user::reset-password-completed', [
@@ -299,11 +299,11 @@ class UserService
     }
 
     /**
-     * @param UserEntity $user
+     * @param User $user
      * @return bool
      * @throws MailException
      */
-    public function sendWelcomeMail(UserEntity $user)
+    public function sendWelcomeMail(User $user)
     {
         $this->mailService->setBody(
             $this->templateRenderer->render('user::welcome', [
@@ -318,13 +318,13 @@ class UserService
     }
 
     /**
-     * @param UserEntity $user
+     * @param User $user
      * @param array $data
-     * @return UserEntity
+     * @return User
      * @throws Exception
      * @throws ORMException
      */
-    public function updateUser(UserEntity $user, array $data = [])
+    public function updateUser(User $user, array $data = [])
     {
         if (isset($data['email']) && !is_null($data['email'])) {
             if ($this->exists($data['email'], $user->getUuid()->toString())) {
@@ -369,7 +369,7 @@ class UserService
             $user->resetRoles();
             foreach ($data['roles'] as $roleData) {
                 $role = $this->userRoleService->findOneBy(['uuid' => $roleData['uuid']]);
-                if ($role instanceof UserRoleEntity) {
+                if ($role instanceof UserRole) {
                     $user->addRole($role);
                 }
             }
@@ -384,11 +384,11 @@ class UserService
     }
 
     /**
-     * @param UserEntity $user
+     * @param User $user
      * @param UploadedFile $uploadedFile
-     * @return UserAvatarEntity
+     * @return UserAvatar
      */
-    protected function createAvatar(UserEntity $user, UploadedFile $uploadedFile)
+    protected function createAvatar(User $user, UploadedFile $uploadedFile)
     {
         $path = $this->config['uploads']['user']['path'] . DIRECTORY_SEPARATOR;
         $path .= $user->getUuid()->toString() . DIRECTORY_SEPARATOR;
@@ -396,11 +396,11 @@ class UserService
             mkdir($path, 0755);
         }
 
-        if ($user->getAvatar() instanceof UserAvatarEntity) {
+        if ($user->getAvatar() instanceof UserAvatar) {
             $avatar = $user->getAvatar();
             $this->deleteAvatarFile($path . $avatar->getName());
         } else {
-            $avatar = new UserAvatarEntity();
+            $avatar = new UserAvatar();
             $avatar->setUser($user);
         }
         $fileName = sprintf('avatar-%s.%s',

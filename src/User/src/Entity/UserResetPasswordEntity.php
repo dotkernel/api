@@ -26,9 +26,9 @@ class UserResetPasswordEntity extends AbstractEntity implements ArraySerializabl
     ];
 
     /**
-     * @ORM\ManyToOne(targetEntity="UserEntity", cascade={"persist", "remove"}, inversedBy="resetPasswords")
+     * @ORM\ManyToOne(targetEntity="User", cascade={"persist", "remove"}, inversedBy="resetPasswords")
      * @ORM\JoinColumn(name="userUuid", referencedColumnName="uuid", nullable=false)
-     * @var UserEntity $user
+     * @var User $user
      */
     protected $user;
 
@@ -62,18 +62,18 @@ class UserResetPasswordEntity extends AbstractEntity implements ArraySerializabl
     }
 
     /**
-     * @return UserEntity
+     * @return User
      */
-    public function getUser(): UserEntity
+    public function getUser(): User
     {
         return $this->user;
     }
 
     /**
-     * @param UserEntity $user
+     * @param User $user
      * @return $this
      */
-    public function setUser(UserEntity $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
 

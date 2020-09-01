@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Api\Console\User\Handler;
 
 use Api\App\Common\Message;
-use Api\User\Entity\UserEntity;
-use Api\User\Entity\UserRoleEntity;
+use Api\User\Entity\User;
+use Api\User\Entity\UserRole;
 use Api\User\Service\UserService;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\AnnotatedServices\Annotation\Service;
@@ -66,14 +66,14 @@ class ListUsersHandler extends AbstractCommand
         $table->setPadding(1);
         $table->appendRow(['UUID', 'Name', 'Email', 'Status', 'Role(s)', 'Created', 'Updated']);
 
-        /** @var UserEntity $user */
+        /** @var User $user */
         foreach ($users as $user) {
             $table->appendRow([
                 $user->getUuid()->toString(),
                 $user->getName(),
                 $user->getEmail(),
                 $user->getStatus(),
-                implode(', ', array_map(function (UserRoleEntity $role) {
+                implode(', ', array_map(function (UserRole $role) {
                     return $role->getName();
                 }, $user->getRoles()->getIterator()->getArrayCopy())),
                 $user->getCreatedFormatted(),
@@ -108,7 +108,7 @@ class ListUsersHandler extends AbstractCommand
 
         if (!empty($params['status'])) {
             $validator = new InArray();
-            $validator->setHaystack(UserEntity::STATUSES);
+            $validator->setHaystack(User::STATUSES);
             if (!$validator->isValid($params['status'])) {
                 throw new Exception(sprintf(Message::INVALID_VALUE, 'status'));
             }

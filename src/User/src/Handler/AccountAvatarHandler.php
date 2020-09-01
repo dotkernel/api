@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Api\User\Handler;
 
 use Api\App\RestDispatchTrait;
-use Api\User\Entity\UserEntity;
+use Api\User\Entity\User;
 use Api\User\Form\InputFilter\UpdateUserInputFilter;
 use Api\User\Service\UserService;
 use Dot\AnnotatedServices\Annotation\Inject;
@@ -59,7 +59,7 @@ class AccountAvatarHandler implements RequestHandlerInterface
 
         try {
             $user = $this->userService->updateUser(
-                $request->getAttribute(UserEntity::class, null),
+                $request->getAttribute(User::class, null),
                 $inputFilter->getValues()
             );
         } catch (Exception $exception) {

@@ -2,7 +2,7 @@
 
 use Api\Console\App\Handler\RoutesHandler;
 use Api\Console\User\Handler\ListUsersHandler;
-use Api\User\Entity\UserEntity;
+use Api\User\Entity\User;
 
 /**
  * Documentation: https://github.com/zfcampus/zf-console
@@ -20,7 +20,7 @@ return [
                 'options_descriptions' => [
                     'page' => '(Optional) Page number',
                     'search' => '(Optional) Filter users by search string.',
-                    'status' => '(Optional) Filter users by status. (' . implode(', ', UserEntity::STATUSES) . ')',
+                    'status' => '(Optional) Filter users by status. (' . implode(', ', User::STATUSES) . ')',
                     'deleted' => '(Optional) Filter users by deletion status (true, false)'
                 ],
                 'defaults' => ['page' => 1, 'search' => null, 'status' => null, 'deleted' => null],

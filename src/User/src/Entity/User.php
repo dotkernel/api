@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Api\User\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Api\App\Common\Entity\AbstractEntity;
 use Api\App\Common\UuidOrderedTimeGenerator;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 use Laminas\Stdlib\ArraySerializableInterface;
 use Exception;
 
@@ -16,13 +16,13 @@ use function bin2hex;
 use function random_bytes;
 
 /**
- * Class UserEntity
+ * Class User
  * @ORM\Entity(repositoryClass="Api\User\Repository\UserRepository")
  * @ORM\Table(name="user")
  * @ORM\HasLifecycleCallbacks()
  * @package Api\User\Entity
  */
-class UserEntity extends AbstractEntity implements ArraySerializableInterface
+class User extends AbstractEntity implements ArraySerializableInterface
 {
     const STATUS_PENDING = 'pending';
     const STATUS_ACTIVE = 'active';
@@ -32,14 +32,14 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
     ];
 
     /**
-     * @ORM\OneToOne(targetEntity="UserAvatarEntity", cascade={"persist", "remove"}, mappedBy="user")
-     * @var UserAvatarEntity $avatar
+     * @ORM\OneToOne(targetEntity="UserAvatar", cascade={"persist", "remove"}, mappedBy="user")
+     * @var UserAvatar $avatar
      */
     protected $avatar;
 
     /**
-     * @ORM\OneToOne(targetEntity="UserDetailEntity", cascade={"persist", "remove"}, mappedBy="user")
-     * @var UserDetailEntity $detail
+     * @ORM\OneToOne(targetEntity="UserDetail", cascade={"persist", "remove"}, mappedBy="user")
+     * @var UserDetail $detail
      */
     protected $detail;
 
@@ -50,13 +50,13 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
     protected $resetPasswords;
 
     /**
-     * @ORM\ManyToMany(targetEntity="UserRoleEntity")
+     * @ORM\ManyToMany(targetEntity="UserRole")
      * @ORM\JoinTable(
      *     name="user_roles",
      *     joinColumns={@ORM\JoinColumn(name="userUuid", referencedColumnName="uuid")},
      *     inverseJoinColumns={@ORM\JoinColumn(name="roleUuid", referencedColumnName="uuid")}
      * )
-     * @var UserRoleEntity[] $roles
+     * @var UserRole[] $roles
      */
     protected $roles;
 
@@ -91,7 +91,7 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
     protected $hash;
 
     /**
-     * UserEntity constructor.
+     * User constructor.
      */
     public function __construct()
     {
@@ -198,18 +198,18 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
     }
 
     /**
-     * @return UserAvatarEntity|null
+     * @return UserAvatar|null
      */
-    public function getAvatar(): ?UserAvatarEntity
+    public function getAvatar(): ?UserAvatar
     {
         return $this->avatar;
     }
 
     /**
-     * @param UserAvatarEntity|null $avatar
+     * @param UserAvatar|null $avatar
      * @return $this
      */
-    public function setAvatar(?UserAvatarEntity $avatar)
+    public function setAvatar(?UserAvatar $avatar)
     {
         $this->avatar = $avatar;
 
@@ -217,18 +217,18 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
     }
 
     /**
-     * @return UserDetailEntity|null
+     * @return UserDetail|null
      */
-    public function getDetail(): ?UserDetailEntity
+    public function getDetail(): ?UserDetail
     {
         return $this->detail;
     }
 
     /**
-     * @param UserDetailEntity $detail
+     * @param UserDetail $detail
      * @return $this
      */
-    public function setDetail(UserDetailEntity $detail)
+    public function setDetail(UserDetail $detail)
     {
         $this->detail = $detail;
 
@@ -236,10 +236,10 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
     }
 
     /**
-     * @param UserRoleEntity $role
+     * @param UserRole $role
      * @return $this
      */
-    public function addRole(UserRoleEntity $role)
+    public function addRole(UserRole $role)
     {
         $this->roles->add($role);
 
@@ -255,19 +255,19 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
     }
 
     /**
-     * @param UserRoleEntity $role
+     * @param UserRole $role
      * @return bool
      */
-    public function hasRole(UserRoleEntity $role)
+    public function hasRole(UserRole $role)
     {
         return $this->roles->contains($role);
     }
 
     /**
-     * @param UserRoleEntity $role
+     * @param UserRole $role
      * @return $this
      */
-    public function removeRole(UserRoleEntity $role)
+    public function removeRole(UserRole $role)
     {
         $this->roles->removeElement($role);
 
@@ -446,9 +446,9 @@ class UserEntity extends AbstractEntity implements ArraySerializableInterface
             'identity' => $this->getIdentity(),
             'status' => $this->getStatus(),
             'isDeleted' => $this->isDeleted(),
-            'avatar' => ($this->getAvatar() instanceof UserAvatarEntity) ? $this->getAvatar()->getArrayCopy() : null,
-            'detail' => ($this->getDetail() instanceof UserDetailEntity) ? $this->getDetail()->getArrayCopy() : null,
-            'roles' => array_map(function (UserRoleEntity $role) {
+            'avatar' => ($this->getAvatar() instanceof UserAvatar) ? $this->getAvatar()->getArrayCopy() : null,
+            'detail' => ($this->getDetail() instanceof UserDetail) ? $this->getDetail()->getArrayCopy() : null,
+            'roles' => array_map(function (UserRole $role) {
                 return $role->getArrayCopy();
             }, $this->getRoles()->getIterator()->getArrayCopy()),
             'resetPasswords' => array_map(function (UserResetPasswordEntity $resetPassword) {

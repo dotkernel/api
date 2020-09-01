@@ -6,7 +6,7 @@ namespace Api\User\Handler;
 
 use Api\App\Common\Message;
 use Api\App\RestDispatchTrait;
-use Api\User\Entity\UserEntity;
+use Api\User\Entity\User;
 use Api\User\Service\UserService;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Exception;
@@ -59,13 +59,13 @@ class UserActivateHandler implements RequestHandlerInterface
         }
 
         $user = $this->userService->findOneBy(['uuid' => $uuid]);
-        if (!($user instanceof UserEntity)) {
+        if (!($user instanceof User)) {
             return $this->notFoundResponse(
                 sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid)
             );
         }
 
-        if ($user->getStatus() === UserEntity::STATUS_ACTIVE) {
+        if ($user->getStatus() === User::STATUS_ACTIVE) {
             return $this->errorResponse(Message::USER_ALREADY_ACTIVATED);
         }
 

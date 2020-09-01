@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
-use Api\User\Entity\UserRoleEntity;
+use Dot\AnnotatedServices\Annotation\Inject;
+use Api\User\Entity\UserRole;
 use Api\User\Repository\UserRoleRepository;
 use Doctrine\ORM\EntityManager;
-use Dot\AnnotatedServices\Annotation\Inject;
 
 /**
  * Class UserRoleService
@@ -26,20 +26,20 @@ class UserRoleService
      */
     public function __construct(EntityManager $entityManager)
     {
-        $this->roleRepository = $entityManager->getRepository(UserRoleEntity::class);
+        $this->roleRepository = $entityManager->getRepository(UserRole::class);
     }
 
     /**
      * @param array $params
-     * @return UserRoleEntity|null
+     * @return UserRole|null
      */
-    public function findOneBy(array $params = []): ?UserRoleEntity
+    public function findOneBy(array $params = []): ?UserRole
     {
         if (empty($params)) {
             return null;
         }
 
-        /** @var UserRoleEntity $role */
+        /** @var UserRole $role */
         $role = $this->roleRepository->findOneBy($params);
 
         return $role;

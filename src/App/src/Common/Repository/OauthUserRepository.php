@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Api\App\Common\Repository;
 
 use Api\App\Common\Message;
-use Api\User\Entity\UserEntity as User;
+use Api\User\Entity\User as User;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;

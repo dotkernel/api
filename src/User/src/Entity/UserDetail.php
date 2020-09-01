@@ -9,33 +9,35 @@ use Doctrine\ORM\Mapping as ORM;
 use Laminas\Stdlib\ArraySerializableInterface;
 
 /**
- * Class UserAvatarEntity
+ * Class UserDetail
  * @ORM\Entity()
- * @ORM\Table(name="user_avatar")
+ * @ORM\Table(name="user_detail")
  * @ORM\HasLifecycleCallbacks()
- * @ORM\EntityListeners({Api\User\EventListener\UserAvatarEventListener::class})
  * @package Api\User\Entity
  */
-class UserAvatarEntity extends AbstractEntity implements ArraySerializableInterface
+class UserDetail extends AbstractEntity implements ArraySerializableInterface
 {
     /**
-     * @ORM\OneToOne(targetEntity="UserEntity", inversedBy="avatar")
+     * @ORM\OneToOne(targetEntity="User", inversedBy="detail")
      * @ORM\JoinColumn(name="userUuid", referencedColumnName="uuid", nullable=false)
-     * @var UserEntity $user
+     * @var User $user
      */
     protected $user;
 
     /**
-     * @ORM\Column(name="name", type="string", length=191, nullable=false)
-     * @var $name
+     * @ORM\Column(name="firstname", type="string", length=191, nullable=true)
+     * @var $firstname
      */
-    protected $name;
-
-    /** @var string $url */
-    protected $url;
+    protected $firstname;
 
     /**
-     * UserAvatarEntity constructor.
+     * @ORM\Column(name="lastname", type="string", length=191, nullable=true)
+     * @var $lastname
+     */
+    protected $lastname;
+
+    /**
+     * UserDetail constructor.
      */
     public function __construct()
     {
@@ -43,18 +45,18 @@ class UserAvatarEntity extends AbstractEntity implements ArraySerializableInterf
     }
 
     /**
-     * @return UserEntity
+     * @return User
      */
-    public function getUser(): UserEntity
+    public function getUser(): User
     {
         return $this->user;
     }
 
     /**
-     * @param UserEntity $user
+     * @param User $user
      * @return $this
      */
-    public function setUser(UserEntity $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
 
@@ -64,41 +66,37 @@ class UserAvatarEntity extends AbstractEntity implements ArraySerializableInterf
     /**
      * @return mixed
      */
-    public function getName()
+    public function getFirstname()
     {
-        return $this->name;
+        return $this->firstname;
     }
 
     /**
-     * @param $name
+     * @param $firstname
      * @return $this
      */
-    public function setName($name)
+    public function setFirstname($firstname)
     {
-        $this->name = $name;
+        $this->firstname = $firstname;
 
         return $this;
     }
 
     /**
-     * Helper methods
+     * @return mixed
      */
-
-    /**
-     * @return string
-     */
-    public function getUrl()
+    public function getLastname()
     {
-        return $this->url;
+        return $this->lastname;
     }
 
     /**
-     * @param string $url
+     * @param $lastname
      * @return $this
      */
-    public function setUrl(string $url)
+    public function setLastname($lastname)
     {
-        $this->url = $url;
+        $this->lastname = $lastname;
 
         return $this;
     }
@@ -111,8 +109,8 @@ class UserAvatarEntity extends AbstractEntity implements ArraySerializableInterf
     public function getArrayCopy()
     {
         return [
-            'uuid' => $this->getUuid()->toString(),
-            'url' => $this->getUrl(),
+            'firstname' => $this->getFirstname(),
+            'lastname' => $this->getLastname(),
             'created' => $this->getCreated(),
             'updated' => $this->getUpdated()
         ];

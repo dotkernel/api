@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Api\User\Form\InputFilter;
 
 use Api\App\Common\Message;
-use Api\User\Entity\UserEntity;
+use Api\User\Entity\User;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
 use Laminas\InputFilter\CollectionInputFilter;
@@ -133,7 +133,7 @@ class CreateUserInputFilter implements InputFilterAwareInterface
                         'name' => InArray::class,
                         'break_chain_on_failure' => true,
                         'options' => [
-                            'haystack' => UserEntity::STATUSES,
+                            'haystack' => User::STATUSES,
                             'message' => sprintf(Message::INVALID_VALUE, 'status')
                         ]
                     ]

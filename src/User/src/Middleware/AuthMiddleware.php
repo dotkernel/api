@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace Api\User\Middleware;
 
-use Api\User\Entity\UserEntity;
+use Api\User\Entity\Admin;
+use Dot\AnnotatedServices\Annotation\Inject;
+use Api\User\Entity\User;
 use Api\User\Entity\UserIdentity;
-use Api\User\Entity\UserRoleEntity;
+use Api\User\Entity\UserRole;
+use Api\User\Service\AdminService;
 use Api\User\Service\UserService;
 use Api\App\Common\Message;
-use Dot\AnnotatedServices\Annotation\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\Diactoros\Response\JsonResponse;
+use Laminas\Http\Response;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authorization\AuthorizationInterface;
-use Laminas\Http\Response;
 use Exception;
 
 use function array_map;
@@ -34,17 +36,25 @@ class AuthMiddleware implements MiddlewareInterface
     /** @var AuthorizationInterface $authorization */
     protected $authorization;
 
+    /** @var AdminService $adminService */
+    protected $adminService;
+
     /**
      * AuthMiddleware constructor.
      * @param UserService $userService
      * @param AuthorizationInterface $authorization
+     * @param AdminService $adminService
      *
-     * @Inject({UserService::class, AuthorizationInterface::class})
+     * @Inject({UserService::class, AuthorizationInterface::class, AdminService::class})
      */
-    public function __construct(UserService $userService, AuthorizationInterface $authorization)
-    {
+    public function __construct(
+        UserService $userService,
+        AuthorizationInterface $authorization,
+        AdminService $adminService
+    ) {
         $this->userService = $userService;
         $this->authorization = $authorization;
+        $this->adminService = $adminService;
     }
 
     /**
@@ -57,23 +67,56 @@ class AuthMiddleware implements MiddlewareInterface
     {
         /** @var UserIdentity $defaultUser */
         $defaultUser = $request->getAttribute(UserInterface::class);
-
-        $user = $this->userService->findOneBy(['email' => $defaultUser->getIdentity(), 'isDeleted' => false]);
-        if ($user->getStatus() !== UserEntity::STATUS_ACTIVE) {
-            return new JsonResponse([
-                'error' => [
-                    'messages' => [
-                        Message::USER_NOT_ACTIVATED
+        switch ($defaultUser->getDetail('oauth_client_id')) {
+            case 'frontend':
+                $user = $this->userService->findOneBy(
+                    [
+                        'identity' => $defaultUser->getIdentity(),
+                        'isDeleted' => false
                     ]
-                ]
-            ], Response::STATUS_CODE_403);
+                );
+                if ($user->getStatus() !== User::STATUS_ACTIVE) {
+                    return new JsonResponse([
+                        'error' => [
+                            'messages' => [
+                                Message::USER_NOT_ACTIVATED
+                            ]
+                        ]
+                    ], Response::STATUS_CODE_403);
+                }
+                $request = $request->withAttribute(User::class, $user);
+                break;
+            case 'admin':
+                $user = $this->adminService->findOneBy(
+                    [
+                        'identity' => $defaultUser->getIdentity(),
+                    ]
+                );
+                if ($user->getStatus() !== Admin::STATUS_ACTIVE) {
+                    return new JsonResponse([
+                        'error' => [
+                            'messages' => [
+                                Message::ADMIN_NOT_ACTIVATED
+                            ]
+                        ]
+                    ], Response::STATUS_CODE_403);
+                }
+                $request = $request->withAttribute(Admin::class, $user);
+                break;
+            default:
+                return new JsonResponse([
+                    'error' => [
+                        'messages' => [
+                            Message::INVALID_CLIENT_ID
+                        ]
+                    ]
+                ], Response::STATUS_CODE_403);
         }
 
-        $defaultUser->setRoles(array_map(function (UserRoleEntity $role) {
+        $defaultUser->setRoles(array_map(function ($role) {
             return $role->getName();
         }, $user->getRoles()->getIterator()->getArrayCopy()));
 
-        $request = $request->withAttribute(UserEntity::class, $user);
         $request = $request->withAttribute(UserInterface::class, $defaultUser);
 
         $isGranted = false;
