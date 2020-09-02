@@ -4,17 +4,21 @@ declare(strict_types=1);
 
 namespace Api\User;
 
+use Api\User\Entity\Admin;
 use Api\User\Entity\UserResetPasswordEntity;
 use Api\User\Handler\AccountActivateHandler;
 use Api\User\Handler\AccountAvatarHandler;
 use Api\User\Handler\AccountHandler;
 use Api\User\Handler\AccountResetPasswordHandler;
+use Api\User\Handler\AdminAccountHandler;
 use Api\User\Handler\UserActivateHandler;
 use Api\User\Handler\UserAvatarHandler;
 use Api\User\Handler\UserHandler;
 use Api\User\Middleware\AuthMiddleware;
 use Api\User\Collection\UserCollection;
-use Api\User\Entity\UserEntity;
+use Api\User\Entity\User;
+use Api\User\Service\AdminRoleService;
+use Api\User\Service\AdminService;
 use Api\User\Service\UserRoleService;
 use Api\User\Service\UserService;
 use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
@@ -51,6 +55,7 @@ class ConfigProvider
                 AccountActivateHandler::class => AnnotatedServiceFactory::class,
                 AccountAvatarHandler::class => AnnotatedServiceFactory::class,
                 AccountHandler::class => AnnotatedServiceFactory::class,
+                AdminAccountHandler::class => AnnotatedServiceFactory::class,
                 AccountResetPasswordHandler::class => AnnotatedServiceFactory::class,
                 AuthMiddleware::class => AnnotatedServiceFactory::class,
                 UserActivateHandler::class => AnnotatedServiceFactory::class,
@@ -58,6 +63,8 @@ class ConfigProvider
                 UserHandler::class => AnnotatedServiceFactory::class,
                 UserService::class => AnnotatedServiceFactory::class,
                 UserRoleService::class => AnnotatedServiceFactory::class,
+                AdminService::class => AnnotatedServiceFactory::class,
+                AdminRoleService::class => AnnotatedServiceFactory::class
             ]
         ];
     }
@@ -75,8 +82,15 @@ class ConfigProvider
                 'route' => 'user:list,create',
             ], [
                 '__class__' => RouteBasedResourceMetadata::class,
-                'resource_class' => UserEntity::class,
+                'resource_class' => User::class,
                 'route' => 'user:delete,view,update',
+                'extractor' => ArraySerializable::class,
+                'resource_identifier' => 'uuid',
+                'route_identifier_placeholder' => 'uuid'
+            ], [
+                '__class__' => RouteBasedResourceMetadata::class,
+                'resource_class' => Admin::class,
+                'route' => 'my-account:me',
                 'extractor' => ArraySerializable::class,
                 'resource_identifier' => 'uuid',
                 'route_identifier_placeholder' => 'uuid'

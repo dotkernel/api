@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Api\App\Common\Repository;
 
 use Api\App\Common\Message;
+use Api\User\Entity\User as User;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
@@ -34,7 +35,18 @@ class OauthUserRepository extends AbstractRepository implements UserRepositoryIn
         $grantType,
         ClientEntityInterface $clientEntity
     ) {
-        $sth = $this->pdo->prepare('SELECT password, status FROM user WHERE identity = :identity AND isDeleted = 0');
+        switch ($clientEntity->getName()) {
+            case 'admin':
+                $sth = $this->pdo->prepare('SELECT password FROM admin WHERE identity = :identity');
+                break;
+            case 'frontend':
+                $sth = $this->pdo->prepare(
+                    'SELECT password, status FROM user WHERE identity = :identity AND isDeleted = 0'
+                );
+                break;
+            default:
+                throw new OAuthServerException(Message::INVALID_CLIENT_ID, 6, 'invalid_client', 401);
+        }
         $sth->bindParam(':identity', $identity);
 
         if (! $sth->execute()) {
@@ -50,7 +62,7 @@ class OauthUserRepository extends AbstractRepository implements UserRepositoryIn
             return;
         }
 
-        if ($row['status'] !== \Api\User\Entity\UserEntity::STATUS_ACTIVE) {
+        if ($clientEntity->getName() == 'frontend' && $row['status'] !== User::STATUS_ACTIVE) {
             throw new OAuthServerException(Message::USER_NOT_ACTIVATED, 6, 'inactive_user', 401);
         }
 

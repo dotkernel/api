@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Api\User\Form\InputFilter;
 
 use Api\App\Common\Message;
-use Api\User\Entity\User;
+use Api\User\Entity\Admin;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
 use Laminas\InputFilter\CollectionInputFilter;
@@ -19,10 +19,10 @@ use Laminas\Validator\NotEmpty;
 use Laminas\Validator\StringLength;
 
 /**
- * Class CreateUserInputFilter
+ * Class CreateAdminInputFilter
  * @package Api\User\Form\InputFilter
  */
-class CreateUserInputFilter implements InputFilterAwareInterface
+class CreateAdminInputFilter implements InputFilterAwareInterface
 {
     use InputFilterAwareTrait;
 
@@ -59,7 +59,7 @@ class CreateUserInputFilter implements InputFilterAwareInterface
 
             $this->inputFilter = new InputFilter();
             $this->inputFilter->add([
-                'name' => 'email',
+                'name' => 'identity',
                 'required' => true,
                 'filters' => [
                     ['name' => StringTrim::class],
@@ -70,7 +70,7 @@ class CreateUserInputFilter implements InputFilterAwareInterface
                         'name' => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options' => [
-                            'message' => 'Email is required and cannot be empty!'
+                            'message' => 'Identity is required and cannot be empty!'
                         ]
                     ]
                 ]
@@ -88,11 +88,6 @@ class CreateUserInputFilter implements InputFilterAwareInterface
                             'min' => self::PASSWORD_MIN_LENGTH
                         ]
                     ], [
-                        'name' => Identical::class,
-                        'options' => [
-                            'token' => 'passwordConfirm'
-                        ]
-                    ], [
                         'name' => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options' => [
@@ -108,12 +103,6 @@ class CreateUserInputFilter implements InputFilterAwareInterface
                     ['name' => StripTags::class]
                 ],
                 'validators' => [
-                    [
-                        'name' => StringLength::class,
-                        'options' => [
-                            'min' => self::PASSWORD_MIN_LENGTH
-                        ]
-                    ],
                     [
                         'name' => Identical::class,
                         'options' => [
@@ -133,12 +122,28 @@ class CreateUserInputFilter implements InputFilterAwareInterface
                         'name' => InArray::class,
                         'break_chain_on_failure' => true,
                         'options' => [
-                            'haystack' => User::STATUSES,
+                            'haystack' => Admin::STATUSES,
                             'message' => sprintf(Message::INVALID_VALUE, 'status')
                         ]
                     ]
                 ]
-            ])->add($rolesCollection, 'roles')->add((new CreateDetailInputFilter())->getInputFilter(), 'detail');
+            ])->add(
+                $rolesCollection, 'roles'
+            )->add([
+                'name' => 'firstname',
+                'required' => false,
+                'filters' => [
+                    ['name' => StringTrim::class],
+                    ['name' => StripTags::class]
+                ]
+            ])->add([
+                'name' => 'lastname',
+                'required' => false,
+                'filters' => [
+                    ['name' => StringTrim::class],
+                    ['name' => StripTags::class]
+                ]
+            ]);
         }
 
         return $this->inputFilter;

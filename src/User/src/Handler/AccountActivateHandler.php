@@ -6,7 +6,7 @@ namespace Api\User\Handler;
 
 use Api\App\Common\Message;
 use Api\App\RestDispatchTrait;
-use Api\User\Entity\UserEntity;
+use Api\User\Entity\User;
 use Api\User\Form\InputFilter\ActivateAccountInputFilter;
 use Api\User\Service\UserService;
 use Dot\AnnotatedServices\Annotation\Inject;
@@ -68,11 +68,11 @@ class AccountActivateHandler implements RequestHandlerInterface
         }
 
         $user = $this->userService->findOneBy(['hash' => $hash]);
-        if (!($user instanceof UserEntity)) {
+        if (!($user instanceof User)) {
             return $this->errorResponse(Message::INVALID_ACTIVATION_CODE);
         }
 
-        if ($user->getStatus() === UserEntity::STATUS_ACTIVE) {
+        if ($user->getStatus() === User::STATUS_ACTIVE) {
             return $this->errorResponse(Message::USER_ALREADY_ACTIVATED);
         }
 
@@ -99,13 +99,13 @@ class AccountActivateHandler implements RequestHandlerInterface
         }
 
         $user = $this->userService->findOneBy($inputFilter->getValues());
-        if (!($user instanceof UserEntity)) {
+        if (!($user instanceof User)) {
             return $this->notFoundResponse(
                 sprintf(Message::USER_NOT_FOUND_BY_EMAIL, $inputFilter->getValue('email'))
             );
         }
 
-        if ($user->getStatus() === UserEntity::STATUS_ACTIVE) {
+        if ($user->getStatus() === User::STATUS_ACTIVE) {
             return $this->errorResponse(Message::USER_ALREADY_ACTIVATED);
         }
 

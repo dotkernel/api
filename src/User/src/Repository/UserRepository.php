@@ -6,7 +6,7 @@ namespace Api\User\Repository;
 
 use Api\App\Common\Pagination;
 use Api\User\Collection\UserCollection;
-use Api\User\Entity\UserEntity;
+use Api\User\Entity\User;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\ORM;
 use Doctrine\ORM\EntityRepository;
@@ -41,12 +41,12 @@ class UserRepository extends EntityRepository
     }
 
     /**
-     * @param UserEntity $user
+     * @param User $user
      * @return null
      * @throws ORM\ORMException
      * @throws ORM\OptimisticLockException
      */
-    public function deleteUser(UserEntity $user)
+    public function deleteUser(User $user)
     {
         $em = $this->getEntityManager();
         $em->remove($user);
@@ -58,14 +58,14 @@ class UserRepository extends EntityRepository
     /**
      * @param string $email
      * @param string|null $uuid
-     * @return UserEntity|null
+     * @return User|null
      */
     public function exists(string $email = '', ?string $uuid = '')
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('user')
-            ->from(UserEntity::class, 'user')
+            ->from(User::class, 'user')
             ->andWhere('user.email = :email')->setParameter('email', $email);
         if (!empty($uuid)) {
             $qb->andWhere('user.uuid != :uuid')->setParameter('uuid', $uuid, UuidBinaryOrderedTimeType::NAME);
@@ -80,13 +80,13 @@ class UserRepository extends EntityRepository
 
     /**
      * @param string $hash
-     * @return UserEntity|null
+     * @return User|null
      */
-    public function findByResetPasswordHash(string $hash): ?UserEntity
+    public function findByResetPasswordHash(string $hash): ?User
     {
         try {
             $qb = $this->getEntityManager()->createQueryBuilder();
-            $qb->select(['user', 'resetPasswords'])->from(UserEntity::class, 'user')
+            $qb->select(['user', 'resetPasswords'])->from(User::class, 'user')
                 ->leftJoin('user.resetPasswords', 'resetPasswords')
                 ->andWhere('resetPasswords.hash = :hash')->setParameter('hash', $hash);
 
@@ -104,7 +104,7 @@ class UserRepository extends EntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select(['user', 'avatar', 'detail', 'roles'])
-            ->from(UserEntity::class, 'user')
+            ->from(User::class, 'user')
             ->leftJoin('user.avatar', 'avatar')
             ->leftJoin('user.detail', 'detail')
             ->leftJoin('user.roles', 'roles');
@@ -199,11 +199,11 @@ class UserRepository extends EntityRepository
     }
 
     /**
-     * @param UserEntity $user
+     * @param User $user
      * @throws ORM\ORMException
      * @throws ORM\OptimisticLockException
      */
-    public function saveUser(UserEntity $user)
+    public function saveUser(User $user)
     {
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();

@@ -6,7 +6,7 @@ namespace Api\User\Handler;
 
 use Api\App\Common\Message;
 use Api\App\RestDispatchTrait;
-use Api\User\Entity\UserEntity;
+use Api\User\Entity\User;
 use Api\User\Entity\UserResetPasswordEntity;
 use Api\User\Form\InputFilter\ResetPasswordInputFilter;
 use Api\User\Form\InputFilter\UpdateUserInputFilter;
@@ -34,7 +34,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
     protected $userService;
 
     /**
-     * AccountHandler constructor.
+     * AccountResetPasswordHandler constructor.
      * @param HalResponseFactory $halResponseFactory
      * @param ResourceGenerator $resourceGenerator
      * @param UserService $userService
@@ -59,7 +59,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
     {
         $hash = $request->getAttribute('hash') ?? null;
         $user = $this->userService->findByResetPasswordHash($hash);
-        if (!($user instanceof UserEntity)) {
+        if (!($user instanceof User)) {
             return $this->notFoundResponse(
                 sprintf(Message::RESET_PASSWORD_NOT_FOUND, $hash)
             );
@@ -85,7 +85,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
     {
         $hash = $request->getAttribute('hash') ?? null;
         $user = $this->userService->findByResetPasswordHash($hash);
-        if (!($user instanceof UserEntity)) {
+        if (!($user instanceof User)) {
             return $this->notFoundResponse(
                 sprintf(Message::RESET_PASSWORD_NOT_FOUND, $hash)
             );
@@ -139,7 +139,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
         }
 
         $user = $this->userService->findOneBy(['email' => $inputFilter->getValue('email')]);
-        if (!($user instanceof UserEntity)) {
+        if (!($user instanceof User)) {
             return $this->infoResponse(Message::MAIL_SENT_RESET_PASSWORD);
         }
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DotKernelApi\Migrations;
 
 use Api\App\Common\UuidOrderedTimeGenerator;
-use Api\User\Entity\UserEntity;
+use Api\User\Entity\User;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
@@ -24,6 +24,9 @@ final class Version20191007122229 extends AbstractMigration
     const TABLE_USER_DETAIL = 'user_detail';
     const TABLE_USER_ROLE = 'user_role';
     const TABLE_USER_ROLES = 'user_roles';
+    const TABLE_ADMIN = 'admin';
+    const TABLE_ADMIN_ROLE = 'admin_role';
+    const TABLE_ADMIN_ROLES = 'admin_roles';
 
     /**
      * @return string
@@ -48,9 +51,19 @@ final class Version20191007122229 extends AbstractMigration
 
         $now = (new \DateTime())->format('Y-m-d H:i:s');
         $this->connection->insert(self::TABLE_OAUTH_CLIENTS, [
-            'name' => 'dotkernel',
+            'name' => 'frontend',
             'user_id' => null,
-            'secret' => password_hash('dotkernel', PASSWORD_DEFAULT),
+            'secret' => password_hash('frontend', PASSWORD_DEFAULT),
+            'redirect' => '/',
+            'personal_access_client' => true,
+            'password_client' => true,
+            'revoked' => 0,
+            'created_at' => $now
+        ]);
+        $this->connection->insert(self::TABLE_OAUTH_CLIENTS, [
+            'name' => 'admin',
+            'user_id' => null,
+            'secret' => password_hash('admin', PASSWORD_DEFAULT),
             'redirect' => '/',
             'personal_access_client' => true,
             'password_client' => true,
@@ -67,9 +80,9 @@ final class Version20191007122229 extends AbstractMigration
             'uuid' => $userUuid,
             'identity' => 'test@dotkernel.com',
             'password' => password_hash('dotkernel', PASSWORD_DEFAULT),
-            'status' => UserEntity::STATUS_ACTIVE,
+            'status' => User::STATUS_ACTIVE,
             'isDeleted' => 0,
-            'hash' => UserEntity::generateHash(),
+            'hash' => User::generateHash(),
             'created' => $now
         ]);
 
@@ -79,6 +92,17 @@ final class Version20191007122229 extends AbstractMigration
             'userUuid' => $userUuid,
             'firstname' => 'Test',
             'lastname' => 'Account',
+            'created' => $now
+        ]);
+
+        $adminUuid = UuidOrderedTimeGenerator::generateUuid()->getBytes();
+        $this->connection->insert(self::TABLE_ADMIN, [
+            'uuid' => $adminUuid,
+            'identity' => 'admin',
+            'password' => password_hash('dotadmin', PASSWORD_DEFAULT),
+            'firstName' => 'DotKernel',
+            'lastName' => 'Admin',
+            'status' => User::STATUS_ACTIVE,
             'created' => $now
         ]);
 
@@ -93,6 +117,18 @@ final class Version20191007122229 extends AbstractMigration
                 'roleUuid' => $role['uuid']
             ]);
         }
+
+        $adminRoles = [
+            ['uuid' => UuidOrderedTimeGenerator::generateUuid()->getBytes(), 'name' => 'admin', 'created' => $now],
+            ['uuid' => UuidOrderedTimeGenerator::generateUuid()->getBytes(), 'name' => 'superuser', 'created' => $now],
+        ];
+        foreach ($adminRoles as $adminRole) {
+            $this->connection->insert(self::TABLE_ADMIN_ROLE, $adminRole);
+            $this->connection->insert(self::TABLE_ADMIN_ROLES, [
+                'userUuid' => $adminUuid,
+                'roleUuid' => $adminRole['uuid']
+            ]);
+        }
     }
 
     /**
@@ -100,9 +136,14 @@ final class Version20191007122229 extends AbstractMigration
      */
     public function down(Schema $schema) : void
     {
-        $this->addSql("DELETE FROM `oauth_clients` WHERE `oauth_clients`.`name` = 'dotkernel'");
-        $this->addSql("DELETE FROM `oauth_scopes` WHERE `id` = 'api'");
-        $this->addSql("DELETE FROM `user_role` WHERE `user_role`.`uuid` = CAST(0x11e9e6a81f24525e9cbbb8ca3aa0178d AS BINARY)");
-        $this->addSql("DELETE FROM `user_role` WHERE `user_role`.`uuid` = CAST(0x11e9e6a8238faa8ca090b8ca3aa0178d AS BINARY)");
+        $this->addSql("TRUNCATE TABLE " . self::TABLE_ADMIN_ROLES);
+        $this->addSql("TRUNCATE TABLE " . self::TABLE_ADMIN_ROLE);
+        $this->addSql("TRUNCATE TABLE " . self::TABLE_ADMIN);
+        $this->addSql("TRUNCATE TABLE " . self::TABLE_USER_ROLES);
+        $this->addSql("TRUNCATE TABLE " . self::TABLE_USER_ROLE);
+        $this->addSql("TRUNCATE TABLE " . self::TABLE_USER_DETAIL);
+        $this->addSql("TRUNCATE TABLE " . self::TABLE_USER);
+        $this->addSql("TRUNCATE TABLE " . self::TABLE_OAUTH_SCOPES);
+        $this->addSql("TRUNCATE TABLE " . self::TABLE_OAUTH_CLIENTS);
     }
 }

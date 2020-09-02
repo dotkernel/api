@@ -6,7 +6,7 @@ namespace Api\User\Handler;
 
 use Api\App\Common\Message;
 use Api\App\RestDispatchTrait;
-use Api\User\Entity\UserEntity;
+use Api\User\Entity\User;
 use Api\User\Form\InputFilter\UpdateUserInputFilter;
 use Api\User\Service\UserService;
 use Dot\AnnotatedServices\Annotation\Inject;
@@ -66,7 +66,7 @@ class UserAvatarHandler implements RequestHandlerInterface
         }
 
         $user = $this->userService->findOneBy(['uuid' => $uuid]);
-        if (!($user instanceof UserEntity)) {
+        if (!($user instanceof User)) {
             return $this->notFoundResponse(
                 sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid)
             );

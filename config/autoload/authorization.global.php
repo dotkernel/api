@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-use Api\User\Entity\UserRoleEntity;
+use Api\User\Entity\UserRole;
+use Api\User\Entity\AdminRole;
 
 return [
     /**
@@ -18,20 +19,27 @@ return [
      */
     'mezzio-authorization-rbac' => [
         'roles' => [
-            UserRoleEntity::ROLE_ADMIN  => [],
-            UserRoleEntity::ROLE_MEMBER => [UserRoleEntity::ROLE_ADMIN]
+            AdminRole::ROLE_SUPERUSER => [],
+            AdminRole::ROLE_ADMIN => [AdminRole::ROLE_SUPERUSER],
+            UserRole::ROLE_USER => [AdminRole::ROLE_ADMIN],
+            UserRole::ROLE_GUEST => [UserRole::ROLE_USER]
         ],
         'permissions' => [
-            UserRoleEntity::ROLE_ADMIN => [
+            AdminRole::ROLE_SUPERUSER => [
+                'admin:register'
+            ],
+            AdminRole::ROLE_ADMIN => [
                 'user:activate',
                 'user:avatar',
                 'user:list,create',
                 'user:delete,view,update',
+                'admin-my-account:me'
             ],
-            UserRoleEntity::ROLE_MEMBER => [
+            UserRole::ROLE_USER => [
                 'my-account:avatar',
                 'my-account:me',
             ],
+            UserRole::ROLE_GUEST => []
         ],
     ]
 ];

@@ -39,6 +39,9 @@ final class Version20191007120235 extends AbstractMigration
         $this->addSql('CREATE TABLE `user_reset_password` (`uuid` binary(16) NOT NULL COMMENT \'(DC2Type:uuid_binary_ordered_time)\', `userUuid` binary(16) NOT NULL COMMENT \'(DC2Type:uuid_binary_ordered_time)\', `hash` varchar(64) NOT NULL, `status` varchar(20) NOT NULL, `expires` datetime NOT NULL, `created` datetime NOT NULL, `updated` datetime DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
         $this->addSql('CREATE TABLE `user_role` (`uuid` binary(16) NOT NULL COMMENT \'(DC2Type:uuid_binary_ordered_time)\', `name` varchar(20) NOT NULL, `created` datetime NOT NULL, `updated` datetime DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
         $this->addSql('CREATE TABLE `user_roles` (`userUuid` binary(16) NOT NULL COMMENT \'(DC2Type:uuid_binary_ordered_time)\', `roleUuid` binary(16) NOT NULL COMMENT \'(DC2Type:uuid_binary_ordered_time)\') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
+        $this->addSql('CREATE TABLE `admin` (`uuid` binary(16) NOT NULL COMMENT \'(DC2Type:uuid_binary_ordered_time)\', `identity` varchar(191) NOT NULL, `password` varchar(191) NOT NULL, `firstName` varchar(100), `lastName` varchar(100), `status` varchar(20) NOT NULL, `created` datetime NOT NULL, `updated` datetime DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
+        $this->addSql('CREATE TABLE `admin_role` (`uuid` binary(16) NOT NULL COMMENT \'(DC2Type:uuid_binary_ordered_time)\', `name` varchar(20) NOT NULL, `created` datetime NOT NULL, `updated` datetime DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
+        $this->addSql('CREATE TABLE `admin_roles` (`userUuid` binary(16) NOT NULL COMMENT \'(DC2Type:uuid_binary_ordered_time)\', `roleUuid` binary(16) NOT NULL COMMENT \'(DC2Type:uuid_binary_ordered_time)\') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
 
         // Add indexes
         $this->addSql('ALTER TABLE `oauth_access_tokens` ADD PRIMARY KEY (`id`), ADD KEY `idx1_oauth_access_tokens` (`user_id`)');
@@ -53,12 +56,16 @@ final class Version20191007120235 extends AbstractMigration
         $this->addSql('ALTER TABLE `user_reset_password` ADD PRIMARY KEY (`uuid`), ADD UNIQUE KEY `UNIQ_D21DE3BCD1B862B8` (`hash`), ADD KEY `IDX_D21DE3BCD73087E9` (`userUuid`)');
         $this->addSql('ALTER TABLE `user_role` ADD PRIMARY KEY (`uuid`), ADD UNIQUE KEY `UNIQ_2DE8C6A35E237E06` (`name`)');
         $this->addSql('ALTER TABLE `user_roles` ADD PRIMARY KEY (`userUuid`,`roleUuid`), ADD KEY `IDX_54FCD59FD73087E9` (`userUuid`), ADD KEY `IDX_54FCD59F88446210` (`roleUuid`)');
+        $this->addSql('ALTER TABLE `admin` ADD PRIMARY KEY (`uuid`), ADD UNIQUE KEY `UNIQ_8D93D649F85E0678` (`identity`)');
+        $this->addSql('ALTER TABLE `admin_role` ADD PRIMARY KEY (`uuid`), ADD UNIQUE KEY `UNIQ_2DE8C6A35E237E07` (`name`)');
+        $this->addSql('ALTER TABLE `admin_roles` ADD PRIMARY KEY (`userUuid`,`roleUuid`), ADD KEY `IDX_54FCD59FD73087E0` (`userUuid`), ADD KEY `IDX_54FCD59F88446211` (`roleUuid`)');
 
         // Add foreign keys
         $this->addSql('ALTER TABLE `user_avatar` ADD CONSTRAINT `FK_73256912D73087E9` FOREIGN KEY (`userUuid`) REFERENCES `user` (`uuid`)');
         $this->addSql('ALTER TABLE `user_detail` ADD CONSTRAINT `FK_4B5464AED73087E9` FOREIGN KEY (`userUuid`) REFERENCES `user` (`uuid`)');
         $this->addSql('ALTER TABLE `user_reset_password` ADD CONSTRAINT `FK_D21DE3BCD73087E9` FOREIGN KEY (`userUuid`) REFERENCES `user` (`uuid`)');
         $this->addSql('ALTER TABLE `user_roles` ADD CONSTRAINT `FK_54FCD59F88446210` FOREIGN KEY (`roleUuid`) REFERENCES `user_role` (`uuid`), ADD CONSTRAINT `FK_54FCD59FD73087E9` FOREIGN KEY (`userUuid`) REFERENCES `user` (`uuid`)');
+        $this->addSql('ALTER TABLE `admin_roles` ADD CONSTRAINT `FK_54FCD59F88446211` FOREIGN KEY (`roleUuid`) REFERENCES `admin_role` (`uuid`), ADD CONSTRAINT `FK_54FCD59FD73087E0` FOREIGN KEY (`userUuid`) REFERENCES `user` (`uuid`)');
     }
 
     /**
@@ -78,5 +85,8 @@ final class Version20191007120235 extends AbstractMigration
         $this->addSql('DROP TABLE user_reset_password');
         $this->addSql('DROP TABLE user_role');
         $this->addSql('DROP TABLE user_roles');
+        $this->addSql('DROP TABLE admin');
+        $this->addSql('DROP TABLE admin_role');
+        $this->addSql('DROP TABLE admin_roles');
     }
 }

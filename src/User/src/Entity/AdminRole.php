@@ -4,34 +4,33 @@ declare(strict_types=1);
 
 namespace Api\User\Entity;
 
-use Api\App\Common\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
-use Laminas\Stdlib\ArraySerializableInterface;
+use Api\App\Common\Entity\AbstractEntity;
 
 /**
- * Class UserRoleEntity
- * @ORM\Entity(repositoryClass="Api\User\Repository\UserRoleRepository")
- * @ORM\Table(name="user_role")
+ * Class AdminRole
+ * @ORM\Entity(repositoryClass="Api\User\Repository\AdminRoleRepository")
+ * @ORM\Table(name="admin_role")
  * @ORM\HasLifecycleCallbacks()
  * @package Api\User\Entity
  */
-class UserRoleEntity extends AbstractEntity implements ArraySerializableInterface
+class AdminRole extends AbstractEntity
 {
-    const ROLE_ADMIN = 'admin';
-    const ROLE_MEMBER = 'member';
-    const ROLES = [
-        self::ROLE_MEMBER,
-        self::ROLE_ADMIN
+    public const ROLE_ADMIN = 'admin';
+    public const ROLE_SUPERUSER = 'superuser';
+    public const ROLES = [
+        self::ROLE_ADMIN,
+        self::ROLE_SUPERUSER
     ];
 
     /**
-     * @ORM\Column(name="name", type="string", length=20, nullable=false, unique=true)
+     * @ORM\Column(name="name", type="string", length=30, nullable=false, unique=true)
      * @var string $name
      */
-    protected $name;
+    protected string $name;
 
     /**
-     * UserRolesEntity constructor.
+     * AdminRole constructor.
      */
     public function __construct()
     {
@@ -48,9 +47,9 @@ class UserRoleEntity extends AbstractEntity implements ArraySerializableInterfac
 
     /**
      * @param string $name
-     * @return $this
+     * @return AdminRole
      */
-    public function setName(string $name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -58,11 +57,9 @@ class UserRoleEntity extends AbstractEntity implements ArraySerializableInterfac
     }
 
     /**
-     * Return an array representation of the object
-     *
      * @return array
      */
-    public function getArrayCopy()
+    public function toArray(): array
     {
         return [
             'uuid' => $this->getUuid()->toString(),

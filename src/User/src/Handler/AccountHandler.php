@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
+use Dot\AnnotatedServices\Annotation\Inject;
 use Api\App\RestDispatchTrait;
-use Api\User\Entity\UserEntity;
+use Api\User\Entity\User;
 use Api\User\Form\InputFilter\CreateAccountInputFilter;
 use Api\User\Form\InputFilter\UpdateAccountInputFilter;
 use Api\User\Service\UserService;
-use Dot\AnnotatedServices\Annotation\Inject;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -52,7 +52,7 @@ class AccountHandler implements RequestHandlerInterface
      */
     public function delete(ServerRequestInterface $request) : ResponseInterface
     {
-        $user = $request->getAttribute(UserEntity::class, null);
+        $user = $request->getAttribute(User::class, null);
 
         try {
             $user = $this->userService->deleteUser($user);
@@ -69,9 +69,9 @@ class AccountHandler implements RequestHandlerInterface
      */
     public function get(ServerRequestInterface $request) : ResponseInterface
     {
-        return $this->responseFactory->createResponse(
+       return $this->responseFactory->createResponse(
             $request,
-            $this->resourceGenerator->fromObject($request->getAttribute(UserEntity::class, null), $request)
+            $this->resourceGenerator->fromObject($request->getAttribute(User::class, null), $request)
         );
     }
 
@@ -89,7 +89,7 @@ class AccountHandler implements RequestHandlerInterface
 
         try {
             $user = $this->userService->updateUser(
-                $request->getAttribute(UserEntity::class, null),
+                $request->getAttribute(User::class, null),
                 $inputFilter->getValues()
             );
         } catch (Exception $exception) {
