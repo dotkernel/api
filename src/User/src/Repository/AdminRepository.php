@@ -54,7 +54,7 @@ class AdminRepository extends EntityRepository
         }
 
         try {
-            return $qb->getQuery()->getSingleResult();
+            return $qb->getQuery()->useQueryCache(true)->getSingleResult();
         } catch (\Exception $exception) {
             return null;
         }
