@@ -72,7 +72,7 @@ class UserRepository extends EntityRepository
         }
 
         try {
-            return $qb->getQuery()->getSingleResult();
+            return $qb->getQuery()->useQueryCache(true)->getSingleResult();
         } catch (Exception $exception) {
             return null;
         }
@@ -90,7 +90,7 @@ class UserRepository extends EntityRepository
                 ->leftJoin('user.resetPasswords', 'resetPasswords')
                 ->andWhere('resetPasswords.hash = :hash')->setParameter('hash', $hash);
 
-            return $qb->getQuery()->getSingleResult();
+            return $qb->getQuery()->useQueryCache(true)->getSingleResult();
         } catch (Exception $exception) {
             return null;
         }
@@ -142,6 +142,8 @@ class UserRepository extends EntityRepository
         // Paginate results
         $page = Pagination::getOffsetAndLimit($filters);
         $qb->setFirstResult($page['offset'])->setMaxResults($page['limit']);
+
+        $qb->getQuery()->useQueryCache(true);
 
         // Return results
         return new UserCollection($qb, false);
