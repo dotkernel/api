@@ -65,7 +65,7 @@ final class Version20191007120235 extends AbstractMigration
         $this->addSql('ALTER TABLE `user_detail` ADD CONSTRAINT `FK_4B5464AED73087E9` FOREIGN KEY (`userUuid`) REFERENCES `user` (`uuid`)');
         $this->addSql('ALTER TABLE `user_reset_password` ADD CONSTRAINT `FK_D21DE3BCD73087E9` FOREIGN KEY (`userUuid`) REFERENCES `user` (`uuid`)');
         $this->addSql('ALTER TABLE `user_roles` ADD CONSTRAINT `FK_54FCD59F88446210` FOREIGN KEY (`roleUuid`) REFERENCES `user_role` (`uuid`), ADD CONSTRAINT `FK_54FCD59FD73087E9` FOREIGN KEY (`userUuid`) REFERENCES `user` (`uuid`)');
-        $this->addSql('ALTER TABLE `admin_roles` ADD CONSTRAINT `FK_54FCD59F88446211` FOREIGN KEY (`roleUuid`) REFERENCES `admin_role` (`uuid`), ADD CONSTRAINT `FK_54FCD59FD73087E0` FOREIGN KEY (`userUuid`) REFERENCES `user` (`uuid`)');
+        $this->addSql('ALTER TABLE `admin_roles` ADD CONSTRAINT `FK_54FCD59F88446211` FOREIGN KEY (`roleUuid`) REFERENCES `admin_role` (`uuid`), ADD CONSTRAINT `FK_54FCD59FD73087E0` FOREIGN KEY (`userUuid`) REFERENCES `admin` (`uuid`)');
     }
 
     /**
