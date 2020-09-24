@@ -8,13 +8,6 @@ use Ramsey\Uuid\Doctrine\UuidType;
 
 return [
     'doctrine' => [
-        'configuration' => [
-            'orm_default' => [
-                'query_cache' => \Doctrine\Common\Cache\PhpFileCache::class,
-                'metadata_cache' => \Doctrine\Common\Cache\PhpFileCache::class,
-                'result_cache' => \Doctrine\Common\Cache\PhpFileCache::class
-            ]
-        ],
         'connection' => [
             'orm_default' => [
                 'doctrine_mapping_types' => [
