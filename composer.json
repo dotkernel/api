@@ -1,19 +1,21 @@
 {
     "name": "dotkernel/api",
-    "description": "DotKernel API",
     "type": "project",
-    "homepage": "https://github.com/dotkernel/api",
+    "description": "DotKernel API",
     "license": "MIT",
+    "homepage": "https://github.com/dotkernel/api",
+    "keywords": [
+        "api",
+        "REST", 
+        "REST API",
+        "mezzio",
+        "laminas"
+    ],
     "authors": [
         {
             "name": "DotKernel Team",
             "email": "team@dotkernel.com"
         }
-    ],
-    "keywords": [
-        "api",
-        "mezzio",
-        "laminas"
     ],
     "config": {
         "sort-packages": true
@@ -34,10 +36,10 @@
         "ext-json": "*",
         "brick/math": "^0.8",
         "doctrine/migrations": "^2.2",
-        "dotkernel/dot-annotated-services": "^3.0",
-        "dotkernel/dot-console": "^2.0",
-        "dotkernel/dot-errorhandler": "^3.0",
-        "dotkernel/dot-mail": "^3.0",
+        "dotkernel/dot-annotated-services": "^3.1",
+        "dotkernel/dot-console": "^3.1",
+        "dotkernel/dot-errorhandler": "^3.1",
+        "dotkernel/dot-mail": "^3.1",
         "laminas/laminas-component-installer": "^2.1",
         "laminas/laminas-config": "^3.3",
         "laminas/laminas-config-aggregator": "^1.2",
