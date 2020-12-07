@@ -7,6 +7,7 @@ namespace Api\User;
 use Api\User\Handler\AccountActivateHandler;
 use Api\User\Handler\AccountAvatarHandler;
 use Api\User\Handler\AccountHandler;
+use Api\User\Handler\AccountRecoveryHandler;
 use Api\User\Handler\AccountResetPasswordHandler;
 use Api\User\Handler\AdminAccountHandler;
 use Api\User\Handler\UserActivateHandler;
@@ -39,24 +40,28 @@ class RoutesDelegator
          * Admins manage users' accounts
          */
 
-        $app->route('/user',
+        $app->route(
+            '/user',
             [AuthenticationMiddleware::class, AuthMiddleware::class, UserHandler::class],
             [RequestMethod::METHOD_GET, RequestMethod::METHOD_POST],
             'user:list,create'
         );
 
-        $app->route('/user/' . \Api\App\RoutesDelegator::REGEXP_UUID,
+        $app->route(
+            '/user/' . \Api\App\RoutesDelegator::REGEXP_UUID,
             [AuthenticationMiddleware::class, AuthMiddleware::class, UserHandler::class],
             [RequestMethod::METHOD_DELETE, RequestMethod::METHOD_GET, RequestMethod::METHOD_PATCH],
             'user:delete,view,update'
         );
 
-        $app->post('/user/activate/' . \Api\App\RoutesDelegator::REGEXP_UUID,
+        $app->post(
+            '/user/activate/' . \Api\App\RoutesDelegator::REGEXP_UUID,
             [AuthenticationMiddleware::class, AuthMiddleware::class, UserActivateHandler::class],
             'user:activate'
         );
 
-        $app->post('/user/avatar/' . \Api\App\RoutesDelegator::REGEXP_UUID,
+        $app->post(
+            '/user/avatar/' . \Api\App\RoutesDelegator::REGEXP_UUID,
             [AuthenticationMiddleware::class, AuthMiddleware::class, UserAvatarHandler::class],
             'user:avatar'
         );
@@ -65,26 +70,36 @@ class RoutesDelegator
          * Users manage their own accounts
          */
 
-        $app->route('/my-account',
+        $app->route(
+            '/my-account',
             [AuthenticationMiddleware::class, AuthMiddleware::class, AccountHandler::class],
             [RequestMethod::METHOD_DELETE, RequestMethod::METHOD_GET, RequestMethod::METHOD_PATCH],
             'my-account:me'
         );
 
-        $app->post('/my-account/avatar',
+        $app->post(
+            '/my-account/avatar',
             [AuthenticationMiddleware::class, AuthMiddleware::class, AccountAvatarHandler::class],
             'my-account:avatar'
         );
 
         $app->post('/account/register', AccountHandler::class, 'account:register');
 
-        $app->route('/account/reset-password[/{hash}]',
+        $app->route(
+            '/account/reset-password[/{hash}]',
             AccountResetPasswordHandler::class,
             [RequestMethod::METHOD_GET, RequestMethod::METHOD_PATCH, RequestMethod::METHOD_POST],
             'account:reset-password'
         );
 
-        $app->route('/account/activate[/{hash}]',
+        $app->post(
+            '/account/recover-identity',
+            AccountRecoveryHandler::class,
+            'account:recover-identity'
+        );
+
+        $app->route(
+            '/account/activate[/{hash}]',
             AccountActivateHandler::class,
             [RequestMethod::METHOD_GET, RequestMethod::METHOD_POST],
             'account:activate'
@@ -94,7 +109,8 @@ class RoutesDelegator
          * Admins manage their own accounts
          */
 
-        $app->route('/admin/my-account',
+        $app->route(
+            '/admin/my-account',
             [AuthenticationMiddleware::class, AuthMiddleware::class, AdminAccountHandler::class],
             [RequestMethod::METHOD_GET, RequestMethod::METHOD_PATCH],
             'admin-my-account:me'

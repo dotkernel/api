@@ -23,7 +23,7 @@ class UpdateAccountInputFilter implements InputFilterAwareInterface
     {
         if (empty($this->inputFilter)) {
             $this->inputFilter = (new UpdateUserInputFilter())->getInputFilter();
-            $this->inputFilter->setValidationGroup(['email', 'password', 'passwordConfirm', 'detail', 'avatar']);
+            $this->inputFilter->setValidationGroup(['identity', 'password', 'passwordConfirm', 'detail', 'avatar']);
         }
 
         return $this->inputFilter;

@@ -107,8 +107,8 @@ final class Version20191007122229 extends AbstractMigration
         ]);
 
         $roles = [
-            ['uuid' => UuidOrderedTimeGenerator::generateUuid()->getBytes(), 'name' => 'admin', 'created' => $now],
-            ['uuid' => UuidOrderedTimeGenerator::generateUuid()->getBytes(), 'name' => 'member', 'created' => $now],
+            ['uuid' => UuidOrderedTimeGenerator::generateUuid()->getBytes(), 'name' => 'user', 'created' => $now],
+            ['uuid' => UuidOrderedTimeGenerator::generateUuid()->getBytes(), 'name' => 'guest', 'created' => $now],
         ];
         foreach ($roles as $role) {
             $this->connection->insert(self::TABLE_USER_ROLE, $role);

@@ -1,0 +1,18 @@
+<div>
+    <p>
+    <p>Hi {{ user.detail.firstname ?? user.getDetail().getEmail() ?? user.getIdentity() }},</p>
+    </p>
+
+    <p>
+        Someone requested the identity of this account: {{ user.getDetail().getEmail() }}<br />
+
+        Your account's identity is: {{ user.getIdentity() }}
+
+        If you did not make this request, just ignore this email - no changes have been made to your account.
+    </p>
+
+    <p>
+        Thanks,<br />
+        The {{ config.application.name }} Team
+    </p>
+</div>

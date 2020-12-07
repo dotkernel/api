@@ -12,13 +12,17 @@ class Message
 {
     const ADMIN_NOT_ACTIVATED = 'This account is deactivated.';
     const DUPLICATE_EMAIL = 'An account with this email address already exists.';
-    const DUPLICATE_IDENTITY = 'An admin with this identity already exists.';
+    const DUPLICATE_IDENTITY = 'An account with this identity already exists.';
     const INVALID_ACTIVATION_CODE = 'Invalid activation code.';
     const INVALID_CLIENT_ID = 'Invalid client_id.';
     const INVALID_VALUE = 'The value specified for \'%s\' is invalid.';
+    const INVALID_EMAIL = 'Invalid email';
+    const INVALID_IDENTIFIER = 'User cannot be found by supplied identifier';
     const MAIL_SENT_RESET_PASSWORD = 'If the provided email identifies an account in our system, ' .
         'you will receive an email with further instructions on resetting your account\'s password.';
     const MAIL_SENT_USER_ACTIVATION = 'User activation mail has been successfully sent to \'%s\'';
+    const MAIL_SENT_RECOVER_IDENTITY = 'If the provided email identifies an account in our system, ' .
+        'you will receive an email with your account\'s identity.';
     const MISSING_PARAMETER = 'Missing parameter: \'%s\'';
     const NOT_FOUND_BY_UUID = 'Unable to find %s identified by uuid: %s';
     const RESET_PASSWORD_EXPIRED = 'Password reset request for hash: \'%s\' is invalid (expired).';

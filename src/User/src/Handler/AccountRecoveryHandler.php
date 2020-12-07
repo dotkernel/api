@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
+use Api\User\Form\InputFilter\RecoverIdentityInputFilter;
+use Dot\AnnotatedServices\Annotation\Inject;
+use Api\App\Common\Message;
 use Api\App\RestDispatchTrait;
 use Api\User\Entity\User;
-use Api\User\Form\InputFilter\UpdateUserInputFilter;
 use Api\User\Service\UserService;
-use Dot\AnnotatedServices\Annotation\Inject;
-use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -17,10 +17,10 @@ use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 
 /**
- * Class AccountAvatarHandler
+ * Class AccountRecoveryHandler
  * @package Api\User\Handler
  */
-class AccountAvatarHandler implements RequestHandlerInterface
+class AccountRecoveryHandler implements RequestHandlerInterface
 {
     use RestDispatchTrait;
 
@@ -28,7 +28,7 @@ class AccountAvatarHandler implements RequestHandlerInterface
     protected $userService;
 
     /**
-     * AccountAvatarHandler constructor.
+     * AccountRecoveryHandler constructor.
      * @param HalResponseFactory $halResponseFactory
      * @param ResourceGenerator $resourceGenerator
      * @param UserService $userService
@@ -51,21 +51,18 @@ class AccountAvatarHandler implements RequestHandlerInterface
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new UpdateUserInputFilter())->getInputFilter();
-        $inputFilter->setData($request->getUploadedFiles());
+        $inputFilter = (new RecoverIdentityInputFilter())->getInputFilter();
+        $inputFilter->setData($request->getParsedBody());
         if (!$inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
         }
 
-        try {
-            $user = $this->userService->updateUser(
-                $request->getAttribute(User::class, null),
-                $inputFilter->getValues()
-            );
-        } catch (Exception $exception) {
-            return $this->errorResponse($exception->getMessage());
+        $user = $this->userService->getUserByEmail($inputFilter->getValue('email'));
+
+        if ($user instanceof User) {
+            $this->userService->sendRecoverIdentityMail($user);
         }
 
-        return $this->responseFactory->createResponse($request, $this->resourceGenerator->fromObject($user, $request));
+        return $this->infoResponse(Message::MAIL_SENT_RECOVER_IDENTITY);
     }
 }

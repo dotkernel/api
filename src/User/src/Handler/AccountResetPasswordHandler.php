@@ -55,7 +55,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function get(ServerRequestInterface $request) : ResponseInterface
+    public function get(ServerRequestInterface $request): ResponseInterface
     {
         $hash = $request->getAttribute('hash') ?? null;
         $user = $this->userService->findByResetPasswordHash($hash);
@@ -81,7 +81,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function patch(ServerRequestInterface $request) : ResponseInterface
+    public function patch(ServerRequestInterface $request): ResponseInterface
     {
         $hash = $request->getAttribute('hash') ?? null;
         $user = $this->userService->findByResetPasswordHash($hash);
@@ -121,7 +121,8 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
             return $this->errorResponse($exception->getMessage());
         }
 
-        return $this->responseFactory->createResponse($request,
+        return $this->responseFactory->createResponse(
+            $request,
             $this->resourceGenerator->fromObject($resetPasswordRequest, $request)
         );
     }
@@ -130,7 +131,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function post(ServerRequestInterface $request) : ResponseInterface
+    public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new ResetPasswordInputFilter())->getInputFilter();
         $inputFilter->setData($request->getParsedBody());
@@ -138,9 +139,14 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
             return $this->errorResponse($inputFilter->getMessages());
         }
 
-        $user = $this->userService->findOneBy(['email' => $inputFilter->getValue('email')]);
+        if (!empty($inputFilter->getValue('email'))) {
+            $user = $this->userService->getUserByEmail($inputFilter->getValue('email'));
+        } else {
+            $user = $this->userService->findOneBy(['identity' => $inputFilter->getValue('identity')]);
+        }
+
         if (!($user instanceof User)) {
-            return $this->infoResponse(Message::MAIL_SENT_RESET_PASSWORD);
+            return $this->infoResponse(Message::INVALID_IDENTIFIER);
         }
 
         try {

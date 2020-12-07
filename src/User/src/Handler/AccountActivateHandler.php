@@ -60,7 +60,7 @@ class AccountActivateHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function get(ServerRequestInterface $request) : ResponseInterface
+    public function get(ServerRequestInterface $request): ResponseInterface
     {
         $hash = $request->getAttribute('hash', null);
         if (empty($hash)) {
@@ -90,7 +90,7 @@ class AccountActivateHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function post(ServerRequestInterface $request) : ResponseInterface
+    public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new ActivateAccountInputFilter())->getInputFilter();
         $inputFilter->setData($request->getParsedBody());
