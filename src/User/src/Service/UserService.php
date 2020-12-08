@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
+use Api\User\Repository\UserDetailRepository;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Api\App\Common\Message;
 use Api\App\Common\UuidOrderedTimeGenerator;
@@ -54,6 +55,9 @@ class UserService
     /** @var UserRepository $userRepository */
     protected $userRepository;
 
+    /** @var UserDetailRepository $userDetailRepository */
+    protected $userDetailRepository;
+
     /** @var UserRoleService $userRoleService */
     protected $userRoleService;
 
@@ -76,6 +80,7 @@ class UserService
         array $config = []
     ) {
         $this->userRepository = $entityManager->getRepository(User::class);
+        $this->userDetailRepository = $entityManager->getRepository(UserDetail::class);
         $this->userRoleService = $userRoleService;
         $this->mailService = $mailService;
         $this->templateRenderer = $templateRenderer;
@@ -104,15 +109,18 @@ class UserService
      */
     public function createUser(array $data = [])
     {
-        if ($this->exists($data['email'])) {
-            throw new ORMException(Message::DUPLICATE_EMAIL);
+        if ($this->exists($data['identity'])) {
+            throw new ORMException(Message::DUPLICATE_IDENTITY);
         }
-
         $user = new User();
-        $user->setPassword(password_hash($data['password'], PASSWORD_DEFAULT))->setEmail($data['email']);
+        $user->setPassword(password_hash($data['password'], PASSWORD_DEFAULT))->setIdentity($data['identity']);
 
         $detail = new UserDetail();
         $detail->setUser($user)->setFirstname($data['detail']['firstname'])->setLastname($data['detail']['lastname']);
+
+        if (!empty($data['detail']['email'] && !$this->emailExists($data['detail']['email']))) {
+            $detail->setEmail($data['detail']['email']);
+        }
 
         $user->setDetail($detail);
 
@@ -170,28 +178,41 @@ class UserService
         $user = $user->markAsDeleted();
 
         // make user anonymous
-        $user->setEmail('anonymous' . date('dmYHis') . '@dotkernel.com');
+        $user->setIdentity('anonymous' . date('dmYHis'));
         $userDetails = $user->getDetail();
         $userDetails->setFirstName('anonymous' . date('dmYHis'));
         $userDetails->setLastName('anonymous' . date('dmYHis'));
+        $userDetails->setEmail('anonymous' . date('dmYHis') . '@dotkernel.com');
 
         $user->setDetail($userDetails);
 
         $this->userRepository->saveUser($user->markAsDeleted());
-        $this->userRepository->revokeAccessTokens($user->getEmail());
+        $this->userRepository->revokeAccessTokens($user->getIdentity());
 
         return $user;
     }
 
     /**
-     * @param string $email
-     * @param null|string $uuid
+     * @param string $identity
+     * @param string|null $uuid
      * @return bool
      */
-    public function exists(string $email = '', ?string $uuid = '')
+    public function exists(string $identity = '', ?string $uuid = '')
     {
-        return !is_null(
-            $this->userRepository->exists($email, $uuid)
+        return !empty(
+        $this->userRepository->exists($identity, $uuid)
+        );
+    }
+
+    /**
+     * @param string $email
+     * @param string|null $uuid
+     * @return bool
+     */
+    public function emailExists(string $email = '', ?string $uuid = '')
+    {
+        return !empty(
+        $this->userRepository->emailExists($email, $uuid)
         );
     }
 
@@ -240,7 +261,7 @@ class UserService
      */
     public function sendActivationMail(User $user)
     {
-        if ($user->isActive()) {
+        if ($user->isActive() || is_null($user->getDetail()->getEmail())) {
             return false;
         }
 
@@ -251,7 +272,7 @@ class UserService
             ])
         );
         $this->mailService->setSubject('Welcome to ' . $this->config['application']['name']);
-        $this->mailService->getMessage()->addTo($user->getEmail(), $user->getName());
+        $this->mailService->getMessage()->addTo($user->getDetail()->getEmail(), $user->getName());
 
         return $this->mailService->send()->isValid();
     }
@@ -269,10 +290,15 @@ class UserService
                 'user' => $user
             ])
         );
+
         $this->mailService->setSubject(
             'Reset password instructions for your ' . $this->config['application']['name'] . ' account'
         );
-        $this->mailService->getMessage()->addTo($user->getEmail(), $user->getName());
+        if (!empty($user->getDetail()->getEmail())) {
+            $this->mailService->getMessage()->addTo($user->getDetail()->getEmail(), $user->getName());
+        } else {
+            return false;
+        }
 
         return $this->mailService->send()->isValid();
     }
@@ -293,7 +319,7 @@ class UserService
         $this->mailService->setSubject(
             'You have successfully reset the password for your ' . $this->config['application']['name'] . ' account'
         );
-        $this->mailService->getMessage()->addTo($user->getEmail(), $user->getName());
+        $this->mailService->getMessage()->addTo($user->getDetail()->getEmail(), $user->getName());
 
         return $this->mailService->send()->isValid();
     }
@@ -312,7 +338,7 @@ class UserService
             ])
         );
         $this->mailService->setSubject('Welcome to ' . $this->config['application']['name']);
-        $this->mailService->getMessage()->addTo($user->getEmail(), $user->getName());
+        $this->mailService->getMessage()->addTo($user->getDetail()->getEmail(), $user->getName());
 
         return $this->mailService->send()->isValid();
     }
@@ -326,11 +352,11 @@ class UserService
      */
     public function updateUser(User $user, array $data = [])
     {
-        if (isset($data['email']) && !is_null($data['email'])) {
-            if ($this->exists($data['email'], $user->getUuid()->toString())) {
-                throw new ORMException(Message::DUPLICATE_EMAIL);
+        if (isset($data['identity']) && !is_null($data['identity'])) {
+            if ($this->exists($data['identity'], $user->getUuid()->toString())) {
+                throw new ORMException(Message::DUPLICATE_IDENTITY);
             }
-            $user->setEmail($data['email']);
+            $user->setIdentity($data['identity']);
         }
 
         if (isset($data['password']) && !is_null($data['password'])) {
@@ -357,6 +383,13 @@ class UserService
 
         if (isset($data['detail']['lastname']) && !is_null($data['detail']['lastname'])) {
             $user->getDetail()->setLastname($data['detail']['lastname']);
+        }
+
+        if (isset($data['detail']['email']) && !empty($data['detail']['email'])) {
+            if ($this->emailExists($data['detail']['email'], $user->getUuid()->toString())) {
+                throw new ORMException(Message::DUPLICATE_EMAIL);
+            }
+            $user->getDetail()->setEmail($data['detail']['email']);
         }
 
         if (!empty($data['avatar'])) {
@@ -403,17 +436,65 @@ class UserService
             $avatar = new UserAvatar();
             $avatar->setUser($user);
         }
-        $fileName = sprintf('avatar-%s.%s',
+        $fileName = sprintf(
+            'avatar-%s.%s',
             UuidOrderedTimeGenerator::generateUuid(),
             self::EXTENSIONS[$uploadedFile->getClientMediaType()]
         );
         $avatar->setName($fileName);
 
         $uploadedFile = new UploadedFile(
-            $uploadedFile->getStream()->getMetadata()['uri'], $uploadedFile->getSize(), $uploadedFile->getError()
+            $uploadedFile->getStream()->getMetadata()['uri'],
+            $uploadedFile->getSize(),
+            $uploadedFile->getError()
         );
         $uploadedFile->moveTo($path . $fileName);
 
         return $avatar;
+    }
+
+    /**
+     * @param string|null $email
+     * @return false|int|mixed|string|null
+     */
+    public function getUserByEmail(string $email = null)
+    {
+        if (empty($email)) {
+            return false;
+        }
+
+        $userDetail = $this->userDetailRepository->findOneBy(['email' => $email]);
+
+        if (!($userDetail instanceof UserDetail)) {
+            return false;
+        }
+
+        return $userDetail->getUser();
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     * @throws MailException
+     */
+    public function sendRecoverIdentityMail(User $user)
+    {
+        $this->mailService->setBody(
+            $this->templateRenderer->render('user::recover-identity-requested', [
+                'config' => $this->config,
+                'user' => $user
+            ])
+        );
+
+        $this->mailService->setSubject(
+            'Recover identity for your ' . $this->config['application']['name'] . ' account'
+        );
+
+        if (!empty($user->getDetail()->getEmail())) {
+            $this->mailService->getMessage()->addTo($user->getDetail()->getEmail(), $user->getName());
+            return $this->mailService->send()->isValid();
+        }
+
+        return false;
     }
 }

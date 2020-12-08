@@ -11,6 +11,7 @@ use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterAwareInterface;
 use Laminas\InputFilter\InputFilterAwareTrait;
 use Laminas\InputFilter\InputFilterInterface;
+use Laminas\Validator\EmailAddress;
 use Laminas\Validator\NotEmpty;
 
 /**
@@ -30,7 +31,23 @@ class ResetPasswordInputFilter implements InputFilterAwareInterface
             $this->inputFilter = new InputFilter();
             $this->inputFilter->add([
                 'name' => 'email',
-                'required' => true,
+                'required' => false,
+                'filters' => [
+                    ['name' => StringTrim::class],
+                    ['name' => StripTags::class]
+                ],
+                'validators' => [
+                    [
+                        'name' => EmailAddress::class,
+                        'break_chain_on_failure' => false,
+                        'options' => [
+                            'message' => Message::INVALID_EMAIL
+                        ]
+                    ]
+                ]
+            ])->add([
+                'name' => 'identity',
+                'required' => false,
                 'filters' => [
                     ['name' => StringTrim::class],
                     ['name' => StripTags::class]
@@ -38,7 +55,7 @@ class ResetPasswordInputFilter implements InputFilterAwareInterface
                 'validators' => [
                     [
                         'name' => NotEmpty::class,
-                        'break_chain_on_failure' => true,
+                        'break_chain_on_failure' => false,
                         'options' => [
                             'message' => Message::VALIDATOR_REQUIRED_FIELD
                         ]
@@ -46,7 +63,6 @@ class ResetPasswordInputFilter implements InputFilterAwareInterface
                 ]
             ]);
         }
-
         return $this->inputFilter;
     }
 }

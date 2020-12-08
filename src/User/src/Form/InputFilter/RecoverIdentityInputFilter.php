@@ -7,44 +7,29 @@ namespace Api\User\Form\InputFilter;
 use Api\App\Common\Message;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
+use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterAwareInterface;
 use Laminas\InputFilter\InputFilterAwareTrait;
-use Laminas\InputFilter\InputFilterInterface;
-use Laminas\InputFilter\OptionalInputFilter;
 use Laminas\Validator\EmailAddress;
 
 /**
- * Class CreateDetailInputFilter
+ * Class RecoverIdentityInputFilter
  * @package Api\User\Form\InputFilter
  */
-class CreateDetailInputFilter implements InputFilterAwareInterface
+class RecoverIdentityInputFilter implements InputFilterAwareInterface
 {
     use InputFilterAwareTrait;
 
     /**
-     * @return InputFilterInterface
+     * @return InputFilter|\Laminas\InputFilter\InputFilterInterface|null
      */
     public function getInputFilter()
     {
         if (empty($this->inputFilter)) {
-            $this->inputFilter = new OptionalInputFilter();
+            $this->inputFilter = new InputFilter();
             $this->inputFilter->add([
-                'name' => 'firstname',
-                'required' => false,
-                'filters' => [
-                    ['name' => StringTrim::class],
-                    ['name' => StripTags::class]
-                ]
-            ])->add([
-                'name' => 'lastname',
-                'required' => false,
-                'filters' => [
-                    ['name' => StringTrim::class],
-                    ['name' => StripTags::class]
-                ]
-            ])->add([
                 'name' => 'email',
-                'required' => false,
+                'required' => true,
                 'filters' => [
                     ['name' => StringTrim::class],
                     ['name' => StripTags::class]

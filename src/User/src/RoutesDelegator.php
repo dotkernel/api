@@ -7,6 +7,7 @@ namespace Api\User;
 use Api\User\Handler\AccountActivateHandler;
 use Api\User\Handler\AccountAvatarHandler;
 use Api\User\Handler\AccountHandler;
+use Api\User\Handler\AccountRecoveryHandler;
 use Api\User\Handler\AccountResetPasswordHandler;
 use Api\User\Handler\AdminAccountHandler;
 use Api\User\Handler\UserActivateHandler;
@@ -82,6 +83,12 @@ class RoutesDelegator
             AccountResetPasswordHandler::class,
             [RequestMethod::METHOD_GET, RequestMethod::METHOD_PATCH, RequestMethod::METHOD_POST],
             'account:reset-password'
+        );
+
+        $app->post(
+            '/account/recover-identity',
+            AccountRecoveryHandler::class,
+            'account:recover-identity'
         );
 
         $app->route('/account/activate[/{hash}]',

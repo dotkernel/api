@@ -138,9 +138,14 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
             return $this->errorResponse($inputFilter->getMessages());
         }
 
-        $user = $this->userService->findOneBy(['email' => $inputFilter->getValue('email')]);
+        if (!empty($inputFilter->getValue('email'))) {
+            $user = $this->userService->getUserByEmail($inputFilter->getValue('email'));
+        } else {
+            $user = $this->userService->findOneBy(['identity' => $inputFilter->getValue('identity')]);
+        }
+
         if (!($user instanceof User)) {
-            return $this->infoResponse(Message::MAIL_SENT_RESET_PASSWORD);
+            return $this->infoResponse(Message::INVALID_IDENTIFIER);
         }
 
         try {

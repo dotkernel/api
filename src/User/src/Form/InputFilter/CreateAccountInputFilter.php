@@ -23,7 +23,7 @@ class CreateAccountInputFilter implements InputFilterAwareInterface
     {
         if (empty($this->inputFilter)) {
             $this->inputFilter = (new CreateUserInputFilter())->getInputFilter();
-            $this->inputFilter->setValidationGroup(['email', 'password', 'passwordConfirm', 'detail']);
+            $this->inputFilter->setValidationGroup(['identity', 'password', 'passwordConfirm', 'detail']);
         }
 
         return $this->inputFilter;

@@ -10,7 +10,7 @@ use Laminas\Stdlib\ArraySerializableInterface;
 
 /**
  * Class UserDetail
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Api\User\Repository\UserDetailRepository")
  * @ORM\Table(name="user_detail")
  * @ORM\HasLifecycleCallbacks()
  * @package Api\User\Entity
@@ -35,6 +35,12 @@ class UserDetail extends AbstractEntity implements ArraySerializableInterface
      * @var $lastname
      */
     protected $lastname;
+
+    /**
+     * @ORM\Column(name="email", type="string", length=191, nullable=true)
+     * @var $email
+     */
+    protected $email;
 
     /**
      * UserDetail constructor.
@@ -102,6 +108,25 @@ class UserDetail extends AbstractEntity implements ArraySerializableInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param $email
+     * @return $this
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
      * Return an array representation of the object
      *
      * @return array
@@ -111,6 +136,7 @@ class UserDetail extends AbstractEntity implements ArraySerializableInterface
         return [
             'firstname' => $this->getFirstname(),
             'lastname' => $this->getLastname(),
+            'email' => $this->getEmail(),
             'created' => $this->getCreated(),
             'updated' => $this->getUpdated()
         ];

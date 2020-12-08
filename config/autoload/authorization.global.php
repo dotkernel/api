@@ -38,6 +38,7 @@ return [
             UserRole::ROLE_USER => [
                 'my-account:avatar',
                 'my-account:me',
+                'my-account:recover-identity'
             ],
             UserRole::ROLE_GUEST => []
         ],
