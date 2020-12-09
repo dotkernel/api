@@ -9,6 +9,7 @@ use Api\User\Entity\UserResetPasswordEntity;
 use Api\User\Handler\AccountActivateHandler;
 use Api\User\Handler\AccountAvatarHandler;
 use Api\User\Handler\AccountHandler;
+use Api\User\Handler\AccountRecoveryHandler;
 use Api\User\Handler\AccountResetPasswordHandler;
 use Api\User\Handler\AdminAccountHandler;
 use Api\User\Handler\UserActivateHandler;
@@ -57,6 +58,7 @@ class ConfigProvider
                 AccountHandler::class => AnnotatedServiceFactory::class,
                 AdminAccountHandler::class => AnnotatedServiceFactory::class,
                 AccountResetPasswordHandler::class => AnnotatedServiceFactory::class,
+                AccountRecoveryHandler::class => AnnotatedServiceFactory::class,
                 AuthMiddleware::class => AnnotatedServiceFactory::class,
                 UserActivateHandler::class => AnnotatedServiceFactory::class,
                 UserAvatarHandler::class => AnnotatedServiceFactory::class,

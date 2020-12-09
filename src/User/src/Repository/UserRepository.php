@@ -22,6 +22,7 @@ class UserRepository extends EntityRepository
     /**
      * @param string $email
      * @return bool
+     * @throws \Doctrine\DBAL\Driver\Exception
      */
     public function deleteAccessTokens(string $email)
     {
@@ -56,17 +57,41 @@ class UserRepository extends EntityRepository
     }
 
     /**
-     * @param string $email
+     * @param string $identity
      * @param string|null $uuid
-     * @return User|null
+     * @return int|mixed|string|null
      */
-    public function exists(string $email = '', ?string $uuid = '')
+    public function exists(string $identity = '', ?string $uuid = '')
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('user')
             ->from(User::class, 'user')
-            ->andWhere('user.email = :email')->setParameter('email', $email);
+            ->andWhere('user.identity = :identity')->setParameter('identity', $identity);
+        if (!empty($uuid)) {
+            $qb->andWhere('user.uuid != :uuid')->setParameter('uuid', $uuid, UuidBinaryOrderedTimeType::NAME);
+        }
+
+        try {
+            return $qb->getQuery()->useQueryCache(true)->getSingleResult();
+        } catch (Exception $exception) {
+            return null;
+        }
+    }
+
+    /**
+     * @param string $email
+     * @param string|null $uuid
+     * @return int|mixed|string|null
+     */
+    public function emailExists(string $email = '', ?string $uuid = '')
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('user')
+            ->from(User::class, 'user')
+            ->join('user.detail', 'user_detail')
+            ->andWhere('user_detail.email = :email')->setParameter('email', $email);
         if (!empty($uuid)) {
             $qb->andWhere('user.uuid != :uuid')->setParameter('uuid', $uuid, UuidBinaryOrderedTimeType::NAME);
         }

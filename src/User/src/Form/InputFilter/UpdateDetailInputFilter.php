@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Api\User\Form\InputFilter;
 
+use Api\App\Common\Message;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
 use Laminas\InputFilter\InputFilterAwareInterface;
 use Laminas\InputFilter\InputFilterAwareTrait;
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\InputFilter\OptionalInputFilter;
+use Laminas\Validator\EmailAddress;
 
 /**
  * Class UpdateDetailInputFilter
@@ -39,6 +41,22 @@ class UpdateDetailInputFilter implements InputFilterAwareInterface
                 'filters' => [
                     ['name' => StringTrim::class],
                     ['name' => StripTags::class]
+                ]
+            ])->add([
+                'name' => 'email',
+                'required' => false,
+                'filters' => [
+                    ['name' => StringTrim::class],
+                    ['name' => StripTags::class]
+                ],
+                'validators' => [
+                    [
+                        'name' => EmailAddress::class,
+                        'break_chain_on_failure' => false,
+                        'options' => [
+                            'message' => Message::INVALID_EMAIL
+                        ]
+                    ]
                 ]
             ]);
         }

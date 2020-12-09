@@ -40,7 +40,7 @@ class UpdateUserInputFilter implements InputFilterAwareInterface
             $rolesInputFilter = new InputFilter();
             $rolesInputFilter->add([
                 'name' => 'uuid',
-                'required' => true,
+                'required' => false,
                 'filters' => [
                     ['name' => StringTrim::class],
                     ['name' => StripTags::class]
@@ -48,7 +48,7 @@ class UpdateUserInputFilter implements InputFilterAwareInterface
                 'validators' => [
                     [
                         'name' => NotEmpty::class,
-                        'break_chain_on_failure' => true,
+                        'break_chain_on_failure' => false,
                         'options' => [
                             'message' => Message::VALIDATOR_REQUIRED_FIELD
                         ]
@@ -65,7 +65,7 @@ class UpdateUserInputFilter implements InputFilterAwareInterface
                 'name' => 'uuid',
                 'required' => false
             ])->add([
-                'name' => 'email',
+                'name' => 'identity',
                 'required' => false,
                 'filters' => [
                     ['name' => StringTrim::class],
@@ -83,11 +83,6 @@ class UpdateUserInputFilter implements InputFilterAwareInterface
                         'name' => StringLength::class,
                         'options' => [
                             'min' => CreateUserInputFilter::PASSWORD_MIN_LENGTH
-                        ]
-                    ], [
-                        'name' => Identical::class,
-                        'options' => [
-                            'token' => 'passwordConfirm'
                         ]
                     ]
                 ]

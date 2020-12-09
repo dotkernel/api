@@ -59,7 +59,7 @@ class CreateUserInputFilter implements InputFilterAwareInterface
 
             $this->inputFilter = new InputFilter();
             $this->inputFilter->add([
-                'name' => 'email',
+                'name' => 'identity',
                 'required' => true,
                 'filters' => [
                     ['name' => StringTrim::class],
@@ -70,7 +70,7 @@ class CreateUserInputFilter implements InputFilterAwareInterface
                         'name' => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options' => [
-                            'message' => 'Email is required and cannot be empty!'
+                            'message' => 'Identity is required and cannot be empty!'
                         ]
                     ]
                 ]
@@ -86,11 +86,6 @@ class CreateUserInputFilter implements InputFilterAwareInterface
                         'name' => StringLength::class,
                         'options' => [
                             'min' => self::PASSWORD_MIN_LENGTH
-                        ]
-                    ], [
-                        'name' => Identical::class,
-                        'options' => [
-                            'token' => 'passwordConfirm'
                         ]
                     ], [
                         'name' => NotEmpty::class,
