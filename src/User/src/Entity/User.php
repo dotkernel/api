@@ -24,9 +24,9 @@ use function random_bytes;
  */
 class User extends AbstractEntity implements ArraySerializableInterface
 {
-    const STATUS_PENDING = 'pending';
-    const STATUS_ACTIVE = 'active';
-    const STATUSES = [
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_ACTIVE = 'active';
+    public const STATUSES = [
         self::STATUS_PENDING,
         self::STATUS_ACTIVE
     ];

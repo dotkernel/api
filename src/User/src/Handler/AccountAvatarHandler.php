@@ -49,7 +49,7 @@ class AccountAvatarHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function post(ServerRequestInterface $request) : ResponseInterface
+    public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new UpdateUserInputFilter())->getInputFilter();
         $inputFilter->setData($request->getUploadedFiles());

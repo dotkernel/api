@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Api\App;
@@ -31,7 +32,7 @@ trait RestDispatchTrait
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $method = strtolower($request->getMethod());
         if (method_exists($this, $method)) {

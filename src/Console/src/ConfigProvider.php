@@ -13,7 +13,7 @@ class ConfigProvider
     /**
      * @return array
      */
-    public function __invoke() : array
+    public function __invoke(): array
     {
         return [];
     }

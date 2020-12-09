@@ -49,7 +49,7 @@ class AdminAccountHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function get(ServerRequestInterface $request) : ResponseInterface
+    public function get(ServerRequestInterface $request): ResponseInterface
     {
         return $this->responseFactory->createResponse(
             $request,
@@ -61,7 +61,7 @@ class AdminAccountHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function patch(ServerRequestInterface $request) : ResponseInterface
+    public function patch(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new UpdateAdminAccountInputFilter())->getInputFilter();
         $inputFilter->setData($request->getParsedBody());
@@ -85,7 +85,7 @@ class AdminAccountHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function post(ServerRequestInterface $request) : ResponseInterface
+    public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new CreateAdminAccountInputFilter())->getInputFilter();
         $inputFilter->setData($request->getParsedBody());

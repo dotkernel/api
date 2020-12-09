@@ -56,7 +56,7 @@ class UserHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function delete(ServerRequestInterface $request) : ResponseInterface
+    public function delete(ServerRequestInterface $request): ResponseInterface
     {
         $uuid = $request->getAttribute('uuid', null);
         if (empty($uuid)) {
@@ -90,7 +90,7 @@ class UserHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function get(ServerRequestInterface $request) : ResponseInterface
+    public function get(ServerRequestInterface $request): ResponseInterface
     {
         $uuid = $request->getAttribute('uuid', null);
 
@@ -121,7 +121,7 @@ class UserHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function patch(ServerRequestInterface $request) : ResponseInterface
+    public function patch(ServerRequestInterface $request): ResponseInterface
     {
         $uuid = $request->getAttribute('uuid', null);
         if (empty($uuid)) {
@@ -154,7 +154,7 @@ class UserHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function post(ServerRequestInterface $request) : ResponseInterface
+    public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new CreateUserInputFilter())->getInputFilter();
         $inputFilter->setData($request->getParsedBody());

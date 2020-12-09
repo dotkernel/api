@@ -55,7 +55,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function get(ServerRequestInterface $request) : ResponseInterface
+    public function get(ServerRequestInterface $request): ResponseInterface
     {
         $hash = $request->getAttribute('hash') ?? null;
         $user = $this->userService->findByResetPasswordHash($hash);
@@ -81,7 +81,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function patch(ServerRequestInterface $request) : ResponseInterface
+    public function patch(ServerRequestInterface $request): ResponseInterface
     {
         $hash = $request->getAttribute('hash') ?? null;
         $user = $this->userService->findByResetPasswordHash($hash);
@@ -121,7 +121,8 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
             return $this->errorResponse($exception->getMessage());
         }
 
-        return $this->responseFactory->createResponse($request,
+        return $this->responseFactory->createResponse(
+            $request,
             $this->resourceGenerator->fromObject($resetPasswordRequest, $request)
         );
     }
@@ -130,7 +131,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function post(ServerRequestInterface $request) : ResponseInterface
+    public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new ResetPasswordInputFilter())->getInputFilter();
         $inputFilter->setData($request->getParsedBody());

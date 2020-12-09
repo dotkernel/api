@@ -20,7 +20,7 @@ class MethodNotAllowedException extends DomainException implements ProblemDetail
      * @param string $message
      * @return static
      */
-    public static function create(string $message) : self
+    public static function create(string $message): self
     {
         $e = new self($message);
         $e->status = 405;
