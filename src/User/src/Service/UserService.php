@@ -37,7 +37,7 @@ use function unlink;
  */
 class UserService
 {
-    const EXTENSIONS = [
+    public const EXTENSIONS = [
         'image/jpg' => 'jpg',
         'image/jpeg' => 'jpg',
         'image/png' => 'png'
@@ -200,7 +200,7 @@ class UserService
     public function exists(string $identity = '', ?string $uuid = '')
     {
         return !empty(
-        $this->userRepository->exists($identity, $uuid)
+            $this->userRepository->exists($identity, $uuid)
         );
     }
 
@@ -212,7 +212,7 @@ class UserService
     public function emailExists(string $email = '', ?string $uuid = '')
     {
         return !empty(
-        $this->userRepository->emailExists($email, $uuid)
+            $this->userRepository->emailExists($email, $uuid)
         );
     }
 

@@ -26,7 +26,7 @@ class CreateUserInputFilter implements InputFilterAwareInterface
 {
     use InputFilterAwareTrait;
 
-    const PASSWORD_MIN_LENGTH = 6;
+    public const PASSWORD_MIN_LENGTH = 6;
 
     /**
      * @return InputFilterInterface

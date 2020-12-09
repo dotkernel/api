@@ -20,7 +20,7 @@ class RuntimeException extends DomainException implements ProblemDetailsExceptio
      * @param string $message
      * @return static
      */
-    public static function create(string $message) : self
+    public static function create(string $message): self
     {
         $e = new self($message);
         $e->status = 500;

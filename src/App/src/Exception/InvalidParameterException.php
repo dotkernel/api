@@ -21,7 +21,7 @@ class InvalidParameterException extends DomainException implements ProblemDetail
      * @param array $additionalData
      * @return static
      */
-    public static function create(string $message, array $additionalData = []) : self
+    public static function create(string $message, array $additionalData = []): self
     {
         $e = new self($message);
         $e->status = 400;

@@ -50,7 +50,7 @@ class AccountHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function delete(ServerRequestInterface $request) : ResponseInterface
+    public function delete(ServerRequestInterface $request): ResponseInterface
     {
         $user = $request->getAttribute(User::class, null);
 
@@ -67,9 +67,9 @@ class AccountHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function get(ServerRequestInterface $request) : ResponseInterface
+    public function get(ServerRequestInterface $request): ResponseInterface
     {
-       return $this->responseFactory->createResponse(
+        return $this->responseFactory->createResponse(
             $request,
             $this->resourceGenerator->fromObject($request->getAttribute(User::class, null), $request)
         );
@@ -79,7 +79,7 @@ class AccountHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function patch(ServerRequestInterface $request) : ResponseInterface
+    public function patch(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new UpdateAccountInputFilter())->getInputFilter();
         $inputFilter->setData($request->getParsedBody());
@@ -103,7 +103,7 @@ class AccountHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function post(ServerRequestInterface $request) : ResponseInterface
+    public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new CreateAccountInputFilter())->getInputFilter();
         $inputFilter->setData($request->getParsedBody());

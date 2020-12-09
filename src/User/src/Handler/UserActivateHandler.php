@@ -51,7 +51,7 @@ class UserActivateHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function post(ServerRequestInterface $request) : ResponseInterface
+    public function post(ServerRequestInterface $request): ResponseInterface
     {
         $uuid = $request->getAttribute('uuid', null);
         if (empty($uuid)) {

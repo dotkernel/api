@@ -12,7 +12,7 @@ use function array_key_exists;
  */
 class Pagination
 {
-    const LIMIT = 10;
+    public const LIMIT = 10;
 
     /**
      * @param array $filters

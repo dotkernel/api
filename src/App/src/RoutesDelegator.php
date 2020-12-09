@@ -17,7 +17,7 @@ use Mezzio\Authentication\OAuth2\TokenEndpointHandler;
  */
 class RoutesDelegator
 {
-    const REGEXP_UUID = '{uuid:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}';
+    public const REGEXP_UUID = '{uuid:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}';
 
     /**
      * @param ContainerInterface $container

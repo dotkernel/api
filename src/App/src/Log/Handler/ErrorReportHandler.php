@@ -13,7 +13,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-
 /**
  * Class ErrorReportHandler
  * @package Api\App\Log\Handler
@@ -49,7 +48,7 @@ class ErrorReportHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function post(ServerRequestInterface $request) : ResponseInterface
+    public function post(ServerRequestInterface $request): ResponseInterface
     {
         $data = $request->getParsedBody();
         if (empty($data['message'])) {
@@ -63,5 +62,4 @@ class ErrorReportHandler implements RequestHandlerInterface
 
         return $this->infoResponse('Error report successfully saved!');
     }
-
 }

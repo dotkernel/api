@@ -81,11 +81,14 @@ class ListUsersHandler extends AbstractCommand
             ]);
         }
 
-        $console->writeLine(sprintf('Showing %d-%d of %d user(s).',
-            $users->getQuery()->getFirstResult() + 1,
-            min($users->count(), $params['page'] * $users->getQuery()->getMaxResults()),
-            $users->count()
-        ));
+        $console->writeLine(
+            sprintf(
+                'Showing %d-%d of %d user(s).',
+                $users->getQuery()->getFirstResult() + 1,
+                min($users->count(), $params['page'] * $users->getQuery()->getMaxResults()),
+                $users->count()
+            )
+        );
         $console->write($table->render());
     }
 

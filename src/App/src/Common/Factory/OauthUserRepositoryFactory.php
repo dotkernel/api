@@ -18,7 +18,7 @@ class OauthUserRepositoryFactory
      * @param ContainerInterface $container
      * @return OauthUserRepository
      */
-    public function __invoke(ContainerInterface $container) : OauthUserRepository
+    public function __invoke(ContainerInterface $container): OauthUserRepository
     {
         return new OauthUserRepository(
             $container->get(PdoService::class)

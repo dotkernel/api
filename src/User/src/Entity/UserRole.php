@@ -17,9 +17,9 @@ use Laminas\Stdlib\ArraySerializableInterface;
  */
 class UserRole extends AbstractEntity implements ArraySerializableInterface
 {
-    const ROLE_GUEST = 'guest';
-    const ROLE_USER = 'user';
-    const ROLES = [
+    public const ROLE_GUEST = 'guest';
+    public const ROLE_USER = 'user';
+    public const ROLES = [
         self::ROLE_GUEST,
         self::ROLE_USER
     ];

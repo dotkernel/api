@@ -18,9 +18,9 @@ class UserIdentityFactory
      * @param ContainerInterface $container
      * @return callable
      */
-    public function __invoke(ContainerInterface $container) : callable
+    public function __invoke(ContainerInterface $container): callable
     {
-        return function (string $identity, array $roles = [], array $details = []) : UserInterface {
+        return function (string $identity, array $roles = [], array $details = []): UserInterface {
             return new UserIdentity($identity, $roles, $details);
         };
     }
