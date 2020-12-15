@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\App;
 
+use Api\App\Common\Middleware\ErrorResponseMiddleware;
 use Api\App\Log\Handler\ErrorReportHandler;
 use Mezzio\Helper\BodyParams\BodyParamsMiddleware;
 use Psr\Container\ContainerInterface;
@@ -40,7 +41,7 @@ class RoutesDelegator
         /**
          * OAuth authentication
          */
-        $app->post('/oauth2/generate', [TokenEndpointHandler::class], 'oauth');
+        $app->post('/oauth2/generate', [ErrorResponseMiddleware::class, TokenEndpointHandler::class], 'oauth');
         $app->post('/oauth2/refresh', [TokenEndpointHandler::class], 'refresh');
 
         $app->post('/error-report', [

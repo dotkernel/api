@@ -51,6 +51,11 @@ return [
             ),
             'username' => $databases['default']['user'],
             'password' => $databases['default']['password']
+        ],
+        'invalid_credentials' => [
+            'error' => 'Invalid credentials.',
+            'error_description' => 'Invalid credentials.',
+            'message' => 'Invalid credentials.',
         ]
     ],
     'cors' => [
