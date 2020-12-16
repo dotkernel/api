@@ -38,7 +38,7 @@ class ErrorResponseMiddleware implements MiddlewareInterface
             $body = json_decode((string) $response->getBody());
             if ($body->error === self::INVALID_GRANT && empty($body->hint)) {
                 $body->error = $this->config['invalid_credentials']['error'];
-                $body->error_description = $this->config['invalid_credentials']['error'];
+                $body->error_description = $this->config['invalid_credentials']['error_description'];
                 $body->message = $this->config['invalid_credentials']['message'];
                 $stream = new Stream('php://temp', 'wb+');
                 $stream->write(json_encode($body));
