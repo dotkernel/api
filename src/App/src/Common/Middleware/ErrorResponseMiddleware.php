@@ -8,6 +8,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\Diactoros\Stream;
+use Dot\AnnotatedServices\Annotation\Inject;
 
 class ErrorResponseMiddleware implements MiddlewareInterface
 {
@@ -18,7 +19,9 @@ class ErrorResponseMiddleware implements MiddlewareInterface
     private array $config;
 
     /**
-     * ErrorResponseMiddleware constructor.
+     * ErrorResponseMiddleware constructor
+     *
+     * @Inject({"config.authentication"})
      * @param array $config
      */
     public function __construct(array $config)
