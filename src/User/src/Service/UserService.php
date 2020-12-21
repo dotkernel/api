@@ -352,40 +352,40 @@ class UserService
      */
     public function updateUser(User $user, array $data = [])
     {
-        if (isset($data['identity']) && !is_null($data['identity'])) {
+        if (!empty($data['identity'])) {
             if ($this->exists($data['identity'], $user->getUuid()->toString())) {
                 throw new ORMException(Message::DUPLICATE_IDENTITY);
             }
             $user->setIdentity($data['identity']);
         }
 
-        if (isset($data['password']) && !is_null($data['password'])) {
+        if (!empty($data['password'])) {
             $user->setPassword(
                 password_hash($data['password'], PASSWORD_DEFAULT)
             );
         }
 
-        if (isset($data['status']) && !empty($data['status'])) {
+        if (!empty($data['status'])) {
             $user->setStatus($data['status']);
         }
 
-        if (isset($data['isDeleted']) && !is_null($data['isDeleted'])) {
+        if (!empty($data['isDeleted'])) {
             $user->setIsDeleted($data['isDeleted']);
         }
 
-        if (isset($data['hash']) && !empty($data['hash'])) {
+        if (!empty($data['hash'])) {
             $user->setHash($data['hash']);
         }
 
-        if (isset($data['detail']['firstname']) && !is_null($data['detail']['firstname'])) {
+        if (!empty($data['detail']['firstname'])) {
             $user->getDetail()->setFirstname($data['detail']['firstname']);
         }
 
-        if (isset($data['detail']['lastname']) && !is_null($data['detail']['lastname'])) {
+        if (!empty($data['detail']['lastname'])) {
             $user->getDetail()->setLastname($data['detail']['lastname']);
         }
 
-        if (isset($data['detail']['email']) && !empty($data['detail']['email'])) {
+        if (!empty($data['detail']['email'])) {
             if ($this->emailExists($data['detail']['email'], $user->getUuid()->toString())) {
                 throw new ORMException(Message::DUPLICATE_EMAIL);
             }
@@ -407,6 +407,7 @@ class UserService
                 }
             }
         }
+
         if ($user->getRoles()->count() === 0) {
             throw new Exception(Message::RESTRICTION_ROLES);
         }
