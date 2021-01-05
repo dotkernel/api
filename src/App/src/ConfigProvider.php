@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Api\App;
 
 use Api\App\Common\Factory\AnnotationsCacheFactory;
+use Api\App\Common\Middleware\ErrorResponseMiddleware;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Dot\AnnotatedServices\Factory\AbstractAnnotatedFactory;
+use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
 use Dot\Mail\Factory\MailOptionsAbstractFactory;
 use Dot\Mail\Factory\MailServiceAbstractFactory;
 use Dot\Mail\Service\MailService;
@@ -61,6 +63,7 @@ class ConfigProvider
                 Environment::class => TwigEnvironmentFactory::class,
                 TwigExtension::class => TwigExtensionFactory::class,
                 TwigRenderer::class => TwigRendererFactory::class,
+                ErrorResponseMiddleware::class => AnnotatedServiceFactory::class,
             ],
             'aliases' => [
                 Authentication\AuthenticationInterface::class => Authentication\OAuth2\OAuth2Adapter::class,
