@@ -7,7 +7,7 @@ Based on Enrico Zimuel's Zend Expressive API skeleton proposal.https://github.co
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/api)](https://github.com/dotkernel/api/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/api)](https://github.com/dotkernel/api/network)
-[![GitHub stars](https://img.shields.io/github/stars/api/frontend)](https://github.com/dotkernel/api/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/dotkernel/api)](https://github.com/dotkernel/api/stargazers)
 [![GitHub license](https://img.shields.io/github/license/dotkernel/api)](https://github.com/dotkernel/api/blob/3.0/LICENSE.md)
 
 ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/3.0.x-dev)
