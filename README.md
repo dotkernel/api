@@ -44,6 +44,12 @@ Please hit `Enter` to accept the default option, which will also leave other pac
 $ vendor/bin/doctrine-migrations migrate
 ```
 
+**NOTE:**  on Windows, using XAMPP, use the below command:
+```bash
+php vendor/doctrine/migrations/bin/doctrine-migrations migrate
+```
+
+
 ### Step 4: Optional steps:
 * Enable development mode using this command:
 ```bash
