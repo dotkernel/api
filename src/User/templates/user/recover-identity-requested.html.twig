@@ -1,7 +1,5 @@
 <div>
-    <p>
     <p>Hi {{ user.detail.firstname ?? user.getDetail().getEmail() ?? user.getIdentity() }},</p>
-    </p>
 
     <p>
         Someone requested the identity of this account: {{ user.getDetail().getEmail() }}<br />
