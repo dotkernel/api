@@ -89,7 +89,17 @@ To test the application, visit the [home page](http://localhost:8080/). You shou
 Visit [this link](http://localhost:8080/documentation) to access the application's documentation.
 Here, you can request an access token using the `/oauth2/generate` endpoint using the following credentials:
 ```
+client_id : frontend
+client_secret : frontend
 username: test@dotkernel.com
 password: dotkernel
 ```
+If you want to login as an admin use the following credentials:
+```
+client_id : admin
+client_secret : admin
+username: admin
+password: dotadmin
+```
+
 **IMPORTANT: Don't forget to invalidate the above credentials on your application's production servers!**
