@@ -58,6 +58,7 @@
         "mezzio/mezzio-authentication-oauth2": "^2.0",
         "mezzio/mezzio-authorization-acl": "^1.0",
         "mezzio/mezzio-authorization-rbac": "^1.0",
+        "mezzio/mezzio-cors": "^1.0",
         "mezzio/mezzio-fastroute": "^3.0",
         "mezzio/mezzio-hal": "^1.3",
         "mezzio/mezzio-helpers": "^5.3",
@@ -66,8 +67,7 @@
         "ramsey/uuid-doctrine": "^1.6",
         "roave/psr-container-doctrine": "^2.2",
         "roave/security-advisories": "dev-master",
-        "swagger-api/swagger-ui": "^3.25",
-        "tuupola/cors-middleware": "^1.2"
+        "swagger-api/swagger-ui": "^3.25"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.1",

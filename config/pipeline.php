@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Dot\ErrorHandler\ErrorHandlerInterface;
 use Psr\Container\ContainerInterface;
-use Tuupola\Middleware\CorsMiddleware;
+use Mezzio\Cors\Middleware\CorsMiddleware;
 use Mezzio\Application;
 use Mezzio\Helper\BodyParams\BodyParamsMiddleware;
 use Mezzio\Helper\ServerUrlMiddleware;

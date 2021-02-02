@@ -18,11 +18,13 @@ $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
     Laminas\Validator\ConfigProvider::class,
     Laminas\Hydrator\ConfigProvider::class,
     Laminas\Paginator\ConfigProvider::class,
+    Laminas\Diactoros\ConfigProvider::class,
     Mezzio\Hal\ConfigProvider::class,
     Mezzio\ProblemDetails\ConfigProvider::class,
     Laminas\Db\ConfigProvider::class,
     Mezzio\Router\FastRouteRouter\ConfigProvider::class,
     Laminas\HttpHandlerRunner\ConfigProvider::class,
+    Mezzio\Cors\ConfigProvider::class,
     // Include cache configuration
     new Laminas\ConfigAggregator\ArrayProvider($cacheConfig),
     Mezzio\Helper\ConfigProvider::class,
