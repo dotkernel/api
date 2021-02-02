@@ -58,17 +58,6 @@ return [
             'message' => 'Invalid credentials.',
         ]
     ],
-    'cors' => [
-        'origin' => ['*'],
-        'methods' => ['DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT'],
-        'headers.allow' => ['Accept', 'Content-Type', 'Authorization'],
-        'headers.expose' => [],
-        'credentials' => false,
-        'cache' => 0,
-        'error' => [
-            Api\App\Cors\Factory\CorsFactory::class, 'error'
-        ]
-    ],
     'databases' => $databases,
     'doctrine' => [
         'connection' => [
