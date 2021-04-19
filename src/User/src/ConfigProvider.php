@@ -26,7 +26,7 @@ use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
 use Mezzio\Hal\Metadata\MetadataMap;
 use Mezzio\Hal\Metadata\RouteBasedCollectionMetadata;
 use Mezzio\Hal\Metadata\RouteBasedResourceMetadata;
-use Laminas\Hydrator\ArraySerializable;
+use Laminas\Hydrator\ArraySerializableHydrator;
 
 /**
  * Class ConfigProvider
@@ -86,21 +86,21 @@ class ConfigProvider
                 '__class__' => RouteBasedResourceMetadata::class,
                 'resource_class' => User::class,
                 'route' => 'user:delete,view,update',
-                'extractor' => ArraySerializable::class,
+                'extractor' => ArraySerializableHydrator::class,
                 'resource_identifier' => 'uuid',
                 'route_identifier_placeholder' => 'uuid'
             ], [
                 '__class__' => RouteBasedResourceMetadata::class,
                 'resource_class' => Admin::class,
                 'route' => 'my-account:me',
-                'extractor' => ArraySerializable::class,
+                'extractor' => ArraySerializableHydrator::class,
                 'resource_identifier' => 'uuid',
                 'route_identifier_placeholder' => 'uuid'
             ], [
                 '__class__' => RouteBasedResourceMetadata::class,
                 'resource_class' => UserResetPasswordEntity::class,
                 'route' => 'account:reset-password',
-                'extractor' => ArraySerializable::class,
+                'extractor' => ArraySerializableHydrator::class,
                 'resource_identifier' => 'uuid',
                 'route_identifier_placeholder' => 'uuid'
             ]
