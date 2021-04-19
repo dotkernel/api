@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Api\User\Entity;
 
 use Api\App\Common\Entity\AbstractEntity;
+use DateInterval;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Laminas\Stdlib\ArraySerializableInterface;
 
 /**
@@ -33,8 +36,8 @@ class UserResetPasswordEntity extends AbstractEntity implements ArraySerializabl
     protected $user;
 
     /**
-     * @ORM\Column(name="expires", type="datetime", nullable=false)
-     * @var DateTime
+     * @ORM\Column(name="expires", type="datetime_immutable", nullable=false)
+     * @var DateTimeImmutable
      */
     protected $expires;
 
@@ -57,8 +60,9 @@ class UserResetPasswordEntity extends AbstractEntity implements ArraySerializabl
     {
         parent::__construct();
 
-        $this->expires = new DateTime();
-        $this->expires->add(new \DateInterval('P1D'));
+        $tomorrow = new DateTime();
+        $tomorrow->add(new DateInterval('P1D'));
+        $this->expires = DateTimeImmutable::createFromMutable($tomorrow);
     }
 
     /**
@@ -81,18 +85,18 @@ class UserResetPasswordEntity extends AbstractEntity implements ArraySerializabl
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeImmutable
      */
-    public function getExpires(): DateTime
+    public function getExpires(): DateTimeImmutable
     {
         return $this->expires;
     }
 
     /**
-     * @param DateTime $expires
+     * @param DateTimeImmutable $expires
      * @return $this
      */
-    public function setExpires(DateTime $expires)
+    public function setExpires(DateTimeImmutable $expires)
     {
         $this->expires = $expires;
 
@@ -155,8 +159,8 @@ class UserResetPasswordEntity extends AbstractEntity implements ArraySerializabl
     public function isValid(): bool
     {
         try {
-            return $this->getExpires() > (new DateTime());
-        } catch (\Exception $exception) {
+            return $this->getExpires() > (new DateTimeImmutable());
+        } catch (Exception $exception) {
         }
 
         return false;

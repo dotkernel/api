@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\App\Common;
 
-use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 
@@ -20,14 +20,14 @@ trait TimestampAwareTrait
     private $dateFormat = 'Y-m-d H:i:s';
 
     /**
-     * @ORM\Column(name="created", type="datetime")
-     * @var DateTime
+     * @ORM\Column(name="created", type="datetime_immutable")
+     * @var DateTimeImmutable $created
      */
     protected $created;
 
     /**
-     * @ORM\Column(name="updated", type="datetime", nullable=true)
-     * @var DateTime
+     * @ORM\Column(name="updated", type="datetime_immutable", nullable=true)
+     * @var DateTimeImmutable $updated
      */
     protected $updated;
 
@@ -41,9 +41,9 @@ trait TimestampAwareTrait
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeImmutable
      */
-    public function getCreated(): DateTime
+    public function getCreated(): DateTimeImmutable
     {
         return $this->created;
     }
@@ -53,7 +53,7 @@ trait TimestampAwareTrait
      */
     public function getCreatedFormatted()
     {
-        if ($this->created instanceof DateTime) {
+        if ($this->created instanceof DateTimeImmutable) {
             return $this->created->format($this->dateFormat);
         }
 
@@ -61,9 +61,9 @@ trait TimestampAwareTrait
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeImmutable
      */
-    public function getUpdated(): ?DateTime
+    public function getUpdated(): ?DateTimeImmutable
     {
         return $this->updated;
     }
@@ -73,7 +73,7 @@ trait TimestampAwareTrait
      */
     public function getUpdatedFormatted()
     {
-        if ($this->updated instanceof DateTime) {
+        if ($this->updated instanceof DateTimeImmutable) {
             return $this->updated->format($this->dateFormat);
         }
 
@@ -86,11 +86,11 @@ trait TimestampAwareTrait
     public function touch()
     {
         try {
-            if (!($this->created instanceof DateTime)) {
-                $this->created = new DateTime('now');
+            if (!($this->created instanceof DateTimeImmutable)) {
+                $this->created = new DateTimeImmutable('now');
             }
 
-            $this->updated = new DateTime('now');
+            $this->updated = new DateTimeImmutable('now');
         } catch (Exception $exception) {
             #TODO save the error message
         }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\App\Common;
 
-use DateTime;
+use DateTimeImmutable;
 
 /**
  * Interface TimestampAwareInterface
@@ -13,14 +13,14 @@ use DateTime;
 interface TimestampAwareInterface
 {
     /**
-     * @return DateTime|null
+     * @return DateTimeImmutable|null
      */
-    public function getCreated(): DateTime;
+    public function getCreated(): DateTimeImmutable;
 
     /**
-     * @return DateTime|null
+     * @return DateTimeImmutable|null
      */
-    public function getUpdated(): ?DateTime;
+    public function getUpdated(): ?DateTimeImmutable;
 
     /**
      * Update internal timestamps
