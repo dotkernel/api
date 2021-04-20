@@ -9,7 +9,7 @@ use Api\App\Common\TimestampAwareTrait;
 use Api\App\Common\UuidAwareInterface;
 use Api\App\Common\UuidAwareTrait;
 use Api\App\Common\UuidOrderedTimeGenerator;
-use DateTime;
+use DateTimeImmutable;
 
 /**
  * Class AbstractEntity
@@ -26,8 +26,8 @@ abstract class AbstractEntity implements UuidAwareInterface, TimestampAwareInter
     public function __construct()
     {
         $this->uuid = UuidOrderedTimeGenerator::generateUuid();
-        $this->created = new DateTime('now');
-        $this->updated = new DateTime('now');
+        $this->created = new DateTimeImmutable('now');
+        $this->updated = new DateTimeImmutable('now');
     }
 
     /**
