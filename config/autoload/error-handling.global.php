@@ -16,10 +16,7 @@ return [
                         'name' => 'stream',
                         'priority' => Logger::ALERT,
                         'options' => [
-                            'stream' => sprintf('%s/../../log/error-log-%s.log',
-                                __DIR__,
-                                date('Y-m-d')
-                            ),
+                            'stream' => __DIR__ . '/../../log/error-log-{Y}-{m}-{d}.log',
                             // explicitly log all messages
                             'filters' => [
                                 'allMessages' => [
