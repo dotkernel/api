@@ -8,6 +8,8 @@
 
 declare(strict_types=1);
 
+use Mezzio\Cors\Configuration\ConfigurationInterface;
+
 $baseUrl = 'http://localhost:8080';
 
 $databases = [
@@ -57,6 +59,16 @@ return [
             'error_description' => 'Invalid credentials.',
             'message' => 'Invalid credentials.',
         ]
+    ],
+    /**
+     * Combined with config/autoload/cors.global.php.
+     *
+     * Modify values in allowed_origins to restrict list of accepted origins.
+     */
+    ConfigurationInterface::CONFIGURATION_IDENTIFIER => [
+        'allowed_origins' => [
+            ConfigurationInterface::ANY_ORIGIN
+        ], // Allowed origins
     ],
     'databases' => $databases,
     'doctrine' => [
