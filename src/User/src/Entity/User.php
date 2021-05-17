@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Api\User\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Api\App\Common\Entity\AbstractEntity;
-use Api\App\Common\UuidOrderedTimeGenerator;
+use Api\App\Entity\AbstractEntity;
+use Api\App\Entity\UuidOrderedTimeGenerator;
 use Doctrine\Common\Collections\ArrayCollection;
-use Laminas\Stdlib\ArraySerializableInterface;
-use Exception;
+use Doctrine\ORM\Mapping as ORM;
+use Throwable;
 
 use function array_map;
 use function bin2hex;
@@ -22,7 +21,7 @@ use function random_bytes;
  * @ORM\HasLifecycleCallbacks()
  * @package Api\User\Entity
  */
-class User extends AbstractEntity implements ArraySerializableInterface
+class User extends AbstractEntity
 {
     public const STATUS_PENDING = 'pending';
     public const STATUS_ACTIVE = 'active';
@@ -104,7 +103,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getIdentity()
     {
@@ -122,7 +121,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getPassword()
     {
@@ -133,7 +132,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
      * @param $password
      * @return $this
      */
-    public function setPassword($password)
+    public function setPassword($password): self
     {
         $this->password = $password;
 
@@ -141,7 +140,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getStatus()
     {
@@ -152,7 +151,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
      * @param $status
      * @return $this
      */
-    public function setStatus($status)
+    public function setStatus($status): self
     {
         $this->status = $status;
 
@@ -171,7 +170,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
      * @param bool $isDeleted
      * @return $this
      */
-    public function setIsDeleted(bool $isDeleted)
+    public function setIsDeleted(bool $isDeleted): self
     {
         $this->isDeleted = $isDeleted;
 
@@ -190,7 +189,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
      * @param string $hash
      * @return $this
      */
-    public function setHash(string $hash)
+    public function setHash(string $hash): self
     {
         $this->hash = $hash;
 
@@ -209,9 +208,19 @@ class User extends AbstractEntity implements ArraySerializableInterface
      * @param UserAvatar|null $avatar
      * @return $this
      */
-    public function setAvatar(?UserAvatar $avatar)
+    public function setAvatar(?UserAvatar $avatar): self
     {
         $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function removeAvatar(): self
+    {
+        $this->avatar = null;
 
         return $this;
     }
@@ -228,7 +237,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
      * @param UserDetail $detail
      * @return $this
      */
-    public function setDetail(UserDetail $detail)
+    public function setDetail(UserDetail $detail): self
     {
         $this->detail = $detail;
 
@@ -239,7 +248,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
      * @param UserRole $role
      * @return $this
      */
-    public function addRole(UserRole $role)
+    public function addRole(UserRole $role): self
     {
         $this->roles->add($role);
 
@@ -258,7 +267,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
      * @param UserRole $role
      * @return bool
      */
-    public function hasRole(UserRole $role)
+    public function hasRole(UserRole $role): bool
     {
         return $this->roles->contains($role);
     }
@@ -267,7 +276,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
      * @param UserRole $role
      * @return $this
      */
-    public function removeRole(UserRole $role)
+    public function removeRole(UserRole $role): self
     {
         $this->roles->removeElement($role);
 
@@ -278,7 +287,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
      * @param array $roles
      * @return $this
      */
-    public function setRoles(array $roles)
+    public function setRoles(array $roles): self
     {
         foreach ($roles as $role) {
             $this->roles->add($role);
@@ -298,7 +307,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
     /**
      * @return $this
      */
-    public function createResetPassword()
+    public function createResetPassword(): self
     {
         $resetPassword = new UserResetPasswordEntity();
         $resetPassword->setHash(self::generateHash());
@@ -321,7 +330,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
      * @param UserResetPasswordEntity $resetPassword
      * @return bool
      */
-    public function hasResetPassword(UserResetPasswordEntity $resetPassword)
+    public function hasResetPassword(UserResetPasswordEntity $resetPassword): bool
     {
         return $this->resetPasswords->contains($resetPassword);
     }
@@ -330,7 +339,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
      * @param UserResetPasswordEntity $resetPassword
      * @return $this
      */
-    public function removeResetPassword(UserResetPasswordEntity $resetPassword)
+    public function removeResetPassword(UserResetPasswordEntity $resetPassword): self
     {
         $this->resetPasswords->removeElement($resetPassword);
 
@@ -341,7 +350,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
      * @param array $resetPasswords
      * @return $this
      */
-    public function setResetPasswords(array $resetPasswords)
+    public function setResetPasswords(array $resetPasswords): self
     {
         foreach ($resetPasswords as $resetPassword) {
             $this->resetPasswords->add($resetPassword);
@@ -357,7 +366,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
     /**
      * @return $this
      */
-    public function activate()
+    public function activate(): self
     {
         return $this->setStatus(self::STATUS_ACTIVE);
     }
@@ -365,7 +374,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
     /**
      * @return $this
      */
-    public function deactivate()
+    public function deactivate(): self
     {
         return $this->setStatus(self::STATUS_PENDING);
     }
@@ -377,7 +386,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
     {
         try {
             $bytes = random_bytes(32);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $bytes = UuidOrderedTimeGenerator::generateUuid()->getBytes();
         }
 
@@ -387,7 +396,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getDetail()->getFirstname() . ' ' . $this->getDetail()->getLastname();
     }
@@ -395,7 +404,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
     /**
      * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->status === self::STATUS_ACTIVE;
     }
@@ -403,7 +412,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
     /**
      * @return $this
      */
-    public function markAsDeleted()
+    public function markAsDeleted(): self
     {
         $this->isDeleted = true;
 
@@ -413,7 +422,7 @@ class User extends AbstractEntity implements ArraySerializableInterface
     /**
      * @return $this
      */
-    public function renewHash()
+    public function renewHash(): self
     {
         $this->hash = self::generateHash();
 
@@ -422,9 +431,9 @@ class User extends AbstractEntity implements ArraySerializableInterface
 
     /**
      * @return $this
-     * @throws Exception
+     * @throws Throwable
      */
-    public function resetRoles()
+    public function resetRoles(): self
     {
         foreach ($this->roles->getIterator()->getArrayCopy() as $role) {
             $this->removeRole($role);
@@ -436,9 +445,9 @@ class User extends AbstractEntity implements ArraySerializableInterface
 
     /**
      * @return array
-     * @throws Exception
+     * @throws Throwable
      */
-    public function getArrayCopy()
+    public function getArrayCopy(): array
     {
         return [
             'uuid' => $this->getUuid()->toString(),

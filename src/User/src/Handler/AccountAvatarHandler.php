@@ -4,28 +4,26 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
-use Api\App\RestDispatchTrait;
+use Api\App\Message;
+use Api\App\Handler\DefaultHandler;
 use Api\User\Entity\User;
-use Api\User\Form\InputFilter\UpdateUserInputFilter;
+use Api\User\Entity\UserAvatar;
+use Api\User\Form\InputFilter\UpdateAvatarInputFilter;
 use Api\User\Service\UserService;
 use Dot\AnnotatedServices\Annotation\Inject;
-use Exception;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Throwable;
 
 /**
  * Class AccountAvatarHandler
  * @package Api\User\Handler
  */
-class AccountAvatarHandler implements RequestHandlerInterface
+class AccountAvatarHandler extends DefaultHandler
 {
-    use RestDispatchTrait;
-
-    /** @var UserService $userService */
-    protected $userService;
+    protected UserService $userService;
 
     /**
      * AccountAvatarHandler constructor.
@@ -40,9 +38,42 @@ class AccountAvatarHandler implements RequestHandlerInterface
         ResourceGenerator $resourceGenerator,
         UserService $userService
     ) {
-        $this->responseFactory = $halResponseFactory;
-        $this->resourceGenerator = $resourceGenerator;
+        parent::__construct($halResponseFactory, $resourceGenerator);
+
         $this->userService = $userService;
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function delete(ServerRequestInterface $request): ResponseInterface
+    {
+        try {
+            /** @var User $user */
+            $user = $request->getAttribute(User::class);
+            if (!($user->getAvatar() instanceof UserAvatar)) {
+                return $this->notFoundResponse(Message::AVATAR_MISSING);
+            }
+            $this->userService->removeAvatar($user);
+            return $this->infoResponse(Message::AVATAR_DELETED);
+        } catch (Throwable $exception) {
+            return $this->errorResponse($exception->getMessage());
+        }
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function get(ServerRequestInterface $request): ResponseInterface
+    {
+        /** @var User $user */
+        $user = $request->getAttribute(User::class);
+        if (!($user->getAvatar() instanceof UserAvatar)) {
+            return $this->notFoundResponse(Message::AVATAR_MISSING);
+        }
+        return $this->createResponse($request, $user->getAvatar());
     }
 
     /**
@@ -51,21 +82,17 @@ class AccountAvatarHandler implements RequestHandlerInterface
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new UpdateUserInputFilter())->getInputFilter();
+        $inputFilter = (new UpdateAvatarInputFilter())->getInputFilter();
         $inputFilter->setData($request->getUploadedFiles());
         if (!$inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
         }
 
         try {
-            $user = $this->userService->updateUser(
-                $request->getAttribute(User::class, null),
-                $inputFilter->getValues()
-            );
-        } catch (Exception $exception) {
+            $user = $this->userService->updateUser($request->getAttribute(User::class), $inputFilter->getValues());
+            return $this->createResponse($request, $user->getAvatar());
+        } catch (Throwable $exception) {
             return $this->errorResponse($exception->getMessage());
         }
-
-        return $this->responseFactory->createResponse($request, $this->resourceGenerator->fromObject($user, $request));
     }
 }

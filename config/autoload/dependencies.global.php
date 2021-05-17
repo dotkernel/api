@@ -2,19 +2,18 @@
 
 declare(strict_types=1);
 
-use Api\App\Common\Factory\AccessTokenRepositoryFactory;
-use Api\App\Common\Factory\ErrorResponseGeneratorFactory;
-use Api\App\Common\Factory\OauthUserRepositoryFactory;
-use Api\App\Common\Repository\AccessTokenRepository;
-use Api\App\Common\Repository\OauthUserRepository;
+use Api\App\Factory\AccessTokenRepositoryFactory;
+use Api\App\Factory\ErrorResponseGeneratorFactory;
+use Api\App\Factory\OauthUserRepositoryFactory;
+use Api\App\Repository\AccessTokenRepository;
+use Api\App\Repository\OauthUserRepository;
 use Api\App\Cors\Factory\CorsFactory;
-use Api\User\Entity\UserIdentity;
-use Api\User\Factory\UserIdentityFactory;
+use Api\App\Factory\UserIdentityFactory;
+use Api\App\UserIdentity;
 use Dot\ErrorHandler\ErrorHandlerInterface;
 use Dot\ErrorHandler\LogErrorHandler;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
-use Mezzio as Expressive;
 
 return [
     // Provides application-wide services.

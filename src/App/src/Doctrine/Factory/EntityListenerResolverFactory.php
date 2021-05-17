@@ -17,7 +17,7 @@ class EntityListenerResolverFactory
      * @param ContainerInterface $container
      * @return EntityListenerResolver
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): EntityListenerResolver
     {
         return new EntityListenerResolver($container);
     }

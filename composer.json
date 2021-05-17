@@ -76,6 +76,7 @@
     },
     "autoload": {
         "psr-4": {
+            "Api\\Admin\\": "src/Admin/src/",
             "Api\\App\\": "src/App/src/",
             "Api\\Console\\": "src/Console/src/",
             "Api\\User\\": "src/User/src/"

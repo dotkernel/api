@@ -9,15 +9,12 @@ use Api\User\Handler\AccountAvatarHandler;
 use Api\User\Handler\AccountHandler;
 use Api\User\Handler\AccountRecoveryHandler;
 use Api\User\Handler\AccountResetPasswordHandler;
-use Api\User\Handler\AdminAccountHandler;
 use Api\User\Handler\UserActivateHandler;
 use Api\User\Handler\UserAvatarHandler;
 use Api\User\Handler\UserHandler;
-use Api\User\Middleware\AuthMiddleware;
-use Fig\Http\Message\RequestMethodInterface as RequestMethod;
-use Psr\Container\ContainerInterface;
+use Api\User\Handler\UserRoleHandler;
 use Mezzio\Application;
-use Mezzio\Authentication\AuthenticationMiddleware;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class RoutesDelegator
@@ -31,92 +28,67 @@ class RoutesDelegator
      * @param callable $callback
      * @return Application
      */
-    public function __invoke(ContainerInterface $container, $serviceName, callable $callback)
+    public function __invoke(ContainerInterface $container, $serviceName, callable $callback): Application
     {
         /** @var Application $app */
         $app = $callback();
 
+        $uuid = \Api\App\RoutesDelegator::REGEXP_UUID;
+
         /**
-         * Admins manage users' accounts
+         * Admins manage user accounts
          */
 
-        $app->route(
-            '/user',
-            [AuthenticationMiddleware::class, AuthMiddleware::class, UserHandler::class],
-            [RequestMethod::METHOD_GET, RequestMethod::METHOD_POST],
-            'user:list,create'
-        );
+        $app->post('/user', UserHandler::class, 'user.create');
+        $app->delete('/user/' . $uuid, UserHandler::class, 'user.delete');
+        $app->get('/user', UserHandler::class, 'user.list');
+        $app->patch('/user/' . $uuid, UserHandler::class, 'user.update');
+        $app->get('/user/' . $uuid, UserHandler::class, 'user.view');
 
-        $app->route(
-            '/user/' . \Api\App\RoutesDelegator::REGEXP_UUID,
-            [AuthenticationMiddleware::class, AuthMiddleware::class, UserHandler::class],
-            [RequestMethod::METHOD_DELETE, RequestMethod::METHOD_GET, RequestMethod::METHOD_PATCH],
-            'user:delete,view,update'
-        );
+        $app->post('/user/' . $uuid . '/activate', UserActivateHandler::class, 'user.activate');
 
-        $app->post(
-            '/user/activate/' . \Api\App\RoutesDelegator::REGEXP_UUID,
-            [AuthenticationMiddleware::class, AuthMiddleware::class, UserActivateHandler::class],
-            'user:activate'
-        );
+        $app->delete('/user/' . $uuid . '/avatar', UserAvatarHandler::class, 'user.avatar.delete');
+        $app->get('/user/' . $uuid . '/avatar', UserAvatarHandler::class, 'user.avatar.view');
+        $app->post('/user/' . $uuid . '/avatar', UserAvatarHandler::class, 'user.avatar.create');
 
-        $app->post(
-            '/user/avatar/' . \Api\App\RoutesDelegator::REGEXP_UUID,
-            [AuthenticationMiddleware::class, AuthMiddleware::class, UserAvatarHandler::class],
-            'user:avatar'
-        );
+        $app->get('/user/role', UserRoleHandler::class, 'user.role.list');
+        $app->get('/user/role/' . $uuid, UserRoleHandler::class, 'user.role.view');
 
         /**
          * Users manage their own accounts
          */
 
-        $app->route(
-            '/my-account',
-            [AuthenticationMiddleware::class, AuthMiddleware::class, AccountHandler::class],
-            [RequestMethod::METHOD_DELETE, RequestMethod::METHOD_GET, RequestMethod::METHOD_PATCH],
-            'my-account:me'
-        );
+        $app->delete('/user/my-account', AccountHandler::class, 'user.my-account.delete');
+        $app->get('/user/my-account', AccountHandler::class, 'user.my-account.view');
+        $app->patch('/user/my-account', AccountHandler::class, 'user.my-account.update');
 
-        $app->post(
-            '/my-account/avatar',
-            [AuthenticationMiddleware::class, AuthMiddleware::class, AccountAvatarHandler::class],
-            'my-account:avatar'
-        );
-
-        $app->post('/account/register', AccountHandler::class, 'account:register');
-
-        $app->route(
-            '/account/reset-password[/{hash}]',
-            AccountResetPasswordHandler::class,
-            [RequestMethod::METHOD_GET, RequestMethod::METHOD_PATCH, RequestMethod::METHOD_POST],
-            'account:reset-password'
-        );
-
-        $app->post(
-            '/account/recover-identity',
-            AccountRecoveryHandler::class,
-            'account:recover-identity'
-        );
-
-        $app->route(
-            '/account/activate[/{hash}]',
-            AccountActivateHandler::class,
-            [RequestMethod::METHOD_GET, RequestMethod::METHOD_POST],
-            'account:activate'
-        );
+        $app->post('/user/my-avatar', AccountAvatarHandler::class, 'user.my-avatar.create');
+        $app->delete('/user/my-avatar', AccountAvatarHandler::class, 'user.my-avatar.delete');
+        $app->get('/user/my-avatar', AccountAvatarHandler::class, 'user.my-avatar.view');
 
         /**
-         * Admins manage their own accounts
+         * Guests manage their accounts
          */
 
-        $app->route(
-            '/admin/my-account',
-            [AuthenticationMiddleware::class, AuthMiddleware::class, AdminAccountHandler::class],
-            [RequestMethod::METHOD_GET, RequestMethod::METHOD_PATCH],
-            'admin-my-account:me'
+        $app->post('/account/register', AccountHandler::class, 'account.register');
+
+        $app->get('/account/reset-password/{hash}',
+            AccountResetPasswordHandler::class,
+            'account.reset-password.validate'
+        );
+        $app->patch('/account/reset-password/{hash}',
+            AccountResetPasswordHandler::class,
+            'account.modify-password'
+        );
+        $app->post('/account/reset-password',
+            AccountResetPasswordHandler::class,
+            'account.reset-password.request'
         );
 
-        $app->post('/admin', AdminAccountHandler::class, 'admin:register');
+        $app->post('/account/recover-identity', AccountRecoveryHandler::class, 'account.recover-identity');
+
+        $app->patch('/account/activate/{hash}', AccountActivateHandler::class, 'account.activate');
+        $app->post('/account/activate', AccountActivateHandler::class, 'account.activate.request');
 
         return $app;
     }

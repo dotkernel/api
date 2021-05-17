@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
-use Api\App\Common\Message;
-use Api\App\RestDispatchTrait;
+use Api\App\Message;
+use Api\App\Handler\DefaultHandler;
 use Api\User\Entity\User;
 use Api\User\Entity\UserResetPasswordEntity;
 use Api\User\Form\InputFilter\ResetPasswordInputFilter;
-use Api\User\Form\InputFilter\UpdateUserInputFilter;
+use Api\User\Form\InputFilter\UpdatePasswordInputFilter;
 use Api\User\Service\UserService;
 use Dot\AnnotatedServices\Annotation\Inject;
-use Exception;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
-use Laminas\Http\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Throwable;
 
 use function sprintf;
 
@@ -26,12 +24,9 @@ use function sprintf;
  * Class AccountResetPasswordHandler
  * @package Api\User\Handler
  */
-class AccountResetPasswordHandler implements RequestHandlerInterface
+class AccountResetPasswordHandler extends DefaultHandler
 {
-    use RestDispatchTrait;
-
-    /** @var UserService $userService */
-    protected $userService;
+    protected UserService $userService;
 
     /**
      * AccountResetPasswordHandler constructor.
@@ -46,8 +41,8 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
         ResourceGenerator $resourceGenerator,
         UserService $userService
     ) {
-        $this->responseFactory = $halResponseFactory;
-        $this->resourceGenerator = $resourceGenerator;
+        parent::__construct($halResponseFactory, $resourceGenerator);
+
         $this->userService = $userService;
     }
 
@@ -65,12 +60,16 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
             );
         }
 
-        /** @var UserResetPasswordEntity $resetPasswordRequest */
-        $resetPasswordRequest = $user->getResetPasswords()->current();
-        if (!$resetPasswordRequest->isValid()) {
+        /** @var UserResetPasswordEntity $resetPassword */
+        $resetPassword = $user->getResetPasswords()->filter(
+            function (UserResetPasswordEntity $resetPassword) use ($hash) {
+                return $resetPassword->getHash() == $hash;
+            }
+        )->current();
+        if (!$resetPassword->isValid()) {
             return $this->errorResponse(sprintf(Message::RESET_PASSWORD_EXPIRED, $hash));
         }
-        if ($resetPasswordRequest->isCompleted()) {
+        if ($resetPassword->isCompleted()) {
             return $this->errorResponse(sprintf(Message::RESET_PASSWORD_USED, $hash));
         }
 
@@ -91,40 +90,32 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
             );
         }
 
-        /** @var UserResetPasswordEntity $resetPasswordRequest */
-        $resetPasswordRequest = $user->getResetPasswords()->current();
-        if (!$resetPasswordRequest->isValid()) {
+        /** @var UserResetPasswordEntity $resetPassword */
+        $resetPassword = $user->getResetPasswords()->filter(
+            function (UserResetPasswordEntity $resetPassword) use ($hash) {
+                return $resetPassword->getHash() == $hash;
+            }
+        )->current();
+        if (!$resetPassword->isValid()) {
             return $this->errorResponse(sprintf(Message::RESET_PASSWORD_EXPIRED, $hash));
         }
-        if ($resetPasswordRequest->isCompleted()) {
+        if ($resetPassword->isCompleted()) {
             return $this->errorResponse(sprintf(Message::RESET_PASSWORD_USED, $hash));
         }
 
-        $inputFilter = (new UpdateUserInputFilter())->getInputFilter();
+        $inputFilter = (new UpdatePasswordInputFilter())->getInputFilter();
         $inputFilter->setData($request->getParsedBody());
         if (!$inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
         }
 
         try {
-            $this->userService->updateUser(
-                $resetPasswordRequest->markAsCompleted()->getUser(),
-                $inputFilter->getValues()
-            );
-        } catch (Exception $exception) {
-            return $this->errorResponse($exception->getMessage());
-        }
-
-        try {
+            $this->userService->updateUser($resetPassword->markAsCompleted()->getUser(), $inputFilter->getValues());
             $this->userService->sendResetPasswordCompletedMail($user);
-        } catch (Exception $exception) {
+            return $this->infoResponse(Message::RESET_PASSWORD_OK);
+        } catch (Throwable $exception) {
             return $this->errorResponse($exception->getMessage());
         }
-
-        return $this->responseFactory->createResponse(
-            $request,
-            $this->resourceGenerator->fromObject($resetPasswordRequest, $request)
-        );
     }
 
     /**
@@ -139,28 +130,22 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
             return $this->errorResponse($inputFilter->getMessages());
         }
 
-        if (!empty($inputFilter->getValue('email'))) {
-            $user = $this->userService->getUserByEmail($inputFilter->getValue('email'));
-        } else {
-            $user = $this->userService->findOneBy(['identity' => $inputFilter->getValue('identity')]);
-        }
-
-        if (!($user instanceof User)) {
-            return $this->infoResponse(Message::INVALID_IDENTIFIER);
-        }
-
         try {
+            if (!empty($inputFilter->getValue('email'))) {
+                $user = $this->userService->findByEmail($inputFilter->getValue('email'));
+            } elseif (!empty($inputFilter->getValue('identity'))) {
+                $user = $this->userService->findByIdentity($inputFilter->getValue('identity'));
+            } else {
+                $user = null;
+            }
+            if (!($user instanceof User)) {
+                return $this->infoResponse(Message::MAIL_SENT_RESET_PASSWORD);
+            }
             $user = $this->userService->updateUser($user->createResetPassword());
-        } catch (Exception $exception) {
-            return $this->errorResponse($exception->getMessage());
-        }
-
-        try {
             $this->userService->sendResetPasswordRequestedMail($user);
-        } catch (Exception $exception) {
+            return $this->infoResponse(Message::MAIL_SENT_RESET_PASSWORD);
+        } catch (Throwable $exception) {
             return $this->errorResponse($exception->getMessage());
         }
-
-        return $this->infoResponse(Message::MAIL_SENT_RESET_PASSWORD);
     }
 }

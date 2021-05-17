@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use Api\App\Handler\NotFoundHandler;
+use Api\App\Middleware\AuthenticationMiddleware;
+use Api\App\Middleware\AuthorizationMiddleware;
 use Dot\ErrorHandler\ErrorHandlerInterface;
 use Psr\Container\ContainerInterface;
 use Tuupola\Middleware\CorsMiddleware;
@@ -16,7 +19,6 @@ use Mezzio\Router\Middleware\ImplicitOptionsMiddleware;
 use Mezzio\Router\Middleware\MethodNotAllowedMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
 use Mezzio\ProblemDetails\ProblemDetailsMiddleware;
-use Api\App\Common\Handler\NotFoundHandler;
 
 /**
  * Setup middleware pipeline:
@@ -54,6 +56,8 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // Register the routing middleware in the middleware pipeline.
     // This middleware registers the Mezzio\Router\RouteResult request attribute.
     $app->pipe(RouteMiddleware::class);
+    $app->pipe(AuthenticationMiddleware::class);
+    $app->pipe(AuthorizationMiddleware::class);
 
     // The following handle routing failures for common conditions:
     // - HEAD request but no routes answer that method

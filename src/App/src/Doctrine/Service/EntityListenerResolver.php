@@ -13,8 +13,7 @@ use Psr\Container\ContainerInterface;
  */
 class EntityListenerResolver extends DefaultEntityListenerResolver
 {
-    /** @var ContainerInterface $container */
-    protected $container;
+    protected ContainerInterface $container;
 
     /**
      * EntityListenerResolver constructor.

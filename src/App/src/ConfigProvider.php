@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Api\App;
 
-use Api\App\Common\Factory\AnnotationsCacheFactory;
-use Api\App\Common\Middleware\ErrorResponseMiddleware;
+use Api\App\Factory\AnnotationsCacheFactory;
+use Api\App\Factory\AuthenticationMiddlewareFactory;
+use Api\App\Middleware\AuthenticationMiddleware;
+use Api\App\Middleware\AuthorizationMiddleware;
+use Api\App\Middleware\ErrorResponseMiddleware;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Dot\AnnotatedServices\Factory\AbstractAnnotatedFactory;
@@ -13,10 +16,11 @@ use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
 use Dot\Mail\Factory\MailOptionsAbstractFactory;
 use Dot\Mail\Factory\MailServiceAbstractFactory;
 use Dot\Mail\Service\MailService;
-use Roave\PsrContainerDoctrine\EntityManagerFactory;
-use Twig\Environment;
+use Laminas\Hydrator\ArraySerializableHydrator;
 use Mezzio\Application;
 use Mezzio\Authentication;
+use Mezzio\Hal\Metadata\RouteBasedCollectionMetadata;
+use Mezzio\Hal\Metadata\RouteBasedResourceMetadata;
 use Mezzio\Hal\Metadata\MetadataMap;
 use Mezzio\Template\TemplateRendererInterface;
 use Mezzio\Twig\TwigEnvironmentFactory;
@@ -24,6 +28,8 @@ use Mezzio\Twig\TwigExtension;
 use Mezzio\Twig\TwigExtensionFactory;
 use Mezzio\Twig\TwigRenderer;
 use Mezzio\Twig\TwigRendererFactory;
+use Roave\PsrContainerDoctrine\EntityManagerFactory;
+use Twig\Environment;
 
 /**
  * Class ConfigProvider
@@ -38,8 +44,7 @@ class ConfigProvider
     {
         return [
             'dependencies' => $this->getDependencies(),
-            MetadataMap::class => $this->getHalConfig(),
-            'templates' => $this->getTemplates()
+            MetadataMap::class => $this->getHalConfig()
         ];
     }
 
@@ -51,6 +56,7 @@ class ConfigProvider
         return [
             'delegators' => [
                 Application::class => [
+                    \Api\Admin\RoutesDelegator::class,
                     \Api\App\RoutesDelegator::class,
                     \Api\User\RoutesDelegator::class,
                 ]
@@ -60,6 +66,8 @@ class ConfigProvider
                 'dot-mail.options.default' => MailOptionsAbstractFactory::class,
                 'dot-mail.service.default' => MailServiceAbstractFactory::class,
                 AbstractAnnotatedFactory::CACHE_SERVICE => AnnotationsCacheFactory::class,
+                AuthenticationMiddleware::class => AuthenticationMiddlewareFactory::class,
+                AuthorizationMiddleware::class => AnnotatedServiceFactory::class,
                 Environment::class => TwigEnvironmentFactory::class,
                 TwigExtension::class => TwigExtensionFactory::class,
                 TwigRenderer::class => TwigRendererFactory::class,
@@ -84,18 +92,46 @@ class ConfigProvider
     }
 
     /**
-     * @return array
+     * @param string $collectionClass
+     * @param string $route
+     * @param string $collectionRelation
+     * @return string[]
      */
-    public function getTemplates(): array
+    public static function getCollection(
+        string $collectionClass,
+        string $route,
+        string $collectionRelation
+    ): array
     {
         return [
-            'paths' => [
-                'app' => [__DIR__ . '/../templates/app'],
-                'error' => [__DIR__ . '/../templates/error'],
-                'layout' => [__DIR__ . '/../templates/layout'],
-                'page' => [__DIR__ . '/../templates/page'],
-                'partial' => [__DIR__ . '/../templates/partial'],
-            ]
+            '__class__' => RouteBasedCollectionMetadata::class,
+            'collection_class' => $collectionClass,
+            'collection_relation' => $collectionRelation,
+            'route' => $route
+        ];
+    }
+
+    /**
+     * @param string $resourceClass
+     * @param string $route
+     * @param string $resourceIdentifier
+     * @param string $resourceIdentifierPlaceholder
+     * @return string[]
+     */
+    public static function getResource(
+        string $resourceClass,
+        string $route,
+        string $resourceIdentifier = 'uuid',
+        string $resourceIdentifierPlaceholder = 'uuid'
+    ): array
+    {
+        return [
+            '__class__' => RouteBasedResourceMetadata::class,
+            'resource_class' => $resourceClass,
+            'route' => $route,
+            'extractor' => ArraySerializableHydrator::class,
+            'resource_identifier' => $resourceIdentifier,
+            'route_identifier_placeholder' => $resourceIdentifierPlaceholder
         ];
     }
 }

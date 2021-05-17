@@ -1,0 +1,1359 @@
+{
+	"info": {
+		"_postman_id": "cf252f36-e656-4d44-bafd-bddc3305b866",
+		"name": "DotKernel_API",
+		"description": "DotKernel API documentation.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "My Account",
+					"item": [
+						{
+							"name": "Update my account",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"123456\",\r\n    \"passwordConfirm\": \"123456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/admin/my-account",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"admin",
+										"my-account"
+									]
+								},
+								"description": "Admin updated their own account."
+							},
+							"response": []
+						},
+						{
+							"name": "View my account",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/admin/my-account",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"admin",
+										"my-account"
+									]
+								},
+								"description": "Admin views their own account."
+							},
+							"response": []
+						}
+					],
+					"description": "Admins manager their accounts."
+				},
+				{
+					"name": "Role",
+					"item": [
+						{
+							"name": "List admin roles",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/admin/role",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"admin",
+										"role"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "10",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "role.created",
+											"disabled": true
+										},
+										{
+											"key": "dir",
+											"value": "desc",
+											"disabled": true
+										}
+									]
+								},
+								"description": "Admin lists admin roles."
+							},
+							"response": []
+						},
+						{
+							"name": "View admin role",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/admin/role/{{$randomUUID}}",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"admin",
+										"role",
+										"{{$randomUUID}}"
+									]
+								},
+								"description": "Admin views admin role.\n\nReplace random UUID in URL with a valid user UUID."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Security",
+					"item": [
+						{
+							"name": "Generate access token.",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"grant_type\": \"password\",\r\n  \"client_id\": \"admin\",\r\n  \"client_secret\": \"admin\",\r\n  \"scope\": \"api\",\r\n  \"username\": \"admin\",\r\n  \"password\": \"dotadmin\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/security/generate-token",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"security",
+										"generate-token"
+									]
+								},
+								"description": "Generate OAuth2 Bearer token for identity with admin privileges."
+							},
+							"response": []
+						},
+						{
+							"name": "Refresh access token.",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"grant_type\": \"refresh_token\",\r\n  \"client_id\": \"admin\",\r\n  \"client_secret\": \"admin\",\r\n  \"scope\": \"api\",\r\n  \"refresh_token\": \"{{REFRESH_TOKEN}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/security/refresh-token",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"security",
+										"refresh-token"
+									]
+								},
+								"description": "Refresh OAuth2 Bearer token for identity with admin privileges."
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "noauth"
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.environment.unset(\"ACCESS_TOKEN\");",
+									"pm.environment.unset(\"REFRESH_TOKEN\");",
+									"let jsonData = JSON.parse(responseBody);",
+									"if (jsonData.access_token) {",
+									"\tpm.environment.set(\"ACCESS_TOKEN\", jsonData.access_token);",
+									"}",
+									"if (jsonData.refresh_token) {",
+									"\tpm.environment.set(\"REFRESH_TOKEN\", jsonData.refresh_token);",
+									"}"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "View admin account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{APPLICATION_URL}}/admin/{{$randomUUID}}",
+							"host": [
+								"{{APPLICATION_URL}}"
+							],
+							"path": [
+								"admin",
+								"{{$randomUUID}}"
+							]
+						},
+						"description": "Admin views admin account.\n\nReplace random UUID in URL with a valid user UUID."
+					},
+					"response": []
+				},
+				{
+					"name": "List admin accounts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{APPLICATION_URL}}/admin",
+							"host": [
+								"{{APPLICATION_URL}}"
+							],
+							"path": [
+								"admin"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "admin.created",
+									"disabled": true
+								},
+								{
+									"key": "dir",
+									"value": "desc",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Admin lists admin accounts."
+					},
+					"response": []
+				},
+				{
+					"name": "Create admin account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"123456\",\r\n    \"passwordConfirm\": \"123456\",\r\n    \"firstname\": \"{{$randomFirstName}}\",\r\n    \"lastname\": \"{{$randomLastName}}\",\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{APPLICATION_URL}}/admin",
+							"host": [
+								"{{APPLICATION_URL}}"
+							],
+							"path": [
+								"admin"
+							]
+						},
+						"description": "Admin creates admin account."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete admin account",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{APPLICATION_URL}}/admin/{{$randomUUID}}",
+							"host": [
+								"{{APPLICATION_URL}}"
+							],
+							"path": [
+								"admin",
+								"{{$randomUUID}}"
+							]
+						},
+						"description": "Admin deleted admin account.\n\nReplace random UUID in URL with a valid user UUID."
+					},
+					"response": []
+				},
+				{
+					"name": "Update admin account",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"123456\",\r\n    \"passwordConfirm\": \"123456\",\r\n    \"firstname\": \"{{$randomFirstName}}\",\r\n    \"lastname\": \"{{$randomLastName}}\",\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{APPLICATION_URL}}/admin/{{$randomUUID}}",
+							"host": [
+								"{{APPLICATION_URL}}"
+							],
+							"path": [
+								"admin",
+								"{{$randomUUID}}"
+							]
+						},
+						"description": "Admin updates admin account.\n\nReplace random UUID in URL with a valid user UUID."
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Account",
+					"item": [
+						{
+							"name": "Avatar",
+							"item": [
+								{
+									"name": "Create user avatar",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "avatar",
+													"type": "file",
+													"src": []
+												}
+											]
+										},
+										"url": {
+											"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}/avatar",
+											"host": [
+												"{{APPLICATION_URL}}"
+											],
+											"path": [
+												"user",
+												"{{$randomUUID}}",
+												"avatar"
+											]
+										},
+										"description": "Admin creates avatar for user account.\r\n\r\nReplace random UUID in URL with a valid user UUID."
+									},
+									"response": []
+								},
+								{
+									"name": "Delete user avatar",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}/avatar",
+											"host": [
+												"{{APPLICATION_URL}}"
+											],
+											"path": [
+												"user",
+												"{{$randomUUID}}",
+												"avatar"
+											]
+										},
+										"description": "Admin deletes user avatar.\n\nReplace random UUID in URL with a valid user UUID."
+									},
+									"response": []
+								},
+								{
+									"name": "View user avatar",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}/avatar",
+											"host": [
+												"{{APPLICATION_URL}}"
+											],
+											"path": [
+												"user",
+												"{{$randomUUID}}",
+												"avatar"
+											]
+										},
+										"description": "Admin deletes user avatar.\n\nReplace random UUID in URL with a valid user UUID."
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Role",
+							"item": [
+								{
+									"name": "List user roles",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{APPLICATION_URL}}/user/role",
+											"host": [
+												"{{APPLICATION_URL}}"
+											],
+											"path": [
+												"user",
+												"role"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1",
+													"disabled": true
+												},
+												{
+													"key": "limit",
+													"value": "10",
+													"disabled": true
+												},
+												{
+													"key": "order",
+													"value": "role.created",
+													"disabled": true
+												},
+												{
+													"key": "dir",
+													"value": "desc",
+													"disabled": true
+												}
+											]
+										},
+										"description": "Admin lists user roles."
+									},
+									"response": []
+								},
+								{
+									"name": "View user role",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{APPLICATION_URL}}/user/role/{{$randomUUID}}",
+											"host": [
+												"{{APPLICATION_URL}}"
+											],
+											"path": [
+												"user",
+												"role",
+												"{{$randomUUID}}"
+											]
+										},
+										"description": "Admin views user role.\n\nReplace random UUID in URL with a valid user UUID."
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Activate user account",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/user/activate/{{$randomUUID}}",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"user",
+										"activate",
+										"{{$randomUUID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create user account",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"123456\",\r\n    \"passwordConfirm\": \"123456\",\r\n    \"status\": \"pending\",\r\n    \"detail\": {\r\n        \"firstname\": \"{{$randomFirstName}}\",\r\n        \"lastname\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    },\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"eaa27730-9fc0-11eb-85a5-78f29ef45f43\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/user",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"user"
+									]
+								},
+								"description": "Admin creates new user account."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete user account",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"user",
+										"{{$randomUUID}}"
+									]
+								},
+								"description": "Admin anonymizes and marks user account as deleted.\n\nReplace random UUID in URL with a valid user UUID."
+							},
+							"response": []
+						},
+						{
+							"name": "List user accounts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/user",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"user"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1",
+											"description": "Page number",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "10",
+											"description": "Items per page",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "user.created",
+											"description": "order results by this field",
+											"disabled": true
+										},
+										{
+											"key": "dir",
+											"value": "desc",
+											"description": "order results direction",
+											"disabled": true
+										}
+									]
+								},
+								"description": "Admin lists user accounts."
+							},
+							"response": []
+						},
+						{
+							"name": "Update user account",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"123456\",\r\n    \"passwordConfirm\": \"123456\",\r\n    \"status\": \"active\",\r\n    \"detail\": {\r\n        \"firstname\": \"{{$randomFirstName}}\",\r\n        \"lastname\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    },\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"user",
+										"{{$randomUUID}}"
+									]
+								},
+								"description": "Admin updates user account.\r\n\r\nReplace random UUID in URL with a valid user UUID."
+							},
+							"response": []
+						},
+						{
+							"name": "View user account",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"user",
+										"{{$randomUUID}}"
+									]
+								},
+								"description": "Admin views user account.\r\n\r\nReplace random UUID in URL with a valid user UUID."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "My Account",
+					"item": [
+						{
+							"name": "Avatar",
+							"item": [
+								{
+									"name": "Create my avatar",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "avatar",
+													"type": "file",
+													"src": []
+												}
+											]
+										},
+										"url": {
+											"raw": "{{APPLICATION_URL}}/user/my-avatar",
+											"host": [
+												"{{APPLICATION_URL}}"
+											],
+											"path": [
+												"user",
+												"my-avatar"
+											]
+										},
+										"description": "Authenticated user creates their avatar."
+									},
+									"response": []
+								},
+								{
+									"name": "View my avatar",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{APPLICATION_URL}}/user/my-avatar",
+											"host": [
+												"{{APPLICATION_URL}}"
+											],
+											"path": [
+												"user",
+												"my-avatar"
+											]
+										},
+										"description": "Authenticated user views their avatar."
+									},
+									"response": []
+								},
+								{
+									"name": "Delete my avatar",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{APPLICATION_URL}}/user/my-avatar",
+											"host": [
+												"{{APPLICATION_URL}}"
+											],
+											"path": [
+												"user",
+												"my-avatar"
+											]
+										},
+										"description": "Authenticated user deletes their avatar."
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Activate my account",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/account/activate/{{RANDOM_HASH}}",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"account",
+										"activate",
+										"{{RANDOM_HASH}}"
+									]
+								},
+								"description": "Guest activates their account."
+							},
+							"response": []
+						},
+						{
+							"name": "Activate my account",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"{{$randomExampleEmail}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/account/activate",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"account",
+										"activate"
+									]
+								},
+								"description": "Guest requests account activation email."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete my account",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/user/my-account",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"user",
+										"my-account"
+									]
+								},
+								"description": "Authenticated user deletes their account."
+							},
+							"response": []
+						},
+						{
+							"name": "Modify my password",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"password\": \"123456\",\r\n    \"passwordConfirm\": \"123456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/account/reset-password/{{RANDOM_HASH}}",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"account",
+										"reset-password",
+										"{{RANDOM_HASH}}"
+									]
+								},
+								"description": "Guest modifies password using validated password reset hash."
+							},
+							"response": []
+						},
+						{
+							"name": "Recover my identity",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"{{$randomExampleEmail}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/account/recover-identity",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"account",
+										"recover-identity"
+									]
+								},
+								"description": "Guest recovers identity using email."
+							},
+							"response": []
+						},
+						{
+							"name": "Register my account",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"123456\",\r\n    \"passwordConfirm\": \"123456\",\r\n    \"detail\": {\r\n        \"firstname\": \"{{$randomFirstName}}\",\r\n        \"lastname\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/account/register",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"account",
+										"register"
+									]
+								},
+								"description": "Guest registers new user account."
+							},
+							"response": []
+						},
+						{
+							"name": "Reset my password via email",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"{{$randomExampleEmail}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/account/reset-password",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"account",
+										"reset-password"
+									]
+								},
+								"description": "Guest requests password reset via `email`."
+							},
+							"response": []
+						},
+						{
+							"name": "Reset my password via identity",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/account/reset-password",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"account",
+										"reset-password"
+									]
+								},
+								"description": "Guest requests password reset via `identity`."
+							},
+							"response": []
+						},
+						{
+							"name": "Validate my reset password hash",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/account/reset-password/{{RANDOM_HASH}}",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"account",
+										"reset-password",
+										"{{RANDOM_HASH}}"
+									]
+								},
+								"description": "Guest validates password reset hash."
+							},
+							"response": []
+						},
+						{
+							"name": "View my account",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/user/my-account",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"user",
+										"my-account"
+									]
+								},
+								"description": "Authenticated user views their account."
+							},
+							"response": []
+						},
+						{
+							"name": "Update my account",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"123456\",\r\n    \"passwordConfirm\": \"123456\",\r\n    \"detail\": {\r\n        \"firstname\": \"{{$randomFirstName}}\",\r\n        \"lastname\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/user/my-account",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"user",
+										"my-account"
+									]
+								},
+								"description": "Authenticated user updates their account."
+							},
+							"response": []
+						}
+					],
+					"description": "Authenticated users manage their accounts."
+				},
+				{
+					"name": "Security",
+					"item": [
+						{
+							"name": "Generate access token.",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"grant_type\": \"password\",\r\n  \"client_id\": \"frontend\",\r\n  \"client_secret\": \"frontend\",\r\n  \"scope\": \"api\",\r\n  \"username\": \"test@dotkernel.com\",\r\n  \"password\": \"dotkernel\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/security/generate-token",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"security",
+										"generate-token"
+									]
+								},
+								"description": "Generate OAuth2 Bearer token for identity with regular user privileges."
+							},
+							"response": []
+						},
+						{
+							"name": "Refresh access token.",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"grant_type\": \"refresh_token\",\r\n  \"client_id\": \"frontend\",\r\n  \"client_secret\": \"frontend\",\r\n  \"scope\": \"api\",\r\n  \"refresh_token\": \"{{REFRESH_TOKEN}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/security/refresh-token",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"security",
+										"refresh-token"
+									]
+								},
+								"description": "Refresh OAuth2 Bearer token for identity with regular user privileges."
+							},
+							"response": []
+						}
+					],
+					"description": "Generate/Refresh OAuth2 Bearer token with regular user privileges.",
+					"auth": {
+						"type": "noauth"
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.environment.unset(\"ACCESS_TOKEN\");",
+									"pm.environment.unset(\"REFRESH_TOKEN\");",
+									"let jsonData = JSON.parse(responseBody);",
+									"if (jsonData.access_token) {",
+									"\tpm.environment.set(\"ACCESS_TOKEN\", jsonData.access_token);",
+									"}",
+									"if (jsonData.refresh_token) {",
+									"\tpm.environment.set(\"REFRESH_TOKEN\", jsonData.refresh_token);",
+									"}"
+								]
+							}
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "View homepage",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{APPLICATION_URL}}",
+					"host": [
+						"{{APPLICATION_URL}}"
+					]
+				},
+				"description": "View application homepage."
+			},
+			"response": []
+		},
+		{
+			"name": "Report an error",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"message\": \"{{$randomLoremSentence}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{APPLICATION_URL}}/error-report",
+					"host": [
+						"{{APPLICATION_URL}}"
+					],
+					"path": [
+						"error-report"
+					]
+				},
+				"description": "Some application reports an error."
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{ACCESS_TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "APPLICATION_NAME",
+			"value": "DotKernel API"
+		},
+		{
+			"key": "RANDOM_HASH",
+			"value": "597155ec70defb9f969c9beaf609814933db53cbcb8b9be6db5e0bf7e051e1e4"
+		}
+	]
+}

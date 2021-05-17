@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace Api\User\Form\InputFilter;
 
-use Api\App\Common\Message;
+use Api\App\Message;
 use Api\User\Entity\User;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
 use Laminas\InputFilter\CollectionInputFilter;
-use Laminas\InputFilter\FileInput;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterAwareInterface;
 use Laminas\InputFilter\InputFilterAwareTrait;
 use Laminas\InputFilter\InputFilterInterface;
-use Laminas\Validator\File\IsImage;
-use Laminas\Validator\File\UploadFile;
 use Laminas\Validator\Identical;
 use Laminas\Validator\InArray;
 use Laminas\Validator\NotEmpty;
@@ -34,7 +31,7 @@ class UpdateUserInputFilter implements InputFilterAwareInterface
     /**
      * @return InputFilterInterface
      */
-    public function getInputFilter()
+    public function getInputFilter(): InputFilterInterface
     {
         if (empty($this->inputFilter)) {
             $rolesInputFilter = new InputFilter();
@@ -140,31 +137,6 @@ class UpdateUserInputFilter implements InputFilterAwareInterface
                             'message' => sprintf(Message::INVALID_VALUE, 'isDeleted')
                         ]
                     ]
-                ]
-            ])->add([
-                'name' => 'avatar',
-                'type' => FileInput::class,
-                'required' => false,
-                'validators' => [
-                    [
-                        'name' => NotEmpty::class,
-                        'break_chain_on_failure' => true,
-                        'options' => [
-                            'message' => Message::VALIDATOR_REQUIRED_FIELD
-                        ]
-                    ], [
-                        'name' => UploadFile::class,
-                        'break_chain_on_failure' => true,
-                        'options' => [
-                            'message' => Message::VALIDATOR_REQUIRED_UPLOAD
-                        ]
-                    ], [
-                        'name' => IsImage::class,
-                        'break_chain_on_failure' => true,
-                        'options' => [
-                            'message' => Message::RESTRICTION_IMAGE
-                        ]
-                    ],
                 ]
             ])->add($rolesCollection, 'roles')->add((new UpdateDetailInputFilter())->getInputFilter(), 'detail');
         }

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Api\User\Entity\UserRole;
-use Api\User\Entity\AdminRole;
+use Api\Admin\Entity\AdminRole;
 
 return [
     /**
@@ -25,22 +25,50 @@ return [
             UserRole::ROLE_GUEST => [UserRole::ROLE_USER]
         ],
         'permissions' => [
-            AdminRole::ROLE_SUPERUSER => [
-                'admin:register'
-            ],
+            AdminRole::ROLE_SUPERUSER => [],
             AdminRole::ROLE_ADMIN => [
-                'user:activate',
-                'user:avatar',
-                'user:list,create',
-                'user:delete,view,update',
-                'admin-my-account:me'
+                'admin.my-account.update',
+                'admin.my-account.view',
+                'admin.create',
+                'admin.delete',
+                'admin.list',
+                'admin.update',
+                'admin.view',
+                'admin.role.list',
+                'admin.role.view',
+                'user.activate',
+                'user.create',
+                'user.list',
+                'user.delete',
+                'user.view',
+                'user.update',
+                'user.avatar.create',
+                'user.avatar.delete',
+                'user.avatar.view',
+                'user.role.list',
+                'user.role.view',
             ],
             UserRole::ROLE_USER => [
-                'my-account:avatar',
-                'my-account:me',
-                'my-account:recover-identity'
+                'user.my-account.delete',
+                'user.my-account.update',
+                'user.my-account.view',
+                'user.my-avatar.create',
+                'user.my-avatar.delete',
+                'user.my-avatar.view',
             ],
-            UserRole::ROLE_GUEST => []
+            UserRole::ROLE_GUEST => [
+                'account.activate.request',
+                'account.activate',
+                'account.register',
+                'account.modify-password',
+                'account.recover-identity',
+                'account.reset-password.validate',
+                'account.reset-password.request',
+                'error.report',
+                'home',
+                'security.generate-token',
+                'security.refresh-token',
+            ]
         ],
     ]
 ];

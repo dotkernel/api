@@ -30,20 +30,16 @@ class ConfigProvider
     public function getDependencies(): array
     {
         return [
-            'delegators' => [
-            ],
             'factories' => [
                 EntityListenerResolver::class => EntityListenerResolverFactory::class
             ],
-            'aliases' => [
-            ]
         ];
     }
 
     /**
      * @return array
      */
-    public function getDoctrineConfig()
+    public function getDoctrineConfig(): array
     {
         return [
             'configuration' => [

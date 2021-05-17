@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Api\User\Repository;
 
-use Api\App\Common\Pagination;
+use Api\App\Helper\PaginationHelper;
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\ORM;
 use Doctrine\ORM\EntityRepository;
-use Exception;
 use Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType;
+use Throwable;
 
 /**
  * Class UserRepository
@@ -22,9 +22,8 @@ class UserRepository extends EntityRepository
     /**
      * @param string $email
      * @return bool
-     * @throws \Doctrine\DBAL\Driver\Exception
      */
-    public function deleteAccessTokens(string $email)
+    public function deleteAccessTokens(string $email): bool
     {
         if (empty($email)) {
             return false;
@@ -36,7 +35,7 @@ class UserRepository extends EntityRepository
             );
             $stmt->bindValue('email', $email);
             return $stmt->execute();
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             return false;
         }
     }
@@ -74,7 +73,7 @@ class UserRepository extends EntityRepository
 
         try {
             return $qb->getQuery()->useQueryCache(true)->getSingleResult();
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             return null;
         }
     }
@@ -82,9 +81,9 @@ class UserRepository extends EntityRepository
     /**
      * @param string $email
      * @param string|null $uuid
-     * @return int|mixed|string|null
+     * @return User|null
      */
-    public function emailExists(string $email = '', ?string $uuid = '')
+    public function emailExists(string $email = '', ?string $uuid = ''): ?User
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
@@ -98,7 +97,7 @@ class UserRepository extends EntityRepository
 
         try {
             return $qb->getQuery()->useQueryCache(true)->getSingleResult();
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             return null;
         }
     }
@@ -116,7 +115,7 @@ class UserRepository extends EntityRepository
                 ->andWhere('resetPasswords.hash = :hash')->setParameter('hash', $hash);
 
             return $qb->getQuery()->useQueryCache(true)->getSingleResult();
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             return null;
         }
     }
@@ -125,7 +124,7 @@ class UserRepository extends EntityRepository
      * @param array $filters
      * @return UserCollection
      */
-    public function getUsers(array $filters = [])
+    public function getUsers(array $filters = []): UserCollection
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select(['user', 'avatar', 'detail', 'roles'])
@@ -165,7 +164,7 @@ class UserRepository extends EntityRepository
         $qb->orderBy(($filters['order'] ?? 'user.created'), $filters['dir'] ?? 'desc');
 
         // Paginate results
-        $page = Pagination::getOffsetAndLimit($filters);
+        $page = PaginationHelper::getOffsetAndLimit($filters);
         $qb->setFirstResult($page['offset'])->setMaxResults($page['limit']);
 
         $qb->getQuery()->useQueryCache(true);
@@ -178,7 +177,7 @@ class UserRepository extends EntityRepository
      * @param string $email
      * @return bool
      */
-    public function revokeAccessTokens(string $email)
+    public function revokeAccessTokens(string $email): bool
     {
         if (empty($email)) {
             return false;
@@ -195,7 +194,7 @@ class UserRepository extends EntityRepository
             );
             $stmt->bindValue('email', $email);
             $stmt->bindValue('revoked', 0);
-            $stmt->execute();
+            $stmt->executeStatement();
             $tokenIds = $stmt->fetchAll(FetchMode::COLUMN);
 
             /**
@@ -207,7 +206,7 @@ class UserRepository extends EntityRepository
                     'UPDATE `oauth_refresh_tokens` SET `revoked` = 1 WHERE `access_token_id` IN(:tokenIds)'
                 );
                 $stmt->bindValue('tokenIds', implode("', '", $tokenIds));
-                $stmt->execute();
+                $stmt->executeStatement();
             }
 
             /**
@@ -217,8 +216,8 @@ class UserRepository extends EntityRepository
                 'UPDATE `oauth_access_tokens` SET `revoked` = 1 WHERE `user_id` LIKE :email'
             );
             $stmt->bindValue('email', $email);
-            $stmt->execute();
-        } catch (Exception $exception) {
+            $stmt->executeStatement();
+        } catch (Throwable $exception) {
             return false;
         }
 

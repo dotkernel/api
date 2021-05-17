@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
-use Api\App\Common\Message;
-use Api\App\RestDispatchTrait;
+use Api\App\Message;
+use Api\App\Handler\DefaultHandler;
 use Api\User\Entity\User;
 use Api\User\Form\InputFilter\ActivateAccountInputFilter;
 use Api\User\Service\UserService;
 use Dot\AnnotatedServices\Annotation\Inject;
-use Exception;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Mezzio\Helper\UrlHelper;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Throwable;
 
 use function sprintf;
 
@@ -25,15 +23,11 @@ use function sprintf;
  * Class ActivateAccountInputFilter
  * @package Api\User\Handler
  */
-class AccountActivateHandler implements RequestHandlerInterface
+class AccountActivateHandler extends DefaultHandler
 {
-    use RestDispatchTrait;
+    protected UrlHelper $urlHelper;
 
-    /** @var UrlHelper $urlHelper */
-    protected $urlHelper;
-
-    /** @var UserService $userService */
-    protected $userService;
+    protected UserService $userService;
 
     /**
      * AccountActivateHandler constructor.
@@ -50,8 +44,8 @@ class AccountActivateHandler implements RequestHandlerInterface
         UserService $userService,
         UrlHelper $urlHelper
     ) {
-        $this->responseFactory = $halResponseFactory;
-        $this->resourceGenerator = $resourceGenerator;
+        parent::__construct($halResponseFactory, $resourceGenerator);
+
         $this->userService = $userService;
         $this->urlHelper = $urlHelper;
     }
@@ -60,13 +54,9 @@ class AccountActivateHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function get(ServerRequestInterface $request): ResponseInterface
+    public function patch(ServerRequestInterface $request): ResponseInterface
     {
-        $hash = $request->getAttribute('hash', null);
-        if (empty($hash)) {
-            return $this->errorResponse(sprintf(Message::MISSING_PARAMETER, 'hash'));
-        }
-
+        $hash = $request->getAttribute('hash');
         $user = $this->userService->findOneBy(['hash' => $hash]);
         if (!($user instanceof User)) {
             return $this->errorResponse(Message::INVALID_ACTIVATION_CODE);
@@ -77,12 +67,11 @@ class AccountActivateHandler implements RequestHandlerInterface
         }
 
         try {
-            $user = $this->userService->activateUser($user);
-        } catch (Exception $exception) {
+            $this->userService->activateUser($user);
+            return $this->infoResponse(Message::USER_ACTIVATED);
+        } catch (Throwable $exception) {
             return $this->errorResponse($exception->getMessage());
         }
-
-        return new RedirectResponse($this->urlHelper->generate('home'));
     }
 
     /**
@@ -97,10 +86,11 @@ class AccountActivateHandler implements RequestHandlerInterface
             return $this->errorResponse($inputFilter->getMessages());
         }
 
-        $user = $this->userService->findOneBy($inputFilter->getValues());
+        $email = $inputFilter->getValue('email');
+        $user = $this->userService->findByEmail($email);
         if (!($user instanceof User)) {
             return $this->notFoundResponse(
-                sprintf(Message::USER_NOT_FOUND_BY_EMAIL, $inputFilter->getValue('email'))
+                sprintf(Message::USER_NOT_FOUND_BY_EMAIL, $email)
             );
         }
 
@@ -110,16 +100,12 @@ class AccountActivateHandler implements RequestHandlerInterface
 
         try {
             $user = $this->userService->updateUser($user->renewHash());
-        } catch (Exception $exception) {
-            return $this->errorResponse($exception->getMessage());
-        }
-
-        try {
             $this->userService->sendActivationMail($user);
-        } catch (Exception $exception) {
+            return $this->infoResponse(
+                sprintf(Message::MAIL_SENT_USER_ACTIVATION, $user->getDetail()->getEmail())
+            );
+        } catch (Throwable $exception) {
             return $this->errorResponse($exception->getMessage());
         }
-
-        return $this->infoResponse(sprintf(Message::MAIL_SENT_USER_ACTIVATION, $user->getDetail()->getEmail()));
     }
 }

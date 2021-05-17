@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\Console\User\Handler;
 
-use Api\App\Common\Message;
+use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\Entity\UserRole;
 use Api\User\Service\UserService;
@@ -71,7 +71,7 @@ class ListUsersHandler extends AbstractCommand
             $table->appendRow([
                 $user->getUuid()->toString(),
                 $user->getName(),
-                $user->getEmail(),
+                $user->getIdentity(),
                 $user->getStatus(),
                 implode(', ', array_map(function (UserRole $role) {
                     return $role->getName();
