@@ -59,6 +59,7 @@
         "mezzio/mezzio-authentication-oauth2": "^2.0",
         "mezzio/mezzio-authorization-acl": "^1.0",
         "mezzio/mezzio-authorization-rbac": "^1.0",
+        "mezzio/mezzio-cors": "^1.0",
         "mezzio/mezzio-fastroute": "^3.0",
         "mezzio/mezzio-helpers": "^5.3",
         "mezzio/mezzio-problem-details": "^1.1",
