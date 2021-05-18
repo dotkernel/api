@@ -7,6 +7,7 @@ namespace Api\Admin\Service;
 use Api\Admin\Collection\AdminRoleCollection;
 use Api\Admin\Entity\AdminRole;
 use Api\Admin\Repository\AdminRoleRepository;
+use Api\App\Entity\RoleInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Doctrine\ORM\EntityManager;
 
@@ -40,6 +41,26 @@ class AdminRoleService
         }
 
         return $this->adminRoleRepository->findOneBy($params);
+    }
+
+    /**
+     * @return RoleInterface|null
+     */
+    public function getAdminRole(): ?RoleInterface
+    {
+        return $this->adminRoleRepository->findOneBy(
+            ['name' => AdminRole::ROLE_ADMIN]
+        );
+    }
+
+    /**
+     * @return RoleInterface|null
+     */
+    public function getSuperUserRole(): ?RoleInterface
+    {
+        return $this->adminRoleRepository->findOneBy(
+            ['name' => AdminRole::ROLE_SUPERUSER]
+        );
     }
 
     /**

@@ -10,8 +10,10 @@ namespace Api\App;
  */
 class Message
 {
+    public const ADMIN_CREATED = 'Admin account has been created.';
     public const ADMIN_DELETED = 'Admin account has been deleted.';
     public const ADMIN_NOT_ACTIVATED = 'This account is deactivated.';
+    public const ADMIN_ROLE_MISSING = 'Admin role \'%s\' is missing.';
     public const AVATAR_CREATED = 'Avatar has been successfully created.';
     public const AVATAR_DELETED = 'Avatar has been successfully deleted.';
     public const AVATAR_MISSING = 'This user account has no avatar associated with it.';

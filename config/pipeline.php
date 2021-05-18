@@ -6,8 +6,9 @@ use Api\App\Handler\NotFoundHandler;
 use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
 use Dot\ErrorHandler\ErrorHandlerInterface;
+use Dot\ResponseHeader\Middleware\ResponseHeaderMiddleware;
+use Mezzio\Cors\Middleware\CorsMiddleware;
 use Psr\Container\ContainerInterface;
-use Tuupola\Middleware\CorsMiddleware;
 use Mezzio\Application;
 use Mezzio\Helper\BodyParams\BodyParamsMiddleware;
 use Mezzio\Helper\ServerUrlMiddleware;
@@ -56,6 +57,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // Register the routing middleware in the middleware pipeline.
     // This middleware registers the Mezzio\Router\RouteResult request attribute.
     $app->pipe(RouteMiddleware::class);
+    $app->pipe(ResponseHeaderMiddleware::class);
     $app->pipe(AuthenticationMiddleware::class);
     $app->pipe(AuthorizationMiddleware::class);
 

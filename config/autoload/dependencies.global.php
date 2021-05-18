@@ -7,7 +7,6 @@ use Api\App\Factory\ErrorResponseGeneratorFactory;
 use Api\App\Factory\OauthUserRepositoryFactory;
 use Api\App\Repository\AccessTokenRepository;
 use Api\App\Repository\OauthUserRepository;
-use Api\App\Cors\Factory\CorsFactory;
 use Api\App\Factory\UserIdentityFactory;
 use Api\App\UserIdentity;
 use Dot\ErrorHandler\ErrorHandlerInterface;
@@ -41,7 +40,6 @@ return [
             AccessTokenRepository::class => AccessTokenRepositoryFactory::class,
             OauthUserRepository::class => OauthUserRepositoryFactory::class,
             UserIdentity::class => UserIdentityFactory::class,
-            Tuupola\Middleware\CorsMiddleware::class => CorsFactory::class
         ],
     ],
 ];

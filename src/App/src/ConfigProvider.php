@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Api\App;
 
+use Api\App\Command\RouteListCommand;
 use Api\App\Factory\AnnotationsCacheFactory;
 use Api\App\Factory\AuthenticationMiddlewareFactory;
+use Api\App\Factory\RouteListCommandFactory;
 use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
 use Api\App\Middleware\ErrorResponseMiddleware;
@@ -72,6 +74,7 @@ class ConfigProvider
                 TwigExtension::class => TwigExtensionFactory::class,
                 TwigRenderer::class => TwigRendererFactory::class,
                 ErrorResponseMiddleware::class => AnnotatedServiceFactory::class,
+                RouteListCommand::class => RouteListCommandFactory::class
             ],
             'aliases' => [
                 Authentication\AuthenticationInterface::class => Authentication\OAuth2\OAuth2Adapter::class,

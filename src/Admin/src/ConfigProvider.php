@@ -6,8 +6,10 @@ namespace Api\Admin;
 
 use Api\Admin\Collection\AdminCollection;
 use Api\Admin\Collection\AdminRoleCollection;
+use Api\Admin\Command\AdminCreateCommand;
 use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
+use Api\Admin\Factory\AdminCreateCommandFactory;
 use Api\Admin\Handler\AdminAccountHandler;
 use Api\Admin\Handler\AdminHandler;
 use Api\Admin\Handler\AdminRoleHandler;
@@ -45,7 +47,8 @@ class ConfigProvider
                 AdminAccountHandler::class => AnnotatedServiceFactory::class,
                 AdminRoleHandler::class => AnnotatedServiceFactory::class,
                 AdminService::class => AnnotatedServiceFactory::class,
-                AdminRoleService::class => AnnotatedServiceFactory::class
+                AdminRoleService::class => AnnotatedServiceFactory::class,
+                AdminCreateCommand::class => AdminCreateCommandFactory::class
             ]
         ];
     }
