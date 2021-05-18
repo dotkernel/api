@@ -7,10 +7,10 @@ namespace Api\Console\App\Handler;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\AnnotatedServices\Annotation\Service;
 use Dot\Console\Command\AbstractCommand;
+use Dot\Console\RouteCollector;
 use Laminas\Console\Adapter\AdapterInterface;
 use Mezzio\Application;
 use Laminas\Text\Table\Table;
-use ZF\Console\Route;
 
 use function array_values;
 use function ksort;
@@ -23,8 +23,7 @@ use function strlen;
  */
 class RoutesHandler extends AbstractCommand
 {
-    /** @var Application $application */
-    protected $application;
+    protected Application $application;
 
     /**
      * RoutesHandler constructor.
@@ -38,10 +37,10 @@ class RoutesHandler extends AbstractCommand
     }
 
     /**
-     * @param Route $route
+     * @param RouteCollector $route
      * @param AdapterInterface $console
      */
-    public function __invoke(Route $route, AdapterInterface $console)
+    public function __invoke(RouteCollector $route, AdapterInterface $console)
     {
         $columnWidths = ['method' => 6, 'name' => 4, 'path' => 4];
 
