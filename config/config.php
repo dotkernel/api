@@ -31,12 +31,13 @@ $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
     Mezzio\ConfigProvider::class,
     Mezzio\Router\ConfigProvider::class,
     // DK packages
+    Dot\AnnotatedServices\ConfigProvider::class,
     Dot\Cli\ConfigProvider::class,
     Dot\Console\ConfigProvider::class,
-    Dot\Log\ConfigProvider::class,
-    Dot\ErrorHandler\ConfigProvider::class,
-    Dot\AnnotatedServices\ConfigProvider::class,
     Dot\DoctrineMetadata\ConfigProvider::class,
+    Dot\ErrorHandler\ConfigProvider::class,
+    Dot\Log\ConfigProvider::class,
+    Dot\ResponseHeader\ConfigProvider::class,
     // Default App module config
     Api\App\ConfigProvider::class,
     Api\App\Doctrine\ConfigProvider::class,
