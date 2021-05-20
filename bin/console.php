@@ -4,7 +4,7 @@
  */
 
 use Interop\Container\ContainerInterface;
-use ZF\Console\Application;
+use Dot\Console\Application;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
@@ -18,7 +18,6 @@ call_user_func(function () {
 
     /** @var Application $app */
     $app = $container->get(Application::class);
-    $app->setDebug(false);
 
     $exit = $app->run();
     exit($exit);
