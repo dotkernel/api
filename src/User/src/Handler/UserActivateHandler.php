@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
-use Api\App\Common\Message;
-use Api\App\RestDispatchTrait;
+use Api\App\Message;
+use Api\App\Handler\DefaultHandler;
 use Api\User\Entity\User;
 use Api\User\Service\UserService;
 use Dot\AnnotatedServices\Annotation\Inject;
-use Exception;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Throwable;
 
 use function sprintf;
 
@@ -22,12 +21,9 @@ use function sprintf;
  * Class UserActivateHandler
  * @package Api\User\Handler
  */
-class UserActivateHandler implements RequestHandlerInterface
+class UserActivateHandler extends DefaultHandler
 {
-    use RestDispatchTrait;
-
-    /** @var UserService $userService */
-    protected $userService;
+    protected UserService $userService;
 
     /**
      * UserActivateHandler constructor.
@@ -42,8 +38,8 @@ class UserActivateHandler implements RequestHandlerInterface
         ResourceGenerator $resourceGenerator,
         UserService $userService
     ) {
-        $this->responseFactory = $halResponseFactory;
-        $this->resourceGenerator = $resourceGenerator;
+        parent::__construct($halResponseFactory, $resourceGenerator);
+
         $this->userService = $userService;
     }
 
@@ -53,34 +49,24 @@ class UserActivateHandler implements RequestHandlerInterface
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        $uuid = $request->getAttribute('uuid', null);
-        if (empty($uuid)) {
-            return $this->errorResponse(sprintf(Message::MISSING_PARAMETER, 'uuid'));
-        }
-
-        $user = $this->userService->findOneBy(['uuid' => $uuid]);
-        if (!($user instanceof User)) {
-            return $this->notFoundResponse(
-                sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid)
-            );
-        }
-
-        if ($user->getStatus() === User::STATUS_ACTIVE) {
-            return $this->errorResponse(Message::USER_ALREADY_ACTIVATED);
-        }
-
         try {
+            $uuid = $request->getAttribute('uuid');
+            $user = $this->userService->findOneBy(['uuid' => $uuid]);
+            if (!($user instanceof User)) {
+                return $this->notFoundResponse(
+                    sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid)
+                );
+            }
+
+            if ($user->getStatus() === User::STATUS_ACTIVE) {
+                return $this->errorResponse(Message::USER_ALREADY_ACTIVATED);
+            }
+
             $user = $this->userService->updateUser($user->renewHash());
-        } catch (Exception $exception) {
-            return $this->errorResponse($exception->getMessage());
-        }
-
-        try {
             $this->userService->sendActivationMail($user);
-        } catch (Exception $exception) {
+            return $this->infoResponse(Message::USER_ACTIVATED);
+        } catch (Throwable $exception) {
             return $this->errorResponse($exception->getMessage());
         }
-
-        return $this->responseFactory->createResponse($request, $this->resourceGenerator->fromObject($user, $request));
     }
 }

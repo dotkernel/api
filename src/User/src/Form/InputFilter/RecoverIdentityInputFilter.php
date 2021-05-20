@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Api\User\Form\InputFilter;
 
-use Api\App\Common\Message;
+use Api\App\Message;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
 use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterAwareInterface;
 use Laminas\InputFilter\InputFilterAwareTrait;
+use Laminas\InputFilter\InputFilterInterface;
 use Laminas\Validator\EmailAddress;
 
 /**
@@ -21,9 +22,9 @@ class RecoverIdentityInputFilter implements InputFilterAwareInterface
     use InputFilterAwareTrait;
 
     /**
-     * @return InputFilter|\Laminas\InputFilter\InputFilterInterface|null
+     * @return InputFilterInterface
      */
-    public function getInputFilter()
+    public function getInputFilter(): InputFilterInterface
     {
         if (empty($this->inputFilter)) {
             $this->inputFilter = new InputFilter();

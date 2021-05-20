@@ -4,29 +4,25 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
+use Api\App\Handler\DefaultHandler;
 use Dot\AnnotatedServices\Annotation\Inject;
-use Api\App\RestDispatchTrait;
 use Api\User\Entity\User;
 use Api\User\Form\InputFilter\CreateAccountInputFilter;
 use Api\User\Form\InputFilter\UpdateAccountInputFilter;
 use Api\User\Service\UserService;
-use Exception;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Throwable;
 
 /**
  * Class AccountHandler
  * @package Api\User\Handler
  */
-class AccountHandler implements RequestHandlerInterface
+class AccountHandler extends DefaultHandler
 {
-    use RestDispatchTrait;
-
-    /** @var UserService $userService */
-    protected $userService;
+    protected UserService $userService;
 
     /**
      * AccountHandler constructor.
@@ -41,8 +37,7 @@ class AccountHandler implements RequestHandlerInterface
         ResourceGenerator $resourceGenerator,
         UserService $userService
     ) {
-        $this->responseFactory = $halResponseFactory;
-        $this->resourceGenerator = $resourceGenerator;
+        parent::__construct($halResponseFactory, $resourceGenerator);
         $this->userService = $userService;
     }
 
@@ -52,15 +47,12 @@ class AccountHandler implements RequestHandlerInterface
      */
     public function delete(ServerRequestInterface $request): ResponseInterface
     {
-        $user = $request->getAttribute(User::class, null);
-
         try {
-            $user = $this->userService->deleteUser($user);
-        } catch (Exception $exception) {
+            $user = $this->userService->deleteUser($request->getAttribute(User::class));
+            return $this->createResponse($request, $user);
+        } catch (Throwable $exception) {
             return $this->errorResponse($exception->getMessage());
         }
-
-        return $this->responseFactory->createResponse($request, $this->resourceGenerator->fromObject($user, $request));
     }
 
     /**
@@ -69,10 +61,7 @@ class AccountHandler implements RequestHandlerInterface
      */
     public function get(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->responseFactory->createResponse(
-            $request,
-            $this->resourceGenerator->fromObject($request->getAttribute(User::class, null), $request)
-        );
+        return $this->createResponse($request, $request->getAttribute(User::class));
     }
 
     /**
@@ -88,15 +77,11 @@ class AccountHandler implements RequestHandlerInterface
         }
 
         try {
-            $user = $this->userService->updateUser(
-                $request->getAttribute(User::class, null),
-                $inputFilter->getValues()
-            );
-        } catch (Exception $exception) {
+            $user = $this->userService->updateUser($request->getAttribute(User::class), $inputFilter->getValues());
+            return $this->createResponse($request, $user);
+        } catch (Throwable $exception) {
             return $this->errorResponse($exception->getMessage());
         }
-
-        return $this->responseFactory->createResponse($request, $this->resourceGenerator->fromObject($user, $request));
     }
 
     /**
@@ -113,16 +98,10 @@ class AccountHandler implements RequestHandlerInterface
 
         try {
             $user = $this->userService->createUser($inputFilter->getValues());
-        } catch (Exception $exception) {
-            return $this->errorResponse($exception->getMessage());
-        }
-
-        try {
             $this->userService->sendActivationMail($user);
-        } catch (Exception $exception) {
+            return $this->createResponse($request, $user);
+        } catch (Throwable $exception) {
             return $this->errorResponse($exception->getMessage());
         }
-
-        return $this->responseFactory->createResponse($request, $this->resourceGenerator->fromObject($user, $request));
     }
 }

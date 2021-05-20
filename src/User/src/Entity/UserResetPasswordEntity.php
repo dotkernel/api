@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Api\User\Entity;
 
-use Api\App\Common\Entity\AbstractEntity;
+use Api\App\Entity\AbstractEntity;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
-use Laminas\Stdlib\ArraySerializableInterface;
+use Throwable;
 
 /**
  * Class UserResetPasswordEntity
@@ -19,7 +18,7 @@ use Laminas\Stdlib\ArraySerializableInterface;
  * @ORM\HasLifecycleCallbacks()
  * @package Api\User\Entity
  */
-class UserResetPasswordEntity extends AbstractEntity implements ArraySerializableInterface
+class UserResetPasswordEntity extends AbstractEntity
 {
     public const STATUS_COMPLETED = 'completed';
     public const STATUS_REQUESTED = 'requested';
@@ -160,7 +159,7 @@ class UserResetPasswordEntity extends AbstractEntity implements ArraySerializabl
     {
         try {
             return $this->getExpires() > (new DateTimeImmutable());
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
         }
 
         return false;

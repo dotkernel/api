@@ -1,3 +1,0 @@
-{% if error %}
-{{ {file: error.getFile(), line: error.getLine(), message: error.getMessage()}|json_encode()|raw }}
-{% endif %}

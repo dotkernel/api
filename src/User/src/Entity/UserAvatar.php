@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace Api\User\Entity;
 
-use Api\App\Common\Entity\AbstractEntity;
+use Api\App\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
-use Laminas\Stdlib\ArraySerializableInterface;
 
 /**
  * Class UserAvatar
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Api\User\Repository\UserAvatarRepository")
  * @ORM\Table(name="user_avatar")
  * @ORM\HasLifecycleCallbacks()
- * @ORM\EntityListeners({Api\User\EventListener\UserAvatarEventListener::class})
+ * @ORM\EntityListeners({Api\User\EventListener\UserAvatarEventListener})
  * @package Api\User\Entity
  */
-class UserAvatar extends AbstractEntity implements ArraySerializableInterface
+class UserAvatar extends AbstractEntity
 {
     /**
      * @ORM\OneToOne(targetEntity="User", inversedBy="avatar")
@@ -31,7 +30,7 @@ class UserAvatar extends AbstractEntity implements ArraySerializableInterface
      */
     protected $name;
 
-    /** @var string $url */
+    /** @var $url */
     protected $url;
 
     /**
@@ -54,7 +53,7 @@ class UserAvatar extends AbstractEntity implements ArraySerializableInterface
      * @param User $user
      * @return $this
      */
-    public function setUser(User $user)
+    public function setUser(User $user): UserAvatar
     {
         $this->user = $user;
 
@@ -73,7 +72,7 @@ class UserAvatar extends AbstractEntity implements ArraySerializableInterface
      * @param $name
      * @return $this
      */
-    public function setName($name)
+    public function setName($name): UserAvatar
     {
         $this->name = $name;
 
@@ -96,7 +95,7 @@ class UserAvatar extends AbstractEntity implements ArraySerializableInterface
      * @param string $url
      * @return $this
      */
-    public function setUrl(string $url)
+    public function setUrl(string $url): UserAvatar
     {
         $this->url = $url;
 
@@ -108,7 +107,7 @@ class UserAvatar extends AbstractEntity implements ArraySerializableInterface
      *
      * @return array
      */
-    public function getArrayCopy()
+    public function getArrayCopy(): array
     {
         return [
             'uuid' => $this->getUuid()->toString(),

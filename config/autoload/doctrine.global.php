@@ -20,8 +20,14 @@ return [
             'orm_default' => [
                 'class' => MappingDriverChain::class,
                 'drivers' => [
-                    'Api\\User\\Entity' => 'UserEntities'
+                    'Api\\User\\Entity' => 'UserEntities',
+                    'Api\\Admin\\Entity' => 'AdminEntities',
                 ]
+            ],
+            'AdminEntities' => [
+                'class' => AnnotationDriver::class,
+                'cache' => 'array',
+                'paths' => __DIR__ . '/../../src/Admin/src/Entity',
             ],
             'UserEntities' => [
                 'class' => AnnotationDriver::class,

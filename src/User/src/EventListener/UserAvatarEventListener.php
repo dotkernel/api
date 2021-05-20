@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Api\User\EventListener;
 
 use Api\User\Entity\UserAvatar;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\AnnotatedServices\Annotation\Service;
 
@@ -17,8 +16,7 @@ use Dot\AnnotatedServices\Annotation\Service;
  */
 class UserAvatarEventListener
 {
-    /** @var array $config */
-    protected $config;
+    protected ?array $config;
 
     /**
      * UserAvatarEventListener constructor.

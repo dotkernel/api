@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Api\App\Log\Handler;
 
+use Api\App\Handler\DefaultHandler;
+use Api\App\Message;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\AnnotatedServices\Annotation\Service;
-use Api\App\RestDispatchTrait;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use Symfony\Component\Filesystem\Filesystem;
+
+use function date;
+use function sprintf;
 
 /**
  * Class ErrorReportHandler
@@ -19,29 +23,26 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @Service
  */
-class ErrorReportHandler implements RequestHandlerInterface
+class ErrorReportHandler extends DefaultHandler
 {
-    use RestDispatchTrait;
-
-    /** @var array $errorReportConfig */
-    protected array $errorReportConfig;
+    protected array $config;
 
     /**
      * ErrorReportHandler constructor.
      * @param HalResponseFactory $halResponseFactory
      * @param ResourceGenerator $resourceGenerator
-     * @param array $errorReportConfig
+     * @param array $config
      *
      * @Inject({HalResponseFactory::class, ResourceGenerator::class, "config.error-report"})
      */
     public function __construct(
         HalResponseFactory $halResponseFactory,
         ResourceGenerator $resourceGenerator,
-        array $errorReportConfig
+        array $config
     ) {
-        $this->responseFactory = $halResponseFactory;
-        $this->resourceGenerator = $resourceGenerator;
-        $this->errorReportConfig = $errorReportConfig;
+        parent::__construct($halResponseFactory, $resourceGenerator);
+
+        $this->config = $config;
     }
 
     /**
@@ -52,14 +53,15 @@ class ErrorReportHandler implements RequestHandlerInterface
     {
         $data = $request->getParsedBody();
         if (empty($data['message'])) {
-            return $this->infoResponse('<b>message</b> is empty and nothing was saved!');
+            return $this->errorResponse(Message::ERROR_REPORT_KO);
         }
 
-        $handle = fopen($this->errorReportConfig['filePath'], "a");
-        $write = sprintf("%s => %s\r\n", date('Y-m-d H:i:s'), $data['message']);
-        fwrite($handle, $write);
-        fclose($handle);
+        $writer = new Filesystem();
+        $writer->appendToFile(
+            $this->config['filePath'],
+            sprintf('%s => %s' . PHP_EOL, date('Y-m-d H:i:s'), $data['message'])
+        );
 
-        return $this->infoResponse('Error report successfully saved!');
+        return $this->infoResponse(Message::ERROR_REPORT_OK);
     }
 }

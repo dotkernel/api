@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Api\User\Entity;
 
-use Api\App\Common\Entity\AbstractEntity;
+use Api\App\Entity\AbstractEntity;
+use Api\App\Entity\RoleInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Laminas\Stdlib\ArraySerializableInterface;
 
 /**
  * Class UserRole
@@ -15,7 +15,7 @@ use Laminas\Stdlib\ArraySerializableInterface;
  * @ORM\HasLifecycleCallbacks()
  * @package Api\User\Entity
  */
-class UserRole extends AbstractEntity implements ArraySerializableInterface
+class UserRole extends AbstractEntity implements RoleInterface
 {
     public const ROLE_GUEST = 'guest';
     public const ROLE_USER = 'user';
@@ -48,9 +48,9 @@ class UserRole extends AbstractEntity implements ArraySerializableInterface
 
     /**
      * @param string $name
-     * @return $this
+     * @return RoleInterface
      */
-    public function setName(string $name)
+    public function setName(string $name): RoleInterface
     {
         $this->name = $name;
 
@@ -62,7 +62,7 @@ class UserRole extends AbstractEntity implements ArraySerializableInterface
      *
      * @return array
      */
-    public function getArrayCopy()
+    public function getArrayCopy(): array
     {
         return [
             'uuid' => $this->getUuid()->toString(),

@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Api\User\Entity;
 
-use Api\App\Common\Entity\AbstractEntity;
+use Api\App\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
-use Laminas\Stdlib\ArraySerializableInterface;
 
 /**
  * Class UserDetail
@@ -15,7 +14,7 @@ use Laminas\Stdlib\ArraySerializableInterface;
  * @ORM\HasLifecycleCallbacks()
  * @package Api\User\Entity
  */
-class UserDetail extends AbstractEntity implements ArraySerializableInterface
+class UserDetail extends AbstractEntity
 {
     /**
      * @ORM\OneToOne(targetEntity="User", inversedBy="detail")

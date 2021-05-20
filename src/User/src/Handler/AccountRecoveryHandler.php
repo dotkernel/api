@@ -4,28 +4,25 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
-use Api\User\Form\InputFilter\RecoverIdentityInputFilter;
-use Dot\AnnotatedServices\Annotation\Inject;
-use Api\App\Common\Message;
-use Api\App\RestDispatchTrait;
+use Api\App\Handler\DefaultHandler;
+use Api\App\Message;
 use Api\User\Entity\User;
+use Api\User\Form\InputFilter\RecoverIdentityInputFilter;
 use Api\User\Service\UserService;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use Dot\AnnotatedServices\Annotation\Inject;
+use Dot\Mail\Exception\MailException;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class AccountRecoveryHandler
  * @package Api\User\Handler
  */
-class AccountRecoveryHandler implements RequestHandlerInterface
+class AccountRecoveryHandler extends DefaultHandler
 {
-    use RestDispatchTrait;
-
-    /** @var UserService $userService */
-    protected $userService;
+    protected UserService $userService;
 
     /**
      * AccountRecoveryHandler constructor.
@@ -40,15 +37,15 @@ class AccountRecoveryHandler implements RequestHandlerInterface
         ResourceGenerator $resourceGenerator,
         UserService $userService
     ) {
-        $this->responseFactory = $halResponseFactory;
-        $this->resourceGenerator = $resourceGenerator;
+        parent::__construct($halResponseFactory, $resourceGenerator);
+
         $this->userService = $userService;
     }
 
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Dot\Mail\Exception\MailException
+     * @throws MailException
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
@@ -58,8 +55,7 @@ class AccountRecoveryHandler implements RequestHandlerInterface
             return $this->errorResponse($inputFilter->getMessages());
         }
 
-        $user = $this->userService->getUserByEmail($inputFilter->getValue('email'));
-
+        $user = $this->userService->findByEmail($inputFilter->getValue('email'));
         if ($user instanceof User) {
             $this->userService->sendRecoverIdentityMail($user);
         }

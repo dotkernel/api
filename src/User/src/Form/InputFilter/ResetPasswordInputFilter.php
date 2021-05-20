@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Form\InputFilter;
 
-use Api\App\Common\Message;
+use Api\App\Message;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
 use Laminas\InputFilter\InputFilter;
@@ -25,7 +25,7 @@ class ResetPasswordInputFilter implements InputFilterAwareInterface
     /**
      * @return InputFilterInterface
      */
-    public function getInputFilter()
+    public function getInputFilter(): InputFilterInterface
     {
         if (empty($this->inputFilter)) {
             $this->inputFilter = new InputFilter();

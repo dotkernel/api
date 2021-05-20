@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Form\InputFilter;
 
-use Api\App\Common\Message;
+use Api\App\Message;
 use Api\User\Entity\User;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
@@ -31,7 +31,7 @@ class CreateUserInputFilter implements InputFilterAwareInterface
     /**
      * @return InputFilterInterface
      */
-    public function getInputFilter()
+    public function getInputFilter(): InputFilterInterface
     {
         if (empty($this->inputFilter)) {
             $rolesInputFilter = new InputFilter();
@@ -70,7 +70,7 @@ class CreateUserInputFilter implements InputFilterAwareInterface
                         'name' => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options' => [
-                            'message' => 'Identity is required and cannot be empty!'
+                            'message' => Message::VALIDATOR_REQUIRED_FIELD
                         ]
                     ]
                 ]
@@ -91,7 +91,7 @@ class CreateUserInputFilter implements InputFilterAwareInterface
                         'name' => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options' => [
-                            'message' => 'Password is required and cannot be empty!'
+                            'message' => Message::VALIDATOR_REQUIRED_FIELD
                         ]
                     ]
                 ]

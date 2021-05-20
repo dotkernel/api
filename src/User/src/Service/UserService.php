@@ -4,24 +4,26 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
-use Api\User\Repository\UserDetailRepository;
-use Dot\AnnotatedServices\Annotation\Inject;
-use Api\App\Common\Message;
-use Api\App\Common\UuidOrderedTimeGenerator;
+use Api\App\Entity\UuidOrderedTimeGenerator;
+use Api\App\Message;
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\UserAvatar;
 use Api\User\Entity\UserDetail;
 use Api\User\Entity\User;
 use Api\User\Entity\UserRole;
+use Api\User\Repository\UserAvatarRepository;
+use Api\User\Repository\UserDetailRepository;
 use Api\User\Repository\UserRepository;
 use Doctrine\ORM;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
-use Dot\Mail\Service\MailService;
+use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\Mail\Exception\MailException;
+use Dot\Mail\Service\MailService;
 use Exception;
 use Laminas\Diactoros\UploadedFile;
 use Mezzio\Template\TemplateRendererInterface;
+use Throwable;
 
 use function file_exists;
 use function is_null;
@@ -43,23 +45,19 @@ class UserService
         'image/png' => 'png'
     ];
 
-    /** @var array $config */
-    protected $config;
+    protected array $config;
 
-    /** @var MailService $mailService */
-    protected $mailService;
+    protected MailService $mailService;
 
-    /** @var TemplateRendererInterface $templateRenderer */
-    protected $templateRenderer;
+    protected TemplateRendererInterface $templateRenderer;
 
-    /** @var UserRepository $userRepository */
-    protected $userRepository;
+    protected UserRepository $userRepository;
 
-    /** @var UserDetailRepository $userDetailRepository */
-    protected $userDetailRepository;
+    protected UserAvatarRepository $userAvatarRepository;
 
-    /** @var UserRoleService $userRoleService */
-    protected $userRoleService;
+    protected UserDetailRepository $userDetailRepository;
+
+    protected UserRoleService $userRoleService;
 
     /**
      * UserService constructor.
@@ -80,6 +78,7 @@ class UserService
         array $config = []
     ) {
         $this->userRepository = $entityManager->getRepository(User::class);
+        $this->userAvatarRepository = $entityManager->getRepository(UserAvatar::class);
         $this->userDetailRepository = $entityManager->getRepository(UserDetail::class);
         $this->userRoleService = $userRoleService;
         $this->mailService = $mailService;
@@ -93,7 +92,7 @@ class UserService
      * @throws ORMException
      * @throws ORM\OptimisticLockException
      */
-    public function activateUser(User $user)
+    public function activateUser(User $user): User
     {
         $this->userRepository->saveUser($user->activate());
 
@@ -107,7 +106,7 @@ class UserService
      * @throws ORMException
      * @throws ORM\OptimisticLockException
      */
-    public function createUser(array $data = [])
+    public function createUser(array $data = []): User
     {
         if ($this->exists($data['identity'])) {
             throw new ORMException(Message::DUPLICATE_IDENTITY);
@@ -154,7 +153,7 @@ class UserService
      * @param string $path
      * @return bool
      */
-    public function deleteAvatarFile(string $path)
+    public function deleteAvatarFile(string $path): bool
     {
         if (empty($path)) {
             return false;
@@ -169,27 +168,38 @@ class UserService
 
     /**
      * @param User $user
-     * @return User|null
+     * @return User
      * @throws ORMException
      * @throws ORM\OptimisticLockException
      */
-    public function deleteUser(User $user)
+    public function deleteUser(User $user): User
     {
-        $user = $user->markAsDeleted();
+        $placeholder = $this->getAnonymousPlaceholder();
 
         // make user anonymous
-        $user->setIdentity('anonymous' . date('dmYHis'));
-        $userDetails = $user->getDetail();
-        $userDetails->setFirstName('anonymous' . date('dmYHis'));
-        $userDetails->setLastName('anonymous' . date('dmYHis'));
-        $userDetails->setEmail('anonymous' . date('dmYHis') . '@dotkernel.com');
+        $userDetail = $user->getDetail();
+        $userDetail
+            ->setFirstName($placeholder)
+            ->setLastName($placeholder)
+            ->setEmail($placeholder);
 
-        $user->setDetail($userDetails);
+        $user
+            ->markAsDeleted()
+            ->setDetail($userDetail)
+            ->setIdentity($placeholder);
 
-        $this->userRepository->saveUser($user->markAsDeleted());
+        $this->userRepository->saveUser($user);
         $this->userRepository->revokeAccessTokens($user->getIdentity());
 
         return $user;
+    }
+
+    /**
+     * @return string
+     */
+    private function getAnonymousPlaceholder(): string
+    {
+        return 'anonymous' . date('dmYHis');
     }
 
     /**
@@ -197,7 +207,7 @@ class UserService
      * @param string|null $uuid
      * @return bool
      */
-    public function exists(string $identity = '', ?string $uuid = '')
+    public function exists(string $identity = '', ?string $uuid = ''): bool
     {
         return !empty(
             $this->userRepository->exists($identity, $uuid)
@@ -209,7 +219,7 @@ class UserService
      * @param string|null $uuid
      * @return bool
      */
-    public function emailExists(string $email = '', ?string $uuid = '')
+    public function emailExists(string $email = '', ?string $uuid = ''): bool
     {
         return !empty(
             $this->userRepository->emailExists($email, $uuid)
@@ -230,6 +240,32 @@ class UserService
     }
 
     /**
+     * @param string $email
+     * @return User|null
+     */
+    public function findByEmail(string $email): ?User
+    {
+        $detail = $this->userDetailRepository->findOneBy([
+            'email' => $email
+        ]);
+        if ($detail instanceof UserDetail) {
+            return $detail->getUser();
+        }
+        return null;
+    }
+
+    /**
+     * @param string $identity
+     * @return User|null
+     */
+    public function findByIdentity(string $identity): ?User
+    {
+        return $this->userRepository->findOneBy([
+            'identity' => $identity
+        ]);
+    }
+
+    /**
      * @param array $params
      * @return User|null
      */
@@ -239,17 +275,23 @@ class UserService
             return null;
         }
 
-        /** @var User $user */
-        $user = $this->userRepository->findOneBy($params);
+        return $this->userRepository->findOneBy($params);
+    }
 
-        return $user;
+    /**
+     * @param User $user
+     * @return string
+     */
+    public function getUserAvatarDirectoryPath(User $user): string
+    {
+        return sprintf('%s/%s/', $this->config['uploads']['user']['path'], $user->getUuid()->toString());
     }
 
     /**
      * @param array $params
      * @return UserCollection
      */
-    public function getUsers(array $params = [])
+    public function getUsers(array $params = []): UserCollection
     {
         return $this->userRepository->getUsers($params);
     }
@@ -259,7 +301,7 @@ class UserService
      * @return bool
      * @throws MailException
      */
-    public function sendActivationMail(User $user)
+    public function sendActivationMail(User $user): bool
     {
         if ($user->isActive() || is_null($user->getDetail()->getEmail())) {
             return false;
@@ -282,7 +324,7 @@ class UserService
      * @return bool
      * @throws MailException
      */
-    public function sendResetPasswordRequestedMail(User $user)
+    public function sendResetPasswordRequestedMail(User $user): bool
     {
         $this->mailService->setBody(
             $this->templateRenderer->render('user::reset-password-requested', [
@@ -308,7 +350,7 @@ class UserService
      * @return bool
      * @throws MailException
      */
-    public function sendResetPasswordCompletedMail(User $user)
+    public function sendResetPasswordCompletedMail(User $user): bool
     {
         $this->mailService->setBody(
             $this->templateRenderer->render('user::reset-password-completed', [
@@ -329,7 +371,7 @@ class UserService
      * @return bool
      * @throws MailException
      */
-    public function sendWelcomeMail(User $user)
+    public function sendWelcomeMail(User $user): bool
     {
         $this->mailService->setBody(
             $this->templateRenderer->render('user::welcome', [
@@ -347,10 +389,11 @@ class UserService
      * @param User $user
      * @param array $data
      * @return User
-     * @throws Exception
      * @throws ORMException
+     * @throws ORM\OptimisticLockException
+     * @throws Throwable
      */
-    public function updateUser(User $user, array $data = [])
+    public function updateUser(User $user, array $data = []): User
     {
         if (isset($data['identity']) && !is_null($data['identity'])) {
             if ($this->exists($data['identity'], $user->getUuid()->toString())) {
@@ -421,10 +464,9 @@ class UserService
      * @param UploadedFile $uploadedFile
      * @return UserAvatar
      */
-    protected function createAvatar(User $user, UploadedFile $uploadedFile)
+    protected function createAvatar(User $user, UploadedFile $uploadedFile): UserAvatar
     {
-        $path = $this->config['uploads']['user']['path'] . DIRECTORY_SEPARATOR;
-        $path .= $user->getUuid()->toString() . DIRECTORY_SEPARATOR;
+        $path = $this->getUserAvatarDirectoryPath($user);
         if (!file_exists($path)) {
             mkdir($path, 0755);
         }
@@ -454,22 +496,19 @@ class UserService
     }
 
     /**
-     * @param string|null $email
-     * @return false|int|mixed|string|null
+     * @param User $user
+     * @return bool
+     * @throws ORMException
+     * @throws ORM\OptimisticLockException
      */
-    public function getUserByEmail(string $email = null)
+    public function removeAvatar(User $user): bool
     {
-        if (empty($email)) {
+        if (!($user->getAvatar() instanceof UserAvatar)) {
             return false;
         }
-
-        $userDetail = $this->userDetailRepository->findOneBy(['email' => $email]);
-
-        if (!($userDetail instanceof UserDetail)) {
-            return false;
-        }
-
-        return $userDetail->getUser();
+        $path = $this->getUserAvatarDirectoryPath($user);
+        $this->userAvatarRepository->deleteAvatar($user->getAvatar());
+        return $this->deleteAvatarFile($path . $user->getAvatar()->getName());
     }
 
     /**
@@ -477,7 +516,7 @@ class UserService
      * @return bool
      * @throws MailException
      */
-    public function sendRecoverIdentityMail(User $user)
+    public function sendRecoverIdentityMail(User $user): bool
     {
         $this->mailService->setBody(
             $this->templateRenderer->render('user::recover-identity-requested', [

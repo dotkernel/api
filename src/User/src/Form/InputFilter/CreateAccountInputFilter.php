@@ -19,7 +19,7 @@ class CreateAccountInputFilter implements InputFilterAwareInterface
     /**
      * @return InputFilterInterface
      */
-    public function getInputFilter()
+    public function getInputFilter(): InputFilterInterface
     {
         if (empty($this->inputFilter)) {
             $this->inputFilter = (new CreateUserInputFilter())->getInputFilter();
