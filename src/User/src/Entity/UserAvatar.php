@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Api\User\Entity;
 
 use Api\App\Entity\AbstractEntity;
+use Api\User\EventListener\UserAvatarEventListener;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Api\User\Repository\UserAvatarRepository")
  * @ORM\Table(name="user_avatar")
  * @ORM\HasLifecycleCallbacks()
- * @ORM\EntityListeners({Api\User\EventListener\UserAvatarEventListener})
+ * @ORM\EntityListeners({UserAvatarEventListener::class})
  * @package Api\User\Entity
  */
 class UserAvatar extends AbstractEntity

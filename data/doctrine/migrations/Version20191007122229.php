@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace DotKernelApi\Migrations;
 
-use Api\App\Common\UuidOrderedTimeGenerator;
+use Api\App\Entity\UuidOrderedTimeGenerator;
 use Api\User\Entity\User;
+use DateTime;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
@@ -49,7 +50,7 @@ final class Version20191007122229 extends AbstractMigration
          */
         $this->addSql('#');
 
-        $now = (new \DateTime())->format('Y-m-d H:i:s');
+        $now = (new DateTime())->format('Y-m-d H:i:s');
         $this->connection->insert(self::TABLE_OAUTH_CLIENTS, [
             'name' => 'frontend',
             'user_id' => null,
