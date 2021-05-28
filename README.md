@@ -34,6 +34,7 @@ Please hit `Enter` to accept the default option, which will also leave other pac
 ### Step 2: Prepare config files:
 * duplicate `config/autoload/local.php.dist` as `config/autoload/local.php`
 * duplicate `config/autoload/mail.local.php.dist` as `config/autoload/mail.local.php`
+* duplicate `config/autoload/cors.local.php.dist` as `config/autoload/cors.local.php` <- verify if provided settings suit your application's requirements
 
 ### Step 3: Setup database:
 * create a new MySQL database - set collation to `utf8mb4_general_ci`
