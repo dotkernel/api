@@ -35,7 +35,6 @@
         "php": "^7.4",
         "ext-json": "*",
         "brick/math": "^0.8",
-        "doctrine/migrations": "^2.2",
         "dotkernel/dot-annotated-services": "^3.1",
         "dotkernel/dot-cli": "^3.0",
         "dotkernel/dot-doctrine-metadata": "^3.0",
@@ -66,7 +65,7 @@
         "mezzio/mezzio-problem-details": "^1.1",
         "mezzio/mezzio-twigrenderer": "^2.6",
         "ramsey/uuid-doctrine": "^1.6",
-        "roave/psr-container-doctrine": "^2.2",
+        "roave/psr-container-doctrine": "^3.0",
         "roave/security-advisories": "dev-master"
     },
     "require-dev": {
@@ -79,7 +78,6 @@
         "psr-4": {
             "Api\\Admin\\": "src/Admin/src/",
             "Api\\App\\": "src/App/src/",
-            "Api\\Console\\": "src/Console/src/",
             "Api\\User\\": "src/User/src/"
         }
     },

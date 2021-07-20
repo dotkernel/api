@@ -2,22 +2,19 @@
 
 declare(strict_types=1);
 
-namespace DotKernelApi\Migrations;
+namespace Api\Migrations;
 
 use Api\App\Entity\UuidOrderedTimeGenerator;
 use Api\User\Entity\User;
 use DateTime;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
-use function password_hash;
-
 /**
- * Class Version20191007122229
- * @package DotKernelApi\Migrations
+ * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20191007122229 extends AbstractMigration
+final class Version20210719110618 extends AbstractMigration
 {
     const TABLE_OAUTH_CLIENTS = 'oauth_clients';
     const TABLE_OAUTH_SCOPES = 'oauth_scopes';
@@ -32,16 +29,16 @@ final class Version20191007122229 extends AbstractMigration
     /**
      * @return string
      */
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return 'Initial database content.';
     }
 
     /**
      * @param Schema $schema
-     * @throws DBALException
+     * @throws Exception
      */
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         /**
          * Add dummy query to avoid warning:
@@ -135,7 +132,7 @@ final class Version20191007122229 extends AbstractMigration
     /**
      * @param Schema $schema
      */
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         $this->addSql("TRUNCATE TABLE " . self::TABLE_ADMIN_ROLES);
         $this->addSql("TRUNCATE TABLE " . self::TABLE_ADMIN_ROLE);

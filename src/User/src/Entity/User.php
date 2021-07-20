@@ -75,7 +75,7 @@ class User extends AbstractEntity
      * @ORM\Column(name="status", type="string", length=20, nullable=false)
      * @var string $status
      */
-    protected $status = self::STATUS_PENDING;
+    protected string $status = self::STATUS_PENDING;
 
     /**
      * @ORM\Column(name="isDeleted", type="boolean")
