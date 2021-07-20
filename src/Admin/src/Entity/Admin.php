@@ -52,7 +52,7 @@ class Admin extends AbstractEntity
     protected string $password;
 
     /**
-     * @ORM\Column(name="status", type="string", length=20, columnDefinition="ENUM('pending', 'active')")
+     * @ORM\Column(name="status", type="string", length=20, nullable=false)
      * @var string $status
      */
     protected string $status = self::STATUS_ACTIVE;
@@ -108,10 +108,13 @@ class Admin extends AbstractEntity
 
     /**
      * @param string $identity
+     * @return $this
      */
-    public function setIdentity(string $identity): void
+    public function setIdentity(string $identity): self
     {
         $this->identity = $identity;
+
+        return $this;
     }
 
     /**
@@ -123,11 +126,14 @@ class Admin extends AbstractEntity
     }
 
     /**
-     * @param mixed $firstName
+     * @param $firstName
+     * @return $this
      */
-    public function setFirstName($firstName): void
+    public function setFirstName($firstName): self
     {
         $this->firstName = $firstName;
+
+        return $this;
     }
 
     /**
@@ -139,11 +145,14 @@ class Admin extends AbstractEntity
     }
 
     /**
-     * @param mixed $lastName
+     * @param $lastName
+     * @return $this
      */
-    public function setLastName($lastName): void
+    public function setLastName($lastName): self
     {
         $this->lastName = $lastName;
+
+        return $this;
     }
 
     /**
@@ -156,10 +165,13 @@ class Admin extends AbstractEntity
 
     /**
      * @param string $password
+     * @return $this
      */
-    public function setPassword(string $password): void
+    public function setPassword(string $password): self
     {
         $this->password = $password;
+
+        return $this;
     }
 
     /**
@@ -172,10 +184,13 @@ class Admin extends AbstractEntity
 
     /**
      * @param string $status
+     * @return $this
      */
-    public function setStatus(string $status): void
+    public function setStatus(string $status): self
     {
         $this->status = $status;
+
+        return $this;
     }
 
     /**
@@ -188,17 +203,20 @@ class Admin extends AbstractEntity
 
     /**
      * @param ArrayCollection $roles
+     * @return $this
      */
-    public function setRoles(ArrayCollection $roles): void
+    public function setRoles(ArrayCollection $roles): self
     {
         $this->roles = $roles;
+
+        return $this;
     }
 
     /**
      * @param AdminRole $role
-     * @return Admin
+     * @return $this
      */
-    public function addRole(AdminRole $role): Admin
+    public function addRole(AdminRole $role): self
     {
         if (!$this->roles->contains($role)) {
             $this->roles->add($role);
@@ -209,9 +227,9 @@ class Admin extends AbstractEntity
 
     /**
      * @param AdminRole $role
-     * @return Admin
+     * @return $this
      */
-    public function removeRole(AdminRole $role): Admin
+    public function removeRole(AdminRole $role): self
     {
         if (!$this->roles->contains($role)) {
             $this->roles->removeElement($role);
@@ -224,7 +242,7 @@ class Admin extends AbstractEntity
      * @return $this
      * @throws Exception
      */
-    public function resetRoles(): Admin
+    public function resetRoles(): self
     {
         foreach ($this->roles->getIterator()->getArrayCopy() as $role) {
             $this->removeRole($role);

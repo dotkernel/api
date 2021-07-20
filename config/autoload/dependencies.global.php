@@ -9,10 +9,12 @@ use Api\App\Repository\AccessTokenRepository;
 use Api\App\Repository\OauthUserRepository;
 use Api\App\Factory\UserIdentityFactory;
 use Api\App\UserIdentity;
+use Doctrine\Migrations\Tools\Console\Command\ExecuteCommand;
 use Dot\ErrorHandler\ErrorHandlerInterface;
 use Dot\ErrorHandler\LogErrorHandler;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
+use Roave\PsrContainerDoctrine\Migrations\CommandFactory;
 
 return [
     // Provides application-wide services.
@@ -36,6 +38,7 @@ return [
         ],
         // Use 'factories' for services provided by callbacks/factory classes.
         'factories'  => [
+            ExecuteCommand::class => CommandFactory::class,
             Mezzio\Middleware\ErrorResponseGenerator::class => ErrorResponseGeneratorFactory::class,
             AccessTokenRepository::class => AccessTokenRepositoryFactory::class,
             OauthUserRepository::class => OauthUserRepositoryFactory::class,
