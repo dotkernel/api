@@ -13,12 +13,20 @@ DotKernel's PSR-15 API built around the Mezzio API skeleton based on [Enrico Zim
 
 
 ## Getting Started
-### Step 1: Install project dependencies:
-```bash
-$ composer install
+
+### Step 1: Clone the project
+Using your terminal, navigate inside the directory you want to download the project files into. Make sure that the directory is empty before proceeding to the download process. Once there, run the following command:
+```shell
+git clone https://github.com/dotkernel/api.git .
+```
+
+
+### Step 2: Install project dependencies
+```shell
+composer install
 ```
 During the installation process you will be prompted:
-```bash
+```shell
 Please select which config file you wish to inject 'Laminas\*\ConfigProvider' into:
   [0] Do not inject
   [1] config/config.php
@@ -28,60 +36,80 @@ Please enter `0` because the application has an injected ConfigProvider which al
 
 Next, you will be prompted: `Remember this option for other packages of the same type? (Y/n)`
 
-Please hit `Enter` to accept the default option, which will also leave other packages' ConfigProviders uninjected.
+Please hit `Enter` to accept the default option, which will also leave other packages' ConfigProviders not injected.
 
 
-### Step 2: Prepare config files:
+### Step 3: Development mode
+If you're installing the project for development, make sure you have development mode enabled, by running:
+```shell
+composer development-enable
+```
+
+You can disable development mode by running:
+```shell
+composer development-disable
+```
+
+You can check if you have development mode enabled by running:
+```shell
+composer development-status
+```
+
+
+### Step 4: Prepare config files
+* duplicate `config/autoload/cors.local.php.dist` as `config/autoload/cors.local.php` <- if your API will be consumed by another application, make sure configure the `allowed_origins`
 * duplicate `config/autoload/local.php.dist` as `config/autoload/local.php`
-* duplicate `config/autoload/mail.local.php.dist` as `config/autoload/mail.local.php`
-* duplicate `config/autoload/cors.local.php.dist` as `config/autoload/cors.local.php` <- verify if provided settings suit your application's requirements
+* duplicate `config/autoload/mail.local.php.dist` as `config/autoload/mail.local.php` <- if your API will send emails, make sure you fill in SMTP connection params
 
-### Step 3: Setup database:
+
+### Step 5: Setup database
 * create a new MySQL database - set collation to `utf8mb4_general_ci`
-* fill out the database connection params in `config/autoload/local.php`
+* fill out the database connection params in `config/autoload/local.php` under `$databases['default']`
 * run the database migrations by using the following command:
-```bash
-$ vendor/bin/doctrine-migrations migrate
+```shell
+php vendor/bin/doctrine-migrations migrate
 ```
-
-**NOTE:**  on Windows, using XAMPP, use the below command:
-```bash
-php vendor/doctrine/migrations/bin/doctrine-migrations migrate
+This command will prompt you to confirm that you want to run it:
+```shell
+WARNING! You are about to execute a migration in database "..." that could result in schema changes and data loss. Are you sure you wish to continue? (yes/no) [yes]:
 ```
-
-
-### Step 4: Optional steps:
-* Enable development mode using this command:
-```bash
-$ composer development-enable
-```
-* Configure SMTP by adding setting your account params in `config/autoload/mail.local.php` under `dot_mail -> default -> smtp_options`
+Hit `Enter` to confirm the operation.
 
 
-## Using the CLI interface:
-You can access the Mezzio's CLI by using the following command:
-```bash
-$ composer mezzio
+### Step 6: Test the installation
+```shell
+php -S 0.0.0.0:8080 -t public
 ```
-You can access Doctrine's CLI by using the following command:
-```bash
-$ php vendor/doctrine/orm/bin/doctrine
-```
-You can access Doctrine's migration tools by using the following command:
-```bash
-$ vendor/bin/doctrine-migrations
-```
-
-
-## Testing the installation:
-```bash
-$ php -S 0.0.0.0:8080 -t public
-```
-Visit your application's [home page](http://localhost:8080/). You should get the following message:
+Sending a GET request to the [home page](http://localhost:8080/) should output the following message:
 ```json
 {
   "message": "Welcome to DotKernel API!"
 }
 ```
 
-**IMPORTANT: Don't forget to invalidate the default credentials on your application's production servers!**
+
+## Using the CLI:
+You can access the Mezzio's CLI by using the following command:
+```shell
+php vendor/bin/mezzio
+```
+You can access the Laminas' CLI by using the following command:
+```shell
+php vendor/bin/laminas
+```
+You can access Doctrine's CLI by using the following command:
+```shell
+php vendor/bin/doctrine
+```
+You can access DBAL CLI by using the following command:
+```shell
+php vendor/bin/doctrine-dbal
+```
+You can access Doctrine's migration tools by using the following command:
+```shell
+php vendor/bin/doctrine-migrations
+```
+You can access app-specific commands by using the following command:
+```shell
+php bin/cli.php
+```

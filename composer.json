@@ -6,7 +6,7 @@
     "homepage": "https://github.com/dotkernel/api",
     "keywords": [
         "api",
-        "REST", 
+        "REST",
         "REST API",
         "mezzio",
         "laminas"
@@ -41,38 +41,38 @@
         "dotkernel/dot-errorhandler": "^3.1",
         "dotkernel/dot-mail": "^3.1",
         "dotkernel/dot-response-header": "^3.0",
-        "laminas/laminas-component-installer": "^2.1",
-        "laminas/laminas-config": "^3.3",
-        "laminas/laminas-config-aggregator": "^1.2",
-        "laminas/laminas-db": "^2.11",
+        "laminas/laminas-component-installer": "^2.5",
+        "laminas/laminas-config": "^3.5",
+        "laminas/laminas-config-aggregator": "^1.5",
+        "laminas/laminas-db": "^2.12",
         "laminas/laminas-dependency-plugin": "^2.1",
-        "laminas/laminas-diactoros": "^2.3",
-        "laminas/laminas-http": "^2.11",
-        "laminas/laminas-hydrator": "^3.0",
-        "laminas/laminas-inputfilter": "^2.10",
-        "laminas/laminas-paginator": "^2.8",
-        "laminas/laminas-servicemanager": "^3.4",
-        "laminas/laminas-stdlib": "^3.2",
-        "laminas/laminas-text": "^2.7",
-        "mezzio/mezzio": "^3.2",
-        "mezzio/mezzio-authentication": "^1.1",
-        "mezzio/mezzio-authentication-oauth2": "^2.0",
-        "mezzio/mezzio-authorization-acl": "^1.0",
-        "mezzio/mezzio-authorization-rbac": "^1.0",
+        "laminas/laminas-diactoros": "^2.6",
+        "laminas/laminas-http": "^2.14",
+        "laminas/laminas-hydrator": "^4.2",
+        "laminas/laminas-inputfilter": "^2.12",
+        "laminas/laminas-paginator": "^2.10",
+        "laminas/laminas-servicemanager": "^3.7",
+        "laminas/laminas-stdlib": "^3.4",
+        "laminas/laminas-text": "^2.8",
+        "mezzio/mezzio": "^3.5",
+        "mezzio/mezzio-authentication": "^1.2",
+        "mezzio/mezzio-authentication-oauth2": "^2.1",
+        "mezzio/mezzio-authorization-acl": "^1.1",
+        "mezzio/mezzio-authorization-rbac": "^1.1",
         "mezzio/mezzio-cors": "^1.0",
-        "mezzio/mezzio-fastroute": "^3.0",
-        "mezzio/mezzio-helpers": "^5.3",
-        "mezzio/mezzio-problem-details": "^1.1",
-        "mezzio/mezzio-twigrenderer": "^2.6",
+        "mezzio/mezzio-fastroute": "^3.2",
+        "mezzio/mezzio-helpers": "^5.6",
+        "mezzio/mezzio-problem-details": "^1.4",
+        "mezzio/mezzio-twigrenderer": "^2.7",
         "ramsey/uuid-doctrine": "^1.6",
         "roave/psr-container-doctrine": "^3.0",
         "roave/security-advisories": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.1",
-        "laminas/laminas-coding-standard": "^2.0",
-        "mezzio/mezzio-tooling": "^1.3",
-        "laminas/laminas-development-mode": "^3.2"
+        "laminas/laminas-coding-standard": "^2.3",
+        "laminas/laminas-development-mode": "^3.3",
+        "mezzio/mezzio-tooling": "^1.4",
+        "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "psr-4": {
@@ -81,13 +81,8 @@
             "Api\\User\\": "src/User/src/"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "AppTest\\": "test/AppTest/"
-        }
-    },
     "scripts": {
-        "post-create-project-cmd": [
+        "post-install-cmd": [
             "@development-enable"
         ],
         "development-disable": "laminas-development-mode disable",
