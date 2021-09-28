@@ -37,6 +37,7 @@ $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
     Dot\AnnotatedServices\ConfigProvider::class,
     Dot\DoctrineMetadata\ConfigProvider::class,
     Dot\ResponseHeader\ConfigProvider::class,
+    Dot\Mail\ConfigProvider::class,
     // Default App module config
     Api\Admin\ConfigProvider::class,
     Api\App\ConfigProvider::class,
