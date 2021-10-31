@@ -21,12 +21,16 @@
         "sort-packages": true
     },
     "extra": {
-        "zf": {
+        "laminas": {
+            "component-whitelist": [
+                "laminas/laminas-httphandlerrunner"
+            ]
+        },
+        "mezzio": {
             "component-whitelist": [
                 "mezzio/mezzio",
                 "mezzio/mezzio-helpers",
                 "mezzio/mezzio-router",
-                "laminas/laminas-httphandlerrunner",
                 "mezzio/mezzio-fastroute"
             ]
         }
@@ -39,38 +43,38 @@
         "dotkernel/dot-cli": "^3.0",
         "dotkernel/dot-doctrine-metadata": "^3.0",
         "dotkernel/dot-errorhandler": "^3.1",
-        "dotkernel/dot-mail": "^3.1",
+        "dotkernel/dot-mail": "^3.2",
         "dotkernel/dot-response-header": "^3.0",
         "laminas/laminas-component-installer": "^2.5",
-        "laminas/laminas-config": "^3.5",
-        "laminas/laminas-config-aggregator": "^1.5",
-        "laminas/laminas-db": "^2.12",
-        "laminas/laminas-dependency-plugin": "^2.1",
-        "laminas/laminas-diactoros": "^2.6",
-        "laminas/laminas-http": "^2.14",
-        "laminas/laminas-hydrator": "^4.2",
+        "laminas/laminas-config": "^3.7",
+        "laminas/laminas-config-aggregator": "^1.7",
+        "laminas/laminas-db": "^2.13",
+        "laminas/laminas-dependency-plugin": "^2.2",
+        "laminas/laminas-diactoros": "^2.8",
+        "laminas/laminas-http": "^2.15",
+        "laminas/laminas-hydrator": "^4.3",
         "laminas/laminas-inputfilter": "^2.12",
-        "laminas/laminas-paginator": "^2.10",
-        "laminas/laminas-servicemanager": "^3.7",
-        "laminas/laminas-stdlib": "^3.4",
-        "laminas/laminas-text": "^2.8",
-        "mezzio/mezzio": "^3.5",
+        "laminas/laminas-paginator": "^2.11",
+        "laminas/laminas-servicemanager": "^3.10",
+        "laminas/laminas-stdlib": "^3.6",
+        "laminas/laminas-text": "^2.9",
+        "mezzio/mezzio": "^3.6",
         "mezzio/mezzio-authentication": "^1.2",
         "mezzio/mezzio-authentication-oauth2": "^2.1",
-        "mezzio/mezzio-authorization-acl": "^1.1",
+        "mezzio/mezzio-authorization-acl": "^1.2",
         "mezzio/mezzio-authorization-rbac": "^1.1",
-        "mezzio/mezzio-cors": "^1.0",
-        "mezzio/mezzio-fastroute": "^3.2",
-        "mezzio/mezzio-helpers": "^5.6",
+        "mezzio/mezzio-cors": "^1.1",
+        "mezzio/mezzio-fastroute": "^3.3",
+        "mezzio/mezzio-helpers": "^5.7",
         "mezzio/mezzio-problem-details": "^1.4",
-        "mezzio/mezzio-twigrenderer": "^2.7",
-        "ramsey/uuid-doctrine": "^1.6",
-        "roave/psr-container-doctrine": "^3.0",
+        "mezzio/mezzio-twigrenderer": "^2.8",
+        "ramsey/uuid-doctrine": "^1.7",
+        "roave/psr-container-doctrine": "^3.1",
         "roave/security-advisories": "dev-master"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "^2.3",
-        "laminas/laminas-development-mode": "^3.3",
+        "laminas/laminas-development-mode": "^3.5",
         "mezzio/mezzio-tooling": "^1.4",
         "phpunit/phpunit": "^9.5"
     },

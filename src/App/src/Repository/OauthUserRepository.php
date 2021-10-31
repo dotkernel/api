@@ -22,7 +22,7 @@ use function password_verify;
 class OauthUserRepository extends AbstractRepository implements UserRepositoryInterface
 {
     /**
-     * @param string $identity
+     * @param string $username
      * @param string $password
      * @param string $grantType
      * @param ClientEntityInterface $clientEntity
@@ -30,7 +30,7 @@ class OauthUserRepository extends AbstractRepository implements UserRepositoryIn
      * @throws OAuthServerException
      */
     public function getUserEntityByUserCredentials(
-        $identity,
+        $username,
         $password,
         $grantType,
         ClientEntityInterface $clientEntity
@@ -47,7 +47,7 @@ class OauthUserRepository extends AbstractRepository implements UserRepositoryIn
             default:
                 throw new OAuthServerException(Message::INVALID_CLIENT_ID, 6, 'invalid_client', 401);
         }
-        $sth->bindParam(':identity', $identity);
+        $sth->bindParam(':identity', $username);
 
         if (! $sth->execute()) {
             throw new OAuthServerException($sth->errorInfo()[2], $sth->errorInfo()[1], 'general_error', 500);
@@ -66,6 +66,6 @@ class OauthUserRepository extends AbstractRepository implements UserRepositoryIn
             throw new OAuthServerException(Message::USER_NOT_ACTIVATED, 6, 'inactive_user', 401);
         }
 
-        return new UserEntity($identity);
+        return new UserEntity($username);
     }
 }

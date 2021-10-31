@@ -33,12 +33,12 @@ abstract class AbstractEntity implements UuidAwareInterface, TimestampAwareInter
     /**
      * Exchange internal values from provided array
      *
-     * @param array $data
+     * @param array $array
      * @return void
      */
-    public function exchangeArray(array $data)
+    public function exchangeArray(array $array)
     {
-        foreach ($data as $property => $values) {
+        foreach ($array as $property => $values) {
             if (is_array($values)) {
                 $method = 'add' . ucfirst($property);
                 if (!method_exists($this, $method)) {

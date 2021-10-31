@@ -120,12 +120,12 @@ class AdminService
             $admin->setStatus($data['status']);
         }
 
-        if (isset($data['firstname']) && !is_null($data['firstname'])) {
-            $admin->setFirstname($data['firstname']);
+        if (isset($data['firstName']) && !is_null($data['firstName'])) {
+            $admin->setFirstname($data['firstName']);
         }
 
-        if (isset($data['lastname']) && !is_null($data['lastname'])) {
-            $admin->setLastname($data['lastname']);
+        if (isset($data['lastName']) && !is_null($data['lastName'])) {
+            $admin->setLastname($data['lastName']);
         }
 
         if (!empty($data['roles'])) {

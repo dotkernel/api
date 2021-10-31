@@ -6,7 +6,6 @@ namespace Api\App\Entity;
 
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Throwable;
 
 /**
  * Trait TimestampAwareTrait
@@ -78,19 +77,15 @@ trait TimestampAwareTrait
 
     /**
      * Update internal timestamps
-     * @return self
+     * @return $this
      */
     public function touch(): self
     {
-        try {
-            if (!($this->created instanceof DateTimeImmutable)) {
-                $this->created = new DateTimeImmutable();
-            }
-
-            $this->updated = new DateTimeImmutable();
-        } catch (Throwable $exception) {
-            #TODO save the error message
+        if (!($this->created instanceof DateTimeImmutable)) {
+            $this->created = new DateTimeImmutable();
         }
+
+        $this->updated = new DateTimeImmutable();
 
         return $this;
     }

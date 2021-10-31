@@ -61,7 +61,7 @@ class UserDetail extends AbstractEntity
      * @param User $user
      * @return $this
      */
-    public function setUser(User $user)
+    public function setUser(User $user): self
     {
         $this->user = $user;
 
@@ -80,7 +80,7 @@ class UserDetail extends AbstractEntity
      * @param $firstname
      * @return $this
      */
-    public function setFirstname($firstname)
+    public function setFirstname($firstname): self
     {
         $this->firstname = $firstname;
 
@@ -99,7 +99,7 @@ class UserDetail extends AbstractEntity
      * @param $lastname
      * @return $this
      */
-    public function setLastname($lastname)
+    public function setLastname($lastname): self
     {
         $this->lastname = $lastname;
 
@@ -118,7 +118,7 @@ class UserDetail extends AbstractEntity
      * @param $email
      * @return $this
      */
-    public function setEmail($email)
+    public function setEmail($email): self
     {
         $this->email = $email;
 
@@ -130,7 +130,7 @@ class UserDetail extends AbstractEntity
      *
      * @return array
      */
-    public function getArrayCopy()
+    public function getArrayCopy(): array
     {
         return [
             'firstname' => $this->getFirstname(),

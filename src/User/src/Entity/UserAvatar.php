@@ -31,8 +31,7 @@ class UserAvatar extends AbstractEntity
      */
     protected $name;
 
-    /** @var $url */
-    protected $url;
+    protected ?string $url;
 
     /**
      * UserAvatar constructor.
@@ -85,9 +84,9 @@ class UserAvatar extends AbstractEntity
      */
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getUrl()
+    public function getUrl(): ?string
     {
         return $this->url;
     }

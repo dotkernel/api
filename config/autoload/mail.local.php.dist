@@ -5,11 +5,11 @@ return [
     /**
      * Dk mail module configuration
      * Note that many of these options can be set programmaticaly too, when sending mail messages
-     * actually that is what you'll usually do, these config provide just default and options that remain the same for all mails
+     * actually that is what you'll usually do, these configs provide just default and options that remain the same for all mails
      */
 
     'dot_mail' => [
-        //the key is the mail service name, this is the default one, which does not extends any configuration
+        //the key is the mail service name, this is the default one, which does not extend any configuration
         'default' => [
             //tells which other mail service configuration to extend
             'extends' => null,

@@ -16,8 +16,7 @@ use Throwable;
  */
 final class UuidOrderedTimeGenerator
 {
-    /** @var UuidFactory $factory */
-    private static $factory;
+    private static ?UuidFactory $factory = null;
 
     /**
      * @return UuidInterface|null
@@ -26,7 +25,9 @@ final class UuidOrderedTimeGenerator
     {
         try {
             return self::getFactory()->uuid1();
-        } catch (Throwable $exception) {}
+        } catch (Throwable $exception) {
+            error_log($exception->getMessage());
+        }
 
         return null;
     }

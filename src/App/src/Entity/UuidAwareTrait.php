@@ -6,7 +6,6 @@ namespace Api\App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\UuidInterface;
-use Throwable;
 
 /**
  * Trait UuidAwareTrait
@@ -28,11 +27,7 @@ trait UuidAwareTrait
     public function getUuid(): ?UuidInterface
     {
         if (!$this->uuid) {
-            try {
-                $this->uuid = UuidOrderedTimeGenerator::generateUuid();
-            } catch (Throwable $exception) {
-                #TODO save the error message
-            }
+            $this->uuid = UuidOrderedTimeGenerator::generateUuid();
         }
 
         return $this->uuid;
