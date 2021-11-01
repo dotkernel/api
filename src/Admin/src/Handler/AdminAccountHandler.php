@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Api\Admin\Handler;
 
 use Api\Admin\Entity\Admin;
-use Api\Admin\Form\InputFilter\CreateAdminInputFilter;
 use Api\Admin\Form\InputFilter\UpdateAdminInputFilter;
 use Api\Admin\Service\AdminService;
 use Api\App\Handler\DefaultHandler;
@@ -68,26 +67,6 @@ class AdminAccountHandler extends DefaultHandler
                 $request->getAttribute(Admin::class),
                 $inputFilter->getValues()
             );
-            return $this->createResponse($request, $admin);
-        } catch (Throwable $exception) {
-            return $this->errorResponse($exception->getMessage());
-        }
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
-    public function post(ServerRequestInterface $request): ResponseInterface
-    {
-        $inputFilter = (new CreateAdminInputFilter())->getInputFilter();
-        $inputFilter->setData($request->getParsedBody());
-        if (!$inputFilter->isValid()) {
-            return $this->errorResponse($inputFilter->getMessages());
-        }
-
-        try {
-            $admin = $this->adminService->createAdmin($inputFilter->getValues());
             return $this->createResponse($request, $admin);
         } catch (Throwable $exception) {
             return $this->errorResponse($exception->getMessage());

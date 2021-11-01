@@ -12,4 +12,8 @@ require 'vendor/autoload.php';
 $container = require 'config/container.php';
 
 $applicationFactory = new ApplicationFactory();
-exit($applicationFactory($container)->run());
+try {
+    exit($applicationFactory($container)->run());
+} catch (Exception $e) {
+    exit($e->getMessage());
+}

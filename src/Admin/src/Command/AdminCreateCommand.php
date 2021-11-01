@@ -84,7 +84,7 @@ class AdminCreateCommand extends Command
         if (!$inputFilter->isValid()) {
             $messages = [];
             foreach ($inputFilter->getMessages() as $field => $errors) {
-                foreach ($errors as $error) {
+                foreach ((array)$errors as $error) {
                     $messages[] = sprintf('%s: %s', $field, $error);
                 }
             }

@@ -58,8 +58,8 @@ class ConfigProvider
         return [
             'delegators' => [
                 Application::class => [
+                    RoutesDelegator::class,
                     \Api\Admin\RoutesDelegator::class,
-                    \Api\App\RoutesDelegator::class,
                     \Api\User\RoutesDelegator::class,
                 ]
             ],

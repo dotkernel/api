@@ -61,6 +61,10 @@ composer development-status
 * duplicate `config/autoload/local.php.dist` as `config/autoload/local.php`
 * duplicate `config/autoload/mail.local.php.dist` as `config/autoload/mail.local.php` <- if your API will send emails, make sure you fill in SMTP connection params
 
+Optional:
+* duplicate `phpcs.xml.dist` as `phpcs.xml`
+* duplicate `phpunit.xml.dist` as `phpunit.xml`
+
 
 ### Step 5: Setup database
 * create a new MySQL database - set collation to `utf8mb4_general_ci`

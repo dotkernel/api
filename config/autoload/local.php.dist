@@ -8,6 +8,8 @@
 
 declare(strict_types=1);
 
+use Doctrine\Common\Cache\PhpFileCache;
+
 $baseUrl = 'http://localhost:8080';
 
 $databases = [
@@ -66,14 +68,14 @@ return [
             ]
         ],
         'configuration' => [
-             'orm_default' => [
-                 // it is recommended to disable doctrine cache on development
-                 // just comment any type of cache you dont want to be applied on development
-                 'query_cache' => \Doctrine\Common\Cache\PhpFileCache::class,
-                 'metadata_cache' => \Doctrine\Common\Cache\PhpFileCache::class,
-                 'result_cache' => \Doctrine\Common\Cache\PhpFileCache::class
-                 ]
-             ],
+            'orm_default' => [
+                // it is recommended to disable doctrine cache on development
+                // just comment any type of cache you don't want to be applied on development
+                'query_cache' => PhpFileCache::class,
+                'metadata_cache' => PhpFileCache::class,
+                'result_cache' => PhpFileCache::class
+            ]
+        ],
     ],
     'uploads' => [
         'user' => [

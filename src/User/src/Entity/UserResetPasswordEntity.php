@@ -76,7 +76,7 @@ class UserResetPasswordEntity extends AbstractEntity
      * @param User $user
      * @return $this
      */
-    public function setUser(User $user)
+    public function setUser(User $user): self
     {
         $this->user = $user;
 
@@ -95,7 +95,7 @@ class UserResetPasswordEntity extends AbstractEntity
      * @param DateTimeImmutable $expires
      * @return $this
      */
-    public function setExpires(DateTimeImmutable $expires)
+    public function setExpires(DateTimeImmutable $expires): self
     {
         $this->expires = $expires;
 
@@ -114,7 +114,7 @@ class UserResetPasswordEntity extends AbstractEntity
      * @param $hash
      * @return $this
      */
-    public function setHash($hash)
+    public function setHash($hash): self
     {
         $this->hash = $hash;
 
@@ -133,7 +133,7 @@ class UserResetPasswordEntity extends AbstractEntity
      * @param string $status
      * @return $this
      */
-    public function setStatus(string $status)
+    public function setStatus(string $status): self
     {
         $this->status = $status;
 
@@ -147,7 +147,7 @@ class UserResetPasswordEntity extends AbstractEntity
     /**
      * @return bool
      */
-    public function isCompleted()
+    public function isCompleted(): bool
     {
         return $this->getStatus() === self::STATUS_COMPLETED;
     }
@@ -168,7 +168,7 @@ class UserResetPasswordEntity extends AbstractEntity
     /**
      * @return $this
      */
-    public function markAsCompleted()
+    public function markAsCompleted(): self
     {
         $this->status = self::STATUS_COMPLETED;
 
@@ -180,7 +180,7 @@ class UserResetPasswordEntity extends AbstractEntity
      *
      * @return array
      */
-    public function getArrayCopy()
+    public function getArrayCopy(): array
     {
         return [
             'uuid' => $this->getUuid()->toString(),

@@ -61,15 +61,15 @@ class User extends AbstractEntity
 
     /**
      * @ORM\Column(name="identity", type="string", length=191, nullable=false, unique=true)
-     * @var string $identity
+     * @var string|null $identity
      */
-    protected $identity;
+    protected ?string $identity;
 
     /**
      * @ORM\Column(name="password", type="string", length=191, nullable=false)
-     * @var string $password
+     * @var string|null $password
      */
-    protected $password;
+    protected ?string $password;
 
     /**
      * @ORM\Column(name="status", type="string", length=20, nullable=false)
@@ -85,9 +85,9 @@ class User extends AbstractEntity
 
     /**
      * @ORM\Column(name="hash", type="string", length=64, nullable=false, unique=true)
-     * @var string $hash
+     * @var string|null $hash
      */
-    protected $hash;
+    protected ?string $hash;
 
     /**
      * User constructor.
@@ -103,9 +103,9 @@ class User extends AbstractEntity
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getIdentity()
+    public function getIdentity(): ?string
     {
         return $this->identity;
     }
@@ -121,9 +121,9 @@ class User extends AbstractEntity
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPassword()
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -142,7 +142,7 @@ class User extends AbstractEntity
     /**
      * @return string
      */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
@@ -178,9 +178,9 @@ class User extends AbstractEntity
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getHash(): string
+    public function getHash(): ?string
     {
         return $this->hash;
     }

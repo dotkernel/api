@@ -73,6 +73,6 @@ class RouteListCommand extends Command
         }, $routes));
         $table->render();
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

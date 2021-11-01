@@ -1,5 +1,6 @@
 <?php
 
+use Doctrine\Common\Cache\PhpFileCache;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType;
@@ -41,8 +42,8 @@ return [
             UuidBinaryOrderedTimeType::NAME => UuidBinaryOrderedTimeType::class,
         ],
         'cache' => [
-            \Doctrine\Common\Cache\PhpFileCache::class => [
-                'class' => \Doctrine\Common\Cache\PhpFileCache::class,
+            PhpFileCache::class => [
+                'class' => PhpFileCache::class,
                 'directory' => getcwd() . '/data/cache/doctrine'
             ]
         ]
