@@ -7,7 +7,7 @@ declare(strict_types=1);
 use Laminas\ZendFrameworkBridge\ConfigPostProcessor;
 
 $cacheConfig = [
-    'config_cache_path' => 'data/cache/config-cache.php'
+    'config_cache_path' => 'data/cache/config-cache.php',
 ];
 
 $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
