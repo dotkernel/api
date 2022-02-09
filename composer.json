@@ -18,7 +18,13 @@
         }
     ],
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "laminas/laminas-dependency-plugin": true,
+            "laminas/laminas-component-installer": true,
+            "composer/package-versions-deprecated": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
     "extra": {
         "laminas": {
@@ -49,16 +55,12 @@
         "laminas/laminas-config": "^3.7",
         "laminas/laminas-config-aggregator": "^1.7",
         "laminas/laminas-db": "^2.13",
-        "laminas/laminas-dependency-plugin": "^2.2",
-        "laminas/laminas-diactoros": "^2.8",
         "laminas/laminas-http": "^2.15",
         "laminas/laminas-hydrator": "^4.3",
         "laminas/laminas-inputfilter": "^2.12",
         "laminas/laminas-paginator": "^2.11",
-        "laminas/laminas-servicemanager": "^3.10",
         "laminas/laminas-stdlib": "^3.6",
         "laminas/laminas-text": "^2.9",
-        "mezzio/mezzio": "^3.6",
         "mezzio/mezzio-authentication": "^1.2",
         "mezzio/mezzio-authentication-oauth2": "^2.1",
         "mezzio/mezzio-authorization-acl": "^1.2",
