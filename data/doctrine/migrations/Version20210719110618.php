@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Api\Migrations;
 
+use Api\Admin\Entity\AdminRole;
 use Api\App\Entity\UuidOrderedTimeGenerator;
 use Api\User\Entity\User;
+use Api\User\Entity\UserRole;
 use DateTime;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\Schema;
@@ -105,8 +107,8 @@ final class Version20210719110618 extends AbstractMigration
         ]);
 
         $roles = [
-            ['uuid' => UuidOrderedTimeGenerator::generateUuid()->getBytes(), 'name' => 'admin', 'created' => $now],
-            ['uuid' => UuidOrderedTimeGenerator::generateUuid()->getBytes(), 'name' => 'member', 'created' => $now],
+            ['uuid' => UuidOrderedTimeGenerator::generateUuid()->getBytes(), 'name' => UserRole::ROLE_GUEST, 'created' => $now],
+            ['uuid' => UuidOrderedTimeGenerator::generateUuid()->getBytes(), 'name' => UserRole::ROLE_USER, 'created' => $now],
         ];
         foreach ($roles as $role) {
             $this->connection->insert(self::TABLE_USER_ROLE, $role);
@@ -117,8 +119,8 @@ final class Version20210719110618 extends AbstractMigration
         }
 
         $adminRoles = [
-            ['uuid' => UuidOrderedTimeGenerator::generateUuid()->getBytes(), 'name' => 'admin', 'created' => $now],
-            ['uuid' => UuidOrderedTimeGenerator::generateUuid()->getBytes(), 'name' => 'superuser', 'created' => $now],
+            ['uuid' => UuidOrderedTimeGenerator::generateUuid()->getBytes(), 'name' => AdminRole::ROLE_ADMIN, 'created' => $now],
+            ['uuid' => UuidOrderedTimeGenerator::generateUuid()->getBytes(), 'name' => AdminRole::ROLE_SUPERUSER, 'created' => $now],
         ];
         foreach ($adminRoles as $adminRole) {
             $this->connection->insert(self::TABLE_ADMIN_ROLE, $adminRole);

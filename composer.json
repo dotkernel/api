@@ -20,6 +20,7 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
+            "dotkernel/*": true,
             "laminas/laminas-dependency-plugin": true,
             "laminas/laminas-component-installer": true,
             "composer/package-versions-deprecated": true,
@@ -75,7 +76,7 @@
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "^2.3",
-        "laminas/laminas-development-mode": "^3.5",
+        "laminas/laminas-development-mode": "^3.6",
         "mezzio/mezzio-tooling": "^1.4",
         "phpunit/phpunit": "^9.5"
     },
