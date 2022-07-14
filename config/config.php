@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 // To enable or disable caching, set the `ConfigAggregator::ENABLE_CACHE` boolean in
 // `config/autoload/local.php`.
-use Laminas\ZendFrameworkBridge\ConfigPostProcessor;
 
 $cacheConfig = [
     'config_cache_path' => 'data/cache/config-cache.php',
@@ -54,6 +53,6 @@ $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
     new Laminas\ConfigAggregator\PhpFileProvider(realpath(__DIR__) . '/autoload/{{,*.}global,{,*.}local}.php'),
     // Load development config if it exists
     new Laminas\ConfigAggregator\PhpFileProvider(realpath(__DIR__) . '/development.config.php'),
-], $cacheConfig['config_cache_path'], [ConfigPostProcessor::class]);
+], $cacheConfig['config_cache_path']);
 
 return $aggregator->getMergedConfig();
