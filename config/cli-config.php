@@ -1,9 +1,14 @@
 <?php
 
-use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
+use Doctrine\Migrations\Configuration\Migration\PhpFile;
+use Doctrine\Migrations\DependencyFactory;
+use Doctrine\ORM\EntityManager;
 
-$container = require 'config/container.php';
+$container = require __DIR__ . '/container.php';
 
-return ConsoleRunner::createHelperSet(
-    $container->get('doctrine.entity_manager.orm_default')
-);
+$config = new PhpFile('config/migrations.php');
+
+$entityManager = $container->get(EntityManager::class);
+
+return DependencyFactory::fromEntityManager($config, new ExistingEntityManager($entityManager));
