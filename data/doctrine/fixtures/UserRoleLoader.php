@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Api\Fixtures;
-
 
 use Api\User\Entity\UserRole;
 use Doctrine\Common\DataFixtures\FixtureInterface;

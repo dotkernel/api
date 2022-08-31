@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Api\Fixtures;
-
 
 use Api\User\Entity\User;
 use Api\User\Entity\UserDetail;

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Api\Fixtures;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Api\Fixtures;
-
 
 use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;

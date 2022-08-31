@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Api\Fixtures;
-
 
 use Api\Admin\Entity\AdminRole;
 use Doctrine\Common\DataFixtures\FixtureInterface;

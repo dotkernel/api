@@ -67,6 +67,8 @@ Optional:
 
 
 ### Step 5: Setup database
+
+#### Running migrations:
 * create a new MySQL database - set collation to `utf8mb4_general_ci`
 * fill out the database connection params in `config/autoload/local.php` under `$databases['default']`
 * run the database migrations by using the following command:
@@ -79,6 +81,27 @@ WARNING! You are about to execute a migration in database "..." that could resul
 ```
 Hit `Enter` to confirm the operation.
 
+#### Executing fixtures:
+**Fixtures are used to seed the database with initial values and should be executed after migrating the database.** 
+
+
+To list all the fixtures, run: 
+```shell
+php bin/doctrine fixtures:list
+```
+This will output all the fixtures in the order of execution.
+
+To execute all fixtures run: 
+```shell
+php bin/doctrine fixtures:execute
+```
+
+To execute a specific fixture run:
+```shell
+php bin/doctrine fixtures:execute
+```
+
+More details on how fixtures work can be found here: https://github.com/dotkernel/dot-data-fixtures#creating-fixtures
 
 ### Step 6: Test the installation
 ```shell
