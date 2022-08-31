@@ -1,0 +1,25 @@
+<?php
+
+declare(strict_types=1);
+
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
+use Dot\DataFixtures\Command\ExecuteFixturesCommand;
+use Dot\DataFixtures\Command\ListFixturesCommand;
+use Doctrine\ORM\EntityManager;
+
+require_once 'vendor/autoload.php';
+
+$container = require getcwd() . '/config/container.php' ;
+
+$entityManager = $container->get(EntityManager::class);
+
+$commands = [
+     $container->get(ExecuteFixturesCommand::class),
+     $container->get(ListFixturesCommand::class),
+];
+
+ConsoleRunner::run(
+    new SingleManagerProvider($entityManager),
+    $commands
+);

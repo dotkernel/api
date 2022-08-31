@@ -46,7 +46,8 @@ return [
                 'class' => PhpFileCache::class,
                 'directory' => getcwd() . '/data/cache/doctrine'
             ]
-        ]
+        ],
+        'fixtures' => getcwd() . '/data/doctrine/fixtures',
     ],
-    'resultCacheLifetime' => 3600
+    'resultCacheLifetime' => 3600,
 ];
