@@ -118,11 +118,15 @@ return [
 
             //listeners to register with the mail service, for mail events
             'event_listeners' => [
-//                [
-//                    'type' => 'service or class name',
-//                    'priority' => 1
-//                ],
+                //[
+                    //'type' => 'service or class name',
+                    //'priority' => 1
+                //],
             ],
+        ],
+        // option to log the SENT emails
+        'log' => [
+            'sent' => getcwd() . '/log/mail/sent.log'
         ],
 
         /**
