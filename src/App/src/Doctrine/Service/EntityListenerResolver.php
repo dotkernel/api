@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Api\App\Doctrine\Service;
 
 use Doctrine\ORM\Mapping\DefaultEntityListenerResolver;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class EntityListenerResolver
@@ -26,9 +28,11 @@ class EntityListenerResolver extends DefaultEntityListenerResolver
 
     /**
      * @param $className
-     * @return mixed
+     * @return object
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function resolve($className)
+    public function resolve($className): object
     {
         return $this->container->get($className);
     }

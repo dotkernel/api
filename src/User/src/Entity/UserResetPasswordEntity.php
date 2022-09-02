@@ -29,28 +29,28 @@ class UserResetPasswordEntity extends AbstractEntity
 
     /**
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist", "remove"}, inversedBy="resetPasswords")
-     * @ORM\JoinColumn(name="userUuid", referencedColumnName="uuid", nullable=false)
+     * @ORM\JoinColumn(name="userUuid", referencedColumnName="uuid")
      * @var User $user
      */
-    protected $user;
+    protected User $user;
 
     /**
-     * @ORM\Column(name="expires", type="datetime_immutable", nullable=false)
-     * @var DateTimeImmutable
+     * @ORM\Column(name="expires", type="datetime_immutable")
+     * @var DateTimeImmutable $expires
      */
-    protected $expires;
+    protected DateTimeImmutable $expires;
 
     /**
-     * @ORM\Column(name="hash", type="string", length=64, nullable=false, unique=true)
-     * @var $hash
+     * @ORM\Column(name="hash", type="string", length=64, unique=true)
+     * @var string $hash
      */
-    protected $hash;
+    protected string $hash;
 
     /**
-     * @ORM\Column(name="status", type="string", length=20, nullable=false)
+     * @ORM\Column(name="status", type="string", length=20)
      * @var string $status
      */
-    protected $status = self::STATUS_REQUESTED;
+    protected string $status = self::STATUS_REQUESTED;
 
     /**
      * UserResetPasswordEntity constructor.
@@ -103,9 +103,9 @@ class UserResetPasswordEntity extends AbstractEntity
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getHash()
+    public function getHash(): string
     {
         return $this->hash;
     }
