@@ -34,7 +34,7 @@ class User extends AbstractEntity
      * @ORM\OneToOne(targetEntity="UserAvatar", cascade={"persist", "remove"}, mappedBy="user")
      * @var UserAvatar|null $avatar
      */
-    protected ?UserAvatar $avatar;
+    protected ?UserAvatar $avatar = null;
 
     /**
      * @ORM\OneToOne(targetEntity="UserDetail", cascade={"persist", "remove"}, mappedBy="user")
@@ -299,7 +299,7 @@ class User extends AbstractEntity
     /**
      * @param UserResetPasswordEntity $resetPassword
      */
-    public function addResetPassword(UserResetPasswordEntity $resetPassword)
+    public function addResetPassword(UserResetPasswordEntity $resetPassword): void
     {
         $this->resetPasswords->add($resetPassword);
     }
