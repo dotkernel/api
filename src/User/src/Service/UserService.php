@@ -115,7 +115,7 @@ class UserService
         $user->setPassword(password_hash($data['password'], PASSWORD_DEFAULT))->setIdentity($data['identity']);
 
         $detail = new UserDetail();
-        $detail->setUser($user)->setFirstname($data['detail']['firstname'])->setLastname($data['detail']['lastname']);
+        $detail->setUser($user)->setFirstName($data['detail']['firstName'])->setLastName($data['detail']['lastName']);
 
         if (!empty($data['detail']['email'] && !$this->emailExists($data['detail']['email']))) {
             $detail->setEmail($data['detail']['email']);
@@ -420,12 +420,12 @@ class UserService
             $user->setHash($data['hash']);
         }
 
-        if (isset($data['detail']['firstname']) && !is_null($data['detail']['firstname'])) {
-            $user->getDetail()->setFirstname($data['detail']['firstname']);
+        if (isset($data['detail']['firstName']) && !is_null($data['detail']['firstName'])) {
+            $user->getDetail()->setFirstname($data['detail']['firstName']);
         }
 
-        if (isset($data['detail']['lastname']) && !is_null($data['detail']['lastname'])) {
-            $user->getDetail()->setLastname($data['detail']['lastname']);
+        if (isset($data['detail']['lastName']) && !is_null($data['detail']['lastName'])) {
+            $user->getDetail()->setLastName($data['detail']['lastName']);
         }
 
         if (isset($data['detail']['email']) && !empty($data['detail']['email'])) {

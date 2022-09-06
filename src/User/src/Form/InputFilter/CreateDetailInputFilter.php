@@ -29,14 +29,14 @@ class CreateDetailInputFilter implements InputFilterAwareInterface
         if (empty($this->inputFilter)) {
             $this->inputFilter = new OptionalInputFilter();
             $this->inputFilter->add([
-                'name' => 'firstname',
+                'name' => 'firstName',
                 'required' => false,
                 'filters' => [
                     ['name' => StringTrim::class],
                     ['name' => StripTags::class]
                 ]
             ])->add([
-                'name' => 'lastname',
+                'name' => 'lastName',
                 'required' => false,
                 'filters' => [
                     ['name' => StringTrim::class],
