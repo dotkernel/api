@@ -398,7 +398,7 @@ class User extends AbstractEntity
      */
     public function getName(): string
     {
-        return $this->getDetail()->getFirstname() . ' ' . $this->getDetail()->getLastname();
+        return $this->getDetail()->getFirstName() . ' ' . $this->getDetail()->getLastName();
     }
 
     /**
