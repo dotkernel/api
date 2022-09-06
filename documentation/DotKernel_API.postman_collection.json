@@ -610,7 +610,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"123456\",\r\n    \"passwordConfirm\": \"123456\",\r\n    \"status\": \"pending\",\r\n    \"detail\": {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    },\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"eaa27730-9fc0-11eb-85a5-78f29ef45f43\"\r\n        }\r\n    ]\r\n}",
+									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"123456\",\r\n    \"passwordConfirm\": \"123456\",\r\n    \"status\": \"pending\",\r\n    \"detail\": {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    },\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
