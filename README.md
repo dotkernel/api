@@ -91,14 +91,14 @@ php bin/doctrine fixtures:list
 ```
 This will output all the fixtures in the order of execution.
 
-To execute all fixtures run: 
+To execute all fixtures, run: 
 ```shell
 php bin/doctrine fixtures:execute
 ```
 
-To execute a specific fixture run:
+To execute a specific fixture, run:
 ```shell
-php bin/doctrine fixtures:execute
+php bin/doctrine fixtures:execute --class=FixtureClassName
 ```
 
 More details on how fixtures work can be found here: https://github.com/dotkernel/dot-data-fixtures#creating-fixtures

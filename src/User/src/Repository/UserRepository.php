@@ -152,9 +152,9 @@ class UserRepository extends EntityRepository
             $qb->andWhere(
                 $qb->expr()->orX(
                     $qb->expr()->like('user.identity', ':search'),
-                    $qb->expr()->like('detail.firstname', ':search'),
-                    $qb->expr()->like('detail.lastname', ':search'),
-                    $qb->expr()->like('detail.email', ':search'),
+                    $qb->expr()->like('detail.firstName', ':search'),
+                    $qb->expr()->like('detail.lastName', ':search'),
+                    $qb->expr()->like('detail.email', ':search')
                 )
             )->setParameter('search', '%' . $filters['search'] . '%');
         }

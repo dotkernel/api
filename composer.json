@@ -51,7 +51,7 @@
         "dotkernel/dot-data-fixtures": "^1.0",
         "dotkernel/dot-doctrine-metadata": "^3.1.0",
         "dotkernel/dot-errorhandler": "^3.2.0",
-        "dotkernel/dot-mail": "^3.3.0",
+        "dotkernel/dot-mail": "~3.4 || ~4.0",
         "dotkernel/dot-response-header": "^3.1.0",
         "laminas/laminas-component-installer": "^2.8.0",
         "laminas/laminas-config": "^3.7.0",

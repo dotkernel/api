@@ -24,16 +24,16 @@ class UserDetail extends AbstractEntity
     protected User $user;
 
     /**
-     * @ORM\Column(name="firstname", type="string", length=191, nullable=true)
-     * @var string|null $firstname
+     * @ORM\Column(name="firstName", type="string", length=191, nullable=true)
+     * @var string|null $firstName
      */
-    protected ?string $firstname;
+    protected ?string $firstName;
 
     /**
-     * @ORM\Column(name="lastname", type="string", length=191, nullable=true)
-     * @var string|null $lastname
+     * @ORM\Column(name="lastName", type="string", length=191, nullable=true)
+     * @var string|null $lastName
      */
-    protected ?string $lastname;
+    protected ?string $lastName;
 
     /**
      * @ORM\Column(name="email", type="string", length=191, nullable=true)
@@ -71,18 +71,18 @@ class UserDetail extends AbstractEntity
     /**
      * @return string|null
      */
-    public function getFirstname(): ?string
+    public function getFirstName(): ?string
     {
-        return $this->firstname;
+        return $this->firstName;
     }
 
     /**
-     * @param $firstname
+     * @param $firstName
      * @return $this
      */
-    public function setFirstname($firstname): self
+    public function setFirstName($firstName): self
     {
-        $this->firstname = $firstname;
+        $this->firstName = $firstName;
 
         return $this;
     }
@@ -90,18 +90,18 @@ class UserDetail extends AbstractEntity
     /**
      * @return string|null
      */
-    public function getLastname(): ?string
+    public function getLastName(): ?string
     {
-        return $this->lastname;
+        return $this->lastName;
     }
 
     /**
-     * @param $lastname
+     * @param $lastName
      * @return $this
      */
-    public function setLastname($lastname): self
+    public function setLastName($lastName): self
     {
-        $this->lastname = $lastname;
+        $this->lastName = $lastName;
 
         return $this;
     }
@@ -133,8 +133,8 @@ class UserDetail extends AbstractEntity
     public function getArrayCopy(): array
     {
         return [
-            'firstname' => $this->getFirstname(),
-            'lastname' => $this->getLastname(),
+            'firstName' => $this->getFirstName(),
+            'lastName' => $this->getLastName(),
             'email' => $this->getEmail(),
             'created' => $this->getCreated(),
             'updated' => $this->getUpdated()

@@ -121,11 +121,11 @@ class AdminService
         }
 
         if (isset($data['firstName']) && !is_null($data['firstName'])) {
-            $admin->setFirstname($data['firstName']);
+            $admin->setFirstName($data['firstName']);
         }
 
         if (isset($data['lastName']) && !is_null($data['lastName'])) {
-            $admin->setLastname($data['lastName']);
+            $admin->setLastName($data['lastName']);
         }
 
         if (!empty($data['roles'])) {
@@ -163,11 +163,11 @@ class AdminService
         $admin->setIdentity($data['identity']);
         $admin->setPassword(password_hash($data['password'], PASSWORD_DEFAULT));
 
-        if (!empty($data['firstname'])) {
-            $admin->setFirstName($data['firstname']);
+        if (!empty($data['firstName'])) {
+            $admin->setFirstName($data['firstName']);
         }
-        if (!empty($data['lastname'])) {
-            $admin->setLastname($data['lastname']);
+        if (!empty($data['lastName'])) {
+            $admin->setLastName($data['lastName']);
         }
 
         if (!empty($data['status'])) {
