@@ -7,7 +7,7 @@ namespace Api\User\Repository;
 use Api\App\Helper\PaginationHelper;
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
-use Doctrine\DBAL\FetchMode;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM;
 use Doctrine\ORM\EntityRepository;
 use Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType;
@@ -34,7 +34,9 @@ class UserRepository extends EntityRepository
                 'DELETE FROM `oauth_access_tokens` WHERE `user_id` LIKE :email'
             );
             $stmt->bindValue('email', $email);
-            return $stmt->execute();
+            $stmt->executeStatement();
+
+            return true;
         } catch (Throwable $exception) {
             return false;
         }
@@ -43,8 +45,6 @@ class UserRepository extends EntityRepository
     /**
      * @param User $user
      * @return null
-     * @throws ORM\ORMException
-     * @throws ORM\OptimisticLockException
      */
     public function deleteUser(User $user)
     {
@@ -148,11 +148,13 @@ class UserRepository extends EntityRepository
             }
         }
         if (!empty($filters['search'])) {
+            /** @psalm-suppress TooManyArguments */
             $qb->andWhere(
                 $qb->expr()->orX(
-                    $qb->expr()->like('user.email', ':search'),
-                    $qb->expr()->like('detail.firstname', ':search'),
-                    $qb->expr()->like('detail.lastname', ':search')
+                    $qb->expr()->like('user.identity', ':search'),
+                    $qb->expr()->like('detail.firstName', ':search'),
+                    $qb->expr()->like('detail.lastName', ':search'),
+                    $qb->expr()->like('detail.email', ':search')
                 )
             )->setParameter('search', '%' . $filters['search'] . '%');
         }
@@ -194,18 +196,20 @@ class UserRepository extends EntityRepository
             );
             $stmt->bindValue('email', $email);
             $stmt->bindValue('revoked', 0);
-            $stmt->executeStatement();
-            $tokenIds = $stmt->fetchAll(FetchMode::COLUMN);
+            $result = $stmt->executeQuery();
+            $tokenIds = $result->fetchFirstColumn();
 
             /**
              * ... and mark them as revoked.
              * (Do this because: In case users have a valid refresh token, they could use it to get a new access token.)
              */
             if (!empty($tokenIds)) {
-                $stmt = $connection->prepare(
-                    'UPDATE `oauth_refresh_tokens` SET `revoked` = 1 WHERE `access_token_id` IN(:tokenIds)'
+                $connection->executeQuery(
+                    'UPDATE `oauth_refresh_tokens` SET `revoked` = 1 WHERE `access_token_id` IN(?)',
+                    [$tokenIds],
+                    [Connection::PARAM_STR_ARRAY]
                 );
-                $stmt->bindValue('tokenIds', implode("', '", $tokenIds));
+
                 $stmt->executeStatement();
             }
 
@@ -226,10 +230,9 @@ class UserRepository extends EntityRepository
 
     /**
      * @param User $user
-     * @throws ORM\ORMException
-     * @throws ORM\OptimisticLockException
+     * @return void
      */
-    public function saveUser(User $user)
+    public function saveUser(User $user): void
     {
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();

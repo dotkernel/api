@@ -20,17 +20,18 @@ class UserAvatar extends AbstractEntity
 {
     /**
      * @ORM\OneToOne(targetEntity="User", inversedBy="avatar")
-     * @ORM\JoinColumn(name="userUuid", referencedColumnName="uuid", nullable=false)
+     * @ORM\JoinColumn(name="userUuid", referencedColumnName="uuid")
      * @var User $user
      */
-    protected $user;
+    protected User $user;
 
     /**
-     * @ORM\Column(name="name", type="string", length=191, nullable=false)
-     * @var $name
+     * @ORM\Column(name="name", type="string", length=191)
+     * @var string $name
      */
-    protected $name;
+    protected string $name;
 
+    /** @var string|null $url */
     protected ?string $url;
 
     /**
@@ -61,18 +62,18 @@ class UserAvatar extends AbstractEntity
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return $this
      */
-    public function setName($name): UserAvatar
+    public function setName(string $name): UserAvatar
     {
         $this->name = $name;
 

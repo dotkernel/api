@@ -7,10 +7,10 @@ namespace Api\User\Entity;
 use Api\App\Entity\AbstractEntity;
 use Api\App\Entity\UuidOrderedTimeGenerator;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Throwable;
 
-use function array_map;
 use function bin2hex;
 use function random_bytes;
 
@@ -32,21 +32,21 @@ class User extends AbstractEntity
 
     /**
      * @ORM\OneToOne(targetEntity="UserAvatar", cascade={"persist", "remove"}, mappedBy="user")
-     * @var UserAvatar $avatar
+     * @var UserAvatar|null $avatar
      */
-    protected $avatar;
+    protected ?UserAvatar $avatar = null;
 
     /**
      * @ORM\OneToOne(targetEntity="UserDetail", cascade={"persist", "remove"}, mappedBy="user")
      * @var UserDetail $detail
      */
-    protected $detail;
+    protected UserDetail $detail;
 
     /**
      * @ORM\OneToMany(targetEntity="UserResetPasswordEntity", cascade={"persist", "remove"}, mappedBy="user")
-     * @var UserResetPasswordEntity[] $resetPassword
+     * @var Collection $resetPassword
      */
-    protected $resetPasswords;
+    protected Collection $resetPasswords;
 
     /**
      * @ORM\ManyToMany(targetEntity="UserRole")
@@ -55,24 +55,24 @@ class User extends AbstractEntity
      *     joinColumns={@ORM\JoinColumn(name="userUuid", referencedColumnName="uuid")},
      *     inverseJoinColumns={@ORM\JoinColumn(name="roleUuid", referencedColumnName="uuid")}
      * )
-     * @var UserRole[] $roles
+     * @var Collection $roles
      */
-    protected $roles;
+    protected Collection $roles;
 
     /**
-     * @ORM\Column(name="identity", type="string", length=191, nullable=false, unique=true)
-     * @var string|null $identity
+     * @ORM\Column(name="identity", type="string", length=191, unique=true)
+     * @var string $identity
      */
-    protected ?string $identity;
+    protected string $identity;
 
     /**
-     * @ORM\Column(name="password", type="string", length=191, nullable=false)
-     * @var string|null $password
+     * @ORM\Column(name="password", type="string", length=191)
+     * @var string $password
      */
-    protected ?string $password;
+    protected string $password;
 
     /**
-     * @ORM\Column(name="status", type="string", length=20, nullable=false)
+     * @ORM\Column(name="status", type="string", length=20)
      * @var string $status
      */
     protected string $status = self::STATUS_PENDING;
@@ -81,13 +81,13 @@ class User extends AbstractEntity
      * @ORM\Column(name="isDeleted", type="boolean")
      * @var bool $isDeleted
      */
-    protected $isDeleted = false;
+    protected bool $isDeleted = false;
 
     /**
-     * @ORM\Column(name="hash", type="string", length=64, nullable=false, unique=true)
-     * @var string|null $hash
+     * @ORM\Column(name="hash", type="string", length=64, unique=true)
+     * @var string $hash
      */
-    protected ?string $hash;
+    protected string $hash;
 
     /**
      * User constructor.
@@ -103,9 +103,9 @@ class User extends AbstractEntity
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getIdentity(): ?string
+    public function getIdentity(): string
     {
         return $this->identity;
     }
@@ -121,9 +121,9 @@ class User extends AbstractEntity
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -178,9 +178,9 @@ class User extends AbstractEntity
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getHash(): ?string
+    public function getHash(): string
     {
         return $this->hash;
     }
@@ -226,9 +226,9 @@ class User extends AbstractEntity
     }
 
     /**
-     * @return UserDetail|null
+     * @return UserDetail
      */
-    public function getDetail(): ?UserDetail
+    public function getDetail(): UserDetail
     {
         return $this->detail;
     }
@@ -256,9 +256,9 @@ class User extends AbstractEntity
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getRoles()
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
@@ -299,7 +299,7 @@ class User extends AbstractEntity
     /**
      * @param UserResetPasswordEntity $resetPassword
      */
-    public function addResetPassword(UserResetPasswordEntity $resetPassword)
+    public function addResetPassword(UserResetPasswordEntity $resetPassword): void
     {
         $this->resetPasswords->add($resetPassword);
     }
@@ -319,9 +319,9 @@ class User extends AbstractEntity
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getResetPasswords()
+    public function getResetPasswords(): Collection
     {
         return $this->resetPasswords;
     }
@@ -398,7 +398,7 @@ class User extends AbstractEntity
      */
     public function getName(): string
     {
-        return $this->getDetail()->getFirstname() . ' ' . $this->getDetail()->getLastname();
+        return $this->getDetail()->getFirstName() . ' ' . $this->getDetail()->getLastName();
     }
 
     /**
@@ -435,9 +435,9 @@ class User extends AbstractEntity
      */
     public function resetRoles(): self
     {
-        foreach ($this->roles->getIterator()->getArrayCopy() as $role) {
-            $this->removeRole($role);
-        }
+        $this->getRoles()->map(function (UserRole $role) {
+           return $this->removeRole($role);
+        });
         $this->roles = new ArrayCollection();
 
         return $this;
@@ -457,12 +457,12 @@ class User extends AbstractEntity
             'isDeleted' => $this->isDeleted(),
             'avatar' => ($this->getAvatar() instanceof UserAvatar) ? $this->getAvatar()->getArrayCopy() : null,
             'detail' => ($this->getDetail() instanceof UserDetail) ? $this->getDetail()->getArrayCopy() : null,
-            'roles' => array_map(function (UserRole $role) {
-                return $role->getArrayCopy();
-            }, $this->getRoles()->getIterator()->getArrayCopy()),
-            'resetPasswords' => array_map(function (UserResetPasswordEntity $resetPassword) {
+            'roles' => $this->getRoles()->map(function (UserRole $userRole) {
+                return $userRole->getArrayCopy();
+            })->toArray(),
+            'resetPasswords' => $this->getResetPasswords()->map(function (UserResetPasswordEntity $resetPassword) {
                 return $resetPassword->getArrayCopy();
-            }, $this->getResetPasswords()->getIterator()->getArrayCopy()),
+            })->toArray(),
             'created' => $this->getCreated(),
             'updated' => $this->getUpdated()
         ];

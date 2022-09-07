@@ -25,7 +25,7 @@ class AdminRole extends AbstractEntity implements RoleInterface
     ];
 
     /**
-     * @ORM\Column(name="name", type="string", length=30, nullable=false, unique=true)
+     * @ORM\Column(name="name", type="string", length=30, unique=true)
      * @var string $name
      */
     protected string $name;
@@ -67,8 +67,6 @@ class AdminRole extends AbstractEntity implements RoleInterface
         return [
             'uuid' => $this->getUuid()->toString(),
             'name' => $this->getName(),
-            'created' => $this->getCreated(),
-            'updated' => $this->getUpdated()
         ];
     }
 }
