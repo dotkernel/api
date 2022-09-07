@@ -25,7 +25,7 @@ class UserRoleRepository extends EntityRepository
         $qb->select(['role'])->from(UserRole::class, 'role');
 
         // Order results
-        $qb->orderBy(($filters['order'] ?? 'role.created'), $filters['dir'] ?? 'desc');
+        $qb->orderBy(($params['order'] ?? 'role.created'), $params['dir'] ?? 'desc');
 
         // Paginate results
         $page = PaginationHelper::getOffsetAndLimit($params);

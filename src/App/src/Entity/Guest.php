@@ -13,9 +13,11 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Guest
 {
+    /** @var string $identity */
     protected string $identity = 'guest';
 
-    protected $roles;
+    /** @var ArrayCollection<int, UserRole> */
+    protected ArrayCollection $roles;
 
     public function __construct()
     {
@@ -54,10 +56,10 @@ class Guest
     }
 
     /**
-     * @param array $roles
+     * @param ArrayCollection $roles
      * @return $this
      */
-    public function setRoles(array $roles): self
+    public function setRoles(ArrayCollection $roles): self
     {
         $this->roles = $roles;
 

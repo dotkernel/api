@@ -13,13 +13,13 @@ use Mezzio\Authentication\UserInterface;
 class UserIdentity implements UserInterface
 {
     /** @var string $identity */
-    protected $identity;
+    protected string $identity;
 
-    /** @var array $roles */
-    protected $roles;
+    /** @var iterable<int|string, string> $roles */
+    protected array $roles;
 
     /** @var array $details */
-    protected $details;
+    protected array $details;
 
     /**
      * UserIdentity constructor.
@@ -43,6 +43,7 @@ class UserIdentity implements UserInterface
     }
 
     /**
+     * @psalm-return iterable<int|string, string>
      * @return iterable
      */
     public function getRoles(): iterable
@@ -52,8 +53,8 @@ class UserIdentity implements UserInterface
 
     /**
      * @param string $name
-     * @param null $default
-     * @return mixed|null
+     * @param mixed|null $default
+     * @return mixed
      */
     public function getDetail(string $name, $default = null)
     {
@@ -61,7 +62,7 @@ class UserIdentity implements UserInterface
     }
 
     /**
-     * @return array
+     * @psalm-return array<string, mixed>
      */
     public function getDetails(): array
     {
@@ -71,7 +72,7 @@ class UserIdentity implements UserInterface
     /**
      * @param array $roles
      */
-    public function setRoles(array $roles = [])
+    public function setRoles(array $roles)
     {
         $this->roles = $roles;
     }

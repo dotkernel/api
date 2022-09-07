@@ -18,28 +18,28 @@ class UserDetail extends AbstractEntity
 {
     /**
      * @ORM\OneToOne(targetEntity="User", inversedBy="detail")
-     * @ORM\JoinColumn(name="userUuid", referencedColumnName="uuid", nullable=false)
+     * @ORM\JoinColumn(name="userUuid", referencedColumnName="uuid")
      * @var User $user
      */
-    protected $user;
+    protected User $user;
 
     /**
      * @ORM\Column(name="firstName", type="string", length=191, nullable=true)
-     * @var $firstName
+     * @var string|null $firstName
      */
-    protected $firstName;
+    protected ?string $firstName;
 
     /**
      * @ORM\Column(name="lastName", type="string", length=191, nullable=true)
-     * @var $lastName
+     * @var string|null $lastName
      */
-    protected $lastName;
+    protected ?string $lastName;
 
     /**
      * @ORM\Column(name="email", type="string", length=191, nullable=true)
-     * @var $email
+     * @var string|null $email
      */
-    protected $email;
+    protected ?string $email;
 
     /**
      * UserDetail constructor.
@@ -69,9 +69,9 @@ class UserDetail extends AbstractEntity
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getFirstName()
+    public function getFirstName(): ?string
     {
         return $this->firstName;
     }
@@ -88,9 +88,9 @@ class UserDetail extends AbstractEntity
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getLastName()
+    public function getLastName(): ?string
     {
         return $this->lastName;
     }
@@ -107,9 +107,9 @@ class UserDetail extends AbstractEntity
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }

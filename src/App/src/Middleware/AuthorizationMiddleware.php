@@ -23,8 +23,6 @@ use Mezzio\Authentication\UserInterface;
 use Mezzio\Authorization\AuthorizationInterface;
 use Throwable;
 
-use function array_map;
-
 /**
  * Class AuthorizationMiddleware
  * @package Api\App\Middleware
@@ -115,9 +113,9 @@ class AuthorizationMiddleware implements MiddlewareInterface
                 ], Response::STATUS_CODE_403);
         }
 
-        $defaultUser->setRoles(array_map(function (RoleInterface $role) {
+        $defaultUser->setRoles($user->getRoles()->map(function (RoleInterface $role) {
             return $role->getName();
-        }, $user->getRoles()->getIterator()->getArrayCopy()));
+        })->toArray());
 
         $request = $request->withAttribute(UserInterface::class, $defaultUser);
 

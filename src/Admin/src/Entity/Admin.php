@@ -6,10 +6,9 @@ namespace Api\Admin\Entity;
 
 use Api\App\Entity\AbstractEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
-
-use function array_map;
 
 /**
  * Class Admin
@@ -28,31 +27,31 @@ class Admin extends AbstractEntity
     ];
 
     /**
-     * @ORM\Column(name="identity", type="string", length=100, nullable=false, unique=true)
+     * @ORM\Column(name="identity", type="string", length=100, unique=true)
      * @var string $identity
      */
     protected string $identity;
 
     /**
      * @ORM\Column(name="firstName", type="string", length=255)
-     * @var $firstName
+     * @var string $firstName
      */
-    protected $firstName;
+    protected string $firstName;
 
     /**
      * @ORM\Column(name="lastName", type="string", length=255)
-     * @var $lastName
+     * @var string $lastName
      */
-    protected $lastName;
+    protected string $lastName;
 
     /**
-     * @ORM\Column(name="password", type="string", length=100, nullable=false)
+     * @ORM\Column(name="password", type="string", length=100)
      * @var string $password
      */
     protected string $password;
 
     /**
-     * @ORM\Column(name="status", type="string", length=20, nullable=false)
+     * @ORM\Column(name="status", type="string", length=20)
      * @var string $status
      */
     protected string $status = self::STATUS_ACTIVE;
@@ -64,9 +63,9 @@ class Admin extends AbstractEntity
      *     joinColumns={@ORM\JoinColumn(name="userUuid", referencedColumnName="uuid")},
      *     inverseJoinColumns={@ORM\JoinColumn(name="roleUuid", referencedColumnName="uuid")}
      * )
-     * @var ArrayCollection $roles
+     * @var Collection $roles
      */
-    protected $roles = [];
+    protected Collection $roles;
 
     /**
      * Admin constructor.
@@ -90,9 +89,9 @@ class Admin extends AbstractEntity
             'firstName' => $this->getfirstName(),
             'lastName' => $this->getlastName(),
             'status' => $this->getStatus(),
-            'roles' => array_map(function (AdminRole $role) {
-                return $role->getArrayCopy();
-            }, $this->getRoles()->getIterator()->getArrayCopy()),
+            'roles' => $this->getRoles()->map(function (AdminRole $role) {
+               return $role->getArrayCopy();
+            })->toArray(),
             'created' => $this->getCreated(),
             'updated' => $this->getUpdated()
         ];
@@ -118,9 +117,9 @@ class Admin extends AbstractEntity
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getFirstName()
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
@@ -137,9 +136,9 @@ class Admin extends AbstractEntity
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getLastName()
+    public function getLastName(): string
     {
         return $this->lastName;
     }
@@ -194,9 +193,9 @@ class Admin extends AbstractEntity
     }
 
     /**
-     * @return array|ArrayCollection
+     * @return Collection
      */
-    public function getRoles()
+    public function getRoles(): Collection
     {
         return $this->roles;
     }
@@ -244,9 +243,10 @@ class Admin extends AbstractEntity
      */
     public function resetRoles(): self
     {
-        foreach ($this->roles->getIterator()->getArrayCopy() as $role) {
+        $this->getRoles()->map(function (AdminRole $role) {
             $this->removeRole($role);
-        }
+        });
+
         $this->roles = new ArrayCollection();
 
         return $this;

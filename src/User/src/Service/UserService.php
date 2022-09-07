@@ -117,7 +117,7 @@ class UserService
         $detail = new UserDetail();
         $detail->setUser($user)->setFirstName($data['detail']['firstName'])->setLastName($data['detail']['lastName']);
 
-        if (!empty($data['detail']['email'] && !$this->emailExists($data['detail']['email']))) {
+        if (!empty($data['detail']['email']) && !$this->emailExists($data['detail']['email'])) {
             $detail->setEmail($data['detail']['email']);
         }
 
@@ -480,7 +480,7 @@ class UserService
         }
         $fileName = sprintf(
             'avatar-%s.%s',
-            UuidOrderedTimeGenerator::generateUuid(),
+            UuidOrderedTimeGenerator::generateUuid()->toString(),
             self::EXTENSIONS[$uploadedFile->getClientMediaType()]
         );
         $avatar->setName($fileName);
