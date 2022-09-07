@@ -80,7 +80,7 @@
         "laminas/laminas-development-mode": "^3.6",
         "mezzio/mezzio-tooling": "^2.5",
         "phpunit/phpunit": "^9.5",
-        "vimeo/psalm": "^4.26"
+        "vimeo/psalm": "^4.27"
     },
     "autoload": {
         "psr-4": {
