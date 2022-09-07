@@ -44,4 +44,4 @@ jobs:
         run: composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
 
       - name: Static analysis
-        run: vendor/bin/psalm --stats --output-format=github --show-info=false --threads=4 | cs2pr --graceful-warnings --colorize
+        run: vendor/bin/psalm --output-format=github
