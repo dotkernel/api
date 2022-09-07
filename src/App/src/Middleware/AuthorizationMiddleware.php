@@ -59,7 +59,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
      * @return ResponseInterface
      * @throws Throwable
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler)
     {
         /** @var UserIdentity $defaultUser */
         $defaultUser = $request->getAttribute(UserInterface::class);
