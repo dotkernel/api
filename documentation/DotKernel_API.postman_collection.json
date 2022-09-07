@@ -579,14 +579,14 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{APPLICATION_URL}}/user/activate/{{$randomUUID}}",
+									"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}/activate",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
 										"user",
-										"activate",
-										"{{$randomUUID}}"
+										"{{$randomUUID}}",
+										"activate"
 									]
 								}
 							},
