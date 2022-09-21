@@ -36,7 +36,7 @@ class UserDetail extends AbstractEntity
     protected ?string $lastName = null;
 
     /**
-     * @ORM\Column(name="email", type="string", length=191, nullable=false)
+     * @ORM\Column(name="email", type="string", length=191)
      * @var string $email
      */
     protected string $email;
