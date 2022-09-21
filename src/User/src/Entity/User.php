@@ -130,6 +130,8 @@ class User extends AbstractEntity
 
     /**
      * @param $password
+     * @param false|string $password
+     *
      * @return $this
      */
     public function setPassword($password): self
@@ -149,9 +151,12 @@ class User extends AbstractEntity
 
     /**
      * @param $status
+     *
      * @return $this
+     *
+     * @psalm-param 'active'|'pending' $status
      */
-    public function setStatus($status): self
+    public function setStatus(string $status): self
     {
         $this->status = $status;
 

@@ -72,7 +72,7 @@ class UserIdentity implements UserInterface
     /**
      * @param array $roles
      */
-    public function setRoles(array $roles)
+    public function setRoles(array $roles): void
     {
         $this->roles = $roles;
     }

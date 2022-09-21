@@ -22,11 +22,12 @@ class AdminRepository extends EntityRepository
 {
     /**
      * @param Admin $admin
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      * @throws Exception
      */
-    public function deleteAdmin(Admin $admin)
+    public function deleteAdmin(Admin $admin): void
     {
         $this->saveAdmin($admin->resetRoles());
 
@@ -36,10 +37,11 @@ class AdminRepository extends EntityRepository
 
     /**
      * @param Admin $admin
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function saveAdmin(Admin $admin)
+    public function saveAdmin(Admin $admin): void
     {
         $this->getEntityManager()->persist($admin);
         $this->getEntityManager()->flush();

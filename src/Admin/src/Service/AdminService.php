@@ -40,10 +40,11 @@ class AdminService
 
     /**
      * @param Admin $admin
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function deleteAdmin(Admin $admin)
+    public function deleteAdmin(Admin $admin): void
     {
         $this->adminRepository->deleteAdmin($admin);
     }

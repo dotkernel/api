@@ -118,7 +118,7 @@ class UserDetail extends AbstractEntity
      * @param $email
      * @return $this
      */
-    public function setEmail($email): self
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
