@@ -107,7 +107,7 @@ class UserDetail extends AbstractEntity
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getEmail(): string
     {
