@@ -103,13 +103,6 @@ class AdminService
      */
     public function updateAdmin(Admin $admin, array $data = []): Admin
     {
-        if (isset($data['identity']) && !is_null($data['identity'])) {
-            if ($this->exists($data['identity'], $admin->getUuid()->toString())) {
-                throw new ORMException(Message::DUPLICATE_IDENTITY);
-            }
-            $admin->setIdentity($data['identity']);
-        }
-
         if (isset($data['password']) && !is_null($data['password'])) {
             $admin->setPassword(
                 password_hash($data['password'], PASSWORD_DEFAULT)

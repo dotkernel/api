@@ -406,13 +406,6 @@ class UserService
      */
     public function updateUser(User $user, array $data = []): User
     {
-        if (isset($data['identity']) && !is_null($data['identity'])) {
-            if ($this->exists($data['identity'], $user->getUuid()->toString())) {
-                throw new ORMException(Message::DUPLICATE_IDENTITY);
-            }
-            $user->setIdentity($data['identity']);
-        }
-
         if (isset($data['password']) && !is_null($data['password'])) {
             $user->setPassword(
                 password_hash($data['password'], PASSWORD_DEFAULT)
