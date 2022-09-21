@@ -44,7 +44,7 @@ class CreateDetailInputFilter implements InputFilterAwareInterface
                 ]
             ])->add([
                 'name' => 'email',
-                'required' => false,
+                'required' => true,
                 'filters' => [
                     ['name' => StringTrim::class],
                     ['name' => StripTags::class]

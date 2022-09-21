@@ -111,11 +111,22 @@ class UserService
         if ($this->exists($data['identity'])) {
             throw new ORMException(Message::DUPLICATE_IDENTITY);
         }
+        if ($this->emailExists($data['detail']['email'])) {
+            throw new ORMException(Message::DUPLICATE_EMAIL);
+        }
         $user = new User();
         $user->setPassword(password_hash($data['password'], PASSWORD_DEFAULT))->setIdentity($data['identity']);
 
         $detail = new UserDetail();
-        $detail->setUser($user)->setFirstName($data['detail']['firstName'])->setLastName($data['detail']['lastName']);
+        $detail->setUser($user);
+
+        if (!empty($data['detail']['firstName'])) {
+            $detail->setFirstName($data['detail']['firstName']);
+        }
+
+        if (!empty($data['detail']['lastName'])) {
+            $detail->setLastName($data['detail']['lastName']);
+        }
 
         if (!empty($data['detail']['email']) && !$this->emailExists($data['detail']['email'])) {
             $detail->setEmail($data['detail']['email']);

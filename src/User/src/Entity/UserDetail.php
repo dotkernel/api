@@ -27,13 +27,13 @@ class UserDetail extends AbstractEntity
      * @ORM\Column(name="firstName", type="string", length=191, nullable=true)
      * @var string|null $firstName
      */
-    protected ?string $firstName;
+    protected ?string $firstName = null;
 
     /**
      * @ORM\Column(name="lastName", type="string", length=191, nullable=true)
      * @var string|null $lastName
      */
-    protected ?string $lastName;
+    protected ?string $lastName = null;
 
     /**
      * @ORM\Column(name="email", type="string", length=191, nullable=true)
@@ -80,7 +80,7 @@ class UserDetail extends AbstractEntity
      * @param $firstName
      * @return $this
      */
-    public function setFirstName($firstName): self
+    public function setFirstName(?string $firstName): self
     {
         $this->firstName = $firstName;
 
@@ -99,7 +99,7 @@ class UserDetail extends AbstractEntity
      * @param $lastName
      * @return $this
      */
-    public function setLastName($lastName): self
+    public function setLastName(?string $lastName): self
     {
         $this->lastName = $lastName;
 
