@@ -34,6 +34,8 @@ final class UuidOrderedTimeGenerator
 
     /**
      * @return UuidFactory|null
+     *
+     * @psalm-suppress UndefinedInterfaceMethod
      */
     private static function getFactory(): ?UuidFactory
     {

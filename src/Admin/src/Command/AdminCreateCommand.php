@@ -49,8 +49,8 @@ class AdminCreateCommand extends Command
             ->setDescription('Create admin account.')
             ->addOption('identity', 'i', InputOption::VALUE_REQUIRED, 'Admin account identity')
             ->addOption('password', 'p', InputOption::VALUE_REQUIRED, 'Admin account password')
-            ->addOption('firstname', 'f', InputOption::VALUE_OPTIONAL, 'Admin account firstname')
-            ->addOption('lastname', 'l', InputOption::VALUE_OPTIONAL, 'Admin account lastname')
+            ->addOption('firstName', 'f', InputOption::VALUE_OPTIONAL, 'Admin account firstname')
+            ->addOption('lastName', 'l', InputOption::VALUE_OPTIONAL, 'Admin account lastname')
         ;
     }
 
@@ -72,8 +72,8 @@ class AdminCreateCommand extends Command
             'identity' => $input->getOption('identity'),
             'password' => $input->getOption('password'),
             'passwordConfirm' => $input->getOption('password'),
-            'firstname' => $input->getOption('firstname'),
-            'lastname' => $input->getOption('lastname'),
+            'firstName' => $input->getOption('firstName'),
+            'lastName' => $input->getOption('lastName'),
             'roles' => [
                 ['uuid' => $role->getUuid()->toString()]
             ]

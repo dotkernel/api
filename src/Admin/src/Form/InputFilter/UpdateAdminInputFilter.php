@@ -60,22 +60,6 @@ class UpdateAdminInputFilter implements InputFilterAwareInterface
                 'name' => 'uuid',
                 'required' => false
             ])->add([
-                'name' => 'identity',
-                'required' => false,
-                'filters' => [
-                    ['name' => StringTrim::class],
-                    ['name' => StripTags::class]
-                ],
-                'validators' => [
-                    [
-                        'name' => NotEmpty::class,
-                        'break_chain_on_failure' => true,
-                        'options' => [
-                            'message' => Message::VALIDATOR_SKIP_OR_FILL
-                        ]
-                    ]
-                ]
-            ])->add([
                 'name' => 'password',
                 'required' => false,
                 'filters' => [

@@ -1,3 +1,4 @@
 Hi {{ user.name }},<br /><br />
 
-You can activate your {{ config.application.name }} account using <a href="{{ url('account.activate', {'hash': user.hash}) }}" target="_blank">this link</a>.
+You can activate your {{ config.application.name }} account by copying the link below to the "Activate my account" PATCH endpoint in Postman:<br />
+<a href="{{ url('account.activate', {'hash': user.hash}) }}" target="_blank">{{ url('account.activate', {'hash': user.hash}) }}</a>

@@ -111,13 +111,24 @@ class UserService
         if ($this->exists($data['identity'])) {
             throw new ORMException(Message::DUPLICATE_IDENTITY);
         }
+        if ($this->emailExists($data['detail']['email'])) {
+            throw new ORMException(Message::DUPLICATE_EMAIL);
+        }
         $user = new User();
         $user->setPassword(password_hash($data['password'], PASSWORD_DEFAULT))->setIdentity($data['identity']);
 
         $detail = new UserDetail();
-        $detail->setUser($user)->setFirstname($data['detail']['firstname'])->setLastname($data['detail']['lastname']);
+        $detail->setUser($user);
 
-        if (!empty($data['detail']['email'] && !$this->emailExists($data['detail']['email']))) {
+        if (!empty($data['detail']['firstName'])) {
+            $detail->setFirstName($data['detail']['firstName']);
+        }
+
+        if (!empty($data['detail']['lastName'])) {
+            $detail->setLastName($data['detail']['lastName']);
+        }
+
+        if (!empty($data['detail']['email']) && !$this->emailExists($data['detail']['email'])) {
             $detail->setEmail($data['detail']['email']);
         }
 
@@ -395,13 +406,6 @@ class UserService
      */
     public function updateUser(User $user, array $data = []): User
     {
-        if (isset($data['identity']) && !is_null($data['identity'])) {
-            if ($this->exists($data['identity'], $user->getUuid()->toString())) {
-                throw new ORMException(Message::DUPLICATE_IDENTITY);
-            }
-            $user->setIdentity($data['identity']);
-        }
-
         if (isset($data['password']) && !is_null($data['password'])) {
             $user->setPassword(
                 password_hash($data['password'], PASSWORD_DEFAULT)
@@ -420,12 +424,12 @@ class UserService
             $user->setHash($data['hash']);
         }
 
-        if (isset($data['detail']['firstname']) && !is_null($data['detail']['firstname'])) {
-            $user->getDetail()->setFirstname($data['detail']['firstname']);
+        if (isset($data['detail']['firstName']) && !is_null($data['detail']['firstName'])) {
+            $user->getDetail()->setFirstname($data['detail']['firstName']);
         }
 
-        if (isset($data['detail']['lastname']) && !is_null($data['detail']['lastname'])) {
-            $user->getDetail()->setLastname($data['detail']['lastname']);
+        if (isset($data['detail']['lastName']) && !is_null($data['detail']['lastName'])) {
+            $user->getDetail()->setLastName($data['detail']['lastName']);
         }
 
         if (isset($data['detail']['email']) && !empty($data['detail']['email'])) {
@@ -480,7 +484,7 @@ class UserService
         }
         $fileName = sprintf(
             'avatar-%s.%s',
-            UuidOrderedTimeGenerator::generateUuid(),
+            UuidOrderedTimeGenerator::generateUuid()->toString(),
             self::EXTENSIONS[$uploadedFile->getClientMediaType()]
         );
         $avatar->setName($fileName);

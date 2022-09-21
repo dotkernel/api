@@ -103,13 +103,6 @@ class AdminService
      */
     public function updateAdmin(Admin $admin, array $data = []): Admin
     {
-        if (isset($data['identity']) && !is_null($data['identity'])) {
-            if ($this->exists($data['identity'], $admin->getUuid()->toString())) {
-                throw new ORMException(Message::DUPLICATE_IDENTITY);
-            }
-            $admin->setIdentity($data['identity']);
-        }
-
         if (isset($data['password']) && !is_null($data['password'])) {
             $admin->setPassword(
                 password_hash($data['password'], PASSWORD_DEFAULT)
@@ -121,11 +114,11 @@ class AdminService
         }
 
         if (isset($data['firstName']) && !is_null($data['firstName'])) {
-            $admin->setFirstname($data['firstName']);
+            $admin->setFirstName($data['firstName']);
         }
 
         if (isset($data['lastName']) && !is_null($data['lastName'])) {
-            $admin->setLastname($data['lastName']);
+            $admin->setLastName($data['lastName']);
         }
 
         if (!empty($data['roles'])) {
@@ -163,11 +156,11 @@ class AdminService
         $admin->setIdentity($data['identity']);
         $admin->setPassword(password_hash($data['password'], PASSWORD_DEFAULT));
 
-        if (!empty($data['firstname'])) {
-            $admin->setFirstName($data['firstname']);
+        if (!empty($data['firstName'])) {
+            $admin->setFirstName($data['firstName']);
         }
-        if (!empty($data['lastname'])) {
-            $admin->setLastname($data['lastname']);
+        if (!empty($data['lastName'])) {
+            $admin->setLastName($data['lastName']);
         }
 
         if (!empty($data['status'])) {

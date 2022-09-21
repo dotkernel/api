@@ -128,14 +128,14 @@ class CreateAdminInputFilter implements InputFilterAwareInterface
                     ]
                 ]
             ])->add([
-                'name' => 'firstname',
+                'name' => 'firstName',
                 'required' => false,
                 'filters' => [
                     ['name' => StringTrim::class],
                     ['name' => StripTags::class]
                 ]
             ])->add([
-                'name' => 'lastname',
+                'name' => 'lastName',
                 'required' => false,
                 'filters' => [
                     ['name' => StringTrim::class],

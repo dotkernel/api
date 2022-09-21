@@ -25,10 +25,10 @@ class UserRole extends AbstractEntity implements RoleInterface
     ];
 
     /**
-     * @ORM\Column(name="name", type="string", length=20, nullable=false, unique=true)
+     * @ORM\Column(name="name", type="string", length=20, unique=true)
      * @var string $name
      */
-    protected $name;
+    protected string $name;
 
     /**
      * UserRolesEntity constructor.
@@ -67,8 +67,6 @@ class UserRole extends AbstractEntity implements RoleInterface
         return [
             'uuid' => $this->getUuid()->toString(),
             'name' => $this->getName(),
-            'created' => $this->getCreated(),
-            'updated' => $this->getUpdated()
         ];
     }
 }

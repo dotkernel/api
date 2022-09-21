@@ -18,28 +18,28 @@ class UserDetail extends AbstractEntity
 {
     /**
      * @ORM\OneToOne(targetEntity="User", inversedBy="detail")
-     * @ORM\JoinColumn(name="userUuid", referencedColumnName="uuid", nullable=false)
+     * @ORM\JoinColumn(name="userUuid", referencedColumnName="uuid")
      * @var User $user
      */
-    protected $user;
+    protected User $user;
 
     /**
-     * @ORM\Column(name="firstname", type="string", length=191, nullable=true)
-     * @var $firstname
+     * @ORM\Column(name="firstName", type="string", length=191, nullable=true)
+     * @var string|null $firstName
      */
-    protected $firstname;
+    protected ?string $firstName = null;
 
     /**
-     * @ORM\Column(name="lastname", type="string", length=191, nullable=true)
-     * @var $lastname
+     * @ORM\Column(name="lastName", type="string", length=191, nullable=true)
+     * @var string|null $lastName
      */
-    protected $lastname;
+    protected ?string $lastName = null;
 
     /**
      * @ORM\Column(name="email", type="string", length=191, nullable=true)
-     * @var $email
+     * @var string|null $email
      */
-    protected $email;
+    protected ?string $email;
 
     /**
      * UserDetail constructor.
@@ -69,47 +69,47 @@ class UserDetail extends AbstractEntity
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getFirstname()
+    public function getFirstName(): ?string
     {
-        return $this->firstname;
+        return $this->firstName;
     }
 
     /**
-     * @param $firstname
+     * @param $firstName
      * @return $this
      */
-    public function setFirstname($firstname): self
+    public function setFirstName(?string $firstName): self
     {
-        $this->firstname = $firstname;
+        $this->firstName = $firstName;
 
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getLastname()
+    public function getLastName(): ?string
     {
-        return $this->lastname;
+        return $this->lastName;
     }
 
     /**
-     * @param $lastname
+     * @param $lastName
      * @return $this
      */
-    public function setLastname($lastname): self
+    public function setLastName(?string $lastName): self
     {
-        $this->lastname = $lastname;
+        $this->lastName = $lastName;
 
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -133,8 +133,8 @@ class UserDetail extends AbstractEntity
     public function getArrayCopy(): array
     {
         return [
-            'firstname' => $this->getFirstname(),
-            'lastname' => $this->getLastname(),
+            'firstName' => $this->getFirstName(),
+            'lastName' => $this->getLastName(),
             'email' => $this->getEmail(),
             'created' => $this->getCreated(),
             'updated' => $this->getUpdated()
