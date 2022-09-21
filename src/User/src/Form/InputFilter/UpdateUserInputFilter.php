@@ -62,13 +62,6 @@ class UpdateUserInputFilter implements InputFilterAwareInterface
                 'name' => 'uuid',
                 'required' => false
             ])->add([
-                'name' => 'identity',
-                'required' => false,
-                'filters' => [
-                    ['name' => StringTrim::class],
-                    ['name' => StripTags::class]
-                ]
-            ])->add([
                 'name' => 'password',
                 'required' => false,
                 'filters' => [
