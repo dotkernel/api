@@ -54,8 +54,7 @@ class DefaultHandler implements RequestHandlerInterface
 
     /**
      * @param ServerRequestInterface $request
-     * @param $instance
-     * @param \Api\Admin\Collection\AdminCollection|\Api\Admin\Collection\AdminRoleCollection|\Api\Admin\Entity\Admin|\Api\Admin\Entity\AdminRole|\Api\User\Collection\UserCollection|\Api\User\Collection\UserRoleCollection|\Api\User\Entity\User|\Api\User\Entity\UserAvatar|\Api\User\Entity\UserRole|null $instance
+     * @param mixed $instance
      *
      * @return ResponseInterface
      */

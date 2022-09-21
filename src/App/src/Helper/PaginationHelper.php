@@ -23,7 +23,7 @@ class PaginationHelper
 
         $offset = 0;
         if ($page > 0) {
-            $offset = ($page - 1) * self::LIMIT;
+            $offset = ($page - 1) * $limit;
         }
 
         return [

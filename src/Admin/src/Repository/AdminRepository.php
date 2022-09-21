@@ -8,24 +8,22 @@ use Api\Admin\Collection\AdminCollection;
 use Api\Admin\Entity\Admin;
 use Api\App\Helper\PaginationHelper;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
-use Exception;
 use Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType;
+use Exception;
 use Throwable;
 
 /**
  * Class AdminRepository
  * @package Api\Admin\Repository
+ *
+ * @Entity(name="Api\Admin\Entity\Admin")
  */
 class AdminRepository extends EntityRepository
 {
     /**
      * @param Admin $admin
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Exception
+     * @return void
      */
     public function deleteAdmin(Admin $admin): void
     {
@@ -37,9 +35,7 @@ class AdminRepository extends EntityRepository
 
     /**
      * @param Admin $admin
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @return void
      */
     public function saveAdmin(Admin $admin): void
     {

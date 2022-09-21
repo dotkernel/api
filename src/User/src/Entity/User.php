@@ -129,12 +129,11 @@ class User extends AbstractEntity
     }
 
     /**
-     * @param $password
-     * @param false|string $password
+     * @param string $password
      *
      * @return $this
      */
-    public function setPassword($password): self
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 

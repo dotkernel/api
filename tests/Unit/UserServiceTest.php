@@ -6,15 +6,12 @@ use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserRole;
-use Api\User\Repository\UserAvatarRepository;
 use Api\User\Repository\UserDetailRepository;
 use Api\User\Repository\UserRepository;
 use Api\User\Service\UserRoleService;
-use Api\User\Service\UserService;
 use Api\User\Service\UserService as Subject;
 use Doctrine\ORM\ORMException;
 use Dot\Mail\Service\MailService;
-use Laminas\Diactoros\UploadedFile;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
 use Exception;
@@ -25,7 +22,6 @@ use Exception;
  */
 class UserServiceTest extends TestCase
 {
-    /** @var Subject $subject */
     private Subject $subject;
 
     private UserRoleService $userRoleService;
@@ -35,8 +31,6 @@ class UserServiceTest extends TestCase
     private TemplateRendererInterface $templateRendererInterface;
 
     private UserRepository $userRepository;
-
-    private UserAvatarRepository $userAvatarRepository;
 
     private UserDetailRepository $userDetailRepository;
 
@@ -130,19 +124,6 @@ class UserServiceTest extends TestCase
         $this->assertFalse($user->isActive());
     }
 
-    public function testUpdateUserThrowsExceptionDuplicateIdentity()
-    {
-        $this->userRepository->method('exists')->willReturn(true);
-
-        $this->expectException(ORMException::class);
-
-        $user = new User();
-
-        $this->subject->updateUser($user, [
-            'identity' => 'test@dotkernel.com',
-        ]);
-    }
-
     public function testUpdateUserThrowsExceptionDuplicateUserDetailEmail()
     {
         $user = new User();
@@ -186,7 +167,6 @@ class UserServiceTest extends TestCase
         $userDetail->setEmail($data['detail']['lastName']);
         $userDetail->setEmail($data['detail']['email']);
 
-        $user->setIdentity($data['identity']);
         $user->setPassword(password_hash($data['password'], PASSWORD_DEFAULT));
         $user->setDetail($userDetail);
         $user->addRole($role);
@@ -203,41 +183,11 @@ class UserServiceTest extends TestCase
 
         $updatedUser = $this->subject->updateUser($user, $updateData);
 
-        $this->assertSame($updateData['identity'], $updatedUser->getIdentity());
         $this->assertTrue(password_verify($updateData['password'], $updatedUser->getPassword()));
         $this->assertSame($updateData['detail']['firstName'], $updatedUser->getDetail()->getFirstName());
         $this->assertSame($updateData['detail']['lastName'], $updatedUser->getDetail()->getLastName());
         $this->assertSame($updateData['detail']['email'], $updatedUser->getDetail()->getEmail());
     }
-
-//    public function testCreateUserAvatar()
-//    {
-//        $subject = $this->getMockBuilder(UserService::class)
-//            ->setConstructorArgs([
-//                $this->userRoleService,
-//                $this->mailService,
-//                $this->templateRendererInterface,
-//                $this->userRepository,
-//                $this->userAvatarRepository,
-//                $this->userDetailRepository,
-//                $this->config,
-//            ])
-//            ->onlyMethods([
-//                'deleteAvatarFile',
-//                'getUserAvatarDirectoryPath',
-//                'ensurePathExists',
-//            ])
-//            ->getMock();
-//
-//        $user = new User();
-//        $uploadedFile = $this->createMock(UploadedFile::class);
-//        $uploadedFile->method('getClientMediaType')->willReturn('image/jpg');
-//
-//        $userAvatar = $subject->createAvatar($user, $uploadedFile);
-//
-//        $this->assertSame($user, $userAvatar->getUser());
-//        $this->assertStringContainsString('.jpg', $userAvatar->getName());
-//    }
 
     private function getUser(array $data = []): array
     {

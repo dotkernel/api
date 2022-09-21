@@ -13,9 +13,12 @@ use Api\Admin\Factory\AdminCreateCommandFactory;
 use Api\Admin\Handler\AdminAccountHandler;
 use Api\Admin\Handler\AdminHandler;
 use Api\Admin\Handler\AdminRoleHandler;
+use Api\Admin\Repository\AdminRepository;
+use Api\Admin\Repository\AdminRoleRepository;
 use Api\Admin\Service\AdminRoleService;
 use Api\Admin\Service\AdminService;
 use Api\App\ConfigProvider as AppConfigProvider;
+use Dot\AnnotatedServices\Factory\AnnotatedRepositoryFactory;
 use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
 use Mezzio\Hal\Metadata\MetadataMap;
 
@@ -48,7 +51,9 @@ class ConfigProvider
                 AdminRoleHandler::class => AnnotatedServiceFactory::class,
                 AdminService::class => AnnotatedServiceFactory::class,
                 AdminRoleService::class => AnnotatedServiceFactory::class,
-                AdminCreateCommand::class => AdminCreateCommandFactory::class
+                AdminCreateCommand::class => AdminCreateCommandFactory::class,
+                AdminRepository::class => AnnotatedRepositoryFactory::class,
+                AdminRoleRepository::class => AnnotatedRepositoryFactory::class,
             ]
         ];
     }

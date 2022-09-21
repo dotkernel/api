@@ -9,9 +9,7 @@ use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
 use Api\Admin\Repository\AdminRepository;
 use Api\App\Message;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Doctrine\ORM\EntityManager;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Exception;
 
@@ -21,28 +19,27 @@ use Exception;
  */
 class AdminService
 {
-    protected AdminRepository $adminRepository;
-
     protected AdminRoleService $adminRoleService;
+
+    protected AdminRepository $adminRepository;
 
     /**
      * AdminService constructor.
-     * @param EntityManager $entityManager
      * @param AdminRoleService $adminRoleService
+     * @param AdminRepository $adminRepository
      *
-     * @Inject({EntityManager::class, AdminRoleService::class})
+     * @Inject({AdminRoleService::class, AdminRepository::class})
      */
-    public function __construct(EntityManager $entityManager, AdminRoleService $adminRoleService)
+    public function __construct(AdminRoleService $adminRoleService, AdminRepository $adminRepository)
     {
-        $this->adminRepository = $entityManager->getRepository(Admin::class);
         $this->adminRoleService = $adminRoleService;
+        $this->adminRepository = $adminRepository;
     }
 
     /**
      * @param Admin $admin
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @return void
+     * @throws Exception
      */
     public function deleteAdmin(Admin $admin): void
     {
@@ -98,8 +95,6 @@ class AdminService
      * @param Admin $admin
      * @param array $data
      * @return Admin
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Exception
      */
     public function updateAdmin(Admin $admin, array $data = []): Admin
@@ -143,8 +138,6 @@ class AdminService
     /**
      * @param array $data
      * @return Admin
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws Exception
      */
     public function createAdmin(array $data = []): Admin

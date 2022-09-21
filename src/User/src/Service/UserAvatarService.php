@@ -58,17 +58,15 @@ class UserAvatarService
             $avatar->setUser($user);
         }
 
-        $fileName = sprintf(
-            'avatar-%s.%s',
-            UuidOrderedTimeGenerator::generateUuid()->toString(),
-            self::EXTENSIONS[$uploadedFile->getClientMediaType()]
-        );
+        $fileName = $this->createFileName($uploadedFile->getClientMediaType());
 
         $avatar->setName($fileName);
 
         $uploadedFile->moveTo($path . $fileName);
 
-        return $this->userAvatarRepository->saveAvatar($avatar);
+        $this->userAvatarRepository->saveAvatar($avatar);
+
+        return $avatar;
     }
 
     /**
@@ -116,5 +114,18 @@ class UserAvatarService
         if (!file_exists($path)) {
             mkdir($path, 0755);
         }
+    }
+
+    /**
+     * @param string $fileType
+     * @return string
+     */
+    protected function createFileName(string $fileType): string
+    {
+        return sprintf(
+            'avatar-%s.%s',
+            UuidOrderedTimeGenerator::generateUuid()->toString(),
+            self::EXTENSIONS[$fileType]
+        );
     }
 }
