@@ -8,14 +8,16 @@ use Api\App\Helper\PaginationHelper;
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
 use Doctrine\DBAL\Connection;
-use Doctrine\ORM;
 use Doctrine\ORM\EntityRepository;
 use Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType;
+use Dot\AnnotatedServices\Annotation\Entity;
 use Throwable;
 
 /**
  * Class UserRepository
  * @package Api\User\Repository
+ *
+ * @Entity(name="Api\User\Entity\User")
  */
 class UserRepository extends EntityRepository
 {

@@ -8,10 +8,13 @@ use Api\App\Helper\PaginationHelper;
 use Api\User\Collection\UserRoleCollection;
 use Api\User\Entity\UserRole;
 use Doctrine\ORM\EntityRepository;
+use Dot\AnnotatedServices\Annotation\Entity;
 
 /**
  * Class UserRoleRepository
  * @package Api\User\Repository
+ *
+ * @Entity(name="Api\User\Entity\UserRole")
  */
 class UserRoleRepository extends EntityRepository
 {

@@ -19,8 +19,14 @@ use Api\User\Handler\UserActivateHandler;
 use Api\User\Handler\UserAvatarHandler;
 use Api\User\Handler\UserHandler;
 use Api\User\Handler\UserRoleHandler;
+use Api\User\Repository\UserAvatarRepository;
+use Api\User\Repository\UserDetailRepository;
+use Api\User\Repository\UserRepository;
+use Api\User\Repository\UserRoleRepository;
+use Api\User\Service\UserAvatarService;
 use Api\User\Service\UserRoleService;
 use Api\User\Service\UserService;
+use Dot\AnnotatedServices\Factory\AnnotatedRepositoryFactory;
 use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
 use Mezzio\Hal\Metadata\MetadataMap;
 
@@ -60,6 +66,11 @@ class ConfigProvider
                 UserRoleHandler::class => AnnotatedServiceFactory::class,
                 UserService::class => AnnotatedServiceFactory::class,
                 UserRoleService::class => AnnotatedServiceFactory::class,
+                UserAvatarService::class => AnnotatedServiceFactory::class,
+                UserRepository::class => AnnotatedRepositoryFactory::class,
+                UserDetailRepository::class => AnnotatedRepositoryFactory::class,
+                UserRoleRepository::class => AnnotatedRepositoryFactory::class,
+                UserAvatarRepository::class => AnnotatedRepositoryFactory::class,
             ]
         ];
     }

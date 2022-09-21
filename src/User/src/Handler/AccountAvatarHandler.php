@@ -9,7 +9,7 @@ use Api\App\Handler\DefaultHandler;
 use Api\User\Entity\User;
 use Api\User\Entity\UserAvatar;
 use Api\User\Form\InputFilter\UpdateAvatarInputFilter;
-use Api\User\Service\UserService;
+use Api\User\Service\UserAvatarService;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
@@ -23,24 +23,24 @@ use Throwable;
  */
 class AccountAvatarHandler extends DefaultHandler
 {
-    protected UserService $userService;
+    protected UserAvatarService $userAvatarService;
 
     /**
      * AccountAvatarHandler constructor.
      * @param HalResponseFactory $halResponseFactory
      * @param ResourceGenerator $resourceGenerator
-     * @param UserService $userService
+     * @param UserAvatarService $userAvatarService
      *
-     * @Inject({HalResponseFactory::class, ResourceGenerator::class, UserService::class})
+     * @Inject({HalResponseFactory::class, ResourceGenerator::class, UserAvatarService::class})
      */
     public function __construct(
         HalResponseFactory $halResponseFactory,
         ResourceGenerator $resourceGenerator,
-        UserService $userService
+        UserAvatarService $userAvatarService
     ) {
         parent::__construct($halResponseFactory, $resourceGenerator);
 
-        $this->userService = $userService;
+        $this->userAvatarService = $userAvatarService;
     }
 
     /**
@@ -50,12 +50,11 @@ class AccountAvatarHandler extends DefaultHandler
     public function delete(ServerRequestInterface $request): ResponseInterface
     {
         try {
-            /** @var User $user */
             $user = $request->getAttribute(User::class);
             if (!($user->getAvatar() instanceof UserAvatar)) {
                 return $this->notFoundResponse(Message::AVATAR_MISSING);
             }
-            $this->userService->removeAvatar($user);
+            $this->userAvatarService->removeAvatar($user);
             return $this->infoResponse(Message::AVATAR_DELETED);
         } catch (Throwable $exception) {
             return $this->errorResponse($exception->getMessage());
@@ -89,8 +88,11 @@ class AccountAvatarHandler extends DefaultHandler
         }
 
         try {
-            $user = $this->userService->updateUser($request->getAttribute(User::class), $inputFilter->getValues());
-            return $this->createResponse($request, $user->getAvatar());
+            $userAvatar = $this->userAvatarService->createAvatar(
+                $request->getAttribute(User::class),
+                $inputFilter->getValue('avatar')
+            );
+            return $this->createResponse($request, $userAvatar);
         } catch (Throwable $exception) {
             return $this->errorResponse($exception->getMessage());
         }
