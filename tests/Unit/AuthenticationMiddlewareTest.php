@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Unit;
-
 
 use Api\App\Middleware\AuthenticationMiddleware as Subject;
 use Api\User\Entity\UserRole;

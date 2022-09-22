@@ -65,7 +65,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
         switch ($defaultUser->getDetail('oauth_client_id')) {
             case 'admin':
                 $user = $this->adminRepository->findOneBy(['identity' => $defaultUser->getIdentity()]);
-                if ($user->getStatus() !== Admin::STATUS_ACTIVE) {
+                if (! $user->isActive()) {
                     return $this->unauthorizedResponse(Message::ADMIN_NOT_ACTIVATED);
                 }
                 $request = $request->withAttribute(Admin::class, $user);

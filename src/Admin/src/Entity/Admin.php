@@ -239,6 +239,14 @@ class Admin extends AbstractEntity
     }
 
     /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->status === self::STATUS_ACTIVE;
+    }
+
+    /**
      * @return $this
      * @throws Exception
      */

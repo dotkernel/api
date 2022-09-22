@@ -6,7 +6,6 @@ use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
 use Api\Admin\Repository\AdminRepository;
 use Api\Admin\Service\AdminRoleService;
-use Api\Admin\Service\AdminService;
 use Api\Admin\Service\AdminService as Subject;
 use Api\App\Message;
 use Doctrine\ORM\ORMException;
@@ -32,7 +31,7 @@ class AdminServiceTest extends TestCase
         $this->adminRoleService = $this->createMock(AdminRoleService::class);
         $this->adminRepository = $this->createMock(AdminRepository::class);
 
-        $this->subject = $this->getMockBuilder(AdminService::class)
+        $this->subject = $this->getMockBuilder(Subject::class)
             ->setConstructorArgs([
                 $this->adminRoleService,
                 $this->adminRepository,

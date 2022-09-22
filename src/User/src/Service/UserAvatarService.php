@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Api\User\Service;
 
 use Api\App\Entity\UuidOrderedTimeGenerator;

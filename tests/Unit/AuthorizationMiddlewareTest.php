@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Unit;
-
 
 use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
@@ -21,8 +19,11 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use function Couchbase\defaultDecoder;
 
+/**
+ * Class AuthorizationMiddlewareTest
+ * @package Test\Unit
+ */
 class AuthorizationMiddlewareTest extends TestCase
 {
     private Subject $subject;
