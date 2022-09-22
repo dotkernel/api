@@ -36,10 +36,10 @@ class UserDetail extends AbstractEntity
     protected ?string $lastName = null;
 
     /**
-     * @ORM\Column(name="email", type="string", length=191, nullable=true)
-     * @var string|null $email
+     * @ORM\Column(name="email", type="string", length=191)
+     * @var string $email
      */
-    protected ?string $email;
+    protected string $email;
 
     /**
      * UserDetail constructor.
@@ -107,9 +107,9 @@ class UserDetail extends AbstractEntity
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }

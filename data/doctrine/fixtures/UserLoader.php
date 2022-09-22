@@ -29,7 +29,8 @@ class UserLoader implements FixtureInterface, DependentFixtureInterface
         $userDetail
             ->setUser($user)
             ->setFirstName('Test')
-            ->setLastName('Account');
+            ->setLastName('Account')
+            ->setEmail('test@dotkernel.com');
 
         $userRoleRepository = $manager->getRepository(UserRole::class);
 
