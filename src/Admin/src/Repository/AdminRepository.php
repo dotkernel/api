@@ -9,6 +9,7 @@ use Api\Admin\Entity\Admin;
 use Api\App\Helper\PaginationHelper;
 use Doctrine\ORM\EntityRepository;
 use Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType;
+use Dot\AnnotatedServices\Annotation\Entity;
 use Exception;
 use Throwable;
 

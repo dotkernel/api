@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Api\Admin\Entity;
 
 use Api\App\Entity\AbstractEntity;
+use Api\App\Entity\RoleInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -212,10 +213,10 @@ class Admin extends AbstractEntity
     }
 
     /**
-     * @param AdminRole $role
+     * @param RoleInterface $role
      * @return $this
      */
-    public function addRole(AdminRole $role): self
+    public function addRole(RoleInterface $role): self
     {
         if (!$this->roles->contains($role)) {
             $this->roles->add($role);
@@ -225,10 +226,10 @@ class Admin extends AbstractEntity
     }
 
     /**
-     * @param AdminRole $role
+     * @param RoleInterface $role
      * @return $this
      */
-    public function removeRole(AdminRole $role): self
+    public function removeRole(RoleInterface $role): self
     {
         if (!$this->roles->contains($role)) {
             $this->roles->removeElement($role);
@@ -243,7 +244,7 @@ class Admin extends AbstractEntity
      */
     public function resetRoles(): self
     {
-        $this->getRoles()->map(function (AdminRole $role) {
+        $this->getRoles()->map(function (RoleInterface $role) {
             $this->removeRole($role);
         });
 
