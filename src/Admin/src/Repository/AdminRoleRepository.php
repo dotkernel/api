@@ -8,10 +8,13 @@ use Api\Admin\Collection\AdminRoleCollection;
 use Api\Admin\Entity\AdminRole;
 use Api\App\Helper\PaginationHelper;
 use Doctrine\ORM\EntityRepository;
+use Dot\AnnotatedServices\Annotation\Entity;
 
 /**
  * Class AdminRoleRepository
  * @package Api\Admin\Repository
+ *
+ * @Entity(name="Api\Admin\Entity\AdminRole")
  */
 class AdminRoleRepository extends EntityRepository
 {

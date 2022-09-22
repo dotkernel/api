@@ -9,6 +9,7 @@ use Api\App\Handler\DefaultHandler;
 use Api\User\Entity\User;
 use Api\User\Entity\UserAvatar;
 use Api\User\Form\InputFilter\UpdateAvatarInputFilter;
+use Api\User\Service\UserAvatarService;
 use Api\User\Service\UserService;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Mezzio\Hal\HalResponseFactory;
@@ -27,22 +28,27 @@ class UserAvatarHandler extends DefaultHandler
 {
     protected UserService $userService;
 
+    protected UserAvatarService $userAvatarService;
+
     /**
      * UserAvatarHandler constructor.
      * @param HalResponseFactory $halResponseFactory
      * @param ResourceGenerator $resourceGenerator
      * @param UserService $userService
+     * @param UserAvatarService $userAvatarService
      *
-     * @Inject({HalResponseFactory::class, ResourceGenerator::class, UserService::class})
+     * @Inject({HalResponseFactory::class, ResourceGenerator::class, UserService::class, UserAvatarService::class})
      */
     public function __construct(
         HalResponseFactory $halResponseFactory,
         ResourceGenerator $resourceGenerator,
-        UserService $userService
+        UserService $userService,
+        UserAvatarService $userAvatarService
     ) {
         parent::__construct($halResponseFactory, $resourceGenerator);
 
         $this->userService = $userService;
+        $this->userAvatarService = $userAvatarService;
     }
 
     /**
@@ -57,7 +63,8 @@ class UserAvatarHandler extends DefaultHandler
             if (!($user->getAvatar() instanceof UserAvatar)) {
                 return $this->notFoundResponse(Message::AVATAR_MISSING);
             }
-            $this->userService->removeAvatar($user);
+
+            $this->userAvatarService->removeAvatar($user);
             return $this->infoResponse(Message::AVATAR_DELETED);
         } catch (Throwable $exception) {
             return $this->errorResponse($exception->getMessage());
@@ -99,8 +106,8 @@ class UserAvatarHandler extends DefaultHandler
                 );
             }
 
-            $user = $this->userService->updateUser($user, $inputFilter->getValues());
-            return $this->createResponse($request, $user->getAvatar());
+            $userAvatar = $this->userAvatarService->createAvatar($user, $inputFilter->getValue('avatar'));
+            return $this->createResponse($request, $userAvatar);
         } catch (Throwable $exception) {
             return $this->errorResponse($exception->getMessage());
         }

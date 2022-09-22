@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Api\Admin\Entity;
 
 use Api\App\Entity\AbstractEntity;
+use Api\App\Entity\RoleInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -125,10 +126,10 @@ class Admin extends AbstractEntity
     }
 
     /**
-     * @param $firstName
+     * @param string $firstName
      * @return $this
      */
-    public function setFirstName($firstName): self
+    public function setFirstName(string $firstName): self
     {
         $this->firstName = $firstName;
 
@@ -144,10 +145,10 @@ class Admin extends AbstractEntity
     }
 
     /**
-     * @param $lastName
+     * @param string $lastName
      * @return $this
      */
-    public function setLastName($lastName): self
+    public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
 
@@ -212,10 +213,10 @@ class Admin extends AbstractEntity
     }
 
     /**
-     * @param AdminRole $role
+     * @param RoleInterface $role
      * @return $this
      */
-    public function addRole(AdminRole $role): self
+    public function addRole(RoleInterface $role): self
     {
         if (!$this->roles->contains($role)) {
             $this->roles->add($role);
@@ -225,10 +226,10 @@ class Admin extends AbstractEntity
     }
 
     /**
-     * @param AdminRole $role
+     * @param RoleInterface $role
      * @return $this
      */
-    public function removeRole(AdminRole $role): self
+    public function removeRole(RoleInterface $role): self
     {
         if (!$this->roles->contains($role)) {
             $this->roles->removeElement($role);
@@ -238,12 +239,20 @@ class Admin extends AbstractEntity
     }
 
     /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->status === self::STATUS_ACTIVE;
+    }
+
+    /**
      * @return $this
      * @throws Exception
      */
     public function resetRoles(): self
     {
-        $this->getRoles()->map(function (AdminRole $role) {
+        $this->getRoles()->map(function (RoleInterface $role) {
             $this->removeRole($role);
         });
 

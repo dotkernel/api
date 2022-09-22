@@ -32,7 +32,7 @@ class UserAvatarEventListener
     /**
      * @param UserAvatar $avatar
      */
-    public function postLoad(UserAvatar $avatar)
+    public function postLoad(UserAvatar $avatar): void
     {
         $this->setAvatarUrl($avatar);
     }
@@ -40,7 +40,7 @@ class UserAvatarEventListener
     /**
      * @param UserAvatar $avatar
      */
-    public function postPersist(UserAvatar $avatar)
+    public function postPersist(UserAvatar $avatar): void
     {
         $this->setAvatarUrl($avatar);
     }
@@ -48,7 +48,7 @@ class UserAvatarEventListener
     /**
      * @param UserAvatar $avatar
      */
-    public function postUpdate(UserAvatar $avatar)
+    public function postUpdate(UserAvatar $avatar): void
     {
         $this->setAvatarUrl($avatar);
     }
@@ -56,7 +56,7 @@ class UserAvatarEventListener
     /**
      * @param UserAvatar $avatar
      */
-    private function setAvatarUrl(UserAvatar $avatar)
+    private function setAvatarUrl(UserAvatar $avatar): void
     {
         $avatar->setUrl(
             sprintf(

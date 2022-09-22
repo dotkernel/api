@@ -7,7 +7,6 @@ namespace Api\User\Service;
 use Api\User\Collection\UserRoleCollection;
 use Api\User\Entity\UserRole;
 use Api\User\Repository\UserRoleRepository;
-use Doctrine\ORM\EntityManager;
 use Dot\AnnotatedServices\Annotation\Inject;
 
 /**
@@ -19,14 +18,14 @@ class UserRoleService
     protected UserRoleRepository $roleRepository;
 
     /**
-     * RoleService constructor.
-     * @param EntityManager $entityManager
+     * UserRoleService constructor.
+     * @param UserRoleRepository $roleRepository
      *
-     * @Inject({EntityManager::class})
+     * @Inject({UserRoleRepository::class})
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(UserRoleRepository $roleRepository)
     {
-        $this->roleRepository = $entityManager->getRepository(UserRole::class);
+        $this->roleRepository = $roleRepository;
     }
 
     /**

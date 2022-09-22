@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Api\App\Middleware;
 
 use Api\Admin\Entity\Admin;
-use Api\Admin\Service\AdminService;
+use Api\Admin\Repository\AdminRepository;
+use Api\User\Repository\UserRepository;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Api\App\Entity\Guest;
 use Api\App\Entity\RoleInterface;
 use Api\App\Message;
 use Api\App\UserIdentity;
 use Api\User\Entity\User;
-use Api\User\Service\UserService;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Http\Response;
 use Psr\Http\Message\ResponseInterface;
@@ -21,7 +21,6 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authorization\AuthorizationInterface;
-use Throwable;
 
 /**
  * Class AuthorizationMiddleware
@@ -29,35 +28,35 @@ use Throwable;
  */
 class AuthorizationMiddleware implements MiddlewareInterface
 {
-    protected UserService $userService;
-
     protected AuthorizationInterface $authorization;
 
-    protected AdminService $adminService;
+    protected UserRepository $userRepository;
+
+    protected AdminRepository $adminRepository;
 
     /**
      * AuthorizationMiddleware constructor.
-     * @param UserService $userService
      * @param AuthorizationInterface $authorization
-     * @param AdminService $adminService
+     * @param UserRepository $userRepository
+     * @param AdminRepository $adminRepository
      *
-     * @Inject({UserService::class, AuthorizationInterface::class, AdminService::class})
+     * @Inject({AuthorizationInterface::class, UserRepository::class, AdminRepository::class})
      */
-    public function __construct(
-        UserService $userService,
+    public function __construct
+    (
         AuthorizationInterface $authorization,
-        AdminService $adminService
+        UserRepository $userRepository,
+        AdminRepository $adminRepository
     ) {
-        $this->userService = $userService;
         $this->authorization = $authorization;
-        $this->adminService = $adminService;
+        $this->userRepository = $userRepository;
+        $this->adminRepository = $adminRepository;
     }
 
     /**
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
      * @return ResponseInterface
-     * @throws Throwable
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -65,37 +64,22 @@ class AuthorizationMiddleware implements MiddlewareInterface
         $defaultUser = $request->getAttribute(UserInterface::class);
         switch ($defaultUser->getDetail('oauth_client_id')) {
             case 'admin':
-                $user = $this->adminService->findByIdentity($defaultUser->getIdentity());
-                if ($user->getStatus() !== Admin::STATUS_ACTIVE) {
-                    return new JsonResponse([
-                        'error' => [
-                            'messages' => [
-                                Message::ADMIN_NOT_ACTIVATED
-                            ]
-                        ]
-                    ], Response::STATUS_CODE_403);
+                $user = $this->adminRepository->findOneBy(['identity' => $defaultUser->getIdentity()]);
+                if (! $user->isActive()) {
+                    return $this->unauthorizedResponse(Message::ADMIN_NOT_ACTIVATED);
                 }
                 $request = $request->withAttribute(Admin::class, $user);
                 break;
             case 'frontend':
-                $user = $this->userService->findByIdentity($defaultUser->getIdentity());
+                $user = $this->userRepository->findOneBy(['identity' => $defaultUser->getIdentity()]);
                 if (!($user instanceof User) || $user->isDeleted()) {
-                    return new JsonResponse([
-                        'error' => [
-                            'messages' => [
-                                sprintf(Message::USER_NOT_FOUND_BY_IDENTITY, $defaultUser->getIdentity())
-                            ]
-                        ]
-                    ], Response::STATUS_CODE_403);
+                    return $this->unauthorizedResponse(sprintf(
+                        Message::USER_NOT_FOUND_BY_IDENTITY,
+                        $defaultUser->getIdentity()
+                    ));
                 }
                 if ($user->getStatus() !== User::STATUS_ACTIVE) {
-                    return new JsonResponse([
-                        'error' => [
-                            'messages' => [
-                                Message::USER_NOT_ACTIVATED
-                            ]
-                        ]
-                    ], Response::STATUS_CODE_403);
+                    return $this->unauthorizedResponse(Message::USER_NOT_ACTIVATED);
                 }
                 $request = $request->withAttribute(User::class, $user);
                 break;
@@ -104,13 +88,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
                 $request = $request->withAttribute(Guest::class, $user);
                 break;
             default:
-                return new JsonResponse([
-                    'error' => [
-                        'messages' => [
-                            Message::INVALID_CLIENT_ID
-                        ]
-                    ]
-                ], Response::STATUS_CODE_403);
+                return $this->unauthorizedResponse(Message::INVALID_CLIENT_ID);
         }
 
         $defaultUser->setRoles($user->getRoles()->map(function (RoleInterface $role) {
@@ -128,15 +106,24 @@ class AuthorizationMiddleware implements MiddlewareInterface
         }
 
         if (!$isGranted) {
-            return new JsonResponse([
-                'error' => [
-                    'messages' => [
-                        Message::RESOURCE_NOT_ALLOWED
-                    ]
-                ]
-            ], Response::STATUS_CODE_403);
+            return $this->unauthorizedResponse(Message::RESOURCE_NOT_ALLOWED);
         }
 
         return $handler->handle($request);
+    }
+
+    /**
+     * @param string $message
+     * @return ResponseInterface
+     */
+    protected function unauthorizedResponse(string $message): ResponseInterface
+    {
+        return new JsonResponse([
+            'error' => [
+                'messages' => [
+                    $message
+                ]
+            ]
+        ], Response::STATUS_CODE_403);
     }
 }

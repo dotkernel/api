@@ -32,7 +32,7 @@ class UserAvatar extends AbstractEntity
     protected string $name;
 
     /** @var string|null $url */
-    protected ?string $url;
+    protected ?string $url = null;
 
     /**
      * UserAvatar constructor.

@@ -4,34 +4,24 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
-use Api\App\Entity\UuidOrderedTimeGenerator;
 use Api\App\Message;
 use Api\User\Collection\UserCollection;
-use Api\User\Entity\UserAvatar;
 use Api\User\Entity\UserDetail;
 use Api\User\Entity\User;
 use Api\User\Entity\UserRole;
-use Api\User\Repository\UserAvatarRepository;
 use Api\User\Repository\UserDetailRepository;
 use Api\User\Repository\UserRepository;
-use Doctrine\ORM;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
-use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\Mail\Exception\MailException;
 use Dot\Mail\Service\MailService;
-use Exception;
-use Laminas\Diactoros\UploadedFile;
 use Mezzio\Template\TemplateRendererInterface;
+use Dot\AnnotatedServices\Annotation\Inject;
+use Doctrine\ORM;
+use Exception;
 use Throwable;
 
-use function file_exists;
 use function is_null;
-use function is_readable;
-use function mkdir;
 use function password_hash;
-use function sprintf;
-use function unlink;
 
 /**
  * Class UserService
@@ -39,13 +29,7 @@ use function unlink;
  */
 class UserService
 {
-    public const EXTENSIONS = [
-        'image/jpg' => 'jpg',
-        'image/jpeg' => 'jpg',
-        'image/png' => 'png'
-    ];
-
-    protected array $config;
+    protected UserRoleService $userRoleService;
 
     protected MailService $mailService;
 
@@ -53,44 +37,47 @@ class UserService
 
     protected UserRepository $userRepository;
 
-    protected UserAvatarRepository $userAvatarRepository;
-
     protected UserDetailRepository $userDetailRepository;
 
-    protected UserRoleService $userRoleService;
+    protected array $config;
 
     /**
      * UserService constructor.
-     * @param EntityManager $entityManager
      * @param UserRoleService $userRoleService
      * @param MailService $mailService
      * @param TemplateRendererInterface $templateRenderer
+     * @param UserRepository $userRepository
+     * @param UserDetailRepository $userDetailRepository
      * @param array $config
      *
-     * @Inject({EntityManager::class, UserRoleService::class, MailService::class, TemplateRendererInterface::class,
-     *     "config"})
+     * @Inject({
+     *     UserRoleService::class,
+     *     MailService::class,
+     *     TemplateRendererInterface::class,
+     *     UserRepository::class,
+     *     UserDetailRepository::class,
+     *     "config"
+     * })
      */
     public function __construct(
-        EntityManager $entityManager,
         UserRoleService $userRoleService,
         MailService $mailService,
         TemplateRendererInterface $templateRenderer,
+        UserRepository $userRepository,
+        UserDetailRepository $userDetailRepository,
         array $config = []
     ) {
-        $this->userRepository = $entityManager->getRepository(User::class);
-        $this->userAvatarRepository = $entityManager->getRepository(UserAvatar::class);
-        $this->userDetailRepository = $entityManager->getRepository(UserDetail::class);
         $this->userRoleService = $userRoleService;
         $this->mailService = $mailService;
         $this->templateRenderer = $templateRenderer;
+        $this->userRepository = $userRepository;
+        $this->userDetailRepository = $userDetailRepository;
         $this->config = $config;
     }
 
     /**
      * @param User $user
      * @return User
-     * @throws ORMException
-     * @throws ORM\OptimisticLockException
      */
     public function activateUser(User $user): User
     {
@@ -104,7 +91,6 @@ class UserService
      * @return User
      * @throws Exception
      * @throws ORMException
-     * @throws ORM\OptimisticLockException
      */
     public function createUser(array $data = []): User
     {
@@ -114,6 +100,7 @@ class UserService
         if ($this->emailExists($data['detail']['email'])) {
             throw new ORMException(Message::DUPLICATE_EMAIL);
         }
+
         $user = new User();
         $user->setPassword(password_hash($data['password'], PASSWORD_DEFAULT))->setIdentity($data['identity']);
 
@@ -161,27 +148,8 @@ class UserService
     }
 
     /**
-     * @param string $path
-     * @return bool
-     */
-    public function deleteAvatarFile(string $path): bool
-    {
-        if (empty($path)) {
-            return false;
-        }
-
-        if (is_readable($path)) {
-            return unlink($path);
-        }
-
-        return false;
-    }
-
-    /**
      * @param User $user
      * @return User
-     * @throws ORMException
-     * @throws ORM\OptimisticLockException
      */
     public function deleteUser(User $user): User
     {
@@ -290,15 +258,6 @@ class UserService
     }
 
     /**
-     * @param User $user
-     * @return string
-     */
-    public function getUserAvatarDirectoryPath(User $user): string
-    {
-        return sprintf('%s/%s/', $this->config['uploads']['user']['path'], $user->getUuid()->toString());
-    }
-
-    /**
      * @param array $params
      * @return UserCollection
      */
@@ -401,7 +360,6 @@ class UserService
      * @param array $data
      * @return User
      * @throws ORMException
-     * @throws ORM\OptimisticLockException
      * @throws Throwable
      */
     public function updateUser(User $user, array $data = []): User
@@ -439,12 +397,6 @@ class UserService
             $user->getDetail()->setEmail($data['detail']['email']);
         }
 
-        if (!empty($data['avatar'])) {
-            $user->setAvatar(
-                $this->createAvatar($user, $data['avatar'])
-            );
-        }
-
         if (!empty($data['roles'])) {
             $user->resetRoles();
             foreach ($data['roles'] as $roleData) {
@@ -461,58 +413,6 @@ class UserService
         $this->userRepository->saveUser($user);
 
         return $user;
-    }
-
-    /**
-     * @param User $user
-     * @param UploadedFile $uploadedFile
-     * @return UserAvatar
-     */
-    protected function createAvatar(User $user, UploadedFile $uploadedFile): UserAvatar
-    {
-        $path = $this->getUserAvatarDirectoryPath($user);
-        if (!file_exists($path)) {
-            mkdir($path, 0755);
-        }
-
-        if ($user->getAvatar() instanceof UserAvatar) {
-            $avatar = $user->getAvatar();
-            $this->deleteAvatarFile($path . $avatar->getName());
-        } else {
-            $avatar = new UserAvatar();
-            $avatar->setUser($user);
-        }
-        $fileName = sprintf(
-            'avatar-%s.%s',
-            UuidOrderedTimeGenerator::generateUuid()->toString(),
-            self::EXTENSIONS[$uploadedFile->getClientMediaType()]
-        );
-        $avatar->setName($fileName);
-
-        $uploadedFile = new UploadedFile(
-            $uploadedFile->getStream()->getMetadata()['uri'],
-            $uploadedFile->getSize(),
-            $uploadedFile->getError()
-        );
-        $uploadedFile->moveTo($path . $fileName);
-
-        return $avatar;
-    }
-
-    /**
-     * @param User $user
-     * @return bool
-     * @throws ORMException
-     * @throws ORM\OptimisticLockException
-     */
-    public function removeAvatar(User $user): bool
-    {
-        if (!($user->getAvatar() instanceof UserAvatar)) {
-            return false;
-        }
-        $path = $this->getUserAvatarDirectoryPath($user);
-        $this->userAvatarRepository->deleteAvatar($user->getAvatar());
-        return $this->deleteAvatarFile($path . $user->getAvatar()->getName());
     }
 
     /**

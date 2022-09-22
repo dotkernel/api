@@ -80,7 +80,7 @@ class ConfigProvider
                 Authentication\AuthenticationInterface::class => Authentication\OAuth2\OAuth2Adapter::class,
                 MailService::class => 'dot-mail.service.default',
                 EntityManager::class => 'doctrine.entity_manager.orm_default',
-                EntityManagerInterface::class => 'doctrine.entity_manager.default',
+                EntityManagerInterface::class => 'doctrine.entity_manager.orm_default',
                 TemplateRendererInterface::class => TwigRenderer::class,
             ]
         ];

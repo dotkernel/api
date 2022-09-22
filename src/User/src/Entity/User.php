@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Api\User\Entity;
 
 use Api\App\Entity\AbstractEntity;
+use Api\App\Entity\RoleInterface;
 use Api\App\Entity\UuidOrderedTimeGenerator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -129,10 +130,11 @@ class User extends AbstractEntity
     }
 
     /**
-     * @param $password
+     * @param string $password
+     *
      * @return $this
      */
-    public function setPassword($password): self
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
@@ -149,9 +151,12 @@ class User extends AbstractEntity
 
     /**
      * @param $status
+     *
      * @return $this
+     *
+     * @psalm-param 'active'|'pending' $status
      */
-    public function setStatus($status): self
+    public function setStatus(string $status): self
     {
         $this->status = $status;
 
@@ -245,10 +250,10 @@ class User extends AbstractEntity
     }
 
     /**
-     * @param UserRole $role
+     * @param RoleInterface $role
      * @return $this
      */
-    public function addRole(UserRole $role): self
+    public function addRole(RoleInterface $role): self
     {
         $this->roles->add($role);
 
@@ -264,19 +269,19 @@ class User extends AbstractEntity
     }
 
     /**
-     * @param UserRole $role
+     * @param RoleInterface $role
      * @return bool
      */
-    public function hasRole(UserRole $role): bool
+    public function hasRole(RoleInterface $role): bool
     {
         return $this->roles->contains($role);
     }
 
     /**
-     * @param UserRole $role
+     * @param RoleInterface $role
      * @return $this
      */
-    public function removeRole(UserRole $role): self
+    public function removeRole(RoleInterface $role): self
     {
         $this->roles->removeElement($role);
 
@@ -435,7 +440,7 @@ class User extends AbstractEntity
      */
     public function resetRoles(): self
     {
-        $this->getRoles()->map(function (UserRole $role) {
+        $this->getRoles()->map(function (RoleInterface $role) {
            return $this->removeRole($role);
         });
         $this->roles = new ArrayCollection();

@@ -9,7 +9,6 @@ use Api\Admin\Entity\AdminRole;
 use Api\Admin\Repository\AdminRoleRepository;
 use Api\App\Entity\RoleInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
-use Doctrine\ORM\EntityManager;
 
 /**
  * Class AdminRoleService
@@ -20,14 +19,14 @@ class AdminRoleService
     protected AdminRoleRepository $adminRoleRepository;
 
     /**
-     * RoleService constructor.
-     * @param EntityManager $entityManager
+     * AdminRoleService constructor.
+     * @param AdminRoleRepository $adminRoleRepository
      *
-     * @Inject({EntityManager::class})
+     * @Inject({AdminRoleRepository::class})
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(AdminRoleRepository $adminRoleRepository)
     {
-        $this->adminRoleRepository = $entityManager->getRepository(AdminRole::class);
+        $this->adminRoleRepository = $adminRoleRepository;
     }
 
     /**

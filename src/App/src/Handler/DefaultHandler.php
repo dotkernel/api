@@ -54,7 +54,8 @@ class DefaultHandler implements RequestHandlerInterface
 
     /**
      * @param ServerRequestInterface $request
-     * @param $instance
+     * @param mixed $instance
+     *
      * @return ResponseInterface
      */
     public function createResponse(ServerRequestInterface $request, $instance): ResponseInterface
