@@ -23,8 +23,7 @@
             "dotkernel/*": true,
             "laminas/laminas-component-installer": true,
             "composer/package-versions-deprecated": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true,
-            "laminas/laminas-dependency-plugin": true
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "extra": {
