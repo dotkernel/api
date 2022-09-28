@@ -21,7 +21,6 @@ return [
         'roles' => [
             AdminRole::ROLE_SUPERUSER => [],
             AdminRole::ROLE_ADMIN => [AdminRole::ROLE_SUPERUSER],
-            UserRole::ROLE_USER => [AdminRole::ROLE_ADMIN],
             UserRole::ROLE_GUEST => [UserRole::ROLE_USER]
         ],
         'permissions' => [
@@ -47,6 +46,8 @@ return [
                 'user.avatar.view',
                 'user.role.list',
                 'user.role.view',
+                'error.report',
+                'home',
             ],
             UserRole::ROLE_USER => [
                 'user.my-account.delete',
