@@ -5,10 +5,10 @@
          colors="true">
     <testsuites>
         <testsuite name="UnitTests">
-            <directory>./tests/Unit</directory>
+            <directory>./tests/AppTest/Unit</directory>
         </testsuite>
-        <testsuite name="App\\Tests">
-            <directory>./tests</directory>
+        <testsuite name="FunctionalTests">
+            <directory>./tests/AppTest/Functional</directory>
         </testsuite>
     </testsuites>
 </phpunit>

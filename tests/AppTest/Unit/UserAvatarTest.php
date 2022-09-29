@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit;
+namespace AppTest\Unit;
 
 use Api\User\Entity\User;
 use Api\User\Entity\UserAvatar;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit;
+namespace AppTest\Unit;
 
 use Api\App\Middleware\AuthenticationMiddleware as Subject;
 use Api\User\Entity\UserRole;

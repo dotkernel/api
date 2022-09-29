@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit;
+namespace AppTest\Unit;
 
 use Api\App\Message;
 use Api\User\Entity\User;
