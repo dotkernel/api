@@ -31,13 +31,14 @@ return [
     'test_mode' => true,
     'authentication' => [
         'pdo' => [
-            'dsn' => sprintf('mysql:host=%s;port=%d;dbname=%s',
-                'localhost',
-                3306,
-                'api_unit_tests'
-            ),
-            'username' => 'root',
-            'password' => 'marioradu',
+            'dsn' => 'sqlite::memory:',
+//            'dsn' => sprintf('mysql:host=%s;port=%d;dbname=%s',
+//                'test',
+//                3306,
+//                'test'
+//            ),
+//            'username' => 'test',
+//            'password' => 'test',
         ],
     ]
 ];

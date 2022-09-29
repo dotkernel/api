@@ -3,7 +3,7 @@
 namespace AppTest\Functional;
 
 use AppTest\Helper\AbstractFunctionalTest;
-use Laminas\Http\Response;
+use Fig\Http\Message\StatusCodeInterface;
 use AppTest\Helper\DatabaseTrait;
 
 /**
@@ -13,11 +13,6 @@ use AppTest\Helper\DatabaseTrait;
 class AuthenticationTest extends AbstractFunctionalTest
 {
     use DatabaseTrait;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
 
     public function testAuthenticateInvalidUser()
     {
@@ -31,8 +26,9 @@ class AuthenticationTest extends AbstractFunctionalTest
             'scope' => 'api',
         ]);
 
-        $data = json_decode((string)$response->getBody(), true);
-        $this->assertSame(Response::STATUS_CODE_400, $response->getStatusCode());
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        $this->assertSame(StatusCodeInterface::STATUS_BAD_REQUEST, $response->getStatusCode());
         $this->assertArrayHasKey('error', $data);
         $this->assertArrayHasKey('error_description', $data);
         $this->assertArrayHasKey('message', $data);
@@ -52,9 +48,9 @@ class AuthenticationTest extends AbstractFunctionalTest
             'scope' => 'api',
         ]);
 
-        $data = json_decode((string)$response->getBody(), true);
+        $data = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertSame(Response::STATUS_CODE_200, $response->getStatusCode());
+        $this->assertSame(StatusCodeInterface::STATUS_OK, $response->getStatusCode());
         $this->assertArrayHasKey('token_type', $data);
         $this->assertArrayHasKey('expires_in', $data);
         $this->assertArrayHasKey('access_token', $data);
@@ -67,16 +63,27 @@ class AuthenticationTest extends AbstractFunctionalTest
 
     public function testRefreshToken()
     {
-        $response = $this->post('/security/generate-token', [
-            'username' => 'test@dotkernel.com',
-            'password' => 'dotkernel',
-            'grant_type' => 'password',
+        $this->loginAs('test@dotkernel.com', 'dotkernel');
+        $authTokens = $this->authTokens;
+
+        $response = $this->post('/security/refresh-token', [
+            'grant_type' => 'refresh_token',
             'client_id' => 'frontend',
             'client_secret' => 'frontend',
             'scope' => 'api',
+            'refresh_token' => $authTokens['refresh_token']
         ]);
 
+        $this->assertSame(StatusCodeInterface::STATUS_OK, $response->getStatusCode());
 
+        $data = json_decode($response->getBody()->getContents(), true);
 
+        $this->assertArrayHasKey('token_type', $data);
+        $this->assertArrayHasKey('expires_in', $data);
+        $this->assertArrayHasKey('access_token', $data);
+        $this->assertArrayHasKey('refresh_token', $data);
+        $this->assertSame('Bearer', $data['token_type']);
+        $this->assertNotEquals($authTokens['access_token'], $data['access_token']);
+        $this->assertNotEquals($authTokens['refresh_token'], $data['refresh_token']);
     }
 }

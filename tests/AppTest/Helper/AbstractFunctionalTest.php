@@ -5,11 +5,16 @@ namespace AppTest\Helper;
 use Doctrine\ORM\EntityManagerInterface;
 use Fig\Http\Message\RequestMethodInterface;
 use Laminas\Diactoros\ServerRequest;
-use Laminas\Http\Response;
+use Fig\Http\Message\StatusCodeInterface;
+use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -23,7 +28,7 @@ abstract class AbstractFunctionalTest extends TestCase
 
     protected Application $app;
 
-    private string $accessToken = '';
+    protected array $authTokens = [];
 
     public function setUp(): void
     {
@@ -46,9 +51,9 @@ abstract class AbstractFunctionalTest extends TestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
-
         TestHelper::disableTestMode();
+
+        parent::tearDown();
     }
 
     private function initContainer(): void
@@ -73,11 +78,6 @@ abstract class AbstractFunctionalTest extends TestCase
         (require realpath(__DIR__ . '/../../../config/routes.php'))($this->app, $factory, $this->container);
     }
 
-    protected function app(): Application
-    {
-        return $this->app;
-    }
-
     protected function getEntityManager(): EntityManagerInterface
     {
         return $this->container->get(EntityManagerInterface::class);
@@ -88,34 +88,17 @@ abstract class AbstractFunctionalTest extends TestCase
         return $this->container;
     }
 
+    /**
+     * @param string $uri
+     * @param array $queryParams
+     * @param array $uploadedFiles
+     * @param array $headers
+     * @param array $cookies
+     * @return ResponseInterface
+     */
     protected function get
     (
         string $uri,
-        array $params = [],
-        array $uploadedFiles = [],
-        array $headers = [],
-        array $cookies = []
-    ): ResponseInterface
-    {
-        $queryParams = $params;
-        $request = $this->createRequest(
-            [],
-            $uploadedFiles,
-            $uri,
-            RequestMethodInterface::METHOD_GET,
-            'php://input',
-            $headers,
-            $cookies,
-            $queryParams,
-        );
-
-        return $this->app->handle($request);
-    }
-
-    protected function post
-    (
-        string $uri,
-        array $bodyParams = [],
         array $queryParams = [],
         array $uploadedFiles = [],
         array $headers = [],
@@ -123,60 +106,137 @@ abstract class AbstractFunctionalTest extends TestCase
     ): ResponseInterface
     {
         $request = $this->createRequest(
-            [],
-            $uploadedFiles,
             $uri,
-            RequestMethodInterface::METHOD_POST,
-            'php://input',
+            RequestMethodInterface::METHOD_GET,
+            [],
+            $queryParams,
+            $uploadedFiles,
             $headers,
             $cookies,
-            $queryParams,
-            $bodyParams,
         );
 
-        return $this->app->handle($request);
+        return $this->getResponse($request);
     }
 
-    protected function loginAs(string $identity, string $password): self
+    /**
+     * @param string $uri
+     * @param array $parsedBody
+     * @param array $queryParams
+     * @param array $uploadedFiles
+     * @param array $headers
+     * @param array $cookies
+     * @return ResponseInterface
+     */
+    protected function post
+    (
+        string $uri,
+        array $parsedBody = [],
+        array $queryParams = [],
+        array $uploadedFiles = [],
+        array $headers = [],
+        array $cookies = []
+    ): ResponseInterface
     {
-        $response = $this->post('/security/generate-token', [
+        $request = $this->createRequest(
+            $uri,
+            RequestMethodInterface::METHOD_POST,
+            $parsedBody,
+            $queryParams,
+            $uploadedFiles,
+            $headers,
+            $cookies
+        );
+
+        return $this->getResponse($request);
+    }
+
+    /**
+     * @param string $identity
+     * @param string $password
+     * @param string $clientId
+     * @param string $clientSecret
+     * @param string $scope
+     * @return $this
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    protected function loginAs
+    (
+        string $identity,
+        string $password,
+        string $clientId = 'frontend',
+        string $clientSecret = 'frontend',
+        string $scope = 'api'
+    ): self
+    {
+        $request = $this->createLoginRequest([
             'grant_type' => 'password',
-            'client_id' => 'frontend',
-            'client_secret' => 'frontend',
-            'scope' => 'api',
+            'client_id' => $clientId,
+            'client_secret' => $clientSecret,
+            'scope' => $scope,
             'username' => $identity,
             'password' => $password,
         ]);
 
-        $this->assertSame(Response::STATUS_CODE_200, $response->getStatusCode());
+        $authorizationServer = $this->getContainer()->get(AuthorizationServer::class);
+        $responseFactory = $this->getContainer()->get(ResponseFactoryInterface::class);
+        $response = $responseFactory->createResponse();
+        try {
+            $response = $authorizationServer->respondToAccessTokenRequest($request, $responseFactory->createResponse());
+        } catch (OAuthServerException $exception) {
+            $response = $exception->generateHttpResponse($response);
+        }
 
-        $body = json_decode((string)$response->getBody(),true);
+        $this->assertSame(StatusCodeInterface::STATUS_OK, $response->getStatusCode());
+
+        $response->getBody()->rewind();
+
+        $body = json_decode($response->getBody()->getContents(),true);
 
         $this->assertArrayHasKey('access_token', $body);
+        $this->assertArrayHasKey('refresh_token', $body);
         $this->assertNotEmpty($body['access_token']);
+        $this->assertNotEmpty($body['refresh_token']);
 
-        $this->accessToken = 'Bearer ' . $body['access_token'];
+        $this->authTokens = [
+            'access_token' => 'Bearer ' . $body['access_token'],
+            'refresh_token' => $body['refresh_token'],
+        ];
 
         return $this;
     }
 
+    /**
+     * @param string $uri
+     * @param string $method
+     * @param array $parsedBody
+     * @param array $queryParams
+     * @param array $uploadedFiles
+     * @param array $headers
+     * @param array $cookies
+     * @param array $serverParams
+     * @param string $body
+     * @param string $protocol
+     * @return ServerRequestInterface
+     */
     private function createRequest
     (
-        array $serverParams = [],
+        string $uri,
+        string $method,
+        array $parsedBody = [],
+        array $queryParams = [],
         array $uploadedFiles = [],
-        string $uri = '',
-        string $method = RequestMethodInterface::METHOD_GET,
-        string $body = 'php://input',
         array $headers = [],
         array $cookies = [],
-        array $queryParams = [],
-        array $parsedBody = [],
+        array $serverParams = [],
+        string $body = 'php://input',
         string $protocol = '1.1'
     ): ServerRequestInterface
     {
-        if (! empty($this->accessToken)) {
-            $headers = array_merge($headers, ['Authorization' => $this->accessToken]);
+        if (! empty($this->authTokens['access_token'])) {
+            $headers = array_merge($headers, ['Authorization' => $this->authTokens['access_token']]);
         }
+
         return new ServerRequest(
             $serverParams,
             $uploadedFiles,
@@ -187,7 +247,43 @@ abstract class AbstractFunctionalTest extends TestCase
             $cookies,
             $queryParams,
             $parsedBody,
-            $protocol
+            $protocol,
         );
     }
+
+    /**
+     * @param array $bodyParams
+     * @return ServerRequest
+     */
+    private function createLoginRequest(array $bodyParams): ServerRequest
+    {
+        return new ServerRequest(
+            [],
+            [],
+            '',
+            RequestMethodInterface::METHOD_POST,
+            'php://input',
+            [],
+            [],
+            [],
+            $bodyParams,
+            '1.1',
+        );
+    }
+
+    /**
+     *
+     * Process response and set cursor at position(0)
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    private function getResponse(ServerRequestInterface $request): ResponseInterface
+    {
+        $response = $this->app->handle($request);
+        $response->getBody()->rewind();
+
+        return $response;
+    }
+
 }
