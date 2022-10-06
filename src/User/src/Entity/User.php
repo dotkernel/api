@@ -9,6 +9,7 @@ use Api\App\Entity\RoleInterface;
 use Api\App\Entity\UuidOrderedTimeGenerator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use League\OAuth2\Server\Entities\UserEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Throwable;
 
@@ -22,7 +23,7 @@ use function random_bytes;
  * @ORM\HasLifecycleCallbacks()
  * @package Api\User\Entity
  */
-class User extends AbstractEntity
+class User extends AbstractEntity implements UserEntityInterface
 {
     public const STATUS_PENDING = 'pending';
     public const STATUS_ACTIVE = 'active';
@@ -247,6 +248,14 @@ class User extends AbstractEntity
         $this->detail = $detail;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier(): string
+    {
+        return $this->getIdentity();
     }
 
     /**

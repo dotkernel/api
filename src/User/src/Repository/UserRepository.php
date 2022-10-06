@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace Api\User\Repository;
 
+use Api\Admin\Entity\Admin;
 use Api\App\Helper\PaginationHelper;
+use Api\App\Message;
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityRepository;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Exception\OAuthServerException;
+use League\OAuth2\Server\Repositories\UserRepositoryInterface;
+use Mezzio\Authentication\OAuth2\Entity\UserEntity;
 use Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType;
 use Dot\AnnotatedServices\Annotation\Entity;
 use Throwable;
@@ -19,7 +25,7 @@ use Throwable;
  *
  * @Entity(name="Api\User\Entity\User")
  */
-class UserRepository extends EntityRepository
+class UserRepository extends EntityRepository implements UserRepositoryInterface
 {
     /**
      * @param string $email
@@ -238,5 +244,48 @@ class UserRepository extends EntityRepository
     {
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
+    }
+
+    public function getUserEntityByUserCredentials(
+        $username,
+        $password,
+        $grantType,
+        ClientEntityInterface $clientEntity
+    ): ?UserEntity {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        switch ($clientEntity->getName()) {
+            case 'admin':
+                $qb->select('a.password')
+                    ->from(Admin::class, 'a')
+                    ->andWhere('identity = :identity')
+                    ->setParameter('identity', $username);
+                break;
+            case 'frontend':
+                $qb->select(['u.password', 'u.status'])
+                    ->from(User::class, 'u')
+                    ->andWhere('u.identity = :identity')
+                    ->andWhere('u.isDeleted = 0')
+                    ->setParameter('identity', $username);
+                break;
+            default:
+                throw new OAuthServerException(Message::INVALID_CLIENT_ID, 6, 'invalid_client', 401);
+        }
+
+        $result = $qb->getQuery()->getArrayResult();
+        if (empty($result) || empty($result[0])) {
+            return null;
+        }
+
+        $result = $result[0];
+
+        if (!password_verify($password, $result['password'])) {
+            return null;
+        }
+
+        if ($clientEntity->getName() == 'frontend' && $result['status'] !== User::STATUS_ACTIVE) {
+            throw new OAuthServerException(Message::USER_NOT_ACTIVATED, 6, 'inactive_user', 401);
+        }
+
+        return new UserEntity($username);
     }
 }

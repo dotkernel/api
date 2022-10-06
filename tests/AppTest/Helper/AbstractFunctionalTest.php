@@ -11,9 +11,7 @@ use League\OAuth2\Server\Exception\OAuthServerException;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -88,14 +86,6 @@ abstract class AbstractFunctionalTest extends TestCase
         return $this->container;
     }
 
-    /**
-     * @param string $uri
-     * @param array $queryParams
-     * @param array $uploadedFiles
-     * @param array $headers
-     * @param array $cookies
-     * @return ResponseInterface
-     */
     protected function get
     (
         string $uri,
@@ -118,15 +108,6 @@ abstract class AbstractFunctionalTest extends TestCase
         return $this->getResponse($request);
     }
 
-    /**
-     * @param string $uri
-     * @param array $parsedBody
-     * @param array $queryParams
-     * @param array $uploadedFiles
-     * @param array $headers
-     * @param array $cookies
-     * @return ResponseInterface
-     */
     protected function post
     (
         string $uri,
@@ -150,16 +131,6 @@ abstract class AbstractFunctionalTest extends TestCase
         return $this->getResponse($request);
     }
 
-    /**
-     * @param string $identity
-     * @param string $password
-     * @param string $clientId
-     * @param string $clientSecret
-     * @param string $scope
-     * @return $this
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     protected function loginAs
     (
         string $identity,
@@ -285,5 +256,4 @@ abstract class AbstractFunctionalTest extends TestCase
 
         return $response;
     }
-
 }

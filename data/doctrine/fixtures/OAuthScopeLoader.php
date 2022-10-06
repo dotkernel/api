@@ -15,8 +15,9 @@ class OAuthScopeLoader implements FixtureInterface
 
     public function load(ObjectManager $manager)
     {
-//        $manager->getConnection()->insert(self::TABLE_NAME, [
-//            'id' => 'api'
-//        ]);
+        $manager->getConnection()->insert(self::TABLE_NAME, [
+            'id' => 0,
+            'scope' => 'api',
+        ]);
     }
 }

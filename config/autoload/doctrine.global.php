@@ -23,6 +23,7 @@ return [
                 'drivers' => [
                     'Api\\User\\Entity' => 'UserEntities',
                     'Api\\Admin\\Entity' => 'AdminEntities',
+                    'Api\\App\Entity' => 'AppEntities',
                 ]
             ],
             'AdminEntities' => [
@@ -34,6 +35,11 @@ return [
                 'class' => AnnotationDriver::class,
                 'cache' => 'array',
                 'paths' => __DIR__ . '/../../src/User/src/Entity',
+            ],
+            'AppEntities' => [
+                'class' => AnnotationDriver::class,
+                'cache' => 'array',
+                'paths' => __DIR__ . '/../../src/App/src/Entity',
             ]
         ],
         'types' => [
