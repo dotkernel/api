@@ -1,9 +1,7 @@
 <?php
 
-
 namespace Api\App\Entity;
 
-use Api\User\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -16,6 +14,7 @@ use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Token;
+use DateTimeImmutable;
 
 /**
  * Class OAuthAccessToken
@@ -39,10 +38,10 @@ class OAuthAccessToken implements AccessTokenEntityInterface
     private ClientEntityInterface $client;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Api\User\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="uuid", nullable=true)
+     * @ORM\Column(name="user_id", type="string", nullable=true)
+     * @var string|null $userId
      */
-    private ?User $user;
+    private ?string $userId;
 
     /**
      * @ORM\Column(name="token", type="string", length=100)
@@ -66,20 +65,19 @@ class OAuthAccessToken implements AccessTokenEntityInterface
     protected Collection $scopes;
 
     /**
-     * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @ORM\Column(name="expires_at", type="datetime_immutable")
      */
-    private \DateTimeImmutable $expiresDatetime;
+    private DateTimeImmutable $expiresAt;
 
     private ?CryptKey $privateKey = null;
 
     private ?Configuration $jwtConfiguration = null;
 
+    /**
+     * OAuthAccessToken constructor.
+     */
     public function __construct()
     {
-        $this->id = 0;
-        $this->expiresDatetime = new \DateTimeImmutable();
-        $this->user = null;
-        $this->token = '';
         $this->scopes = new ArrayCollection();
     }
 
@@ -105,18 +103,6 @@ class OAuthAccessToken implements AccessTokenEntityInterface
     public function getClient(): ClientEntityInterface
     {
         return $this->client;
-    }
-
-    public function setUser(?User $user = null): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
     }
 
     public function getToken(): string
@@ -155,17 +141,14 @@ class OAuthAccessToken implements AccessTokenEntityInterface
 
     public function setUserIdentifier($identifier): self
     {
-        //TODO: not sure what this is for, just making the interface happy for now
+        $this->userId = $identifier;
+
         return $this;
     }
 
-    public function getUserIdentifier(): string
+    public function getUserIdentifier(): ?string
     {
-        if (null === $user = $this->getUser()) {
-            return '';
-        }
-
-        return $user->getIdentifier();
+        return $this->userId;
     }
 
     public function addScope(ScopeEntityInterface $scope): self
@@ -196,26 +179,16 @@ class OAuthAccessToken implements AccessTokenEntityInterface
         return $this->scopes->matching($criteria)->toArray();
     }
 
-    public function setExpiresDatetime(\DateTimeImmutable $expiresDatetime): self
+    public function getExpiryDateTime(): DateTimeImmutable
     {
-        $this->expiresDatetime = $expiresDatetime;
+        return $this->expiresAt;
+    }
+
+    public function setExpiryDateTime(DateTimeImmutable $dateTime): self
+    {
+        $this->expiresAt = $dateTime;
 
         return $this;
-    }
-
-    public function getExpiresDatetime(): \DateTimeImmutable
-    {
-        return $this->expiresDatetime;
-    }
-
-    public function getExpiryDateTime(): \DateTimeImmutable
-    {
-        return $this->getExpiresDatetime();
-    }
-
-    public function setExpiryDateTime(\DateTimeImmutable $dateTime): self
-    {
-        return $this->setExpiresDatetime($dateTime);
     }
 
     public function setPrivateKey(CryptKey $privateKey): self

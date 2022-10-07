@@ -65,6 +65,12 @@ class AuthorizationMiddleware implements MiddlewareInterface
         switch ($defaultUser->getDetail('oauth_client_id')) {
             case 'admin':
                 $user = $this->adminRepository->findOneBy(['identity' => $defaultUser->getIdentity()]);
+                if (! ($user instanceof Admin)) {
+                    return $this->unauthorizedResponse(sprintf(
+                        Message::USER_NOT_FOUND_BY_IDENTITY,
+                        $defaultUser->getIdentity()
+                    ));
+                }
                 if (! $user->isActive()) {
                     return $this->unauthorizedResponse(Message::ADMIN_NOT_ACTIVATED);
                 }
@@ -96,6 +102,8 @@ class AuthorizationMiddleware implements MiddlewareInterface
         })->toArray());
 
         $request = $request->withAttribute(UserInterface::class, $defaultUser);
+
+//        echo "<pre>"; var_dump($defaultUser); exit;
 
         $isGranted = false;
         foreach ($defaultUser->getRoles() as $role) {

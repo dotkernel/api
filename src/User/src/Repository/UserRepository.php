@@ -257,7 +257,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             case 'admin':
                 $qb->select('a.password')
                     ->from(Admin::class, 'a')
-                    ->andWhere('identity = :identity')
+                    ->andWhere('a.identity = :identity')
                     ->setParameter('identity', $username);
                 break;
             case 'frontend':

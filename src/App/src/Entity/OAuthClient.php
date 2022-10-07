@@ -15,8 +15,11 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="oauth_clients")
  * @package Api\App\Entity
  */
-class OAuthClient implements UserInterface, ClientEntityInterface
+class OAuthClient implements ClientEntityInterface
 {
+    public const NAME_ADMIN = 'admin';
+    public const NAME_FRONTEND = 'frontend';
+
     /**
      * @ORM\Id()
      * @ORM\Column(name="id", type="integer", options={"unsigned":true})
@@ -56,7 +59,6 @@ class OAuthClient implements UserInterface, ClientEntityInterface
     private bool $isConfidential = false;
 
     private array $roles = [];
-    private array $details = [];
 
     public function __construct()
     {
@@ -93,33 +95,6 @@ class OAuthClient implements UserInterface, ClientEntityInterface
     public function getIdentity(): string
     {
         return $this->getName();
-    }
-
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
-        return $this;
-    }
-
-    public function getRoles(): array
-    {
-        return $this->roles;
-    }
-
-    public function setDetails(array $details): self
-    {
-        $this->details = $details;
-        return $this;
-    }
-
-    public function getDetails(): array
-    {
-        return $this->details;
-    }
-
-    public function getDetail(string $name, $default = null)
-    {
-        return $this->details[$name] ?? $default;
     }
 
     public function getIdentifier(): string

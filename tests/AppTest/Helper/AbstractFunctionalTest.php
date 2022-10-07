@@ -32,7 +32,7 @@ abstract class AbstractFunctionalTest extends TestCase
     {
         parent::setUp();
 
-        TestHelper::enableTestMode();
+        $this->enableTestMode();
 
         $this->initContainer();
         $this->initApp();
@@ -49,9 +49,24 @@ abstract class AbstractFunctionalTest extends TestCase
 
     public function tearDown(): void
     {
-        TestHelper::disableTestMode();
+        $this->disableTestMode();
 
         parent::tearDown();
+    }
+
+    private function enableTestMode(): void
+    {
+        putenv('TEST_MODE=true');
+    }
+
+    private function disableTestMode(): void
+    {
+        putenv('TEST_MODE');
+    }
+
+    public static function isTestMode(): bool
+    {
+        return getenv('TEST_MODE') === 'true';
     }
 
     private function initContainer(): void
@@ -121,6 +136,52 @@ abstract class AbstractFunctionalTest extends TestCase
         $request = $this->createRequest(
             $uri,
             RequestMethodInterface::METHOD_POST,
+            $parsedBody,
+            $queryParams,
+            $uploadedFiles,
+            $headers,
+            $cookies
+        );
+
+        return $this->getResponse($request);
+    }
+
+    protected function patch
+    (
+        string $uri,
+        array $parsedBody = [],
+        array $queryParams = [],
+        array $uploadedFiles = [],
+        array $headers = [],
+        array $cookies = []
+    ): ResponseInterface
+    {
+        $request = $this->createRequest(
+            $uri,
+            RequestMethodInterface::METHOD_PATCH,
+            $parsedBody,
+            $queryParams,
+            $uploadedFiles,
+            $headers,
+            $cookies
+        );
+
+        return $this->getResponse($request);
+    }
+
+    protected function put
+    (
+        string $uri,
+        array $parsedBody = [],
+        array $queryParams = [],
+        array $uploadedFiles = [],
+        array $headers = [],
+        array $cookies = []
+    ): ResponseInterface
+    {
+        $request = $this->createRequest(
+            $uri,
+            RequestMethodInterface::METHOD_PUT,
             $parsedBody,
             $queryParams,
             $uploadedFiles,

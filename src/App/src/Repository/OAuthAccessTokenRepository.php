@@ -2,11 +2,14 @@
 
 namespace Api\App\Repository;
 
+use Api\Admin\Entity\Admin;
+use Api\App\Entity\OAuthClient;
 use Api\User\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Api\App\Entity\OAuthAccessToken;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 
 /**
@@ -28,11 +31,19 @@ class OAuthAccessTokenRepository extends EntityRepository implements AccessToken
             $accessToken->addScope($scope);
         }
 
-        if ($userIdentifier !== null) {
-            $repository = $this->getEntityManager()->getRepository(User::class);
-            /** @var User $user */
-            $user = $repository->findOneBy(['identity' => $userIdentifier]);
-            $accessToken->setUser($user);
+        if (null === $userIdentifier) {
+            return $accessToken;
+        }
+
+        $repository = $this->getEntityManager()->getRepository(User::class);
+        if ($clientEntity->getName() === OAuthClient::NAME_ADMIN) {
+            $repository = $this->getEntityManager()->getRepository(Admin::class);
+        }
+
+        /** @var UserEntityInterface $user **/
+        $user = $repository->findOneBy(['identity' => $userIdentifier]);
+        if ($user instanceof UserEntityInterface) {
+            $accessToken->setUserIdentifier($user->getIdentifier());
         }
 
         return $accessToken;

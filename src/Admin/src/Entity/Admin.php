@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
+use League\OAuth2\Server\Entities\UserEntityInterface;
 
 /**
  * Class Admin
@@ -18,7 +19,7 @@ use Exception;
  * @ORM\HasLifecycleCallbacks()
  * @package Api\Admin\Entity
  */
-class Admin extends AbstractEntity
+class Admin extends AbstractEntity implements UserEntityInterface
 {
     public const STATUS_ACTIVE = 'active';
     public const STATUS_INACTIVE = 'inactive';
@@ -210,6 +211,14 @@ class Admin extends AbstractEntity
         $this->roles = $roles;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier(): string
+    {
+        return $this->getIdentity();
     }
 
     /**

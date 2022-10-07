@@ -35,15 +35,9 @@ class OAuthRefreshToken implements RefreshTokenEntityInterface
     private bool $isRevoked = false;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(name="expires_at", type="datetime_immutable")
      */
-    private DateTimeImmutable $expiresDatetime;
-
-    public function __construct()
-    {
-        $this->id = 0;
-        $this->expiresDatetime = new DateTimeImmutable();
-    }
+    private DateTimeImmutable $expiresAt;
 
     public function setId(int $id): self
     {
@@ -93,25 +87,15 @@ class OAuthRefreshToken implements RefreshTokenEntityInterface
         return $this->isRevoked;
     }
 
-    public function setExpiresDatetime(DateTimeImmutable $expiresDatetime): self
-    {
-        $this->expiresDatetime = $expiresDatetime;
-
-        return $this;
-    }
-
-    public function getExpiresDatetime(): DateTimeImmutable
-    {
-        return $this->expiresDatetime;
-    }
-
     public function getExpiryDateTime(): DateTimeImmutable
     {
-        return $this->getExpiresDatetime();
+        return $this->expiresAt;
     }
 
     public function setExpiryDateTime(DateTimeImmutable $dateTime): self
     {
-        return $this->setExpiresDatetime($dateTime);
+        $this->expiresAt = $dateTime;
+
+        return $this;
     }
 }
