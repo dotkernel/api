@@ -2,9 +2,9 @@
 
 namespace AppTest\Functional;
 
-use AppTest\Helper\AbstractFunctionalTest;
+use AppTest\Functional\Traits\DatabaseTrait;
 use Fig\Http\Message\StatusCodeInterface;
-use AppTest\Helper\DatabaseTrait;
+
 
 /**
  * Class FunctionalTest

@@ -40,7 +40,6 @@ class OAuthAccessTokenRepository extends EntityRepository implements AccessToken
             $repository = $this->getEntityManager()->getRepository(Admin::class);
         }
 
-        /** @var UserEntityInterface $user **/
         $user = $repository->findOneBy(['identity' => $userIdentifier]);
         if ($user instanceof UserEntityInterface) {
             $accessToken->setUserIdentifier($user->getIdentifier());

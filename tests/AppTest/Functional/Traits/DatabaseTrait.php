@@ -1,6 +1,6 @@
 <?php
 
-namespace AppTest\Helper;
+namespace AppTest\Functional\Traits;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
@@ -29,7 +29,7 @@ trait DatabaseTrait
         $purger = new ORMPurger($entityManager);
         $executor = new ORMExecutor($entityManager, $purger);
 
-        $path = $this->container->get('config')['doctrine']['fixtures'];
+        $path = $this->getContainer()->get('config')['doctrine']['fixtures'];
         $loader->loadFromDirectory($path);
 
         $fixtures = $loader->getFixtures();

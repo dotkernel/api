@@ -7,7 +7,8 @@
 
 declare(strict_types=1);
 
-use AppTest\Helper\AbstractFunctionalTest;
+
+use AppTest\Functional\AbstractFunctionalTest;
 
 if (! AbstractFunctionalTest::isTestMode()) {
     return [];

@@ -88,8 +88,8 @@ class Admin extends AbstractEntity implements UserEntityInterface
         return [
             'uuid' => $this->getUuid()->toString(),
             'identity' => $this->getIdentity(),
-            'firstName' => $this->getfirstName(),
-            'lastName' => $this->getlastName(),
+            'firstName' => $this->getFirstName(),
+            'lastName' => $this->getLastName(),
             'status' => $this->getStatus(),
             'roles' => $this->getRoles()->map(function (AdminRole $role) {
                return $role->getArrayCopy();

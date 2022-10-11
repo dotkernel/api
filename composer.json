@@ -87,7 +87,8 @@
             "Api\\Admin\\": "src/Admin/src/",
             "Api\\App\\": "src/App/src/",
             "Api\\User\\": "src/User/src/",
-            "AppTest\\Helper\\": "tests/AppTest/Helper"
+            "AppTest\\Functional\\Helper\\": "tests/AppTest/Functional/Helper",
+            "AppTest\\Functional\\Traits\\": "tests/AppTest/Functional/Traits"
         }
     },
     "scripts": {

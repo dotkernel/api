@@ -1,7 +1,8 @@
 <?php
 
-namespace AppTest\Helper;
+namespace AppTest\Functional;
 
+use AppTest\Functional\Helper\AuthenticationTokenHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Fig\Http\Message\RequestMethodInterface;
 use Laminas\Diactoros\ServerRequest;
@@ -26,7 +27,7 @@ abstract class AbstractFunctionalTest extends TestCase
 
     protected Application $app;
 
-    protected array $authTokens = [];
+    private AuthenticationTokenHelper $authenticationTokens;
 
     public function setUp(): void
     {
@@ -192,6 +193,27 @@ abstract class AbstractFunctionalTest extends TestCase
         return $this->getResponse($request);
     }
 
+    protected function delete
+    (
+        string $uri,
+        array $queryParams = [],
+        array $headers = [],
+        array $cookies = []
+    ): ResponseInterface
+    {
+        $request = $this->createRequest(
+            $uri,
+            RequestMethodInterface::METHOD_DELETE,
+            [],
+            $queryParams,
+            [],
+            $headers,
+            $cookies
+        );
+
+        return $this->getResponse($request);
+    }
+
     protected function loginAs
     (
         string $identity,
@@ -219,23 +241,20 @@ abstract class AbstractFunctionalTest extends TestCase
             $response = $exception->generateHttpResponse($response);
         }
 
-        $this->assertSame(StatusCodeInterface::STATUS_OK, $response->getStatusCode());
-
         $response->getBody()->rewind();
+        if (StatusCodeInterface::STATUS_OK !== $response->getStatusCode()) {
+            $this->fail($response->getBody()->getContents());
+        }
 
         $body = json_decode($response->getBody()->getContents(),true);
-
-        $this->assertArrayHasKey('access_token', $body);
-        $this->assertArrayHasKey('refresh_token', $body);
-        $this->assertNotEmpty($body['access_token']);
-        $this->assertNotEmpty($body['refresh_token']);
-
-        $this->authTokens = [
-            'access_token' => 'Bearer ' . $body['access_token'],
-            'refresh_token' => $body['refresh_token'],
-        ];
+        $this->authenticationTokens = new AuthenticationTokenHelper($body['access_token'], $body['refresh_token']);
 
         return $this;
+    }
+
+    protected function getAuthenticationTokens(): AuthenticationTokenHelper
+    {
+        return $this->authenticationTokens;
     }
 
     /**
@@ -265,8 +284,8 @@ abstract class AbstractFunctionalTest extends TestCase
         string $protocol = '1.1'
     ): ServerRequestInterface
     {
-        if (! empty($this->authTokens['access_token'])) {
-            $headers = array_merge($headers, ['Authorization' => $this->authTokens['access_token']]);
+        if (! empty($this->getAuthenticationTokens()->getAccessToken())) {
+            $headers = array_merge($headers, $this->getAuthenticationTokens()->getAuthorizationHeader());
         }
 
         return new ServerRequest(
