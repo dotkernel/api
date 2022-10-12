@@ -30,14 +30,14 @@ class UpdateDetailInputFilter implements InputFilterAwareInterface
             $this->inputFilter = new OptionalInputFilter();
             $this->inputFilter->add([
                 'name' => 'firstName',
-                'required' => true,
+                'required' => false,
                 'filters' => [
                     ['name' => StringTrim::class],
                     ['name' => StripTags::class]
                 ]
             ])->add([
                 'name' => 'lastName',
-                'required' => true,
+                'required' => false,
                 'filters' => [
                     ['name' => StringTrim::class],
                     ['name' => StripTags::class]

@@ -2,9 +2,14 @@
 
 namespace AppTest\Functional;
 
+use Api\Admin\Entity\Admin;
+use Api\Admin\Entity\AdminRole;
+use Api\App\Entity\RoleInterface;
+use Api\User\Entity\User;
+use Api\User\Entity\UserDetail;
+use Api\User\Entity\UserRole;
+use AppTest\Functional\Traits\AuthenticationTrait;
 use AppTest\Functional\Traits\DatabaseTrait;
-use Fig\Http\Message\StatusCodeInterface;
-
 
 /**
  * Class FunctionalTest
@@ -12,7 +17,7 @@ use Fig\Http\Message\StatusCodeInterface;
  */
 class AuthenticationTest extends AbstractFunctionalTest
 {
-    use DatabaseTrait;
+    use DatabaseTrait, AuthenticationTrait;
 
     public function testAuthenticateInvalidUser()
     {
@@ -28,7 +33,7 @@ class AuthenticationTest extends AbstractFunctionalTest
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertSame(StatusCodeInterface::STATUS_BAD_REQUEST, $response->getStatusCode());
+        $this->assertResponseBadRequest($response);
         $this->assertArrayHasKey('error', $data);
         $this->assertArrayHasKey('error_description', $data);
         $this->assertArrayHasKey('message', $data);
@@ -51,7 +56,7 @@ class AuthenticationTest extends AbstractFunctionalTest
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertSame(StatusCodeInterface::STATUS_BAD_REQUEST, $response->getStatusCode());
+        $this->assertResponseBadRequest($response);
         $this->assertArrayHasKey('error', $data);
         $this->assertArrayHasKey('error_description', $data);
         $this->assertArrayHasKey('message', $data);
@@ -62,9 +67,11 @@ class AuthenticationTest extends AbstractFunctionalTest
 
     public function testAuthenticateAdmin()
     {
+        $admin = $this->createAdmin();
+
         $response = $this->post('/security/generate-token', [
-            'username' => 'admin',
-            'password' => 'dotadmin',
+            'username' => $admin->getIdentity(),
+            'password' => '123456',
             'grant_type' => 'password',
             'client_id' => 'admin',
             'client_secret' => 'admin',
@@ -73,12 +80,11 @@ class AuthenticationTest extends AbstractFunctionalTest
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertSame(StatusCodeInterface::STATUS_OK, $response->getStatusCode());
+        $this->assertResponseOk($response);
         $this->assertArrayHasKey('token_type', $data);
         $this->assertArrayHasKey('expires_in', $data);
         $this->assertArrayHasKey('access_token', $data);
         $this->assertArrayHasKey('refresh_token', $data);
-        $this->assertSame('Bearer', $data['token_type']);
         $this->assertNotEmpty($data['expires_in']);
         $this->assertNotEmpty($data['access_token']);
         $this->assertNotEmpty($data['refresh_token']);
@@ -86,9 +92,10 @@ class AuthenticationTest extends AbstractFunctionalTest
 
     public function testAuthenticateUser()
     {
+        $user = $this->createUser();
         $response = $this->post('/security/generate-token', [
-            'username' => 'test@dotkernel.com',
-            'password' => 'dotkernel',
+            'username' => $user->getIdentity(),
+            'password' => '123456',
             'grant_type' => 'password',
             'client_id' => 'frontend',
             'client_secret' => 'frontend',
@@ -97,7 +104,7 @@ class AuthenticationTest extends AbstractFunctionalTest
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertSame(StatusCodeInterface::STATUS_OK, $response->getStatusCode());
+        $this->assertResponseOk($response);
         $this->assertArrayHasKey('token_type', $data);
         $this->assertArrayHasKey('expires_in', $data);
         $this->assertArrayHasKey('access_token', $data);
@@ -120,7 +127,7 @@ class AuthenticationTest extends AbstractFunctionalTest
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertSame(StatusCodeInterface::STATUS_UNAUTHORIZED, $response->getStatusCode());
+        $this->assertResponseUnauthorized($response);
         $this->assertArrayHasKey('error', $data);
         $this->assertArrayHasKey('error_description', $data);
         $this->assertArrayHasKey('hint', $data);
@@ -131,18 +138,18 @@ class AuthenticationTest extends AbstractFunctionalTest
 
     public function testRefreshToken()
     {
-        $this->loginAs('test@dotkernel.com', 'dotkernel');
-        $authTokens = $this->authTokens;
+        $user = $this->createUser();
+        $this->loginAs($user->getIdentity(), '123456');
 
         $response = $this->post('/security/refresh-token', [
             'grant_type' => 'refresh_token',
             'client_id' => 'frontend',
             'client_secret' => 'frontend',
             'scope' => 'api',
-            'refresh_token' => $authTokens['refresh_token']
+            'refresh_token' => $this->getRefreshToken(),
         ]);
 
-        $this->assertSame(StatusCodeInterface::STATUS_OK, $response->getStatusCode());
+        $this->assertResponseOk($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
 
@@ -151,17 +158,18 @@ class AuthenticationTest extends AbstractFunctionalTest
         $this->assertArrayHasKey('access_token', $data);
         $this->assertArrayHasKey('refresh_token', $data);
         $this->assertSame('Bearer', $data['token_type']);
-        $this->assertNotEquals($authTokens['access_token'], $data['access_token']);
-        $this->assertNotEquals($authTokens['refresh_token'], $data['refresh_token']);
+        $this->assertNotEquals($this->getAccessToken(), $data['access_token']);
+        $this->assertNotEquals($this->getRefreshToken(), $data['refresh_token']);
     }
 
-    public function testAuthenticateAdminAsUser()
+    public function testAdminCannotAuthenticateAsUser()
     {
+        $admin = $this->createAdmin();
         $errorMessages = $this->getContainer()->get('config')['authentication']['invalid_credentials'];
 
         $response = $this->post('/security/generate-token', [
-            'username' => 'admin',
-            'password' => 'dotadmin',
+            'username' => $admin->getIdentity(),
+            'password' => '123456',
             'grant_type' => 'password',
             'client_id' => 'frontend',
             'client_secret' => 'frontend',
@@ -170,7 +178,7 @@ class AuthenticationTest extends AbstractFunctionalTest
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertSame(StatusCodeInterface::STATUS_BAD_REQUEST, $response->getStatusCode());
+        $this->assertResponseBadRequest($response);
         $this->assertArrayHasKey('error', $data);
         $this->assertArrayHasKey('error_description', $data);
         $this->assertArrayHasKey('message', $data);
@@ -179,13 +187,14 @@ class AuthenticationTest extends AbstractFunctionalTest
         $this->assertSame($errorMessages['error_description'], $data['error_description']);
     }
 
-    public function testAuthenticateUserAsAdmin()
+    public function testUserCannotAuthenticateAsAdmin()
     {
+        $user = $this->createUser();
         $errorMessages = $this->getContainer()->get('config')['authentication']['invalid_credentials'];
 
         $response = $this->post('/security/generate-token', [
-            'username' => 'test@dotkernel.com',
-            'password' => 'dotkernel',
+            'username' => $user->getIdentity(),
+            'password' => '123456',
             'grant_type' => 'password',
             'client_id' => 'admin',
             'client_secret' => 'admin',
@@ -194,12 +203,57 @@ class AuthenticationTest extends AbstractFunctionalTest
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertSame(StatusCodeInterface::STATUS_BAD_REQUEST, $response->getStatusCode());
+        $this->assertResponseBadRequest($response);
         $this->assertArrayHasKey('error', $data);
         $this->assertArrayHasKey('error_description', $data);
         $this->assertArrayHasKey('message', $data);
         $this->assertSame($errorMessages['error'], $data['error']);
         $this->assertSame($errorMessages['message'], $data['message']);
         $this->assertSame($errorMessages['error_description'], $data['error_description']);
+    }
+
+    private function createAdmin(): Admin
+    {
+        /** @var RoleInterface $adminRole */
+        $adminRoleRepository = $this->getEntityManager()->getRepository(AdminRole::class);
+        $adminRole = $adminRoleRepository->findOneBy(['name' => AdminRole::ROLE_ADMIN]);
+
+        $admin = new Admin();
+        $admin->setIdentity('admin@test.com');
+        $admin->setPassword(password_hash('123456', PASSWORD_DEFAULT));
+        $admin->setFirstName('Admin');
+        $admin->setLastName('Test');
+        $admin->addRole($adminRole);
+
+        $this->getEntityManager()->persist($admin);
+        $this->getEntityManager()->flush();
+
+        return $admin;
+    }
+
+    private function createUser(): User
+    {
+        /** @var RoleInterface $userRole */
+        $userRoleRepository = $this->getEntityManager()->getRepository(UserRole::class);
+        $userRole = $userRoleRepository->findOneBy(['name' => UserRole::ROLE_USER]);
+
+        $user = new User();
+        $userDetail = new UserDetail();
+
+        $user->setIdentity('user@test.com');
+        $user->setPassword(password_hash('123456', PASSWORD_DEFAULT));
+        $user->activate();
+        $userDetail->setFirstName('Test');
+        $userDetail->setLastName('User');
+        $userDetail->setEmail('user@test.com');
+        $userDetail->setUser($user);
+
+        $user->setDetail($userDetail);
+        $user->addRole($userRole);
+
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+
+        return $user;
     }
 }

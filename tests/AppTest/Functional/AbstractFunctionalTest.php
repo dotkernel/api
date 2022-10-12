@@ -2,20 +2,17 @@
 
 namespace AppTest\Functional;
 
-use AppTest\Functional\Helper\AuthenticationTokenHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Fig\Http\Message\RequestMethodInterface;
-use Laminas\Diactoros\ServerRequest;
 use Fig\Http\Message\StatusCodeInterface;
-use League\OAuth2\Server\AuthorizationServer;
-use League\OAuth2\Server\Exception\OAuthServerException;
+use Laminas\Diactoros\ServerRequest;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+
 
 /**
  * Class AbstractFunctionalTest
@@ -26,8 +23,6 @@ abstract class AbstractFunctionalTest extends TestCase
     protected ContainerInterface $container;
 
     protected Application $app;
-
-    private AuthenticationTokenHelper $authenticationTokens;
 
     public function setUp(): void
     {
@@ -214,49 +209,6 @@ abstract class AbstractFunctionalTest extends TestCase
         return $this->getResponse($request);
     }
 
-    protected function loginAs
-    (
-        string $identity,
-        string $password,
-        string $clientId = 'frontend',
-        string $clientSecret = 'frontend',
-        string $scope = 'api'
-    ): self
-    {
-        $request = $this->createLoginRequest([
-            'grant_type' => 'password',
-            'client_id' => $clientId,
-            'client_secret' => $clientSecret,
-            'scope' => $scope,
-            'username' => $identity,
-            'password' => $password,
-        ]);
-
-        $authorizationServer = $this->getContainer()->get(AuthorizationServer::class);
-        $responseFactory = $this->getContainer()->get(ResponseFactoryInterface::class);
-        $response = $responseFactory->createResponse();
-        try {
-            $response = $authorizationServer->respondToAccessTokenRequest($request, $responseFactory->createResponse());
-        } catch (OAuthServerException $exception) {
-            $response = $exception->generateHttpResponse($response);
-        }
-
-        $response->getBody()->rewind();
-        if (StatusCodeInterface::STATUS_OK !== $response->getStatusCode()) {
-            $this->fail($response->getBody()->getContents());
-        }
-
-        $body = json_decode($response->getBody()->getContents(),true);
-        $this->authenticationTokens = new AuthenticationTokenHelper($body['access_token'], $body['refresh_token']);
-
-        return $this;
-    }
-
-    protected function getAuthenticationTokens(): AuthenticationTokenHelper
-    {
-        return $this->authenticationTokens;
-    }
-
     /**
      * @param string $uri
      * @param string $method
@@ -284,8 +236,8 @@ abstract class AbstractFunctionalTest extends TestCase
         string $protocol = '1.1'
     ): ServerRequestInterface
     {
-        if (! empty($this->getAuthenticationTokens()->getAccessToken())) {
-            $headers = array_merge($headers, $this->getAuthenticationTokens()->getAuthorizationHeader());
+        if (method_exists($this, 'isAuthenticated') && $this->isAuthenticated()) {
+            $headers = array_merge($headers, $this->getAuthorizationHeader());
         }
 
         return new ServerRequest(
@@ -303,26 +255,6 @@ abstract class AbstractFunctionalTest extends TestCase
     }
 
     /**
-     * @param array $bodyParams
-     * @return ServerRequest
-     */
-    private function createLoginRequest(array $bodyParams): ServerRequest
-    {
-        return new ServerRequest(
-            [],
-            [],
-            '',
-            RequestMethodInterface::METHOD_POST,
-            'php://input',
-            [],
-            [],
-            [],
-            $bodyParams,
-            '1.1',
-        );
-    }
-
-    /**
      *
      * Process response and set cursor at position(0)
      *
@@ -335,5 +267,37 @@ abstract class AbstractFunctionalTest extends TestCase
         $response->getBody()->rewind();
 
         return $response;
+    }
+
+    protected function assertResponseOk(ResponseInterface $response): void
+    {
+        $this->assertSame(StatusCodeInterface::STATUS_OK, $response->getStatusCode());
+    }
+
+    protected function assertResponseUnauthorized(ResponseInterface $response): void
+    {
+        $this->assertSame(StatusCodeInterface::STATUS_UNAUTHORIZED, $response->getStatusCode());
+    }
+
+    protected function assertResponseForbidden(ResponseInterface $response): void
+    {
+        $this->assertSame(StatusCodeInterface::STATUS_FORBIDDEN, $response->getStatusCode());
+    }
+
+    protected function assertResponseBadRequest(ResponseInterface $response): void
+    {
+        $this->assertSame(StatusCodeInterface::STATUS_BAD_REQUEST, $response->getStatusCode());
+    }
+
+    protected function assertResponseNotFound(ResponseInterface $response)
+    {
+        $this->assertSame(StatusCodeInterface::STATUS_NOT_FOUND, $response->getStatusCode());
+    }
+
+    protected function swap($service, $mockInstance)
+    {
+        $this->getContainer()->setAllowOverride(true);
+        $this->getContainer()->setService($service, $mockInstance);
+        $this->getContainer()->setAllowOverride(false);
     }
 }
