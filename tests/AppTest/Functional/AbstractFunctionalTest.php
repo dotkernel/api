@@ -294,7 +294,13 @@ abstract class AbstractFunctionalTest extends TestCase
         $this->assertSame(StatusCodeInterface::STATUS_NOT_FOUND, $response->getStatusCode());
     }
 
-    protected function swap($service, $mockInstance)
+    /**
+     * Replaces an actual service with a mock instance
+     *
+     * @param $service
+     * @param $mockInstance
+     */
+    protected function replaceService($service, $mockInstance)
     {
         $this->getContainer()->setAllowOverride(true);
         $this->getContainer()->setService($service, $mockInstance);
