@@ -24,251 +24,251 @@ class UserTest extends AbstractFunctionalTest
 {
     use DatabaseTrait, AuthenticationTrait;
 
-//    public function testCreateMyAvatar()
-//    {
-//        $user = $this->createUser();
-//        $uploadedFile = $this->createUploadedFile();
-//        $userAvatarRepository = $this->getEntityManager()->getRepository(UserAvatar::class);
-//
-//        $userAvatarService = $this->getMockBuilder(UserAvatarService::class)
-//            ->setConstructorArgs([
-//                $userAvatarRepository,
-//                []
-//            ])
-//            ->onlyMethods([
-//                'ensureDirectoryExists',
-//                'getUserAvatarDirectoryPath',
-//                'deleteAvatarFile',
-//                'createFileName',
-//                'saveAvatarImage',
-//            ])
-//            ->getMock();
-//
-//        $this->replaceService(UserAvatarService::class, $userAvatarService);
-//        $this->loginAs($user->getIdentity(), '123456');
-//
-//        $response = $this->post('/user/my-avatar', [], [], ['avatar' => $uploadedFile]);
-//
-//        $this->assertResponseOk($response);
-//    }
-//
-//    public function testViewMyAvatarNotFound()
-//    {
-//        $user = $this->createUser();
-//        $this->loginAs($user->getIdentity(), '123456');
-//
-//        $response = $this->get('/user/my-avatar');
-//
-//        $this->assertResponseNotFound($response);
-//    }
-//
-//    public function testViewMyAvatar()
-//    {
-//        $user = $this->createUser();
-//        $userAvatar = new UserAvatar();
-//        $userAvatar->setUser($user);
-//        $userAvatar->setName('test');
-//        $this->getEntityManager()->persist($userAvatar);
-//        $this->getEntityManager()->flush();
-//
-//        $this->loginAs($user->getIdentity(), '123456');
-//
-//        $response = $this->get('/user/my-avatar');
-//
-//        $this->assertResponseOk($response);
-//    }
-//
-//    public function testDeleteMyAvatarNotFound()
-//    {
-//        $user = $this->createUser();
-//        $this->loginAs($user->getIdentity(), '123456');
-//
-//        $response = $this->delete('/user/my-avatar');
-//
-//        $this->assertResponseNotFound($response);
-//    }
-//
-//    public function testDeleteMyAvatar()
-//    {
-//        $user = $this->createUser();
-//        $userAvatar = new UserAvatar();
-//        $userAvatar->setUser($user);
-//        $userAvatar->setName('test');
-//        $this->getEntityManager()->persist($userAvatar);
-//        $this->getEntityManager()->flush();
-//
-//        $this->loginAs($user->getIdentity(), '123456');
-//
-//        $response = $this->delete('/user/my-avatar');
-//
-//        $this->assertResponseOk($response);
-//    }
-//
-//    public function testActivateMyAccountInvalidCode()
-//    {
-//        $response = $this->patch('/account/activate/invalid_hash');
-//        $this->assertResponseBadRequest($response);
-//    }
-//
-//    public function testActivateMyAccountAlreadyActivated()
-//    {
-//        $user = $this->createUser();
-//
-//        $response = $this->patch('/account/activate/' . $user->getHash());
-//        $this->assertResponseBadRequest($response);
-//    }
-//
-//    public function testActivateMyAccount()
-//    {
-//        $userRepository = $this->getEntityManager()->getRepository(User::class);
-//        $user = $this->createUser(false);
-//        $this->assertFalse($user->isActive());
-//
-//        $response = $this->patch('/account/activate/' . $user->getHash());
-//        $this->assertResponseOk($response);
-//        $user = $userRepository->find($user->getUuid()->toString());
-//
-//        $this->assertTrue($user->isActive());
-//    }
-//
-//    public function testActivateAccountByEmail()
-//    {
-//        $mailService = $this->createMock(MailService::class);
-//        $user = $this->createUser(false);
-//
-//        $this->replaceService(MailService::class, $mailService);
-//
-//        $response = $this->post('/account/activate', [
-//            'email' => $user->getDetail()->getEmail()
-//        ]);
-//
-//        $data = json_decode($response->getBody()->getContents(), true);
-//
-//        $this->assertResponseOk($response);
-//        $this->assertArrayHasKey('info', $data);
-//        $this->assertArrayHasKey('messages', $data['info']);
-//        $this->assertSame(
-//            sprintf(Message::MAIL_SENT_USER_ACTIVATION, $user->getDetail()->getEmail()),
-//            $data['info']['messages'][0]
-//        );
-//    }
-//
-//    public function testDeleteMyAccount()
-//    {
-//        $user = $this->createUser();
-//        $this->loginAs($user->getIdentity(), '123456');
-//
-//        $response = $this->delete('/user/my-account');
-//
-//        $this->assertResponseOk($response);
-//        $userRepository = $this->getEntityManager()->getRepository(User::class);
-//        $deletedUser = $userRepository->find($user->getUuid()->toString());
-//
-//        $this->assertTrue($deletedUser->isDeleted());
-//    }
-//
-//    public function testRequestResetPasswordInvalidHash()
-//    {
-//        $response = $this->patch('/account/reset-password/invalid_hash');
-//
-//        $this->assertResponseNotFound($response);
-//    }
-//
-//    public function testRequestResetPasswordExpired()
-//    {
-//        $user = $this->createUser();
-//        $resetPassword = new UserResetPasswordEntity();
-//        $resetPassword->setUser($user);
-//        $resetPassword->setStatus(UserResetPasswordEntity::STATUS_REQUESTED);
-//        $resetPassword->setHash('test');
-//        $resetPassword->setExpires((new \DateTimeImmutable())->sub(new \DateInterval('P1D')));
-//        $user->addResetPassword($resetPassword);
-//        $this->getEntityManager()->persist($resetPassword);
-//        $this->getEntityManager()->persist($user);
-//        $this->getEntityManager()->flush();
-//
-//        $mailService = $this->createMock(MailService::class);
-//        $this->replaceService(MailService::class, $mailService);
-//
-//        $response = $this->patch('/account/reset-password/' . $resetPassword->getHash(), [
-//            'password' => '654321',
-//            'passwordConfirm' => '654321',
-//        ]);
-//
-//        $data = json_decode($response->getBody()->getContents(), true);
-//
-//        $this->assertResponseBadRequest($response);
-//        $this->assertArrayHasKey('error', $data);
-//        $this->assertArrayHasKey('messages', $data['error']);
-//        $this->assertNotEmpty($data['error']['messages'][0]);
-//        $this->assertSame(
-//            sprintf(Message::RESET_PASSWORD_EXPIRED, $resetPassword->getHash()),
-//            $data['error']['messages'][0]
-//        );
-//    }
-//
-//    public function testRequestResetPasswordAlreadyUsed()
-//    {
-//        $user = $this->createUser();
-//        $resetPassword = new UserResetPasswordEntity();
-//        $resetPassword->setUser($user);
-//        $resetPassword->setStatus(UserResetPasswordEntity::STATUS_COMPLETED);
-//        $resetPassword->setHash('test');
-//        $resetPassword->setExpires((new \DateTimeImmutable())->add(new \DateInterval('P1D')));
-//        $user->addResetPassword($resetPassword);
-//        $this->getEntityManager()->persist($resetPassword);
-//        $this->getEntityManager()->persist($user);
-//        $this->getEntityManager()->flush();
-//
-//        $mailService = $this->createMock(MailService::class);
-//        $this->replaceService(MailService::class, $mailService);
-//
-//        $response = $this->patch('/account/reset-password/' . $resetPassword->getHash(), [
-//            'password' => '654321',
-//            'passwordConfirm' => '654321',
-//        ]);
-//
-//        $data = json_decode($response->getBody()->getContents(), true);
-//
-//        $this->assertResponseBadRequest($response);
-//        $this->assertArrayHasKey('error', $data);
-//        $this->assertArrayHasKey('messages', $data['error']);
-//        $this->assertNotEmpty($data['error']['messages'][0]);
-//        $this->assertSame(
-//            sprintf(Message::RESET_PASSWORD_USED, $resetPassword->getHash()),
-//            $data['error']['messages'][0]
-//        );
-//    }
-//
-//    public function testResetPassword()
-//    {
-//        $user = $this->createUser();
-//        $resetPassword = new UserResetPasswordEntity();
-//        $resetPassword->setUser($user);
-//        $resetPassword->setStatus(UserResetPasswordEntity::STATUS_REQUESTED);
-//        $resetPassword->setHash('test');
-//        $resetPassword->setExpires((new \DateTimeImmutable())->add(new \DateInterval('P1D')));
-//        $user->addResetPassword($resetPassword);
-//        $this->getEntityManager()->persist($resetPassword);
-//        $this->getEntityManager()->persist($user);
-//        $this->getEntityManager()->flush();
-//
-//        $mailService = $this->createMock(MailService::class);
-//        $this->replaceService(MailService::class, $mailService);
-//
-//        $response = $this->patch('/account/reset-password/' . $resetPassword->getHash(), [
-//            'password' => '654321',
-//            'passwordConfirm' => '654321',
-//        ]);
-//
-//        $data = json_decode($response->getBody()->getContents(), true);
-//
-//        $this->assertResponseOk($response);
-//        $this->assertArrayHasKey('info', $data);
-//        $this->assertArrayHasKey('messages', $data['info']);
-//        $this->assertNotEmpty($data['info']['messages'][0]);
-//        $this->assertSame(Message::RESET_PASSWORD_OK, $data['info']['messages'][0]);
-//    }
+    public function testCreateMyAvatar()
+    {
+        $user = $this->createUser();
+        $uploadedFile = $this->createUploadedFile();
+        $userAvatarRepository = $this->getEntityManager()->getRepository(UserAvatar::class);
+
+        $userAvatarService = $this->getMockBuilder(UserAvatarService::class)
+            ->setConstructorArgs([
+                $userAvatarRepository,
+                []
+            ])
+            ->onlyMethods([
+                'ensureDirectoryExists',
+                'getUserAvatarDirectoryPath',
+                'deleteAvatarFile',
+                'createFileName',
+                'saveAvatarImage',
+            ])
+            ->getMock();
+
+        $this->replaceService(UserAvatarService::class, $userAvatarService);
+        $this->loginAs($user->getIdentity(), '123456');
+
+        $response = $this->post('/user/my-avatar', [], [], ['avatar' => $uploadedFile]);
+
+        $this->assertResponseOk($response);
+    }
+
+    public function testViewMyAvatarNotFound()
+    {
+        $user = $this->createUser();
+        $this->loginAs($user->getIdentity(), '123456');
+
+        $response = $this->get('/user/my-avatar');
+
+        $this->assertResponseNotFound($response);
+    }
+
+    public function testViewMyAvatar()
+    {
+        $user = $this->createUser();
+        $userAvatar = new UserAvatar();
+        $userAvatar->setUser($user);
+        $userAvatar->setName('test');
+        $this->getEntityManager()->persist($userAvatar);
+        $this->getEntityManager()->flush();
+
+        $this->loginAs($user->getIdentity(), '123456');
+
+        $response = $this->get('/user/my-avatar');
+
+        $this->assertResponseOk($response);
+    }
+
+    public function testDeleteMyAvatarNotFound()
+    {
+        $user = $this->createUser();
+        $this->loginAs($user->getIdentity(), '123456');
+
+        $response = $this->delete('/user/my-avatar');
+
+        $this->assertResponseNotFound($response);
+    }
+
+    public function testDeleteMyAvatar()
+    {
+        $user = $this->createUser();
+        $userAvatar = new UserAvatar();
+        $userAvatar->setUser($user);
+        $userAvatar->setName('test');
+        $this->getEntityManager()->persist($userAvatar);
+        $this->getEntityManager()->flush();
+
+        $this->loginAs($user->getIdentity(), '123456');
+
+        $response = $this->delete('/user/my-avatar');
+
+        $this->assertResponseOk($response);
+    }
+
+    public function testActivateMyAccountInvalidCode()
+    {
+        $response = $this->patch('/account/activate/invalid_hash');
+        $this->assertResponseBadRequest($response);
+    }
+
+    public function testActivateMyAccountAlreadyActivated()
+    {
+        $user = $this->createUser();
+
+        $response = $this->patch('/account/activate/' . $user->getHash());
+        $this->assertResponseBadRequest($response);
+    }
+
+    public function testActivateMyAccount()
+    {
+        $userRepository = $this->getEntityManager()->getRepository(User::class);
+        $user = $this->createUser(false);
+        $this->assertFalse($user->isActive());
+
+        $response = $this->patch('/account/activate/' . $user->getHash());
+        $this->assertResponseOk($response);
+        $user = $userRepository->find($user->getUuid()->toString());
+
+        $this->assertTrue($user->isActive());
+    }
+
+    public function testActivateAccountByEmail()
+    {
+        $mailService = $this->createMock(MailService::class);
+        $user = $this->createUser(false);
+
+        $this->replaceService(MailService::class, $mailService);
+
+        $response = $this->post('/account/activate', [
+            'email' => $user->getDetail()->getEmail()
+        ]);
+
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        $this->assertResponseOk($response);
+        $this->assertArrayHasKey('info', $data);
+        $this->assertArrayHasKey('messages', $data['info']);
+        $this->assertSame(
+            sprintf(Message::MAIL_SENT_USER_ACTIVATION, $user->getDetail()->getEmail()),
+            $data['info']['messages'][0]
+        );
+    }
+
+    public function testDeleteMyAccount()
+    {
+        $user = $this->createUser();
+        $this->loginAs($user->getIdentity(), '123456');
+
+        $response = $this->delete('/user/my-account');
+
+        $this->assertResponseOk($response);
+        $userRepository = $this->getEntityManager()->getRepository(User::class);
+        $deletedUser = $userRepository->find($user->getUuid()->toString());
+
+        $this->assertTrue($deletedUser->isDeleted());
+    }
+
+    public function testRequestResetPasswordInvalidHash()
+    {
+        $response = $this->patch('/account/reset-password/invalid_hash');
+
+        $this->assertResponseNotFound($response);
+    }
+
+    public function testRequestResetPasswordExpired()
+    {
+        $user = $this->createUser();
+        $resetPassword = new UserResetPasswordEntity();
+        $resetPassword->setUser($user);
+        $resetPassword->setStatus(UserResetPasswordEntity::STATUS_REQUESTED);
+        $resetPassword->setHash('test');
+        $resetPassword->setExpires((new \DateTimeImmutable())->sub(new \DateInterval('P1D')));
+        $user->addResetPassword($resetPassword);
+        $this->getEntityManager()->persist($resetPassword);
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+
+        $mailService = $this->createMock(MailService::class);
+        $this->replaceService(MailService::class, $mailService);
+
+        $response = $this->patch('/account/reset-password/' . $resetPassword->getHash(), [
+            'password' => '654321',
+            'passwordConfirm' => '654321',
+        ]);
+
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        $this->assertResponseBadRequest($response);
+        $this->assertArrayHasKey('error', $data);
+        $this->assertArrayHasKey('messages', $data['error']);
+        $this->assertNotEmpty($data['error']['messages'][0]);
+        $this->assertSame(
+            sprintf(Message::RESET_PASSWORD_EXPIRED, $resetPassword->getHash()),
+            $data['error']['messages'][0]
+        );
+    }
+
+    public function testRequestResetPasswordAlreadyUsed()
+    {
+        $user = $this->createUser();
+        $resetPassword = new UserResetPasswordEntity();
+        $resetPassword->setUser($user);
+        $resetPassword->setStatus(UserResetPasswordEntity::STATUS_COMPLETED);
+        $resetPassword->setHash('test');
+        $resetPassword->setExpires((new \DateTimeImmutable())->add(new \DateInterval('P1D')));
+        $user->addResetPassword($resetPassword);
+        $this->getEntityManager()->persist($resetPassword);
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+
+        $mailService = $this->createMock(MailService::class);
+        $this->replaceService(MailService::class, $mailService);
+
+        $response = $this->patch('/account/reset-password/' . $resetPassword->getHash(), [
+            'password' => '654321',
+            'passwordConfirm' => '654321',
+        ]);
+
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        $this->assertResponseBadRequest($response);
+        $this->assertArrayHasKey('error', $data);
+        $this->assertArrayHasKey('messages', $data['error']);
+        $this->assertNotEmpty($data['error']['messages'][0]);
+        $this->assertSame(
+            sprintf(Message::RESET_PASSWORD_USED, $resetPassword->getHash()),
+            $data['error']['messages'][0]
+        );
+    }
+
+    public function testResetPassword()
+    {
+        $user = $this->createUser();
+        $resetPassword = new UserResetPasswordEntity();
+        $resetPassword->setUser($user);
+        $resetPassword->setStatus(UserResetPasswordEntity::STATUS_REQUESTED);
+        $resetPassword->setHash('test');
+        $resetPassword->setExpires((new \DateTimeImmutable())->add(new \DateInterval('P1D')));
+        $user->addResetPassword($resetPassword);
+        $this->getEntityManager()->persist($resetPassword);
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+
+        $mailService = $this->createMock(MailService::class);
+        $this->replaceService(MailService::class, $mailService);
+
+        $response = $this->patch('/account/reset-password/' . $resetPassword->getHash(), [
+            'password' => '654321',
+            'passwordConfirm' => '654321',
+        ]);
+
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        $this->assertResponseOk($response);
+        $this->assertArrayHasKey('info', $data);
+        $this->assertArrayHasKey('messages', $data['info']);
+        $this->assertNotEmpty($data['info']['messages'][0]);
+        $this->assertSame(Message::RESET_PASSWORD_OK, $data['info']['messages'][0]);
+    }
 
     public function testResetPasswordByEmail()
     {
@@ -285,22 +285,22 @@ class UserTest extends AbstractFunctionalTest
         $this->assertCount(1, $user->getResetPasswords());
     }
 
-    public function testRegisterAccountDuplicateIdentity()
-    {
-        $user = $this->createUser();
-
-        $response = $this->get('/user/my-account', [
-            'identity' => $user->getIdentity(),
-        ]);
-
-        $data = json_decode($response->getBody()->getContents(), true);
-
-        $this->assertResponseBadRequest($response);
-        $this->assertArrayHasKey('error', $data);
-        $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertNotEmpty($data['error']['messages'][0]);
-        $this->assertSame(Message::DUPLICATE_IDENTITY, $data['error']['messages'][0]);
-    }
+//    public function testRegisterAccountDuplicateIdentity()
+//    {
+//        $user = $this->createUser();
+//
+//        $response = $this->get('/user/my-account', [
+//            'identity' => $user->getIdentity(),
+//        ]);
+//
+//        $data = json_decode($response->getBody()->getContents(), true);
+//
+//        $this->assertResponseBadRequest($response);
+//        $this->assertArrayHasKey('error', $data);
+//        $this->assertArrayHasKey('messages', $data['error']);
+//        $this->assertNotEmpty($data['error']['messages'][0]);
+//        $this->assertSame(Message::DUPLICATE_IDENTITY, $data['error']['messages'][0]);
+//    }
 
     public function testViewMyAccount()
     {
