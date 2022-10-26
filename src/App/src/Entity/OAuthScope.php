@@ -34,7 +34,7 @@ class OAuthScope implements ScopeEntityInterface
     /**
      * @ORM\Column(name="scope", type="string", length=191)
      */
-    private string $scope;
+    private string $scope = '';
 
     /**
      * @ORM\ManyToMany(targetEntity="Api\App\Entity\OAuthAccessToken", mappedBy="scopes")
@@ -48,8 +48,6 @@ class OAuthScope implements ScopeEntityInterface
 
     public function __construct()
     {
-        $this->id = 0;
-        $this->scope = '';
         $this->accessTokens = new ArrayCollection();
         $this->authCodes = new ArrayCollection();
     }
@@ -85,18 +83,18 @@ class OAuthScope implements ScopeEntityInterface
 
     public function addAccessToken(OAuthAccessToken $accessToken): self
     {
-        if ($this->accessTokens->contains($accessToken)) {
-            return $this;
+        if (! $this->accessTokens->contains($accessToken)) {
+            $this->accessTokens->add($accessToken);
         }
-
-        $this->accessTokens->add($accessToken);
 
         return $this;
     }
 
     public function removeAccessToken(OAuthAccessToken $accessToken): self
     {
-        $this->accessTokens->removeElement($accessToken);
+        if ($this->accessTokens->contains($accessToken)) {
+            $this->accessTokens->removeElement($accessToken);
+        }
 
         return $this;
     }
@@ -112,18 +110,18 @@ class OAuthScope implements ScopeEntityInterface
 
     public function addAuthCode(OAuthAuthCode $authCode): self
     {
-        if ($this->authCodes->contains($authCode)) {
-            return $this;
+        if (! $this->authCodes->contains($authCode)) {
+            $this->authCodes->add($authCode);
         }
-
-        $this->authCodes->add($authCode);
 
         return $this;
     }
 
     public function removeAuthCode(OAuthAuthCode $authCode): self
     {
-        $this->authCodes->removeElement($authCode);
+        if ($this->authCodes->contains($authCode)) {
+            $this->authCodes->removeElement($authCode);
+        }
 
         return $this;
     }

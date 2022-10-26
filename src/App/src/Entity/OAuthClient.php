@@ -36,17 +36,17 @@ class OAuthClient implements ClientEntityInterface
     /**
      * @ORM\Column(name="name", type="string", length=40)
      */
-    private string $name;
+    private string $name = '';
 
     /**
      * @ORM\Column(name="secret", type="string", length=100, nullable=true)
      */
-    private ?string $secret;
+    private ?string $secret = null;
 
     /**
      * @ORM\Column(name="redirect", type="string", length=191)
      */
-    private string $redirect;
+    private string $redirect = '';
 
     /**
      * @ORM\Column(name="revoked", type="boolean", options={"default":0})
@@ -57,16 +57,6 @@ class OAuthClient implements ClientEntityInterface
      * @ORM\Column(name="isConfidential", type="boolean", options={"default":0})
      */
     private bool $isConfidential = false;
-
-    private array $roles = [];
-
-    public function __construct()
-    {
-        $this->id = 0;
-        $this->name = '';
-        $this->secret = null;
-        $this->redirect = '';
-    }
 
     public function setId(int $id): self
     {

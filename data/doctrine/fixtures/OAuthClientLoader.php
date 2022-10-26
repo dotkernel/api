@@ -2,10 +2,10 @@
 
 namespace Api\Fixtures;
 
+use Api\App\Entity\OAuthClient;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use DateTimeImmutable;
 
 /**
  * Class OAuthClientLoader
@@ -13,26 +13,24 @@ use DateTimeImmutable;
  */
 class OAuthClientLoader extends AbstractFixture implements FixtureInterface
 {
-    private const TABLE_NAME = 'oauth_clients';
-
     public function load(ObjectManager $manager)
     {
-        $manager->getConnection()->insert(self::TABLE_NAME, [
-            'name' => 'frontend',
-            'user_id' => null,
-            'secret' => password_hash('frontend', PASSWORD_DEFAULT),
-            'redirect' => '/',
-            'isConfidential' => 0,
-            'revoked' => 0,
-        ]);
+        $oauthClientFrontend = new OAuthClient();
+        $oauthClientFrontend->setName('frontend');
+        $oauthClientFrontend->setSecret(password_hash('frontend', PASSWORD_DEFAULT));
+        $oauthClientFrontend->setRedirect('/');
+        $oauthClientFrontend->setIsConfidential(false);
+        $oauthClientFrontend->setIsRevoked(false);
 
-        $manager->getConnection()->insert(self::TABLE_NAME, [
-            'name' => 'admin',
-            'user_id' => null,
-            'secret' => password_hash('admin', PASSWORD_DEFAULT),
-            'redirect' => '/',
-            'isConfidential' => 0,
-            'revoked' => 0,
-        ]);
+        $oauthClientAdmin = new OAuthClient();
+        $oauthClientAdmin->setName('admin');
+        $oauthClientAdmin->setSecret(password_hash('admin', PASSWORD_DEFAULT));
+        $oauthClientAdmin->setRedirect('/');
+        $oauthClientAdmin->setIsConfidential(false);
+        $oauthClientAdmin->setIsRevoked(false);
+
+        $manager->persist($oauthClientFrontend);
+        $manager->persist($oauthClientAdmin);
+        $manager->flush();
     }
 }

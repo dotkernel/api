@@ -162,7 +162,9 @@ class OAuthAccessToken implements AccessTokenEntityInterface
 
     public function removeScope(OAuthScope $scope): self
     {
-        $this->scopes->removeElement($scope);
+        if ($this->scopes->contains($scope)) {
+            $this->scopes->removeElement($scope);
+        }
 
         return $this;
     }
