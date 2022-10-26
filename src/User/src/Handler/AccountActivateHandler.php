@@ -99,7 +99,7 @@ class AccountActivateHandler extends DefaultHandler
         }
 
         try {
-            $user = $this->userService->updateUser($user->renewHash());
+            $user = $this->userService->activateUser($user);
             $this->userService->sendActivationMail($user);
             return $this->infoResponse(
                 sprintf(Message::MAIL_SENT_USER_ACTIVATION, $user->getDetail()->getEmail())

@@ -21,7 +21,7 @@ return [
         'roles' => [
             AdminRole::ROLE_SUPERUSER => [],
             AdminRole::ROLE_ADMIN => [AdminRole::ROLE_SUPERUSER],
-            UserRole::ROLE_USER => [AdminRole::ROLE_ADMIN],
+//            UserRole::ROLE_USER => [AdminRole::ROLE_ADMIN],
             UserRole::ROLE_GUEST => [UserRole::ROLE_USER]
         ],
         'permissions' => [
@@ -47,6 +47,8 @@ return [
                 'user.avatar.view',
                 'user.role.list',
                 'user.role.view',
+                'error.report',
+                'home',
             ],
             UserRole::ROLE_USER => [
                 'user.my-account.delete',
@@ -64,10 +66,11 @@ return [
                 'account.recover-identity',
                 'account.reset-password.validate',
                 'account.reset-password.request',
-                'error.report',
-                'home',
                 'security.generate-token',
                 'security.refresh-token',
+                'error.report',
+                'home',
+                'user.create',
             ]
         ],
     ]

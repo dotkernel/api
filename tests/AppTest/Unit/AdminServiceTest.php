@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit;
+namespace AppTest\Unit;
 
 use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;

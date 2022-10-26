@@ -8,6 +8,7 @@ use Api\User\Entity\UserAvatar;
 use Api\User\Repository\UserAvatarRepository;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Laminas\Diactoros\UploadedFile;
+use Psr\Http\Message\UploadedFileInterface;
 
 /**
  * Class UserAvatarService
@@ -61,8 +62,7 @@ class UserAvatarService
 
         $avatar->setName($fileName);
 
-        $uploadedFile->moveTo($path . $fileName);
-
+        $this->saveAvatarImage($uploadedFile, $path . $fileName);
         $this->userAvatarRepository->saveAvatar($avatar);
 
         return $avatar;
@@ -126,5 +126,10 @@ class UserAvatarService
             UuidOrderedTimeGenerator::generateUuid()->toString(),
             self::EXTENSIONS[$fileType]
         );
+    }
+
+    protected function saveAvatarImage(UploadedFileInterface $uploadedFile, string $location): void
+    {
+        $uploadedFile->moveTo($location);
     }
 }

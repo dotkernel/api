@@ -2,6 +2,7 @@
 
 namespace Api\Fixtures;
 
+use Api\App\Entity\OAuthScope;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
@@ -11,12 +12,12 @@ use Doctrine\Persistence\ObjectManager;
  */
 class OAuthScopeLoader implements FixtureInterface
 {
-    private const TABLE_NAME = 'oauth_scopes';
-
     public function load(ObjectManager $manager)
     {
-        $manager->getConnection()->insert(self::TABLE_NAME, [
-            'id' => 'api'
-        ]);
+        $scope = new OAuthScope();
+        $scope->setScope('api');
+
+        $manager->persist($scope);
+        $manager->flush();
     }
 }

@@ -37,7 +37,7 @@ class CreateUserInputFilter implements InputFilterAwareInterface
             $rolesInputFilter = new InputFilter();
             $rolesInputFilter->add([
                 'name' => 'uuid',
-                'required' => true,
+                'required' => false,
                 'filters' => [
                     ['name' => StringTrim::class],
                     ['name' => StripTags::class]
@@ -55,7 +55,7 @@ class CreateUserInputFilter implements InputFilterAwareInterface
 
             $rolesCollection = new CollectionInputFilter();
             $rolesCollection->setInputFilter($rolesInputFilter);
-            $rolesCollection->setIsRequired(true);
+            $rolesCollection->setIsRequired(false);
 
             $this->inputFilter = new InputFilter();
             $this->inputFilter->add([

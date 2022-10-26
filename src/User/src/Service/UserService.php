@@ -97,7 +97,7 @@ class UserService
         if ($this->exists($data['identity'])) {
             throw new ORMException(Message::DUPLICATE_IDENTITY);
         }
-        if ($this->emailExists($data['detail']['email'])) {
+        if (! empty($data['detail']['email']) && $this->emailExists($data['detail']['email'])) {
             throw new ORMException(Message::DUPLICATE_EMAIL);
         }
 
@@ -115,7 +115,7 @@ class UserService
             $detail->setLastName($data['detail']['lastName']);
         }
 
-        if (!empty($data['detail']['email']) && !$this->emailExists($data['detail']['email'])) {
+        if (!empty($data['detail']['email'])) {
             $detail->setEmail($data['detail']['email']);
         }
 
