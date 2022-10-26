@@ -13,7 +13,6 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-
 /**
  * Class AbstractFunctionalTest
  * @package Unit
@@ -67,7 +66,7 @@ abstract class AbstractFunctionalTest extends TestCase
 
     private function initContainer(): void
     {
-        $this->container = require realpath(__DIR__ . '/../../../config/container.php');
+        $this->container = require realpath(__DIR__ . '/../../../../config/container.php');
     }
 
     private function initApp(): void
@@ -78,13 +77,13 @@ abstract class AbstractFunctionalTest extends TestCase
     private function initPipeline(): void
     {
         $factory = $this->container->get(MiddlewareFactory::class);
-        (require realpath(__DIR__ . '/../../../config/pipeline.php'))($this->app, $factory, $this->container);
+        (require realpath(__DIR__ . '/../../../../config/pipeline.php'))($this->app, $factory, $this->container);
     }
 
     private function initRoutes(): void
     {
         $factory = $this->container->get(MiddlewareFactory::class);
-        (require realpath(__DIR__ . '/../../../config/routes.php'))($this->app, $factory, $this->container);
+        (require realpath(__DIR__ . '/../../../../config/routes.php'))($this->app, $factory, $this->container);
     }
 
     protected function getEntityManager(): EntityManagerInterface

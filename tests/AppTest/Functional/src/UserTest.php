@@ -29,7 +29,6 @@ class UserTest extends AbstractFunctionalTest
         $user = $this->createUser();
         $uploadedFile = $this->createUploadedFile();
         $userAvatarRepository = $this->getEntityManager()->getRepository(UserAvatar::class);
-
         $userAvatarService = $this->getMockBuilder(UserAvatarService::class)
             ->setConstructorArgs([
                 $userAvatarRepository,
@@ -45,9 +44,13 @@ class UserTest extends AbstractFunctionalTest
             ->getMock();
 
         $this->replaceService(UserAvatarService::class, $userAvatarService);
+
         $this->loginAs($user->getIdentity(), '123456');
 
         $response = $this->post('/user/my-avatar', [], [], ['avatar' => $uploadedFile]);
+
+        $path = __DIR__ . DIRECTORY_SEPARATOR . $uploadedFile->getClientFilename();
+        unlink($path);
 
         $this->assertResponseOk($response);
     }
@@ -285,23 +288,6 @@ class UserTest extends AbstractFunctionalTest
         $this->assertCount(1, $user->getResetPasswords());
     }
 
-//    public function testRegisterAccountDuplicateIdentity()
-//    {
-//        $user = $this->createUser();
-//
-//        $response = $this->get('/user/my-account', [
-//            'identity' => $user->getIdentity(),
-//        ]);
-//
-//        $data = json_decode($response->getBody()->getContents(), true);
-//
-//        $this->assertResponseBadRequest($response);
-//        $this->assertArrayHasKey('error', $data);
-//        $this->assertArrayHasKey('messages', $data['error']);
-//        $this->assertNotEmpty($data['error']['messages'][0]);
-//        $this->assertSame(Message::DUPLICATE_IDENTITY, $data['error']['messages'][0]);
-//    }
-
     public function testViewMyAccount()
     {
         $user = $this->createUser();
@@ -384,7 +370,13 @@ class UserTest extends AbstractFunctionalTest
 
     private function createUploadedFile(): UploadedFileInterface
     {
-        $path = realpath(__DIR__ . '/../../../avatar.jpg');
-        return new UploadedFile($path, 10, UPLOAD_ERR_OK, 'test.jpg', 'image/jpg');
+        $img = imagecreatetruecolor(120, 20);
+        $bg = imagecolorallocate ($img, 255, 255, 255);
+        imagefilledrectangle($img,0,0,120,20,$bg);
+        $path = __DIR__ . DIRECTORY_SEPARATOR . 'test.jpg';
+        imagejpeg($img, $path,100);
+
+        $uploadedFile = new UploadedFile($path, 10, UPLOAD_ERR_OK, 'test.jpg', 'image/jpg');
+        return $uploadedFile;
     }
 }

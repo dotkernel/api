@@ -153,11 +153,9 @@ class OAuthAccessToken implements AccessTokenEntityInterface
 
     public function addScope(ScopeEntityInterface $scope): self
     {
-        if ($this->scopes->contains($scope)) {
-            return $this;
+        if (! $this->scopes->contains($scope)) {
+            $this->scopes->add($scope);
         }
-
-        $this->scopes->add($scope);
 
         return $this;
     }

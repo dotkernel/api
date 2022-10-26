@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Api\User\Repository;
 
 use Api\Admin\Entity\Admin;
+use Api\App\Entity\OAuthClient;
 use Api\App\Helper\PaginationHelper;
 use Api\App\Message;
 use Api\User\Collection\UserCollection;
@@ -254,13 +255,13 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     ): ?UserEntity {
         $qb = $this->getEntityManager()->createQueryBuilder();
         switch ($clientEntity->getName()) {
-            case 'admin':
+            case OAuthClient::NAME_ADMIN :
                 $qb->select('a.password')
                     ->from(Admin::class, 'a')
                     ->andWhere('a.identity = :identity')
                     ->setParameter('identity', $username);
                 break;
-            case 'frontend':
+            case OAuthClient::NAME_FRONTEND :
                 $qb->select(['u.password', 'u.status'])
                     ->from(User::class, 'u')
                     ->andWhere('u.identity = :identity')

@@ -87,9 +87,7 @@
             "Api\\Admin\\": "src/Admin/src/",
             "Api\\App\\": "src/App/src/",
             "Api\\User\\": "src/User/src/",
-            "AppTest\\Functional\\Exception\\": "tests/AppTest/Functional/Exception",
-            "AppTest\\Functional\\Traits\\": "tests/AppTest/Functional/Traits",
-            "AppTest\\Functional\\": "tests/AppTest/Functional"
+            "AppTest\\Functional\\": "tests/AppTest/Functional/src/"
         }
     },
     "scripts": {

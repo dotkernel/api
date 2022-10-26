@@ -96,6 +96,15 @@ trait AuthenticationTrait
         }
 
         $body = json_decode($response->getBody()->getContents(),true);
+        if (! isset($body['token_type'])) {
+            throw AuthenticationException::invalidResponse('token_type');
+        }
+        if (! isset($body['access_token'])) {
+            throw AuthenticationException::invalidResponse('access_token');
+        }
+        if (! isset($body['refresh_token'])) {
+            throw AuthenticationException::invalidResponse('refresh_token');
+        }
 
         $this
             ->setTokenType($body['token_type'])

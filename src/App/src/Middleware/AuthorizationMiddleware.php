@@ -103,8 +103,6 @@ class AuthorizationMiddleware implements MiddlewareInterface
 
         $request = $request->withAttribute(UserInterface::class, $defaultUser);
 
-//        echo "<pre>"; var_dump($defaultUser); exit;
-
         $isGranted = false;
         foreach ($defaultUser->getRoles() as $role) {
             if ($this->authorization->isGranted($role, $request)) {
