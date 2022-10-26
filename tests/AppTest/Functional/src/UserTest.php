@@ -24,6 +24,85 @@ class UserTest extends AbstractFunctionalTest
 {
     use DatabaseTrait, AuthenticationTrait;
 
+    public function testRegisterAccountDuplicateIdentity()
+    {
+        $user = $this->createUser();
+
+        $userAvatarService = $this->createMock(UserAvatarService::class);
+        $this->replaceService(UserAvatarService::class, $userAvatarService);
+
+        $response = $this->post('/user', [
+            'identity' => $user->getIdentity(),
+            'password' => '123456',
+            'passwordConfirm' => '123456',
+            'detail' => [
+                'email' => 'test@test.com',
+            ]
+        ]);
+
+        $this->assertResponseBadRequest($response);
+
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        $this->assertArrayHasKey('error', $data);
+        $this->assertNotEmpty($data['error']);
+        $this->assertArrayHasKey('messages', $data['error']);
+        $this->assertContains(Message::DUPLICATE_IDENTITY, $data['error']['messages']);
+    }
+
+    public function testRegisterAccountDuplicateEmail()
+    {
+        $user = $this->createUser();
+
+        $userAvatarService = $this->createMock(UserAvatarService::class);
+        $this->replaceService(UserAvatarService::class, $userAvatarService);
+
+        $response = $this->post('/user', [
+            'identity' => 'dot@dotkernel.com',
+            'password' => '123456',
+            'passwordConfirm' => '123456',
+            'detail' => [
+                'email' => $user->getDetail()->getEmail(),
+            ]
+        ]);
+
+        $this->assertResponseBadRequest($response);
+
+        $data = json_decode($response->getBody()->getContents(), true);
+        $this->assertArrayHasKey('error', $data);
+        $this->assertNotEmpty($data['error']);
+        $this->assertArrayHasKey('messages', $data['error']);
+        $this->assertContains(Message::DUPLICATE_EMAIL, $data['error']['messages']);
+    }
+
+    public function testRegisterAccount()
+    {
+        $userAvatarService = $this->createMock(UserAvatarService::class);
+        $this->replaceService(UserAvatarService::class, $userAvatarService);
+
+        $user = [
+            'identity' => 'dot@dotkernel.com',
+            'password' => '123456',
+            'passwordConfirm' => '123456',
+            'detail' => [
+                'email' => 'test@test.com',
+            ]
+        ];
+
+        $response = $this->post('/user', $user);
+
+        $this->assertResponseOk($response);
+
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        $this->assertSame($user['identity'], $data['identity']);
+        $this->assertSame(User::STATUS_PENDING, $data['status']);
+        $this->assertFalse($data['isDeleted']);
+        $this->assertArrayHasKey('detail', $data);
+        $this->assertArrayHasKey('email', $data['detail']);
+        $this->assertSame($user['detail']['email'], $data['detail']['email']);
+    }
+
     public function testCreateMyAvatar()
     {
         $user = $this->createUser();

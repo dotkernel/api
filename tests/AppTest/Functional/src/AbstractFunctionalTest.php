@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Reports\Status;
 
 /**
  * Class AbstractFunctionalTest
@@ -273,6 +274,15 @@ abstract class AbstractFunctionalTest extends TestCase
         $this->assertSame(StatusCodeInterface::STATUS_OK, $response->getStatusCode());
     }
 
+    protected function assertResponseSuccessful(ResponseInterface $response)
+    {
+        $this->assertBetween(
+            $response->getStatusCode(),
+            StatusCodeInterface::STATUS_OK,
+            StatusCodeInterface::STATUS_MULTIPLE_CHOICES
+        );
+    }
+
     protected function assertResponseUnauthorized(ResponseInterface $response): void
     {
         $this->assertSame(StatusCodeInterface::STATUS_UNAUTHORIZED, $response->getStatusCode());
@@ -291,6 +301,17 @@ abstract class AbstractFunctionalTest extends TestCase
     protected function assertResponseNotFound(ResponseInterface $response)
     {
         $this->assertSame(StatusCodeInterface::STATUS_NOT_FOUND, $response->getStatusCode());
+    }
+
+    protected function assertBetween($value, $from, $to)
+    {
+        $this->assertThat(
+            $value,
+            $this->logicalAnd(
+                $this->greaterThan($from),
+                $this->lessThan($to)
+            )
+        );
     }
 
     /**
