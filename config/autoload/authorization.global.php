@@ -15,13 +15,12 @@ return [
         ],
      * A has no parent role.
      * B has A as a parent. That means A inherits the permissions of B.
-     * C has B as a parent. That means C inherits the permissions of B, and A inherits the permissions of C.
+     * C has B as a parent. That means B inherits the permissions of C, and A inherits the permissions of C.
      */
     'mezzio-authorization-rbac' => [
         'roles' => [
             AdminRole::ROLE_SUPERUSER => [],
             AdminRole::ROLE_ADMIN => [AdminRole::ROLE_SUPERUSER],
-//            UserRole::ROLE_USER => [AdminRole::ROLE_ADMIN],
             UserRole::ROLE_GUEST => [UserRole::ROLE_USER]
         ],
         'permissions' => [
