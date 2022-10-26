@@ -7,6 +7,7 @@ namespace Api\User\Form\InputFilter;
 use Api\App\Message;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
+use Laminas\InputFilter\InputFilter;
 use Laminas\InputFilter\InputFilterAwareInterface;
 use Laminas\InputFilter\InputFilterAwareTrait;
 use Laminas\InputFilter\InputFilterInterface;
@@ -27,7 +28,7 @@ class CreateDetailInputFilter implements InputFilterAwareInterface
     public function getInputFilter(): InputFilterInterface
     {
         if (empty($this->inputFilter)) {
-            $this->inputFilter = new OptionalInputFilter();
+            $this->inputFilter = new InputFilter();
             $this->inputFilter->add([
                 'name' => 'firstName',
                 'required' => false,

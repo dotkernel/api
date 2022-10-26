@@ -65,10 +65,11 @@ return [
                 'account.recover-identity',
                 'account.reset-password.validate',
                 'account.reset-password.request',
-                'error.report',
-                'home',
                 'security.generate-token',
                 'security.refresh-token',
+                'error.report',
+                'home',
+                'user.create',
             ]
         ],
     ]

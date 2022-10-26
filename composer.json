@@ -86,7 +86,8 @@
         "psr-4": {
             "Api\\Admin\\": "src/Admin/src/",
             "Api\\App\\": "src/App/src/",
-            "Api\\User\\": "src/User/src/"
+            "Api\\User\\": "src/User/src/",
+            "AppTest\\Functional\\": "tests/AppTest/Functional/src/"
         }
     },
     "scripts": {

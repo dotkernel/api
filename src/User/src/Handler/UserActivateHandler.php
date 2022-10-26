@@ -62,7 +62,7 @@ class UserActivateHandler extends DefaultHandler
                 return $this->errorResponse(Message::USER_ALREADY_ACTIVATED);
             }
 
-            $user = $this->userService->updateUser($user->renewHash());
+            $user = $this->userService->activateUser($user);
             $this->userService->sendActivationMail($user);
             return $this->infoResponse(Message::USER_ACTIVATED);
         } catch (Throwable $exception) {
