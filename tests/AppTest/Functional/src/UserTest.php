@@ -77,8 +77,10 @@ class UserTest extends AbstractFunctionalTest
 
     public function testRegisterAccount()
     {
+        $mailService = $this->createMock(MailService::class);
         $userAvatarService = $this->createMock(UserAvatarService::class);
         $this->replaceService(UserAvatarService::class, $userAvatarService);
+        $this->replaceService(MailService::class, $mailService);
 
         $user = [
             'identity' => 'dot@dotkernel.com',

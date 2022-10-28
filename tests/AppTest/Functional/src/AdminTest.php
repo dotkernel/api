@@ -11,6 +11,7 @@ use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserRole;
 use AppTest\Functional\Traits\AuthenticationTrait;
 use AppTest\Functional\Traits\DatabaseTrait;
+use Dot\Mail\Service\MailService;
 
 /**
  * Class AdminTest
@@ -290,9 +291,11 @@ class AdminTest extends AbstractFunctionalTest
     public function testAdminCanCreateUserAccount()
     {
         $admin = $this->createAdmin();
+        $mailService = $this->createMock(MailService::class);
         $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
         $userRoleRepository = $this->getEntityManager()->getRepository(UserRole::class);
         $userRole = $userRoleRepository->findOneBy(['name' => UserRole::ROLE_USER]);
+        $this->replaceService(MailService::class , $mailService);
 
         $userData = [
             'identity' => 'test@user.com',
