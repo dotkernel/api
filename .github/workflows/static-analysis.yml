@@ -1,6 +1,7 @@
 on:
-#  - pull_request
-  - push
+  push:
+    branches:
+      - 4.0
 
 name: PSALM static analysis
 
