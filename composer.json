@@ -43,7 +43,7 @@
         }
     },
     "require": {
-        "php": "~7.4.0 || ~8.0.0 || ~8.1.0",
+        "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
         "ext-json": "*",
         "brick/math": "^0.10.0",
         "dotkernel/dot-annotated-services": "^4.0.0",
