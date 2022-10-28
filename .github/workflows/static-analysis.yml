@@ -2,7 +2,7 @@ on:
 #  - pull_request
   - push
 
-name: static analysis
+name: PSALM static analysis
 
 jobs:
   mutation:
@@ -16,7 +16,7 @@ jobs:
           - ubuntu-latest
 
         php:
-          - "7.4"
+          - "8.1"
 
     steps:
       - name: Checkout
