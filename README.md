@@ -7,9 +7,9 @@ DotKernel's PSR-15 API built around the Mezzio API skeleton based on [Enrico Zim
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/api)](https://github.com/dotkernel/api/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/api)](https://github.com/dotkernel/api/network)
 [![GitHub stars](https://img.shields.io/github/stars/dotkernel/api)](https://github.com/dotkernel/api/stargazers)
-[![GitHub license](https://img.shields.io/github/license/dotkernel/api)](https://github.com/dotkernel/api/blob/3.0/LICENSE.md)
+[![GitHub license](https://img.shields.io/github/license/dotkernel/api)](https://github.com/dotkernel/api/blob/4.0/LICENSE.md)
 
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/3.0.x-dev)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/4.0.x-dev)
 
 
 ## Getting Started
