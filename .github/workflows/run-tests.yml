@@ -47,8 +47,8 @@ jobs:
         run: |
           echo $(pwd)
           echo $(ls)
-#          cp ../config/autoload/local.php.dist ../config/autoload/local.php
-#          cp ../config/autoload/mail.local.php.dist ../config/autoload/mail.local.php
+          cp config/autoload/local.php.dist config/autoload/local.php
+          cp config/autoload/mail.local.php.dist config/autoload/mail.local.php
 
       - name: Run tests
         run: vendor/bin/phpunit --testdox
