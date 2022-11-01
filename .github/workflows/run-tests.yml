@@ -45,6 +45,7 @@ jobs:
 
       - name: Setup project
         run: |
+          echo $(pwd)
           cp ../config/autoload/local.php.dist ../config/autoload/local.php
           cp ../config/autoload/mail.local.php.dist ../config/autoload/mail.local.php
 
