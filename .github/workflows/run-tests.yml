@@ -45,10 +45,10 @@ jobs:
 
       - name: Setup project
         run: |
-          echo $(pwd)
-          echo $(ls)
-          cp config/autoload/local.php.dist config/autoload/local.php
-          cp config/autoload/mail.local.php.dist config/autoload/mail.local.php
+          mv config/autoload/local.php.dist config/autoload/local.php
+          mv config/autoload/mail.local.php.dist config/autoload/mail.local.php
 
-      - name: Run tests
-        run: vendor/bin/phpunit --testdox
+      - name: Run unit tests
+        run: vendor/bin/phpunit --testsuite=UnitTests --testdox --colors=always
+      - name: Run functional tests
+        run: vendor/bin/phpunit --testsuite=FunctionalTests --testdox --colors=always
