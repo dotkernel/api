@@ -11,6 +11,7 @@ use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserRole;
 use AppTest\Functional\Traits\AuthenticationTrait;
 use AppTest\Functional\Traits\DatabaseTrait;
+use Dot\Mail\Service\MailService;
 
 /**
  * Class AdminTest
@@ -293,6 +294,8 @@ class AdminTest extends AbstractFunctionalTest
         $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
         $userRoleRepository = $this->getEntityManager()->getRepository(UserRole::class);
         $userRole = $userRoleRepository->findOneBy(['name' => UserRole::ROLE_USER]);
+        $mailService = $this->createMock(MailService::class);
+        $this->replaceService(MailService::class , $mailService);
 
         $userData = [
             'identity' => 'test@user.com',
