@@ -1,8 +1,8 @@
 on:
-  - pull_request
+#  - pull_request
   - push
 
-name: Run tests
+name: Run PHPUnit tests
 
 jobs:
   mutation:
