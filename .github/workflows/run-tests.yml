@@ -43,5 +43,11 @@ jobs:
       - name: Install dependencies with composer
         run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
 
+      - name: Setup project
+        run: |
+          cd ../../
+          cp config/autoload/local.php.dist config/autoload/local.php
+          cp config/autoload/mail.local.php.dist config/autoload/mail.local.php
+
       - name: Run tests
         run: vendor/bin/phpunit --testdox
