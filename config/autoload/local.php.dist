@@ -45,15 +45,6 @@ return [
         'access_token_expire'  => 'P1D',
         'refresh_token_expire' => 'P1M',
         'auth_code_expire'     => 'PT10M',
-        'pdo' => [
-            'dsn' => sprintf('mysql:host=%s;port=%d;dbname=%s',
-                $databases['default']['host'],
-                $databases['default']['port'],
-                $databases['default']['dbname']
-            ),
-            'username' => $databases['default']['user'],
-            'password' => $databases['default']['password']
-        ],
         'invalid_credentials' => [
             'error' => 'Invalid credentials.',
             'error_description' => 'Invalid credentials.',
