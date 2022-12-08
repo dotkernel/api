@@ -11,6 +11,7 @@ DotKernel's PSR-15 API built around the Mezzio API skeleton based on [Enrico Zim
 
 ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/4.0.x-dev)
 
+[![Build Static](https://img.shields.io/github/workflow/status/dotkernel/api/static-analysis/4.0)](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml)
 
 ## Getting Started
 
