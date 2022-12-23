@@ -134,4 +134,9 @@ class OAuthScope implements ScopeEntityInterface
 
         return $this->authCodes->matching($criteria);
     }
+
+    public function jsonSerialize(): mixed
+    {
+        return $this->getIdentifier();
+    }
 }
