@@ -2,7 +2,7 @@ on:
 #  - pull_request
   - push
 
-name: PSALM static analysis
+name: static analysis
 
 jobs:
   mutation:
@@ -39,7 +39,6 @@ jobs:
           key: php${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: |
             php${{ matrix.php }}-composer-
-
       - name: Install dependencies with composer
         run: composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
 
