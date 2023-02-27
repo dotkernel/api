@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Api\Admin\Handler;
 
 use Api\Admin\Entity\Admin;
-use Api\Admin\Form\InputFilter\UpdateAdminInputFilter;
+use Api\Admin\InputFilter\UpdateAdminInputFilter;
 use Api\Admin\Service\AdminService;
 use Api\App\Handler\DefaultHandler;
 use Dot\AnnotatedServices\Annotation\Inject;
@@ -56,7 +56,7 @@ class AdminAccountHandler extends DefaultHandler
      */
     public function patch(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new UpdateAdminInputFilter())->getInputFilter();
+        $inputFilter = new UpdateAdminInputFilter();
         $inputFilter->setData($request->getParsedBody());
         if (!$inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Api\Admin\Command;
 
 use Api\Admin\Entity\AdminRole;
-use Api\Admin\Form\InputFilter\CreateAdminInputFilter;
+use Api\Admin\InputFilter\CreateAdminInputFilter;
 use Api\Admin\Service\AdminRoleService;
 use Api\Admin\Service\AdminService;
 use Api\App\Message;
@@ -79,7 +79,7 @@ class AdminCreateCommand extends Command
             ]
         ];
 
-        $inputFilter = (new CreateAdminInputFilter())->getInputFilter();
+        $inputFilter = new CreateAdminInputFilter();
         $inputFilter->setData($data);
         if (!$inputFilter->isValid()) {
             $messages = [];

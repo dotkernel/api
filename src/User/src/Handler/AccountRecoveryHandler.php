@@ -7,7 +7,7 @@ namespace Api\User\Handler;
 use Api\App\Handler\DefaultHandler;
 use Api\App\Message;
 use Api\User\Entity\User;
-use Api\User\Form\InputFilter\RecoverIdentityInputFilter;
+use Api\User\InputFilter\RecoverIdentityInputFilter;
 use Api\User\Service\UserService;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\Mail\Exception\MailException;
@@ -49,7 +49,7 @@ class AccountRecoveryHandler extends DefaultHandler
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new RecoverIdentityInputFilter())->getInputFilter();
+        $inputFilter = new RecoverIdentityInputFilter();
         $inputFilter->setData($request->getParsedBody());
         if (!$inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());

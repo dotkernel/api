@@ -7,8 +7,8 @@ namespace Api\User\Handler;
 use Api\App\Message;
 use Api\App\Handler\DefaultHandler;
 use Api\User\Entity\User;
-use Api\User\Form\InputFilter\CreateUserInputFilter;
-use Api\User\Form\InputFilter\UpdateUserInputFilter;
+use Api\User\InputFilter\CreateUserInputFilter;
+use Api\User\InputFilter\UpdateUserInputFilter;
 use Api\User\Service\UserService;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Mezzio\Hal\HalResponseFactory;
@@ -100,7 +100,7 @@ class UserHandler extends DefaultHandler
      */
     public function patch(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new UpdateUserInputFilter())->getInputFilter();
+        $inputFilter = new UpdateUserInputFilter();
         $inputFilter->setData($request->getParsedBody());
         if (!$inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
@@ -127,7 +127,7 @@ class UserHandler extends DefaultHandler
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new CreateUserInputFilter())->getInputFilter();
+        $inputFilter = new CreateUserInputFilter();
         $inputFilter->setData($request->getParsedBody());
         if (!$inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());

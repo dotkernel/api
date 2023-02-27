@@ -72,7 +72,8 @@
         "mezzio/mezzio-twigrenderer": "^2.9.0",
         "ramsey/uuid-doctrine": "^1.8.1",
         "roave/psr-container-doctrine": "^3.5.0",
-        "roave/security-advisories": "dev-master"
+        "roave/security-advisories": "dev-master",
+        "symfony/filesystem": "^6.2"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "^2.3",
