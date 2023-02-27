@@ -9,7 +9,7 @@ use Api\User\InputFilter\Input\FirstNameInput;
 use Api\User\InputFilter\Input\LastNameInput;
 use Laminas\InputFilter\InputFilter;
 
-class UserDetailInputFilter extends InputFilter
+class CreateUserDetailInputFilter extends InputFilter
 {
     public function __construct()
     {

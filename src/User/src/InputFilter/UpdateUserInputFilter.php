@@ -23,7 +23,7 @@ class UpdateUserInputFilter extends InputFilter
             ->add(new PasswordInput('password', false))
             ->add(new PasswordConfirmInput('passwordConfirm', false))
             ->add(new StatusInput('status', false))
-            ->add(new UserDetailInputFilter(), 'detail')
+            ->add(new UpdateUserDetailInputFilter(), 'detail')
             ->add($roles, 'roles');
     }
 }

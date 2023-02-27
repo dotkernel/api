@@ -17,14 +17,14 @@ class CreateUserInputFilter extends InputFilter
     {
         $roles = (new CollectionInputFilter())
             ->setInputFilter(new UserRoleInputFilter())
-            ->setIsRequired(true);
+            ->setIsRequired(false);
 
         $this
             ->add(new IdentityInput('identity'))
             ->add(new PasswordInput('password'))
             ->add(new PasswordConfirmInput('passwordConfirm'))
             ->add(new StatusInput('status', false))
-            ->add(new UserDetailInputFilter(), 'detail')
+            ->add(new CreateUserDetailInputFilter(), 'detail')
             ->add($roles, 'roles');
     }
 }
