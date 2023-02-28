@@ -8,8 +8,8 @@ use Api\App\Message;
 use Api\App\Handler\DefaultHandler;
 use Api\User\Entity\User;
 use Api\User\Entity\UserResetPasswordEntity;
-use Api\User\Form\InputFilter\ResetPasswordInputFilter;
-use Api\User\Form\InputFilter\UpdatePasswordInputFilter;
+use Api\User\InputFilter\ResetPasswordInputFilter;
+use Api\User\InputFilter\UpdatePasswordInputFilter;
 use Api\User\Service\UserService;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Mezzio\Hal\HalResponseFactory;
@@ -103,7 +103,7 @@ class AccountResetPasswordHandler extends DefaultHandler
             return $this->errorResponse(sprintf(Message::RESET_PASSWORD_USED, $hash));
         }
 
-        $inputFilter = (new UpdatePasswordInputFilter())->getInputFilter();
+        $inputFilter = new UpdatePasswordInputFilter();
         $inputFilter->setData($request->getParsedBody());
         if (!$inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
@@ -124,7 +124,7 @@ class AccountResetPasswordHandler extends DefaultHandler
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new ResetPasswordInputFilter())->getInputFilter();
+        $inputFilter = new ResetPasswordInputFilter();
         $inputFilter->setData($request->getParsedBody());
         if (!$inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());

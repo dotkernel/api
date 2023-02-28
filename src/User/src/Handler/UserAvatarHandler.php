@@ -8,7 +8,7 @@ use Api\App\Message;
 use Api\App\Handler\DefaultHandler;
 use Api\User\Entity\User;
 use Api\User\Entity\UserAvatar;
-use Api\User\Form\InputFilter\UpdateAvatarInputFilter;
+use Api\User\InputFilter\UpdateAvatarInputFilter;
 use Api\User\Service\UserAvatarService;
 use Api\User\Service\UserService;
 use Dot\AnnotatedServices\Annotation\Inject;
@@ -91,7 +91,7 @@ class UserAvatarHandler extends DefaultHandler
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new UpdateAvatarInputFilter())->getInputFilter();
+        $inputFilter = new UpdateAvatarInputFilter();
         $inputFilter->setData($request->getUploadedFiles());
         if (!$inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());

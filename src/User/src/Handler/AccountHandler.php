@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Api\User\Handler;
 
 use Api\App\Handler\DefaultHandler;
+use Api\User\InputFilter\CreateUserInputFilter;
+use Api\User\InputFilter\UpdateUserInputFilter;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Api\User\Entity\User;
-use Api\User\Form\InputFilter\CreateAccountInputFilter;
-use Api\User\Form\InputFilter\UpdateAccountInputFilter;
 use Api\User\Service\UserService;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
@@ -70,7 +70,8 @@ class AccountHandler extends DefaultHandler
      */
     public function patch(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new UpdateAccountInputFilter())->getInputFilter();
+        $inputFilter = new UpdateUserInputFilter();
+        $inputFilter->setValidationGroup(['password', 'passwordConfirm', 'detail']);
         $inputFilter->setData($request->getParsedBody());
         if (!$inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
@@ -90,7 +91,8 @@ class AccountHandler extends DefaultHandler
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new CreateAccountInputFilter())->getInputFilter();
+        $inputFilter = new CreateUserInputFilter();
+        $inputFilter->setValidationGroup(['identity', 'password', 'passwordConfirm', 'detail']);
         $inputFilter->setData($request->getParsedBody());
         if (!$inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
