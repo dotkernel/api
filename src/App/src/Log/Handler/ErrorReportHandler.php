@@ -6,16 +6,14 @@ namespace Api\App\Log\Handler;
 
 use Api\App\Handler\DefaultHandler;
 use Api\App\Message;
+use Api\App\Service\ErrorReportServiceInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\AnnotatedServices\Annotation\Service;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\Filesystem\Filesystem;
-
-use function date;
-use function sprintf;
+use Throwable;
 
 /**
  * Class ErrorReportHandler
@@ -25,43 +23,47 @@ use function sprintf;
  */
 class ErrorReportHandler extends DefaultHandler
 {
-    protected array $config;
+    private ErrorReportServiceInterface $errorReportService;
 
     /**
      * ErrorReportHandler constructor.
      * @param HalResponseFactory $halResponseFactory
      * @param ResourceGenerator $resourceGenerator
-     * @param array $config
+     * @param ErrorReportServiceInterface $errorReportService
      *
-     * @Inject({HalResponseFactory::class, ResourceGenerator::class, "config.error-report"})
+     * @Inject({
+     *     HalResponseFactory::class,
+     *     ResourceGenerator::class,
+     *     ErrorReportServiceInterface::class
+     * })
      */
     public function __construct(
         HalResponseFactory $halResponseFactory,
         ResourceGenerator $resourceGenerator,
-        array $config
+        ErrorReportServiceInterface $errorReportService
     ) {
         parent::__construct($halResponseFactory, $resourceGenerator);
 
-        $this->config = $config;
+        $this->errorReportService = $errorReportService;
     }
 
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws Throwable
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        $data = $request->getParsedBody();
-        if (empty($data['message'])) {
-            return $this->errorResponse(Message::ERROR_REPORT_KO);
+        try {
+            $this->errorReportService
+                ->checkStatus()
+                ->checkRequest($request)
+                ->appendMessage(
+                    $request->getParsedBody()['message'] ?? ''
+                );
+            return $this->infoResponse(Message::ERROR_REPORT_OK);
+        } catch (Throwable $exception) {
+            return $this->errorResponse($exception->getMessage());
         }
-
-        $writer = new Filesystem();
-        $writer->appendToFile(
-            $this->config['filePath'],
-            sprintf('%s => %s' . PHP_EOL, date('Y-m-d H:i:s'), $data['message'])
-        );
-
-        return $this->infoResponse(Message::ERROR_REPORT_OK);
     }
 }
