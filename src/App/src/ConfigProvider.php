@@ -11,6 +11,8 @@ use Api\App\Factory\RouteListCommandFactory;
 use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
 use Api\App\Middleware\ErrorResponseMiddleware;
+use Api\App\Service\ErrorReportService;
+use Api\App\Service\ErrorReportServiceInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Dot\AnnotatedServices\Factory\AbstractAnnotatedFactory;
@@ -74,7 +76,8 @@ class ConfigProvider
                 TwigExtension::class => TwigExtensionFactory::class,
                 TwigRenderer::class => TwigRendererFactory::class,
                 ErrorResponseMiddleware::class => AnnotatedServiceFactory::class,
-                RouteListCommand::class => RouteListCommandFactory::class
+                RouteListCommand::class => RouteListCommandFactory::class,
+                ErrorReportService::class => AnnotatedServiceFactory::class,
             ],
             'aliases' => [
                 Authentication\AuthenticationInterface::class => Authentication\OAuth2\OAuth2Adapter::class,
@@ -82,6 +85,7 @@ class ConfigProvider
                 EntityManager::class => 'doctrine.entity_manager.orm_default',
                 EntityManagerInterface::class => 'doctrine.entity_manager.orm_default',
                 TemplateRendererInterface::class => TwigRenderer::class,
+                ErrorReportServiceInterface::class => ErrorReportService::class,
             ]
         ];
     }

@@ -20,7 +20,8 @@ class Message
     public const DUPLICATE_EMAIL = 'An account with this email address already exists.';
     public const DUPLICATE_IDENTITY = 'An account with this identity already exists.';
     public const ERROR_REPORT_OK = 'Error report successfully saved.';
-    public const ERROR_REPORT_KO = 'Message is empty and nothing was saved.';
+    public const ERROR_REPORT_NOT_ALLOWED = 'This host is not allowed to report logs.';
+    public const ERROR_REPORT_NOT_ENABLED = 'Remote error reporting is not enabled.';
     public const INVALID_ACTIVATION_CODE = 'Invalid activation code.';
     public const INVALID_CLIENT_ID = 'Invalid client_id.';
     public const INVALID_EMAIL = 'Invalid email.';
@@ -31,6 +32,7 @@ class Message
     public const MAIL_SENT_RESET_PASSWORD = 'If the provided email identifies an account in our system, ' .
     'you will receive an email with further instructions on resetting your account\'s password.';
     public const MAIL_SENT_USER_ACTIVATION = 'User activation mail has been successfully sent to \'%s\'';
+    public const MISSING_CONFIG = 'Missing configuration value: \'%s\'';
     public const MISSING_PARAMETER = 'Missing parameter: \'%s\'';
     public const NOT_FOUND_BY_UUID = 'Unable to find %s identified by uuid: %s';
     public const RESET_PASSWORD_EXPIRED = 'Password reset request for hash: \'%s\' is invalid (expired).';
