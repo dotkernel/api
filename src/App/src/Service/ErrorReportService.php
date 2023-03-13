@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\App\Service;
 
+use Api\App\Exception\ForbiddenException;
 use Api\App\Message;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Exception;
@@ -13,7 +14,9 @@ use Symfony\Component\Filesystem\Filesystem;
 class ErrorReportService implements ErrorReportServiceInterface
 {
     private FileSystem $fileSystem;
-    protected array $config;
+    private array $config;
+    private const HEADER_NAME = 'Error-Reporting-Token';
+    private ?string $token = null;
 
     /**
      * @param array $config
@@ -33,31 +36,10 @@ class ErrorReportService implements ErrorReportServiceInterface
      */
     public function appendMessage(string $message): void
     {
-        if (empty($this->config['path'])) {
-            throw new Exception(
-                sprintf(
-                    Message::MISSING_CONFIG,
-                    sprintf('config.%s.path', ErrorReportServiceInterface::class)
-                )
-            );
-        }
-
         $this->fileSystem->appendToFile(
             $this->config['path'],
-            sprintf('%s => %s' . PHP_EOL, date('Y-m-d H:i:s'), $message)
+            sprintf('[%s] [%s] %s' . PHP_EOL, date('Y-m-d H:i:s'), $this->token, $message)
         );
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function checkStatus(): self
-    {
-        if (empty($this->config['enabled'])) {
-            throw new Exception(Message::ERROR_REPORT_NOT_ENABLED);
-        }
-
-        return $this;
     }
 
     /**
@@ -65,36 +47,132 @@ class ErrorReportService implements ErrorReportServiceInterface
      */
     public function checkRequest(ServerRequestInterface $request): self
     {
-        if ($this->isMatchingDomain($request)) {
-            return $this;
+        $this->validateConfigs();
+
+        if (!$this->hasValidToken($request)) {
+            throw new ForbiddenException(Message::ERROR_REPORT_NOT_ALLOWED);
         }
 
-        if ($this->isMatchingIpAddress($request)) {
-            return $this;
+        if (!$this->isMatchingDomain($request) && !$this->isMatchingIpAddress($request)) {
+            throw new ForbiddenException(Message::ERROR_REPORT_NOT_ALLOWED);
         }
 
-        throw new Exception(Message::ERROR_REPORT_NOT_ALLOWED);
+        return $this;
     }
 
+    public function generateToken(): string
+    {
+        return sha1(uniqid());
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return bool
+     * @throws Exception
+     */
+    private function hasValidToken(ServerRequestInterface $request): bool
+    {
+        $tokens = $request->getHeader(self::HEADER_NAME);
+        if (empty($tokens)) {
+            return false;
+        }
+
+        $this->token = $tokens[0];
+        if (!in_array($this->token, $this->config['tokens'])) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return bool
+     * @throws Exception
+     */
     private function isMatchingDomain(ServerRequestInterface $request): bool
     {
-        if (in_array('*', $this->config['domain_whitelist'])) {
-            return true;
+        $domain = parse_url($request->getServerParams()['HTTP_ORIGIN'] ?? '', PHP_URL_HOST);
+        $intersection = array_intersect($this->config['domain_whitelist'], ['*', $domain]);
+        if (empty($intersection)) {
+            return false;
         }
 
-        $domain = parse_url($request->getServerParams()['HTTP_ORIGIN'] ?? '', PHP_URL_HOST);
-
-        return in_array($domain, $this->config['domain_whitelist']);
+        return true;
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return bool
+     * @throws Exception
+     */
     private function isMatchingIpAddress(ServerRequestInterface $request): bool
     {
-        if (in_array('*', $this->config['ip_whitelist'])) {
-            return true;
+        $ipAddress = $request->getServerParams()['REMOTE_ADDR'] ?? null;
+        $intersection = array_intersect($this->config['ip_whitelist'], ['*', $ipAddress]);
+        if (empty($intersection)) {
+            return false;
         }
 
-        $ipAddress = $request->getServerParams()['REMOTE_ADDR'] ?? null;
+        return true;
+    }
 
-        return in_array($ipAddress, $this->config['ip_whitelist']);
+    /**
+     * @return void
+     * @throws Exception
+     */
+    private function validateConfigs(): void
+    {
+        if (!array_key_exists('enabled', $this->config)) {
+            throw new Exception(
+                sprintf(Message::MISSING_CONFIG, 'config.ErrorReportServiceInterface::class.enabled')
+            );
+        }
+
+        if ($this->config['enabled'] !== true) {
+            throw new Exception(Message::ERROR_REPORT_NOT_ENABLED);
+        }
+
+        if (!array_key_exists('path', $this->config)) {
+            throw new Exception(
+                sprintf(Message::MISSING_CONFIG, 'config.ErrorReportServiceInterface::class.path')
+            );
+        }
+
+        if (empty($this->config['path'])) {
+            throw new Exception(
+                sprintf(Message::INVALID_CONFIG, 'config.ErrorReportServiceInterface::class.path')
+            );
+        }
+
+        if (!array_key_exists('tokens', $this->config)) {
+            throw new Exception(
+                sprintf(Message::MISSING_CONFIG, 'config.ErrorReportServiceInterface::class.tokens')
+            );
+        }
+
+        if (empty($this->config['tokens'])) {
+            throw new Exception(
+                sprintf(Message::INVALID_CONFIG, 'config.ErrorReportServiceInterface::class.tokens')
+            );
+        }
+
+        if (!array_key_exists('domain_whitelist', $this->config)) {
+            throw new Exception(
+                sprintf(
+                    Message::MISSING_CONFIG,
+                    sprintf('config.%s.domain_whitelist', ErrorReportServiceInterface::class)
+                )
+            );
+        }
+
+        if (!array_key_exists('ip_whitelist', $this->config)) {
+            throw new Exception(
+                sprintf(
+                    Message::MISSING_CONFIG,
+                    sprintf('config.%s.ip_whitelist', ErrorReportServiceInterface::class)
+                )
+            );
+        }
     }
 }

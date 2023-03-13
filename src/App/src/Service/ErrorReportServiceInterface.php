@@ -19,8 +19,5 @@ interface ErrorReportServiceInterface
      */
     public function checkRequest(ServerRequestInterface $request): self;
 
-    /**
-     * @throws Exception
-     */
-    public function checkStatus(): self;
+    public function generateToken(): string;
 }

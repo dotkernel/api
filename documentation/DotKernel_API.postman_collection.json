@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "cf252f36-e656-4d44-bafd-bddc3305b866",
+		"_postman_id": "5f4c1b92-b1e1-4f8e-840f-f92b6f4cb670",
 		"name": "DotKernel_API",
 		"description": "DotKernel API documentation.",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3494496"
 	},
 	"item": [
 		{
@@ -1292,7 +1293,13 @@
 					"type": "noauth"
 				},
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Error-Reporting-Token",
+						"value": "",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n    \"message\": \"{{$randomLoremSentence}}\"\r\n}",
