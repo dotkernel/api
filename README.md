@@ -117,28 +117,11 @@ Sending a GET request to the [home page](http://localhost:8080/) should output t
 ```
 
 
-## Using the CLI:
-You can access the Mezzio's CLI by using the following command:
-```shell
-php vendor/bin/mezzio
-```
-You can access the Laminas' CLI by using the following command:
-```shell
-php vendor/bin/laminas
-```
-You can access Doctrine's CLI by using the following command:
-```shell
-php vendor/bin/doctrine
-```
-You can access DBAL CLI by using the following command:
-```shell
-php vendor/bin/doctrine-dbal
-```
-You can access Doctrine's migration tools by using the following command:
-```shell
-php vendor/bin/doctrine-migrations
-```
-You can access app-specific commands by using the following command:
-```shell
-php bin/cli.php
-```
+## Documentation
+In order to access DotKernel API documentation, check the provided [readme file](documentation/README.md).
+
+Additionally, each CLI command available has it's own documentation:
+* [Create admin account](documentation/command/admin-create.md)
+* [Generate database migrations](documentation/command/migrations-diff.md)
+* [Display available endpoints](documentation/command/route-list.md)
+* [Generate tokens](documentation/command/token-generate.md)
