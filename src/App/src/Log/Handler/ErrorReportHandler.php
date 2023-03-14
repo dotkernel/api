@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Api\App\Log\Handler;
 
+use Api\App\Exception\ForbiddenException;
 use Api\App\Handler\DefaultHandler;
 use Api\App\Message;
 use Api\App\Service\ErrorReportServiceInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\AnnotatedServices\Annotation\Service;
+use Laminas\Http\Response;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
@@ -56,14 +58,15 @@ class ErrorReportHandler extends DefaultHandler
     {
         try {
             $this->errorReportService
-                ->checkStatus()
                 ->checkRequest($request)
                 ->appendMessage(
                     $request->getParsedBody()['message'] ?? ''
                 );
             return $this->infoResponse(Message::ERROR_REPORT_OK);
+        } catch (ForbiddenException $exception) {
+            return $this->errorResponse($exception->getMessage(), Response::STATUS_CODE_403);
         } catch (Throwable $exception) {
-            return $this->errorResponse($exception->getMessage());
+            return $this->errorResponse($exception->getMessage(), Response::STATUS_CODE_500);
         }
     }
 }

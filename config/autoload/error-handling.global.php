@@ -40,13 +40,14 @@ return [
 
     /**
      * Messages will be stored only if all the below conditions are met:
-     * enabled = true
-     * at least one of the domain_whitelist OR ip_whitelist checks passes
+     * - enabled = true
+     * - request headers contain a valid error reporting token
+     * - at least one of the domain_whitelist OR ip_whitelist checks passes
      */
     ErrorReportServiceInterface::class => [
         /**
          * Usage:
-         * If enabled is set to true, messages will be stored and an info message is returned.
+         * If enabled is set to true, further checks are performed and if all good, message is stored.
          * If enabled is set to false, no message is stored and an error message is returned.
          */
         'enabled' => true,
@@ -56,6 +57,13 @@ return [
          * If it does not exist, it will be created.
          */
         'path' => __DIR__ . '/../../log/error-report-endpoint-log.log',
+
+        /**
+         * In order to be eligible for storing messages, Requests sent to the error reporting endpoint, must contain a header having:
+         * - name: the value of \Api\App\Service\ErrorReportService::HEADER_NAME
+         * - value: one of the items in this array
+         */
+        'tokens' => [],
 
         /**
          * Usage:

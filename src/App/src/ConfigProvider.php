@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Api\App;
 
 use Api\App\Command\RouteListCommand;
+use Api\App\Command\TokenGenerateCommand;
 use Api\App\Factory\AnnotationsCacheFactory;
 use Api\App\Factory\AuthenticationMiddlewareFactory;
 use Api\App\Factory\RouteListCommandFactory;
+use Api\App\Factory\TokenGenerateCommandFactory;
 use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
 use Api\App\Middleware\ErrorResponseMiddleware;
@@ -77,6 +79,7 @@ class ConfigProvider
                 TwigRenderer::class => TwigRendererFactory::class,
                 ErrorResponseMiddleware::class => AnnotatedServiceFactory::class,
                 RouteListCommand::class => RouteListCommandFactory::class,
+                TokenGenerateCommand::class => TokenGenerateCommandFactory::class,
                 ErrorReportService::class => AnnotatedServiceFactory::class,
             ],
             'aliases' => [
