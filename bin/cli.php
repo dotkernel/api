@@ -3,17 +3,14 @@
 declare(strict_types=1);
 
 use Dot\Cli\Factory\ApplicationFactory;
-use Psr\Container\ContainerInterface;
 
 chdir(dirname(__DIR__));
-require 'vendor/autoload.php';
 
-/** @var ContainerInterface $container */
-$container = require 'config/container.php';
+require 'vendor/autoload.php';
 
 $applicationFactory = new ApplicationFactory();
 try {
-    exit($applicationFactory($container)->run());
+    exit($applicationFactory(require 'config/container.php')->run());
 } catch (Exception $e) {
     exit($e->getMessage());
 }

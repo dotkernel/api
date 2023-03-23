@@ -11,32 +11,25 @@ use Doctrine\ORM\EntityRepository;
 use Dot\AnnotatedServices\Annotation\Entity;
 
 /**
- * Class UserRoleRepository
- * @package Api\User\Repository
- *
  * @Entity(name="Api\User\Entity\UserRole")
  */
 class UserRoleRepository extends EntityRepository
 {
-    /**
-     * @param array $params
-     * @return UserRoleCollection
-     */
     public function getRoles(array $params = []): UserRoleCollection
     {
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select(['role'])->from(UserRole::class, 'role');
-
-        // Order results
-        $qb->orderBy(($params['order'] ?? 'role.created'), $params['dir'] ?? 'desc');
-
-        // Paginate results
         $page = PaginationHelper::getOffsetAndLimit($params);
-        $qb->setFirstResult($page['offset'])->setMaxResults($page['limit']);
 
-        $qb->getQuery()->useQueryCache(true);
+        $query = $this
+            ->getEntityManager()
+            ->createQueryBuilder()
+            ->select(['role'])
+            ->from(UserRole::class, 'role')
+            ->orderBy(($params['order'] ?? 'role.created'), $params['dir'] ?? 'desc')
+            ->setFirstResult($page['offset'])
+            ->setMaxResults($page['limit'])
+            ->getQuery()
+            ->useQueryCache(true);
 
-        // Return results
-        return new UserRoleCollection($qb, false);
+        return new UserRoleCollection($query, false);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Unit;
 
 use Api\User\Entity\User;
@@ -10,32 +12,22 @@ use Api\User\Service\UserAvatarService as Subject;
 use Laminas\Diactoros\UploadedFile;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class UserAvatarTest
- * @package Unit
- */
 class UserAvatarTest extends TestCase
 {
     private Subject $subject;
-
     private UploadedFile $uploadedFile;
-
-    private array $config;
-
-    private UserAvatarRepository $userAvatarRepository;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->userAvatarRepository = $this->createMock(UserAvatarRepository::class);
+        $userAvatarRepository = $this->createMock(UserAvatarRepository::class);
         $this->uploadedFile = $this->createMock(UploadedFile::class);
-        $this->config = [];
 
         $this->subject = $this->getMockBuilder(UserAvatarService::class)
             ->setConstructorArgs([
-                $this->userAvatarRepository,
-                $this->config,
+                $userAvatarRepository,
+                [],
             ])
             ->onlyMethods([
                 'ensureDirectoryExists',

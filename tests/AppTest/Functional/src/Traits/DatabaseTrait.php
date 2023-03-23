@@ -1,18 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Functional\Traits;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\ORM\Tools\SchemaTool;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
-/**
- * Trait Database
- * @package AppTest\Helper
- */
 trait DatabaseTrait
 {
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function runMigrations(): void
     {
         $entityManager = $this->getEntityManager();
@@ -22,6 +26,10 @@ trait DatabaseTrait
         $schemaTool->updateSchema($metaData);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function runSeeders(): void
     {
         $entityManager = $this->getEntityManager();

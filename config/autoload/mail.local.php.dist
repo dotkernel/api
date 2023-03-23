@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Laminas\Mail\Transport\Smtp;
+
 return [
 
     /**
@@ -29,7 +31,7 @@ return [
              * defaults to sendmail
              **/
 
-            'transport' => \Laminas\Mail\Transport\Smtp::class,
+            'transport' => Smtp::class,
             
              // Uncomment the below line if you want to save a copy of all sent emails to a certain IMAP folder
             // Valid only if the Transport is SMTP 

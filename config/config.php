@@ -43,7 +43,6 @@ $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
     // Default App module config
     Api\Admin\ConfigProvider::class,
     Api\App\ConfigProvider::class,
-    Api\App\Doctrine\ConfigProvider::class,
     Api\User\ConfigProvider::class,
     // Load application config in a pre-defined order in such a way that local settings
     // overwrite global settings. (Loaded as first to last):
@@ -51,9 +50,13 @@ $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
     //   - `*.global.php`
     //   - `local.php`
     //   - `*.local.php`
-    new Laminas\ConfigAggregator\PhpFileProvider(realpath(__DIR__) . '/autoload/{{,*.}global,{,*.}local,{,*.}test}.php'),
+    new Laminas\ConfigAggregator\PhpFileProvider(
+        realpath(__DIR__) . '/autoload/{{,*.}global,{,*.}local,{,*.}test}.php'
+    ),
     // Load development config if it exists
-    new Laminas\ConfigAggregator\PhpFileProvider(realpath(__DIR__) . '/development.config.php'),
+    new Laminas\ConfigAggregator\PhpFileProvider(
+        realpath(__DIR__) . '/development.config.php'
+    ),
 ], $cacheConfig['config_cache_path']);
 
 return $aggregator->getMergedConfig();

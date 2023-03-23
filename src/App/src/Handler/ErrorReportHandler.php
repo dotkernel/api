@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Api\App\Log\Handler;
+namespace Api\App\Handler;
 
 use Api\App\Exception\ForbiddenException;
-use Api\App\Handler\DefaultHandler;
 use Api\App\Message;
 use Api\App\Service\ErrorReportServiceInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
@@ -15,24 +14,17 @@ use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 
 /**
- * Class ErrorReportHandler
- * @package Api\App\Log\Handler
- *
  * @Service
  */
-class ErrorReportHandler extends DefaultHandler
+class ErrorReportHandler implements RequestHandlerInterface
 {
-    private ErrorReportServiceInterface $errorReportService;
+    use ResponseTrait;
 
     /**
-     * ErrorReportHandler constructor.
-     * @param HalResponseFactory $halResponseFactory
-     * @param ResourceGenerator $resourceGenerator
-     * @param ErrorReportServiceInterface $errorReportService
-     *
      * @Inject({
      *     HalResponseFactory::class,
      *     ResourceGenerator::class,
@@ -40,14 +32,10 @@ class ErrorReportHandler extends DefaultHandler
      * })
      */
     public function __construct(
-        HalResponseFactory $halResponseFactory,
-        ResourceGenerator $resourceGenerator,
-        ErrorReportServiceInterface $errorReportService
-    ) {
-        parent::__construct($halResponseFactory, $resourceGenerator);
-
-        $this->errorReportService = $errorReportService;
-    }
+        protected HalResponseFactory $responseFactory,
+        protected ResourceGenerator $resourceGenerator,
+        protected ErrorReportServiceInterface $errorReportService
+    ) {}
 
     /**
      * @param ServerRequestInterface $request

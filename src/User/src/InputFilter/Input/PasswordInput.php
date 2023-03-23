@@ -27,10 +27,11 @@ class PasswordInput extends Input
 
         $this->getValidatorChain()
             ->attachByName(StringLength::class, [
-                'min' => self::PASSWORD_MIN_LENGTH
+                'min' => self::PASSWORD_MIN_LENGTH,
+                'message' => sprintf(Message::VALIDATOR_MIN_LENGTH, 'Password', self::PASSWORD_MIN_LENGTH),
             ], true)
             ->attachByName(NotEmpty::class, [
-                'message' => Message::VALIDATOR_REQUIRED_FIELD,
+                'message' => sprintf(Message::VALIDATOR_REQUIRED_FIELD_BY_NAME, 'Password'),
             ], true);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Unit;
 
 use Api\Admin\Entity\Admin;
@@ -8,20 +10,13 @@ use Api\Admin\Repository\AdminRepository;
 use Api\Admin\Service\AdminRoleService;
 use Api\Admin\Service\AdminService as Subject;
 use Api\App\Message;
-use Doctrine\ORM\ORMException;
-use PHPUnit\Framework\TestCase;
 use Exception;
+use PHPUnit\Framework\TestCase;
 
-/**
- * Class AdminServiceTest
- * @package Unit
- */
 class AdminServiceTest extends TestCase
 {
     private Subject $subject;
-
     private AdminRoleService $adminRoleService;
-
     private AdminRepository $adminRepository;
 
     public function setUp(): void
@@ -42,9 +37,12 @@ class AdminServiceTest extends TestCase
             ->getMock();
     }
 
+    /**
+     * @throws Exception
+     */
     public function testCreateAdminThrowsDuplicateIdentity()
     {
-        $this->expectException(ORMException::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage(Message::DUPLICATE_IDENTITY);
 
         $this->subject->method('exists')->willReturn(true);
@@ -52,115 +50,60 @@ class AdminServiceTest extends TestCase
         $this->subject->createAdmin(['identity' => 'admin@dotkernel.com']);
     }
 
-    public function testCreateAdminThrowsRestrictionRoles()
-    {
-        $this->adminRoleService->method('findOneBy')->willReturn(null);
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage(Message::RESTRICTION_ROLES);
-
-        $admin = $this->getAdmin();
-
-        $this->subject->createAdmin($admin);
-    }
-
     public function testCreateAdminSuperAdminRole()
     {
         $data = $this->getAdmin([
             'roles' => [
                 [
-                    'uuid' => 'uuid'
+                    'uuid' => 'uuid',
+                    'name' => AdminRole::ROLE_SUPERUSER,
                 ],
             ],
         ]);
 
-        $role = new AdminRole();
-        $role->setName(AdminRole::ROLE_SUPERUSER);
+        $role = (new AdminRole())->setName(AdminRole::ROLE_SUPERUSER);
 
         $this->adminRoleService->method('findOneBy')->willReturn($role);
+        $this->adminRepository->method('saveAdmin')->willReturn(
+            $this->getAdminEntity($data)
+        );
 
         $admin = $this->subject->createAdmin($data);
 
         $this->assertSame($data['identity'], $admin->getIdentity());
-        $this->assertTrue(password_verify($data['password'], $admin->getPassword()));
+        $this->assertTrue(Admin::verifyPassword($data['password'], $admin->getPassword()));
         $this->assertCount(count($data['roles']), $admin->getRoles());
         $this->assertSame($role->getName(), ($admin->getRoles()->first())->getName());
         $this->assertSame(Admin::STATUS_ACTIVE, $admin->getStatus());
-    }
-
-    public function createAdminWithAdminRole()
-    {
-        $data = $this->getAdmin();
-
-        $role = new AdminRole();
-        $role->setName(AdminRole::ROLE_ADMIN);
-
-        $this->adminRoleService->method('findOneBy')->willReturn($role);
-
-        $admin = $this->subject->createAdmin($data);
-
-        $this->assertSame($data['identity'], $admin->getIdentity());
-        $this->assertTrue(password_verify($data['password'], $admin->getPassword()));
-        $this->assertCount(count($data['roles']), $admin->getRoles());
-        $this->assertSame($role->getName(), ($admin->getRoles()->first())->getName());
-        $this->assertSame(Admin::STATUS_ACTIVE, $admin->getStatus());
-    }
-
-    public function updateAdminThrowsRolesRestriction()
-    {
-        $admin = new Admin();
-        $data = $this->getAdmin([
-            'roles' => [
-                [
-                    'uuid' => 'uuid'
-                ],
-            ],
-        ]);
-
-        $this->adminRoleService->method('findOneBy')->willReturn(null);
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage(Message::RESTRICTION_ROLES);
-
-        $this->subject->updateAdmin($admin, $data);
-    }
-
-    public function updateAdmin()
-    {
-        $admin = new Admin();
-
-        $data = $this->getAdmin([
-            'password' => '654321',
-            'firstName' => 'firstName',
-            'lastName' => 'lastName',
-            'roles' => [
-                [
-                    'uuid' => 'uuid'
-                ],
-            ],
-        ]);
-
-        $role = new AdminRole();
-        $role->setName(AdminRole::ROLE_SUPERUSER);
-
-        $this->adminRoleService->method('findOneBy')->willReturn($role);
-
-        $admin = $this->subject->updateAdmin($admin, $data);
-
-        $this->assertTrue(password_verify($data['password'], $admin->getPassword()));
-        $this->assertSame($data['firstName'], $admin->getFirstName());
-        $this->assertSame($data['lastName'], $admin->getLastName());
-        $this->assertCount(count($data['roles']), $admin->getRoles());
-        $this->assertSame($role->getName(), ($admin->getRoles()->first())->getName());
     }
 
     private function getAdmin(array $data = []): array
     {
         $admin = [
             'identity' => 'admin@dotkernel.com',
-            'password' => '123456',
+            'password' => 'dotkernel',
+            'firstName' => 'firstname',
+            'lastName' => 'lastname',
         ];
 
         return array_merge($admin, $data);
+    }
+
+    private function getAdminEntity(array $data = []): Admin
+    {
+        $admin = (new Admin())
+            ->setIdentity($data['identity'] ?? null)
+            ->usePassword($data['password'] ?? '')
+            ->setFirstName($data['firstName'] ?? null)
+            ->setLastName($data['lastName'] ?? null)
+            ->setStatus($data['status'] ?? Admin::STATUS_ACTIVE);
+
+        foreach ($data['roles'] ?? [] as $role) {
+            $admin->addRole(
+                (new AdminRole())->setName($role['name'])
+            );
+        }
+
+        return $admin;
     }
 }

@@ -4,62 +4,59 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
-use Api\App\Handler\DefaultHandler;
+use Api\App\Handler\ResponseTrait;
 use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\InputFilter\RecoverIdentityInputFilter;
-use Api\User\Service\UserService;
+use Api\User\Service\UserServiceInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
-use Dot\Mail\Exception\MailException;
+use Exception;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Throwable;
 
-/**
- * Class AccountRecoveryHandler
- * @package Api\User\Handler
- */
-class AccountRecoveryHandler extends DefaultHandler
+class AccountRecoveryHandler implements RequestHandlerInterface
 {
-    protected UserService $userService;
+    use ResponseTrait;
 
     /**
-     * AccountRecoveryHandler constructor.
-     * @param HalResponseFactory $halResponseFactory
-     * @param ResourceGenerator $resourceGenerator
-     * @param UserService $userService
-     *
-     * @Inject({HalResponseFactory::class, ResourceGenerator::class, UserService::class})
+     * @Inject({
+     *     HalResponseFactory::class,
+     *     ResourceGenerator::class,
+     *     UserServiceInterface::class
+     * })
      */
     public function __construct(
-        HalResponseFactory $halResponseFactory,
-        ResourceGenerator $resourceGenerator,
-        UserService $userService
-    ) {
-        parent::__construct($halResponseFactory, $resourceGenerator);
+        protected HalResponseFactory $responseFactory,
+        protected ResourceGenerator $resourceGenerator,
+        protected UserServiceInterface $userService
+    ) {}
 
-        $this->userService = $userService;
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     * @throws MailException
-     */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = new RecoverIdentityInputFilter();
-        $inputFilter->setData($request->getParsedBody());
+        $inputFilter = (new RecoverIdentityInputFilter())->setData($request->getParsedBody());
         if (!$inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
         }
 
-        $user = $this->userService->findByEmail($inputFilter->getValue('email'));
-        if ($user instanceof User) {
-            $this->userService->sendRecoverIdentityMail($user);
-        }
+        try {
+            $email = $inputFilter->getValue('email');
 
-        return $this->infoResponse(Message::MAIL_SENT_RECOVER_IDENTITY);
+            $user = $this->userService->findByEmail($email);
+            if (!$user instanceof User) {
+                throw new Exception(
+                    sprintf(Message::USER_NOT_FOUND_BY_EMAIL, $email)
+                );
+            }
+
+            $this->userService->sendRecoverIdentityMail($user);
+
+            return $this->infoResponse(Message::MAIL_SENT_RECOVER_IDENTITY);
+        } catch (Throwable $exception) {
+            return $this->errorResponse($exception->getMessage());
+        }
     }
 }

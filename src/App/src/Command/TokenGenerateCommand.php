@@ -11,28 +11,17 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * Class TokenGenerateCommand
- * @package Api\App\Command
- */
 class TokenGenerateCommand extends Command
 {
     protected static $defaultName = 'token:generate';
     private string $typeErrorReporting = 'error-reporting';
-    private ErrorReportServiceInterface $errorReportService;
 
-    /**
-     * TokenGenerateCommand constructor.
-     */
-    public function __construct(ErrorReportServiceInterface $errorReportService)
-    {
+    public function __construct(
+        protected ErrorReportServiceInterface $errorReportService
+    ) {
         parent::__construct(self::$defaultName);
-        $this->errorReportService = $errorReportService;
     }
 
-    /**
-     * @return void
-     */
     protected function configure(): void
     {
         $this
@@ -45,7 +34,7 @@ class TokenGenerateCommand extends Command
 
 Usage:
 1. Create token for the error reporting endpoint:
-* run: <info>%command.full_name% {$this->typeErrorReporting}</info>
+* run: <info>%command.full_name% $this->typeErrorReporting</info>
 * copy the generated token
 * open <comment>config/autoload/error-handling.global.php</comment>
 * paste the copied string inside the <comment>tokens</comment> array found under the <comment>ErrorReportServiceInterface::class</comment> key.
@@ -54,9 +43,6 @@ MSG
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int
      * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -79,7 +65,7 @@ MSG
         $output->writeln(<<<MSG
 Error reporting token:
 
-    <info>{$token}</info>
+    <info>$token</info>
 
 * copy the generated token
 * open <comment>config/autoload/error-handling.global.php</comment>

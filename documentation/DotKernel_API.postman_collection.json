@@ -20,7 +20,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"password\": \"123456\",\r\n    \"passwordConfirm\": \"123456\"\r\n}",
+									"raw": "{\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -159,7 +159,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"grant_type\": \"password\",\r\n  \"client_id\": \"admin\",\r\n  \"client_secret\": \"admin\",\r\n  \"scope\": \"api\",\r\n  \"username\": \"admin\",\r\n  \"password\": \"dotadmin\"\r\n}",
+									"raw": "{\r\n  \"grant_type\": \"password\",\r\n  \"client_id\": \"admin\",\r\n  \"client_secret\": \"admin\",\r\n  \"scope\": \"api\",\r\n  \"username\": \"admin\",\r\n  \"password\": \"dotkernel\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -338,7 +338,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"123456\",\r\n    \"passwordConfirm\": \"123456\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -384,7 +384,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"password\": \"123456\",\r\n    \"passwordConfirm\": \"123456\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -611,7 +611,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"123456\",\r\n    \"passwordConfirm\": \"123456\",\r\n    \"status\": \"pending\",\r\n    \"detail\": {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    },\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
+									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"status\": \"pending\",\r\n    \"detail\": {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    },\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -701,7 +701,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"password\": \"123456\",\r\n    \"passwordConfirm\": \"123456\",\r\n    \"status\": \"active\",\r\n    \"detail\": {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    },\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
+									"raw": "{\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"status\": \"active\",\r\n    \"detail\": {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    },\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -901,7 +901,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"password\": \"123456\",\r\n    \"passwordConfirm\": \"123456\"\r\n}",
+									"raw": "{\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -975,7 +975,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"123456\",\r\n    \"passwordConfirm\": \"123456\",\r\n    \"detail\": {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"detail\": {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1107,7 +1107,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"password\": \"123456\",\r\n    \"passwordConfirm\": \"123456\",\r\n    \"detail\": {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"detail\": {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"

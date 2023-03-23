@@ -13,8 +13,6 @@ use Psr\Container\NotFoundExceptionInterface;
 class TokenGenerateCommandFactory
 {
     /**
-     * @param ContainerInterface $container
-     * @return TokenGenerateCommand
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

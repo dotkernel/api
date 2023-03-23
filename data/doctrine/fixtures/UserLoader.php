@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Api\Fixtures;
 
 use Api\User\Entity\User;
@@ -15,23 +17,8 @@ use Doctrine\Persistence\ObjectManager;
  */
 class UserLoader implements FixtureInterface, DependentFixtureInterface
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
-        $user = new User();
-        $user
-            ->setIdentity('test@dotkernel.com')
-            ->setPassword(password_hash('dotkernel', PASSWORD_DEFAULT))
-            ->setStatus(User::STATUS_ACTIVE)
-            ->setIsDeleted(false)
-            ->setHash(User::generateHash());
-
-        $userDetail = new UserDetail();
-        $userDetail
-            ->setUser($user)
-            ->setFirstName('Test')
-            ->setLastName('Account')
-            ->setEmail('test@dotkernel.com');
-
         $userRoleRepository = $manager->getRepository(UserRole::class);
 
         /** @var UserRole $guestRole */
@@ -44,11 +31,23 @@ class UserLoader implements FixtureInterface, DependentFixtureInterface
             'name' => UserRole::ROLE_USER,
         ]);
 
-        $user->addRole($guestRole);
-        $user->addRole($userRole);
-
-        $manager->persist($userDetail);
+        $user = (new User())
+            ->setIdentity('test@dotkernel.com')
+            ->usePassword('dotkernel')
+            ->setStatus(User::STATUS_ACTIVE)
+            ->setIsDeleted(false)
+            ->setHash(User::generateHash())
+            ->addRole($guestRole)
+            ->addRole($userRole);
         $manager->persist($user);
+
+        $userDetail = (new UserDetail())
+            ->setUser($user)
+            ->setFirstName('Test')
+            ->setLastName('Account')
+            ->setEmail('test@dotkernel.com');
+        $manager->persist($userDetail);
+
         $manager->flush();
     }
 

@@ -8,9 +8,6 @@ use Api\App\Command\TokenGenerateCommand;
 use Dot\Cli\Command\DemoCommand;
 use Dot\Cli\FileLockerInterface;
 
-/**
- * Documentation: https://docs.laminas.dev/laminas-cli/
- */
 return [
     'dot_cli' => [
         'version' => '1.0.0',

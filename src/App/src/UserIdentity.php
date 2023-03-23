@@ -6,10 +6,6 @@ namespace Api\App;
 
 use Mezzio\Authentication\UserInterface;
 
-/**
- * Class UserIdentity
- * @package Api\App
- */
 class UserIdentity implements UserInterface
 {
     /** @var string $identity */
@@ -56,7 +52,7 @@ class UserIdentity implements UserInterface
      * @param mixed|null $default
      * @return mixed
      */
-    public function getDetail(string $name, $default = null)
+    public function getDetail(string $name, $default = null): mixed
     {
         return $this->details[$name] ?? $default;
     }

@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 use AppTest\Functional\AbstractFunctionalTest;
 
-if (! AbstractFunctionalTest::isTestMode()) {
+if (!AbstractFunctionalTest::isTestMode()) {
     return [];
 }
 
@@ -19,7 +19,7 @@ return [
             'orm_default' => [
                 'params' => [
                     'url' => 'sqlite:///:memory:',
-                ]
+                ],
             ],
         ],
     ],

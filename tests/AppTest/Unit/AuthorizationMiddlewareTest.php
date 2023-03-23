@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Unit;
 
 use Api\Admin\Entity\Admin;
@@ -20,24 +22,14 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-/**
- * Class AuthorizationMiddlewareTest
- * @package Test\Unit
- */
 class AuthorizationMiddlewareTest extends TestCase
 {
     private Subject $subject;
-
     private UserRepository $userRepository;
-
     private AdminRepository $adminRepository;
-
     private AuthorizationInterface $authorization;
-
     private ServerRequestInterface $request;
-
     private RequestHandlerInterface $handler;
-
     private ResponseInterface $response;
 
     public function setUp(): void
@@ -93,7 +85,7 @@ class AuthorizationMiddlewareTest extends TestCase
     public function testAuthorizationInactiveUser()
     {
         $identity = new UserIdentity('test@dotkernel.com', ['user'], ['oauth_client_id' => 'frontend']);
-        $user = (new User());
+        $user = new User();
 
         $this->userRepository->method('findOneBy')->willReturn($user);
         $this->request = $this->request->withAttribute(UserInterface::class, $identity);

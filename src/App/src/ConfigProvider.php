@@ -6,8 +6,10 @@ namespace Api\App;
 
 use Api\App\Command\RouteListCommand;
 use Api\App\Command\TokenGenerateCommand;
+use Api\App\Entity\EntityListenerResolver;
 use Api\App\Factory\AnnotationsCacheFactory;
 use Api\App\Factory\AuthenticationMiddlewareFactory;
+use Api\App\Factory\EntityListenerResolverFactory;
 use Api\App\Factory\RouteListCommandFactory;
 use Api\App\Factory\TokenGenerateCommandFactory;
 use Api\App\Middleware\AuthenticationMiddleware;
@@ -37,15 +39,8 @@ use Mezzio\Twig\TwigRendererFactory;
 use Roave\PsrContainerDoctrine\EntityManagerFactory;
 use Twig\Environment;
 
-/**
- * Class ConfigProvider
- * @package Api\App
- */
 class ConfigProvider
 {
-    /**
-     * @return array
-     */
     public function __invoke(): array
     {
         return [
@@ -54,9 +49,6 @@ class ConfigProvider
         ];
     }
 
-    /**
-     * @return array
-     */
     public function getDependencies(): array
     {
         return [
@@ -81,6 +73,7 @@ class ConfigProvider
                 RouteListCommand::class => RouteListCommandFactory::class,
                 TokenGenerateCommand::class => TokenGenerateCommandFactory::class,
                 ErrorReportService::class => AnnotatedServiceFactory::class,
+                EntityListenerResolver::class => EntityListenerResolverFactory::class,
             ],
             'aliases' => [
                 Authentication\AuthenticationInterface::class => Authentication\OAuth2\OAuth2Adapter::class,
@@ -93,25 +86,12 @@ class ConfigProvider
         ];
     }
 
-    /**
-     * @return array
-     */
     public function getHalConfig(): array
     {
         return [];
     }
 
-    /**
-     * @param string $collectionClass
-     * @param string $route
-     * @param string $collectionRelation
-     * @return string[]
-     */
-    public static function getCollection(
-        string $collectionClass,
-        string $route,
-        string $collectionRelation
-    ): array
+    public static function getCollection(string $collectionClass, string $route, string $collectionRelation): array
     {
         return [
             '__class__' => RouteBasedCollectionMetadata::class,
@@ -121,13 +101,6 @@ class ConfigProvider
         ];
     }
 
-    /**
-     * @param string $resourceClass
-     * @param string $route
-     * @param string $resourceIdentifier
-     * @param string $resourceIdentifierPlaceholder
-     * @return string[]
-     */
     public static function getResource(
         string $resourceClass,
         string $route,

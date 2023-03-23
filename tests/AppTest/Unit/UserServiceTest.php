@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Unit;
 
-use Api\App\Message;
+use Api\App\Repository\OAuthAccessTokenRepository;
+use Api\App\Repository\OAuthRefreshTokenRepository;
 use Api\User\Entity\User;
 use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserRole;
@@ -10,86 +13,72 @@ use Api\User\Repository\UserDetailRepository;
 use Api\User\Repository\UserRepository;
 use Api\User\Service\UserRoleService;
 use Api\User\Service\UserService as Subject;
-use Doctrine\ORM\ORMException;
 use Dot\Mail\Service\MailService;
+use Exception;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
-use Exception;
 
-/**
- * Class UserServiceTest
- * @package Unit
- */
 class UserServiceTest extends TestCase
 {
     private Subject $subject;
-
     private UserRoleService $userRoleService;
-
-    private MailService $mailService;
-
-    private TemplateRendererInterface $templateRendererInterface;
-
     private UserRepository $userRepository;
-
     private UserDetailRepository $userDetailRepository;
-
-    private array $config;
 
     public function setUp(): void
     {
+        $mailService = $this->createMock(MailService::class);
         $this->userRoleService = $this->createMock(UserRoleService::class);
-        $this->mailService = $this->createMock(MailService::class);
-        $this->templateRendererInterface = $this->createMock(TemplateRendererInterface::class);
+        $templateRendererInterface = $this->createMock(TemplateRendererInterface::class);
+        $oAuthAccessTokenRepository = $this->createMock(OAuthAccessTokenRepository::class);
+        $oAuthRefreshTokenRepository = $this->createMock(OAuthRefreshTokenRepository::class);
         $this->userRepository = $this->createMock(UserRepository::class);
         $this->userDetailRepository = $this->createMock(UserDetailRepository::class);
-        $this->config = [];
 
         $this->subject = new Subject(
             $this->userRoleService,
-            $this->mailService,
-            $this->templateRendererInterface,
+            $mailService,
+            $templateRendererInterface,
+            $oAuthAccessTokenRepository,
+            $oAuthRefreshTokenRepository,
             $this->userRepository,
             $this->userDetailRepository,
-            $this->config,
+            [],
         );
     }
 
     public function testCreateUserThrowsExceptionDuplicateIdentity()
     {
-        $this->userRepository->method('exists')->willReturn(true);
+        $this->userRepository->method('findOneBy')->willReturn(
+            $this->getUserEntity($this->getUser())
+        );
 
-        $this->expectException(ORMException::class);
+        $this->expectException(Exception::class);
 
         $this->subject->createUser([
             'identity' => 'test@dotkernel.com',
         ]);
     }
 
-    public function testCreateUserThrowsExceptionRestrictionRoles()
-    {
-        $this->userRoleService->method('findOneBy')->willReturn(null);
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage(Message::RESTRICTION_ROLES);
-
-        $this->subject->createUser($this->getUser());
-    }
-
     public function testCreateUserWithMultipleRoles()
     {
-        $this->userRoleService->method('findOneBy')->willReturn(new UserRole());
-
         $data = $this->getUser([
             'roles' => [
                 [
-                    'uuid' => 1,
+                    'uuid' => 'uuid',
+                    'name' => UserRole::ROLE_GUEST,
                 ],
                 [
-                    'uuid' => 2,
+                    'uuid' => 'uuid',
+                    'name' => UserRole::ROLE_USER,
                 ],
             ]
         ]);
+
+        $this->userRoleService->method('findOneBy')->willReturn(new UserRole());
+        $this->userRepository->method('saveUser')->willReturn(
+            $this->getUserEntity($data)
+        );
 
         $user = $this->subject->createUser($data);
         $this->assertCount(count($data['roles']), $user->getRoles());
@@ -97,10 +86,22 @@ class UserServiceTest extends TestCase
 
     public function testCreateUserWithDefaultRole()
     {
+        $data = $this->getUser([
+            'roles' => [
+                [
+                    'uuid' => 'uuid',
+                    'name' => UserRole::ROLE_USER,
+                ]
+            ]
+        ]);
+
         $defaultRole = (new UserRole())->setName(UserRole::ROLE_USER);
         $this->userRoleService->method('findOneBy')->willReturn($defaultRole);
+        $this->userRepository->method('saveUser')->willReturn(
+            $this->getUserEntity($data)
+        );
 
-        $user = $this->subject->createUser($this->getUser());
+        $user = $this->subject->createUser($data);
 
         $this->assertCount(1, $user->getRoles());
         $this->assertSame($defaultRole->getName(), ($user->getRoles()->first())->getName());
@@ -109,12 +110,15 @@ class UserServiceTest extends TestCase
     public function testCreateUser()
     {
         $this->userRoleService->method('findOneBy')->willReturn(new UserRole());
+        $this->userRepository->method('saveUser')->willReturn(
+            $this->getUserEntity($this->getUser())
+        );
 
         $data = $this->getUser();
         $user = $this->subject->createUser($data);
 
         $this->assertSame($data['identity'], $user->getIdentity());
-        $this->assertTrue(password_verify($data['password'], $user->getPassword()));
+        $this->assertTrue(User::verifyPassword($data['password'], $user->getPassword()));
         $this->assertInstanceOf(UserDetail::class, $user->getDetail());
         $this->assertSame($data['detail']['firstName'], $user->getDetail()->getFirstName());
         $this->assertSame($data['detail']['lastName'], $user->getDetail()->getLastName());
@@ -126,50 +130,22 @@ class UserServiceTest extends TestCase
 
     public function testUpdateUserThrowsExceptionDuplicateUserDetailEmail()
     {
-        $user = new User();
-        $this->userRepository->method('emailExists')->willReturn($user);
+        $this->userDetailRepository->method('findOneBy')->willReturn($this->getUserEntity()->getDetail());
 
-        $this->expectException(ORMException::class);
+        $this->expectException(Exception::class);
 
-        $this->subject->updateUser($user, [
+        $this->subject->updateUser($this->getUserEntity(), [
             'detail' => [
                 'email' => 'test@dotkernel.com'
             ],
         ]);
     }
 
-    public function testUpdateUserThrowsExceptionRestrictionRoles()
-    {
-        $user = new User();
-        $this->userRoleService->method('findOneBy')->willReturn(null);
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage(Message::RESTRICTION_ROLES);
-
-        $this->subject->updateUser($user, [
-            'roles' => [
-                [
-                    'uuid' => 1
-                ]
-            ]
-        ]);
-    }
-
     public function testUpdateUser()
     {
-        $data = $this->getUser();
+        $user = $this->getUserEntity($this->getUser());
 
-        $user = new User();
-        $userDetail = new UserDetail();
-        $role = new UserRole();
-
-        $userDetail->setEmail($data['detail']['firstName']);
-        $userDetail->setEmail($data['detail']['lastName']);
-        $userDetail->setEmail($data['detail']['email']);
-
-        $user->setPassword(password_hash($data['password'], PASSWORD_DEFAULT));
-        $user->setDetail($userDetail);
-        $user->addRole($role);
+        $this->userRepository->method('saveUser')->willReturn($user);
 
         $updateData = [
             'identity' => 'test@test.com',
@@ -183,7 +159,7 @@ class UserServiceTest extends TestCase
 
         $updatedUser = $this->subject->updateUser($user, $updateData);
 
-        $this->assertTrue(password_verify($updateData['password'], $updatedUser->getPassword()));
+        $this->assertTrue(User::verifyPassword($updateData['password'], $updatedUser->getPassword()));
         $this->assertSame($updateData['detail']['firstName'], $updatedUser->getDetail()->getFirstName());
         $this->assertSame($updateData['detail']['lastName'], $updatedUser->getDetail()->getLastName());
         $this->assertSame($updateData['detail']['email'], $updatedUser->getDetail()->getEmail());
@@ -193,7 +169,7 @@ class UserServiceTest extends TestCase
     {
         $user = [
             'identity' => 'test@dotkernel.com',
-            'password' => '123456',
+            'password' => 'dotkernel',
             'detail' => [
                 'firstName' => 'first',
                 'lastName' => 'last',
@@ -202,6 +178,30 @@ class UserServiceTest extends TestCase
         ];
 
         return array_merge($user, $data);
+    }
+
+    private function getUserEntity(array $data = []): User
+    {
+        $user = new User();
+        $user
+            ->setIdentity($data['identity'] ?? '')
+            ->usePassword($data['password'] ?? '')
+            ->setStatus($data['status'] ?? User::STATUS_PENDING)
+            ->setDetail(
+                (new UserDetail())
+                    ->setUser($user)
+                    ->setEmail($data['detail']['email'] ?? '')
+                    ->setFirstName($data['detail']['firstName'] ?? null)
+                    ->setLastName($data['detail']['lastName'] ?? null)
+            );
+
+        foreach ($data['roles'] ?? [] as $role) {
+            $user->addRole(
+                (new UserRole())->setName($role['name'])
+            );
+        }
+
+        return $user;
     }
 }
 

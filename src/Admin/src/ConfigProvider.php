@@ -16,21 +16,16 @@ use Api\Admin\Handler\AdminRoleHandler;
 use Api\Admin\Repository\AdminRepository;
 use Api\Admin\Repository\AdminRoleRepository;
 use Api\Admin\Service\AdminRoleService;
+use Api\Admin\Service\AdminRoleServiceInterface;
 use Api\Admin\Service\AdminService;
+use Api\Admin\Service\AdminServiceInterface;
 use Api\App\ConfigProvider as AppConfigProvider;
 use Dot\AnnotatedServices\Factory\AnnotatedRepositoryFactory;
 use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
 use Mezzio\Hal\Metadata\MetadataMap;
 
-/**
- * Class ConfigProvider
- * @package Api\Admin
- */
 class ConfigProvider
 {
-    /**
-     * @return array
-     */
     public function __invoke(): array
     {
         return [
@@ -39,9 +34,6 @@ class ConfigProvider
         ];
     }
 
-    /**
-     * @return array
-     */
     public function getDependencies(): array
     {
         return [
@@ -54,13 +46,14 @@ class ConfigProvider
                 AdminCreateCommand::class => AdminCreateCommandFactory::class,
                 AdminRepository::class => AnnotatedRepositoryFactory::class,
                 AdminRoleRepository::class => AnnotatedRepositoryFactory::class,
-            ]
+            ],
+            'aliases' => [
+                AdminServiceInterface::class => AdminService::class,
+                AdminRoleServiceInterface::class => AdminRoleService::class,
+            ],
         ];
     }
 
-    /**
-     * @return array
-     */
     public function getHalConfig(): array
     {
         return [

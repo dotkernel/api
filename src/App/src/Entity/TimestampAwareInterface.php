@@ -12,19 +12,9 @@ use DateTimeImmutable;
  */
 interface TimestampAwareInterface
 {
-    /**
-     * @return DateTimeImmutable|null
-     */
     public function getCreated(): ?DateTimeImmutable;
 
-    /**
-     * @return DateTimeImmutable|null
-     */
     public function getUpdated(): ?DateTimeImmutable;
 
-    /**
-     * Update internal timestamps
-     * @return self
-     */
-    public function touch(): self;
+    public function touch(): void;
 }

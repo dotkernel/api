@@ -8,16 +8,8 @@ use Api\App\UserIdentity;
 use Mezzio\Authentication\UserInterface;
 use Psr\Container\ContainerInterface;
 
-/**
- * Class UserIdentityFactory
- * @package Api\App\Factory
- */
 class UserIdentityFactory
 {
-    /**
-     * @param ContainerInterface $container
-     * @return callable
-     */
     public function __invoke(ContainerInterface $container): callable
     {
         return function (string $identity, array $roles = [], array $details = []): UserInterface {

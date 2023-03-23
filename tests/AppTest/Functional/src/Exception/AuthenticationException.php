@@ -1,15 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Functional\Exception;
 
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
-/**
- * Class AuthenticationException
- * @package AppTest\Functional\Exception
- */
 class AuthenticationException extends RuntimeException
 {
     public static function fromResponse(ResponseInterface $response): self

@@ -1,29 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Functional;
 
+use Api\Admin\Entity\Admin;
+use Api\Admin\Entity\AdminRole;
+use Api\App\Entity\RoleInterface;
+use Api\User\Entity\User;
+use Api\User\Entity\UserDetail;
+use Api\User\Entity\UserRole;
+use AppTest\Functional\Traits\AuthenticationTrait;
+use AppTest\Functional\Traits\DatabaseTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\ServerRequest;
+use Laminas\ServiceManager\ServiceManager;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Reports\Status;
 
-/**
- * Class AbstractFunctionalTest
- * @package Unit
- */
 abstract class AbstractFunctionalTest extends TestCase
 {
-    protected ContainerInterface $container;
+    use DatabaseTrait, AuthenticationTrait;
 
     protected Application $app;
+    protected ContainerInterface|ServiceManager $container;
+    protected const DEFAULT_PASSWORD = 'dotkernel';
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function setUp(): void
     {
         parent::setUp();
@@ -70,29 +84,45 @@ abstract class AbstractFunctionalTest extends TestCase
         $this->container = require realpath(__DIR__ . '/../../../../config/container.php');
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     private function initApp(): void
     {
         $this->app = $this->container->get(Application::class);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     private function initPipeline(): void
     {
         $factory = $this->container->get(MiddlewareFactory::class);
         (require realpath(__DIR__ . '/../../../../config/pipeline.php'))($this->app, $factory, $this->container);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     private function initRoutes(): void
     {
         $factory = $this->container->get(MiddlewareFactory::class);
         (require realpath(__DIR__ . '/../../../../config/routes.php'))($this->app, $factory, $this->container);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function getEntityManager(): EntityManagerInterface
     {
         return $this->container->get(EntityManagerInterface::class);
     }
 
-    protected function getContainer(): ContainerInterface
+    protected function getContainer(): ContainerInterface|ServiceManager
     {
         return $this->container;
     }
@@ -325,5 +355,186 @@ abstract class AbstractFunctionalTest extends TestCase
         $this->getContainer()->setAllowOverride(true);
         $this->getContainer()->setService($service, $mockInstance);
         $this->getContainer()->setAllowOverride(false);
+    }
+
+    protected function getValidUserData(array $data = []): array
+    {
+        return [
+            'detail' => [
+                'firstName' => $data['detail']['firstName'] ?? 'First',
+                'lastName' => $data['detail']['lastName'] ?? 'Last',
+                'email' => $data['detail']['email'] ?? 'user@dotkernel.com',
+            ],
+            'identity' => $data['identity'] ?? 'user@dotkernel.com',
+            'password' => $data['password'] ?? self::DEFAULT_PASSWORD,
+            'passwordConfirm' => $data['password'] ?? self::DEFAULT_PASSWORD,
+            'status' => $data['status'] ?? User::STATUS_ACTIVE,
+        ];
+    }
+
+    protected function getInvalidUserData(): array
+    {
+        return [
+            'detail' => [
+                'firstName' => 'invalid',
+                'lastName' => 'invalid',
+                'email' => 'invalid@dotkernel.com',
+            ],
+            'identity' => 'invalid',
+            'password' => 'invalid',
+            'status' => Admin::STATUS_INACTIVE,
+        ];
+    }
+
+    protected function getValidAdminData(): array
+    {
+        return [
+            'firstName' => 'First',
+            'identity' => 'admin@dotkernel.com',
+            'lastName' => 'Last',
+            'password' => self::DEFAULT_PASSWORD,
+            'status' => Admin::STATUS_ACTIVE,
+        ];
+    }
+
+    protected function getInvalidAdminData(): array
+    {
+        return [
+            'firstName' => 'invalid',
+            'identity' => 'invalid',
+            'lastName' => 'invalid',
+            'password' => 'invalid',
+            'status' => Admin::STATUS_INACTIVE,
+        ];
+    }
+
+    protected function getValidFrontendAccessTokenCredentials(array $data = []): array
+    {
+        $userData = $this->getValidUserData();
+        return [
+            'client_id' => 'frontend',
+            'client_secret' => 'frontend',
+            'grant_type' => 'password',
+            'password' => $data['password'] ?? $userData['password'],
+            'scope' => 'api',
+            'username' => $data['username'] ?? $userData['identity'],
+        ];
+    }
+
+    protected function getInvalidFrontendAccessTokenCredentials(): array
+    {
+        return [
+            'client_id' => 'frontend',
+            'client_secret' => 'frontend',
+            'grant_type' => 'password',
+            'password' => 'invalid',
+            'scope' => 'api',
+            'username' => 'invalid@dotkernel.com',
+        ];
+    }
+
+    protected function getValidFrontendRefreshTokenCredentials(): array
+    {
+        return [
+            'grant_type' => 'refresh_token',
+            'client_id' => 'frontend',
+            'client_secret' => 'frontend',
+            'scope' => 'api',
+            'refresh_token' => $this->getRefreshToken(),
+        ];
+    }
+
+    protected function getInvalidFrontendRefreshTokenCredentials(): array
+    {
+        return [
+            'grant_type' => 'refresh_token',
+            'client_id' => 'frontend',
+            'client_secret' => 'frontend',
+            'scope' => 'api',
+            'refresh_token' => 'invalid',
+        ];
+    }
+
+    protected function getValidAdminAccessTokenCredentials(array $data = []): array
+    {
+        $adminData = $this->getValidAdminData();
+        return [
+            'client_id' => 'admin',
+            'client_secret' => 'admin',
+            'grant_type' => 'password',
+            'password' => $data['password'] ?? $adminData['password'],
+            'scope' => 'api',
+            'username' => $data['username'] ?? $adminData['identity'],
+        ];
+    }
+
+    protected function getInvalidAdminAccessTokenCredentials(): array
+    {
+        return [
+            'client_id' => 'admin',
+            'client_secret' => 'admin',
+            'grant_type' => 'password',
+            'password' => 'invalid',
+            'scope' => 'api',
+            'username' => 'invalid@dotkernel.com',
+        ];
+    }
+
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
+    protected function createAdmin(): Admin
+    {
+        /** @var RoleInterface $adminRole */
+        $adminRoleRepository = $this->getEntityManager()->getRepository(AdminRole::class);
+        $adminRole = $adminRoleRepository->findOneBy(['name' => AdminRole::ROLE_ADMIN]);
+
+        $data = $this->getValidAdminData();
+
+        $admin = (new Admin())
+            ->setIdentity($data['identity'])
+            ->usePassword($data['password'])
+            ->setFirstName($data['firstName'])
+            ->setLastName($data['lastName'])
+            ->setStatus($data['status'])
+            ->addRole($adminRole);
+
+        $this->getEntityManager()->persist($admin);
+        $this->getEntityManager()->flush();
+
+        return $admin;
+    }
+
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
+    protected function createUser(array $data = []): User
+    {
+        /** @var RoleInterface $userRole */
+        $userRoleRepository = $this->getEntityManager()->getRepository(UserRole::class);
+        $userRole = $userRoleRepository->findOneBy(['name' => UserRole::ROLE_USER]);
+
+        $userData = $this->getValidUserData();
+
+        $user = new User();
+        $userDetail = (new UserDetail())
+            ->setUser($user)
+            ->setFirstName($data['detail']['firstName'] ?? $userData['detail']['firstName'])
+            ->setLastName($data['detail']['lastName'] ?? $userData['detail']['lastName'])
+            ->setEmail($data['detail']['email'] ?? $userData['detail']['email']);
+
+        $user
+            ->setDetail($userDetail)
+            ->addRole($userRole)
+            ->setIdentity($data['identity'] ?? $userData['identity'])
+            ->usePassword($data['password'] ?? $userData['password'])
+            ->setStatus($data['status'] ?? $userData['status']);
+
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+
+        return $user;
     }
 }

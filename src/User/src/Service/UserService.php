@@ -4,126 +4,79 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
+use Api\App\Entity\OAuthAccessToken;
 use Api\App\Message;
+use Api\App\Repository\OAuthAccessTokenRepository;
+use Api\App\Repository\OAuthRefreshTokenRepository;
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\UserDetail;
 use Api\User\Entity\User;
 use Api\User\Entity\UserRole;
 use Api\User\Repository\UserDetailRepository;
 use Api\User\Repository\UserRepository;
-use Doctrine\ORM\ORMException;
 use Dot\Mail\Exception\MailException;
 use Dot\Mail\Service\MailService;
 use Mezzio\Template\TemplateRendererInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
-use Doctrine\ORM;
 use Exception;
-use Throwable;
 
-use function is_null;
-use function password_hash;
-
-/**
- * Class UserService
- * @package Api\User\Service
- */
-class UserService
+class UserService implements UserServiceInterface
 {
-    protected UserRoleService $userRoleService;
-
-    protected MailService $mailService;
-
-    protected TemplateRendererInterface $templateRenderer;
-
-    protected UserRepository $userRepository;
-
-    protected UserDetailRepository $userDetailRepository;
-
-    protected array $config;
-
     /**
-     * UserService constructor.
-     * @param UserRoleService $userRoleService
-     * @param MailService $mailService
-     * @param TemplateRendererInterface $templateRenderer
-     * @param UserRepository $userRepository
-     * @param UserDetailRepository $userDetailRepository
-     * @param array $config
-     *
      * @Inject({
-     *     UserRoleService::class,
+     *     UserRoleServiceInterface::class,
      *     MailService::class,
      *     TemplateRendererInterface::class,
+     *     OAuthAccessTokenRepository::class,
+     *     OAuthRefreshTokenRepository::class,
      *     UserRepository::class,
      *     UserDetailRepository::class,
      *     "config"
      * })
      */
     public function __construct(
-        UserRoleService $userRoleService,
-        MailService $mailService,
-        TemplateRendererInterface $templateRenderer,
-        UserRepository $userRepository,
-        UserDetailRepository $userDetailRepository,
-        array $config = []
-    ) {
-        $this->userRoleService = $userRoleService;
-        $this->mailService = $mailService;
-        $this->templateRenderer = $templateRenderer;
-        $this->userRepository = $userRepository;
-        $this->userDetailRepository = $userDetailRepository;
-        $this->config = $config;
-    }
+        protected UserRoleServiceInterface $userRoleService,
+        protected MailService $mailService,
+        protected TemplateRendererInterface $templateRenderer,
+        protected OAuthAccessTokenRepository $OAuthAccessTokenRepository,
+        protected OAuthRefreshTokenRepository $OAuthRefreshTokenRepository,
+        protected UserRepository $userRepository,
+        protected UserDetailRepository $userDetailRepository,
+        protected array $config = []
+    ) {}
 
     /**
-     * @param User $user
-     * @return User
+     * @throws Exception
      */
     public function activateUser(User $user): User
     {
-        $this->userRepository->saveUser($user->activate());
-
-        return $user;
+        return $this->userRepository->saveUser($user->activate());
     }
 
     /**
-     * @param array $data
-     * @return User
      * @throws Exception
-     * @throws ORMException
      */
     public function createUser(array $data = []): User
     {
         if ($this->exists($data['identity'])) {
-            throw new ORMException(Message::DUPLICATE_IDENTITY);
-        }
-        if (! empty($data['detail']['email']) && $this->emailExists($data['detail']['email'])) {
-            throw new ORMException(Message::DUPLICATE_EMAIL);
+            throw new Exception(Message::DUPLICATE_IDENTITY);
         }
 
-        $user = new User();
-        $user->setPassword(password_hash($data['password'], PASSWORD_DEFAULT))->setIdentity($data['identity']);
+        if ($this->emailExists($data['detail']['email'])) {
+            throw new Exception(Message::DUPLICATE_EMAIL);
+        }
 
-        $detail = new UserDetail();
+        $detail = (new UserDetail())
+            ->setFirstName($data['detail']['firstName'] ?? null)
+            ->setLastName($data['detail']['lastName'] ?? null)
+            ->setEmail($data['detail']['email']);
+
+        $user = (new User())
+            ->setDetail($detail)
+            ->setIdentity($data['identity'])
+            ->usePassword($data['password'])
+            ->setStatus($data['status'] ?? User::STATUS_PENDING);
         $detail->setUser($user);
-
-        if (!empty($data['detail']['firstName'])) {
-            $detail->setFirstName($data['detail']['firstName']);
-        }
-
-        if (!empty($data['detail']['lastName'])) {
-            $detail->setLastName($data['detail']['lastName']);
-        }
-
-        if (!empty($data['detail']['email'])) {
-            $detail->setEmail($data['detail']['email']);
-        }
-
-        $user->setDetail($detail);
-
-        if (!empty($data['status'])) {
-            $user->setStatus($data['status']);
-        }
 
         if (!empty($data['roles'])) {
             foreach ($data['roles'] as $roleData) {
@@ -138,179 +91,139 @@ class UserService
                 $user->addRole($role);
             }
         }
-        if ($user->getRoles()->count() === 0) {
-            throw new Exception(Message::RESTRICTION_ROLES);
+
+        return $this->userRepository->saveUser($user);
+    }
+
+    public function revokeTokens(User $user): void
+    {
+        /** @var OAuthAccessToken[] $accessTokens */
+        $accessTokens = $this->OAuthAccessTokenRepository->findAccessTokens($user->getIdentity());
+        foreach ($accessTokens as $accessToken) {
+            $this->OAuthAccessTokenRepository->revokeAccessToken($accessToken->getToken());
+            $this->OAuthRefreshTokenRepository->revokeRefreshToken($accessToken->getToken());
         }
-
-        $this->userRepository->saveUser($user);
-
-        return $user;
     }
 
     /**
-     * @param User $user
-     * @return User
+     * @throws Exception
      */
     public function deleteUser(User $user): User
     {
+        $this->revokeTokens($user);
+
+        return $this->anonymizeUser($user->markAsDeleted());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function anonymizeUser(User $user): User
+    {
         $placeholder = $this->getAnonymousPlaceholder();
 
-        // make user anonymous
-        $userDetail = $user->getDetail();
-        $userDetail
-            ->setFirstName($placeholder)
-            ->setLastName($placeholder)
-            ->setEmail($placeholder);
-
         $user
-            ->markAsDeleted()
-            ->setDetail($userDetail)
-            ->setIdentity($placeholder);
+            ->setIdentity($placeholder)
+            ->getDetail()
+                ->setFirstName($placeholder)
+                ->setLastName($placeholder)
+                ->setEmail($placeholder)
+        ;
 
-        $this->userRepository->saveUser($user);
-        $this->userRepository->revokeAccessTokens($user->getIdentity());
-
-        return $user;
+        return $this->userRepository->saveUser($user);
     }
 
-    /**
-     * @return string
-     */
-    private function getAnonymousPlaceholder(): string
+    public function exists(string $identity = ''): bool
     {
-        return 'anonymous' . date('dmYHis');
+        return $this->findOneBy(['identity' => $identity]) instanceof User;
     }
 
-    /**
-     * @param string $identity
-     * @param string|null $uuid
-     * @return bool
-     */
-    public function exists(string $identity = '', ?string $uuid = ''): bool
+    public function existsOther(string $identity = '', string $uuid = ''): bool
     {
-        return !empty(
-            $this->userRepository->exists($identity, $uuid)
-        );
-    }
-
-    /**
-     * @param string $email
-     * @param string|null $uuid
-     * @return bool
-     */
-    public function emailExists(string $email = '', ?string $uuid = ''): bool
-    {
-        return !empty(
-            $this->userRepository->emailExists($email, $uuid)
-        );
-    }
-
-    /**
-     * @param string|null $hash
-     * @return User|null
-     */
-    public function findByResetPasswordHash(?string $hash): ?User
-    {
-        if (empty($hash)) {
-            return null;
+        $user = $this->findOneBy(['identity' => $identity]);
+        if (!$user instanceof User) {
+            return false;
         }
 
+        return $user->getUuid()->toString() !== $uuid;
+    }
+
+    public function emailExists(string $email = ''): bool
+    {
+        return $this->findByEmail($email) instanceof User;
+    }
+
+    public function emailExistsOther(string $email = '', string $uuid = ''): bool
+    {
+        $user = $this->findByEmail($email);
+        if (!$user instanceof User) {
+            return false;
+        }
+
+        return $user->getUuid()->toString() !== $uuid;
+    }
+
+    public function findByResetPasswordHash(?string $hash): ?User
+    {
         return $this->userRepository->findByResetPasswordHash($hash);
     }
 
-    /**
-     * @param string $email
-     * @return User|null
-     */
     public function findByEmail(string $email): ?User
     {
-        $detail = $this->userDetailRepository->findOneBy([
-            'email' => $email
-        ]);
-        if ($detail instanceof UserDetail) {
-            return $detail->getUser();
-        }
-        return null;
+        return $this->userDetailRepository->findOneBy(['email' => $email])?->getUser();
     }
 
-    /**
-     * @param string $identity
-     * @return User|null
-     */
     public function findByIdentity(string $identity): ?User
     {
-        return $this->userRepository->findOneBy([
-            'identity' => $identity
-        ]);
+        return $this->findOneBy(['identity' => $identity]);
     }
 
-    /**
-     * @param array $params
-     * @return User|null
-     */
     public function findOneBy(array $params = []): ?User
     {
-        if (empty($params)) {
-            return null;
-        }
-
         return $this->userRepository->findOneBy($params);
     }
 
-    /**
-     * @param array $params
-     * @return UserCollection
-     */
     public function getUsers(array $params = []): UserCollection
     {
         return $this->userRepository->getUsers($params);
     }
 
     /**
-     * @param User $user
-     * @return bool
      * @throws MailException
      */
     public function sendActivationMail(User $user): bool
     {
-        if ($user->isActive() || is_null($user->getDetail()->getEmail())) {
+        if ($user->isActive()) {
             return false;
         }
 
+        $this->mailService->getMessage()->addTo($user->getDetail()->getEmail(), $user->getName());
+        $this->mailService->setSubject('Welcome to ' . $this->config['application']['name']);
         $this->mailService->setBody(
             $this->templateRenderer->render('user::activate', [
                 'config' => $this->config,
                 'user' => $user
             ])
         );
-        $this->mailService->setSubject('Welcome to ' . $this->config['application']['name']);
-        $this->mailService->getMessage()->addTo($user->getDetail()->getEmail(), $user->getName());
 
         return $this->mailService->send()->isValid();
     }
 
     /**
-     * @param User $user
-     * @return bool
      * @throws MailException
      */
     public function sendResetPasswordRequestedMail(User $user): bool
     {
+        $this->mailService->getMessage()->addTo($user->getDetail()->getEmail(), $user->getName());
+        $this->mailService->setSubject(
+            'Reset password instructions for your ' . $this->config['application']['name'] . ' account'
+        );
         $this->mailService->setBody(
             $this->templateRenderer->render('user::reset-password-requested', [
                 'config' => $this->config,
                 'user' => $user
             ])
         );
-
-        $this->mailService->setSubject(
-            'Reset password instructions for your ' . $this->config['application']['name'] . ' account'
-        );
-        if (!empty($user->getDetail()->getEmail())) {
-            $this->mailService->getMessage()->addTo($user->getDetail()->getEmail(), $user->getName());
-        } else {
-            return false;
-        }
 
         return $this->mailService->send()->isValid();
     }
@@ -322,16 +235,16 @@ class UserService
      */
     public function sendResetPasswordCompletedMail(User $user): bool
     {
+        $this->mailService->getMessage()->addTo($user->getDetail()->getEmail(), $user->getName());
+        $this->mailService->setSubject(
+            'You have successfully reset the password for your ' . $this->config['application']['name'] . ' account'
+        );
         $this->mailService->setBody(
             $this->templateRenderer->render('user::reset-password-completed', [
                 'config' => $this->config,
                 'user' => $user
             ])
         );
-        $this->mailService->setSubject(
-            'You have successfully reset the password for your ' . $this->config['application']['name'] . ' account'
-        );
-        $this->mailService->getMessage()->addTo($user->getDetail()->getEmail(), $user->getName());
 
         return $this->mailService->send()->isValid();
     }
@@ -343,58 +256,63 @@ class UserService
      */
     public function sendWelcomeMail(User $user): bool
     {
+        $this->mailService->getMessage()->addTo($user->getDetail()->getEmail(), $user->getName());
+        $this->mailService->setSubject('Welcome to ' . $this->config['application']['name']);
         $this->mailService->setBody(
             $this->templateRenderer->render('user::welcome', [
                 'config' => $this->config,
                 'user' => $user
             ])
         );
-        $this->mailService->setSubject('Welcome to ' . $this->config['application']['name']);
-        $this->mailService->getMessage()->addTo($user->getDetail()->getEmail(), $user->getName());
 
         return $this->mailService->send()->isValid();
     }
 
     /**
-     * @param User $user
-     * @param array $data
-     * @return User
-     * @throws ORMException
-     * @throws Throwable
+     * @throws Exception
      */
     public function updateUser(User $user, array $data = []): User
     {
-        if (isset($data['password']) && !is_null($data['password'])) {
-            $user->setPassword(
-                password_hash($data['password'], PASSWORD_DEFAULT)
-            );
+        if (isset($data['identity'])) {
+            if ($this->existsOther($data['identity'], $user->getUuid()->toString())) {
+                throw new Exception(Message::DUPLICATE_IDENTITY);
+            }
         }
 
-        if (isset($data['status']) && !empty($data['status'])) {
+        if (isset($data['detail']['email'])) {
+            if ($this->emailExistsOther($data['detail']['email'], $user->getUuid()->toString())) {
+                throw new Exception(Message::DUPLICATE_EMAIL);
+            }
+        }
+
+        if (isset($data['password'])) {
+            $user->usePassword($data['password']);
+        }
+
+        if (isset($data['status'])) {
             $user->setStatus($data['status']);
         }
 
-        if (isset($data['isDeleted']) && !is_null($data['isDeleted'])) {
+        if (isset($data['isDeleted'])) {
             $user->setIsDeleted($data['isDeleted']);
         }
 
-        if (isset($data['hash']) && !empty($data['hash'])) {
+        if (isset($data['hash'])) {
             $user->setHash($data['hash']);
         }
 
-        if (isset($data['detail']['firstName']) && !is_null($data['detail']['firstName'])) {
+        if (isset($data['detail']['firstName'])) {
             $user->getDetail()->setFirstname($data['detail']['firstName']);
         }
 
-        if (isset($data['detail']['lastName']) && !is_null($data['detail']['lastName'])) {
+        if (isset($data['detail']['lastName'])) {
             $user->getDetail()->setLastName($data['detail']['lastName']);
         }
 
-        if (isset($data['detail']['email']) && !empty($data['detail']['email'])) {
-            if ($this->emailExists($data['detail']['email'], $user->getUuid()->toString())) {
-                throw new ORMException(Message::DUPLICATE_EMAIL);
+        if (isset($data['detail']['email'])) {
+            if (!$this->emailExists($data['detail']['email'])) {
+                $user->getDetail()->setEmail($data['detail']['email']);
             }
-            $user->getDetail()->setEmail($data['detail']['email']);
         }
 
         if (!empty($data['roles'])) {
@@ -406,22 +324,19 @@ class UserService
                 }
             }
         }
-        if ($user->getRoles()->count() === 0) {
-            throw new Exception(Message::RESTRICTION_ROLES);
-        }
 
-        $this->userRepository->saveUser($user);
-
-        return $user;
+        return $this->userRepository->saveUser($user);
     }
 
     /**
-     * @param User $user
-     * @return bool
      * @throws MailException
      */
     public function sendRecoverIdentityMail(User $user): bool
     {
+        $this->mailService->getMessage()->addTo($user->getDetail()->getEmail(), $user->getName());
+        $this->mailService->setSubject(
+            'Recover identity for your ' . $this->config['application']['name'] . ' account'
+        );
         $this->mailService->setBody(
             $this->templateRenderer->render('user::recover-identity-requested', [
                 'config' => $this->config,
@@ -429,15 +344,11 @@ class UserService
             ])
         );
 
-        $this->mailService->setSubject(
-            'Recover identity for your ' . $this->config['application']['name'] . ' account'
-        );
+        return $this->mailService->send()->isValid();
+    }
 
-        if (!empty($user->getDetail()->getEmail())) {
-            $this->mailService->getMessage()->addTo($user->getDetail()->getEmail(), $user->getName());
-            return $this->mailService->send()->isValid();
-        }
-
-        return false;
+    private function getAnonymousPlaceholder(): string
+    {
+        return 'anonymous' . date('dmYHis');
     }
 }

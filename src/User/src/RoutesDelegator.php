@@ -16,19 +16,9 @@ use Api\User\Handler\UserRoleHandler;
 use Mezzio\Application;
 use Psr\Container\ContainerInterface;
 
-/**
- * Class RoutesDelegator
- * @package Api\User
- */
 class RoutesDelegator
 {
-    /**
-     * @param ContainerInterface $container
-     * @param $serviceName
-     * @param callable $callback
-     * @return Application
-     */
-    public function __invoke(ContainerInterface $container, $serviceName, callable $callback): Application
+    public function __invoke(ContainerInterface $container, string $serviceName, callable $callback): Application
     {
         /** @var Application $app */
         $app = $callback();
@@ -39,38 +29,92 @@ class RoutesDelegator
          * Admins manage user accounts
          */
 
-        $app->post('/user', UserHandler::class, 'user.create');
-        $app->delete('/user/' . $uuid, UserHandler::class, 'user.delete');
-        $app->get('/user', UserHandler::class, 'user.list');
-        $app->patch('/user/' . $uuid, UserHandler::class, 'user.update');
-        $app->get('/user/' . $uuid, UserHandler::class, 'user.view');
+        $app->post('/user',
+            UserHandler::class,
+            'user.create'
+        );
+        $app->delete('/user/' . $uuid,
+            UserHandler::class,
+            'user.delete'
+        );
+        $app->get('/user',
+            UserHandler::class,
+            'user.list'
+        );
+        $app->patch('/user/' . $uuid,
+            UserHandler::class,
+            'user.update'
+        );
+        $app->get('/user/' . $uuid,
+            UserHandler::class,
+            'user.view'
+        );
 
-        $app->post('/user/' . $uuid . '/activate', UserActivateHandler::class, 'user.activate');
+        $app->post('/user/' . $uuid . '/activate',
+            UserActivateHandler::class,
+            'user.activate'
+        );
 
-        $app->delete('/user/' . $uuid . '/avatar', UserAvatarHandler::class, 'user.avatar.delete');
-        $app->get('/user/' . $uuid . '/avatar', UserAvatarHandler::class, 'user.avatar.view');
-        $app->post('/user/' . $uuid . '/avatar', UserAvatarHandler::class, 'user.avatar.create');
+        $app->delete('/user/' . $uuid . '/avatar',
+            UserAvatarHandler::class,
+            'user.avatar.delete'
+        );
+        $app->get('/user/' . $uuid . '/avatar',
+            UserAvatarHandler::class,
+            'user.avatar.view'
+        );
+        $app->post('/user/' . $uuid . '/avatar',
+            UserAvatarHandler::class,
+            'user.avatar.create'
+        );
 
-        $app->get('/user/role', UserRoleHandler::class, 'user.role.list');
-        $app->get('/user/role/' . $uuid, UserRoleHandler::class, 'user.role.view');
+        $app->get('/user/role',
+            UserRoleHandler::class,
+            'user.role.list'
+        );
+        $app->get('/user/role/' . $uuid,
+            UserRoleHandler::class,
+            'user.role.view'
+        );
 
         /**
          * Users manage their own accounts
          */
 
-        $app->delete('/user/my-account', AccountHandler::class, 'user.my-account.delete');
-        $app->get('/user/my-account', AccountHandler::class, 'user.my-account.view');
-        $app->patch('/user/my-account', AccountHandler::class, 'user.my-account.update');
+        $app->delete('/user/my-account',
+            AccountHandler::class,
+            'user.my-account.delete'
+        );
+        $app->get('/user/my-account',
+            AccountHandler::class,
+            'user.my-account.view'
+        );
+        $app->patch('/user/my-account',
+            AccountHandler::class,
+            'user.my-account.update'
+        );
 
-        $app->post('/user/my-avatar', AccountAvatarHandler::class, 'user.my-avatar.create');
-        $app->delete('/user/my-avatar', AccountAvatarHandler::class, 'user.my-avatar.delete');
-        $app->get('/user/my-avatar', AccountAvatarHandler::class, 'user.my-avatar.view');
+        $app->post('/user/my-avatar',
+            AccountAvatarHandler::class,
+            'user.my-avatar.create'
+        );
+        $app->delete('/user/my-avatar',
+            AccountAvatarHandler::class,
+            'user.my-avatar.delete'
+        );
+        $app->get('/user/my-avatar',
+            AccountAvatarHandler::class,
+            'user.my-avatar.view'
+        );
 
         /**
          * Guests manage their accounts
          */
 
-        $app->post('/account/register', AccountHandler::class, 'account.register');
+        $app->post('/account/register',
+            AccountHandler::class,
+            'account.register'
+        );
 
         $app->get('/account/reset-password/{hash}',
             AccountResetPasswordHandler::class,
@@ -85,10 +129,19 @@ class RoutesDelegator
             'account.reset-password.request'
         );
 
-        $app->post('/account/recover-identity', AccountRecoveryHandler::class, 'account.recover-identity');
+        $app->post('/account/recover-identity',
+            AccountRecoveryHandler::class,
+            'account.recover-identity'
+        );
 
-        $app->patch('/account/activate/{hash}', AccountActivateHandler::class, 'account.activate');
-        $app->post('/account/activate', AccountActivateHandler::class, 'account.activate.request');
+        $app->patch('/account/activate/{hash}',
+            AccountActivateHandler::class,
+            'account.activate'
+        );
+        $app->post('/account/activate',
+            AccountActivateHandler::class,
+            'account.activate.request'
+        );
 
         return $app;
     }

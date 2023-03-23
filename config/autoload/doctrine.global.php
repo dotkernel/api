@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Doctrine\Common\Cache\PhpFileCache;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
@@ -50,7 +52,7 @@ return [
         'cache' => [
             PhpFileCache::class => [
                 'class' => PhpFileCache::class,
-                'directory' => getcwd() . '/data/cache/doctrine'
+                'directory' => getcwd() . '/data/cache/doctrine',
             ]
         ],
         'fixtures' => getcwd() . '/data/doctrine/fixtures',

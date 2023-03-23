@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Api\App\Repository;
 
 use Doctrine\ORM\EntityRepository;
@@ -7,9 +9,6 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 
 /**
- * Class OAuthClientRepository
- * @package Api\App\Repository
- *
  * @psalm-suppress UndefinedInterfaceMethod
  */
 class OAuthClientRepository extends EntityRepository implements ClientRepositoryInterface
@@ -28,20 +27,17 @@ class OAuthClientRepository extends EntityRepository implements ClientRepository
 
     public function getClientEntity($clientIdentifier): ?ClientEntityInterface
     {
-        /** @var ClientEntityInterface|null $client */
-        $client = $this->findOneBy(['name' => $clientIdentifier]);
-
-        return $client;
+        return $this->findOneBy(['name' => $clientIdentifier]);
     }
 
     public function validateClient($clientIdentifier, $clientSecret, $grantType): bool
     {
         $client = $this->getClientEntity($clientIdentifier);
-        if (null === $client) {
+        if (!$client instanceof ClientEntityInterface) {
             return false;
         }
 
-        if (! $this->isGranted($client, $grantType)) {
+        if (!$this->isGranted($grantType)) {
             return false;
         }
 
@@ -52,7 +48,7 @@ class OAuthClientRepository extends EntityRepository implements ClientRepository
         return password_verify((string)$clientSecret, $client->getSecret());
     }
 
-    private function isGranted(ClientEntityInterface $client, string $grantType = null): bool
+    private function isGranted(string $grantType = null): bool
     {
         return in_array($grantType, self::GRANT_TYPES);
     }

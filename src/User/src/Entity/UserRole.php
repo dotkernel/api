@@ -26,30 +26,14 @@ class UserRole extends AbstractEntity implements RoleInterface
 
     /**
      * @ORM\Column(name="name", type="string", length=20, unique=true)
-     * @var string $name
      */
     protected string $name;
 
-    /**
-     * UserRolesEntity constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     * @return RoleInterface
-     */
     public function setName(string $name): RoleInterface
     {
         $this->name = $name;
@@ -57,11 +41,6 @@ class UserRole extends AbstractEntity implements RoleInterface
         return $this;
     }
 
-    /**
-     * Return an array representation of the object
-     *
-     * @return array
-     */
     public function getArrayCopy(): array
     {
         return [

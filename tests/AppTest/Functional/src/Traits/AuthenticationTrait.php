@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Functional\Traits;
 
 use AppTest\Functional\Exception\AuthenticationException;
@@ -8,18 +10,14 @@ use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\ServerRequest;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Exception\OAuthServerException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 
-/**
- * Trait AuthenticationTrait
- * @package AppTest\Functional\Traits
- */
 trait AuthenticationTrait
 {
     private string $tokenType = 'Bearer';
-
     private ?string $accessToken = null;
-
     private ?string $refreshToken = null;
 
     private function setAccessToken(string $accessToken): self
@@ -63,6 +61,10 @@ trait AuthenticationTrait
         return ! is_null($this->accessToken);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function loginAs
     (
         string $identity,

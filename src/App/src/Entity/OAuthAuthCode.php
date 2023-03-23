@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Api\App\Entity;
 
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\Traits\AuthCodeTrait;
-use Doctrine\ORM\Mapping as ORM;
-use DateTimeImmutable;
 
 /**
  * Class OauthClient
@@ -37,16 +39,15 @@ class OAuthAuthCode implements AuthCodeEntityInterface
 
     /**
      * @ORM\Column(name="revoked", type="boolean", options={"default":0})
-     * @var bool $redirect
      */
     private bool $isRevoked = false;
 
     /**
      * @ORM\ManyToMany(targetEntity="Api\App\Entity\OAuthSCope", inversedBy="authCodes", indexBy="id")
      * @ORM\JoinTable(name="oauth_auth_code_scopes",
-     *      joinColumns={@ORM\JoinColumn(name="auth_code_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="scope_id", referencedColumnName="id")}
-     *      )
+     *     joinColumns={@ORM\JoinColumn(name="auth_code_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="scope_id", referencedColumnName="id")}
+     * )
      */
     protected Collection $scopes;
 
@@ -126,9 +127,16 @@ class OAuthAuthCode implements AuthCodeEntityInterface
         return $this->isRevoked;
     }
 
+    public function revoke(): self
+    {
+        $this->isRevoked = true;
+
+        return $this;
+    }
+
     public function addScope(ScopeEntityInterface $scope): self
     {
-        if (! $this->scopes->contains($scope)) {
+        if (!$this->scopes->contains($scope)) {
             $this->scopes->add($scope);
         }
 
@@ -144,7 +152,7 @@ class OAuthAuthCode implements AuthCodeEntityInterface
 
     public function getScopes(?Criteria $criteria = null): array
     {
-        if ($criteria === null) {
+        if (is_null($criteria)) {
             return $this->scopes->toArray();
         }
 

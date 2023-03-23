@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManager;
 
 require_once 'vendor/autoload.php';
 
-$container = require getcwd() . '/config/container.php' ;
+$container = require 'config/container.php' ;
 
 $entityManager = $container->get(EntityManager::class);
 

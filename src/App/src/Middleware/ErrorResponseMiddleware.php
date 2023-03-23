@@ -5,54 +5,41 @@ declare(strict_types=1);
 namespace Api\App\Middleware;
 
 use Dot\AnnotatedServices\Annotation\Inject;
-use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Stream;
+use Laminas\Http\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-/**
- * Class ErrorResponseMiddleware
- * @package Api\App\Middleware
- */
 class ErrorResponseMiddleware implements MiddlewareInterface
 {
-    public const INVALID_GRANT = 'invalid_grant';
-
-    /** @var array $config */
-    private array $config;
-
     /**
-     * ErrorResponseMiddleware constructor
-     *
-     * @Inject({"config.authentication"})
-     * @param array $config
+     * @Inject({
+     *     "config.authentication"
+     * })
      */
-    public function __construct(array $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(
+        protected array $config
+    ) {}
 
-    /**
-     * @param ServerRequestInterface $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
-     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);
-        if ($response->getStatusCode() === StatusCodeInterface::STATUS_BAD_REQUEST) {
+        if ($response->getStatusCode() === Response::STATUS_CODE_400) {
             $body = json_decode((string) $response->getBody());
-            if ($body->error === self::INVALID_GRANT && empty($body->hint)) {
+            if ($body->error === 'invalid_grant' && empty($body->hint)) {
                 $body->error = $this->config['invalid_credentials']['error'];
                 $body->error_description = $this->config['invalid_credentials']['error_description'];
                 $body->message = $this->config['invalid_credentials']['message'];
+
                 $stream = new Stream('php://temp', 'wb+');
                 $stream->write(json_encode($body));
+
                 return $response->withBody($stream);
             }
         }
+
         return $response;
     }
 }

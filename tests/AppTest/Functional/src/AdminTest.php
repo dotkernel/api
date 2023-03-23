@@ -1,94 +1,117 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Functional;
 
 use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
-use Api\App\Entity\RoleInterface;
 use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserRole;
-use AppTest\Functional\Traits\AuthenticationTrait;
-use AppTest\Functional\Traits\DatabaseTrait;
 use Dot\Mail\Service\MailService;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
-/**
- * Class AdminTest
- * @package AppTest\Functional
- */
 class AdminTest extends AbstractFunctionalTest
 {
-    use DatabaseTrait, AuthenticationTrait;
-
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testUserCannotListAdminAccounts()
     {
-        $user = $this->createUser([], true);
-        $this->loginAs($user->getIdentity(), '123456');
+        $user = $this->createUser();
+        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
         $response = $this->get('/admin/my-account');
 
         $this->assertResponseForbidden($response);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testUserCannotViewAdminAccount()
     {
-        $user = $this->createUser([], true);
+        $user = $this->createUser();
         $admin = $this->createAdmin();
 
-        $this->loginAs($user->getIdentity(), '123456');
+        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
         $response = $this->get('/admin/' . $admin->getUuid()->toString());
 
         $this->assertResponseForbidden($response);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testUserCannotCreateAdminAccount()
     {
-        $user = $this->createUser([], true);
-        $this->loginAs($user->getIdentity(), '123456');
+        $user = $this->createUser();
+        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
-        $response = $this->post('/admin', []);
+        $response = $this->post('/admin');
 
         $this->assertResponseForbidden($response);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testUserCannotUpdateAdminAccount()
     {
-        $user = $this->createUser([], true);
+        $user = $this->createUser();
         $admin = $this->createAdmin();
 
-        $this->loginAs($user->getIdentity(), '123456');
+        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
-        $response = $this->patch('/admin/' . $admin->getUuid()->toString(), []);
+        $response = $this->patch('/admin/' . $admin->getUuid()->toString());
         $this->assertResponseForbidden($response);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testUserCannotDeleteAdminAccount()
     {
-        $user = $this->createUser([], true);
+        $user = $this->createUser();
         $admin = $this->createAdmin();
 
-        $this->loginAs($user->getIdentity(), '123456');
+        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
         $response = $this->delete('/admin/' . $admin->getUuid()->toString());
         $this->assertResponseForbidden($response);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testAdminCanListAdminAccounts()
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->get('/admin/my-account');
 
         $this->assertResponseOk($response);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testAdminCanViewAdminAccount()
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->get('/admin/' . $admin->getUuid()->toString());
         $data = json_decode($response->getBody()->getContents(), true);
@@ -97,10 +120,14 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertSame($admin->getUuid()->toString(), $data['uuid']);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testCannotCreateDuplicateAdminAccount()
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $adminRoleRepository = $this->getEntityManager()->getRepository(AdminRole::class);
 
@@ -109,8 +136,8 @@ class AdminTest extends AbstractFunctionalTest
 
         $requestBody = [
             'identity' => $admin->getIdentity(),
-            'password' => '123456',
-            'passwordConfirm' => '123456',
+            'password' => self::DEFAULT_PASSWORD,
+            'passwordConfirm' => self::DEFAULT_PASSWORD,
             'firstName' => $admin->getFirstName(),
             'lastName' => $admin->getLastName(),
             'roles' => [
@@ -129,10 +156,14 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertSame(Message::DUPLICATE_IDENTITY, $data['error']['messages'][0]);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testAdminCanCreateAdminAccount()
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $adminRoleRepository = $this->getEntityManager()->getRepository(AdminRole::class);
         $adminRepository = $this->getEntityManager()->getRepository(Admin::class);
@@ -141,8 +172,8 @@ class AdminTest extends AbstractFunctionalTest
 
         $requestBody = [
             'identity' => 'newadmin@test.com',
-            'password' => '123456',
-            'passwordConfirm' => '123456',
+            'password' => self::DEFAULT_PASSWORD,
+            'passwordConfirm' => self::DEFAULT_PASSWORD,
             'firstName' => 'Admin',
             'lastName' => 'Test',
             'roles' => [
@@ -166,10 +197,14 @@ class AdminTest extends AbstractFunctionalTest
         });
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testAdminCanUpdateAdminAccount()
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $updateData = [
             'firstName' => 'Test',
@@ -184,10 +219,14 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertSame($updateData['lastName'], $data['lastName']);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testAdminCanDeleteAdminAccount()
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->delete('/admin/' . $admin->getUuid()->toString());
 
@@ -199,10 +238,14 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertEmpty($admin);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testAdminCanViewPersonalAccount()
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->get('/admin/my-account');
         $data = json_decode($response->getBody()->getContents(), true);
@@ -214,10 +257,14 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertSame($admin->getLastName(), $data['lastName']);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testAdminCanUpdatePersonalAccount()
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $updateData = [
             'firstName' => 'test',
@@ -232,20 +279,28 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertSame($updateData['lastName'], $data['lastName']);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testAdminCanListAdminRoles()
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->get('/admin/role');
 
         $this->assertResponseOk($response);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testAdminCanViewAdminRole()
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $adminRole = new AdminRole();
         $adminRole->setName('new_admin_role');
@@ -260,17 +315,21 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertSame($adminRole->getName(), $data['name']);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testAdminCreateUserAccountDuplicateEmail()
     {
         $admin = $this->createAdmin();
         $this->createUser(['detail' => ['email' => 'user1@test.com']]);
 
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $userData = [
             'identity' => 'test@user.com',
-            'password' => '123456',
-            'passwordConfirm' => '123456',
+            'password' => self::DEFAULT_PASSWORD,
+            'passwordConfirm' => self::DEFAULT_PASSWORD,
             'status' => 'pending',
             'detail' => [
                 'firstName' => 'User',
@@ -288,10 +347,14 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertSame(Message::DUPLICATE_EMAIL, $data['error']['messages'][0]);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testAdminCanCreateUserAccount()
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
         $userRoleRepository = $this->getEntityManager()->getRepository(UserRole::class);
         $userRole = $userRoleRepository->findOneBy(['name' => UserRole::ROLE_USER]);
         $mailService = $this->createMock(MailService::class);
@@ -299,8 +362,8 @@ class AdminTest extends AbstractFunctionalTest
 
         $userData = [
             'identity' => 'test@user.com',
-            'password' => '123456',
-            'passwordConfirm' => '123456',
+            'password' => self::DEFAULT_PASSWORD,
+            'passwordConfirm' => self::DEFAULT_PASSWORD,
             'status' => 'pending',
             'detail' => [
                 'firstName' => 'User',
@@ -339,11 +402,17 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertSame($userRole->getName(), $data['roles'][0]['name']);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testAdminCanActiveUserAccount()
     {
         $admin = $this->createAdmin();
-        $user = $this->createUser();
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $user = $this->createUser([
+            'status' => User::STATUS_PENDING,
+        ]);
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $this->assertFalse($user->isActive());
         $response = $this->post(sprintf('/user/%s/activate', $user->getUuid()->toString()));
@@ -356,11 +425,15 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertTrue($user->isActive());
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testAdminCanDeleteUserAccount()
     {
         $admin = $this->createAdmin();
         $user = $this->createUser();
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->delete('/user/' . $user->getUuid()->toString());
 
@@ -372,23 +445,31 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertTrue($user->isDeleted());
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testAdminCanListUserAccounts()
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->get('/user');
 
         $this->assertResponseOk($response);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testAdminUpdateUserAccountDuplicateEmail()
     {
         $admin = $this->createAdmin();
         $user1 = $this->createUser(['identity' => 'user1@test.com', 'detail' => ['email' => 'user1@test.com']]);
         $user2 = $this->createUser(['identity' => 'user2@test.com', 'detail' => ['email' => 'user2@test.com']]);
 
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->patch('/user/' . $user2->getUuid()->toString(), [
             'detail' => [
@@ -408,22 +489,25 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertSame($user2->getDetail()->getEmail(), $userDetail->getEmail());
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testAdminCanUpdateUserAccount()
     {
-        $userRole = new UserRole();
-        $userRole->setName('new_role');
+        $userRole = (new UserRole())->setName('new_role');
         $this->getEntityManager()->persist($userRole);
         $this->getEntityManager()->flush();
 
         $user = $this->createUser();
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $updateData = [
             'detail' => [
-                'firstName' => 'John',
-                'lastName' => 'Doe',
-                'email' => 'john@doe.com',
+                'firstName' => 'Foo',
+                'lastName' => 'Bar',
+                'email' => 'foobar@dotkernel.com',
             ],
             'status' => User::STATUS_ACTIVE,
             'roles' => [
@@ -445,11 +529,15 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertSame($updateData['roles'][0]['uuid'], $data['roles'][0]['uuid']);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testAdminCanViewUserAccount()
     {
         $user = $this->createUser();
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->get('/user/' . $user->getUuid()->toString());
 
@@ -459,61 +547,18 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertSame($user->getUuid()->toString(), $data['uuid']);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testAdminViewNotFoundUserAccount()
     {
         $user = new User();
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), '123456', 'admin', 'admin');
+        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->get('/user/' . $user->getUuid()->toString());
 
         $this->assertResponseNotFound($response);
-    }
-
-    private function createAdmin(): Admin
-    {
-        /** @var RoleInterface $adminRole */
-        $adminRoleRepository = $this->getEntityManager()->getRepository(AdminRole::class);
-        $adminRole = $adminRoleRepository->findOneBy(['name' => AdminRole::ROLE_ADMIN]);
-
-        $admin = new Admin();
-        $admin->setIdentity('admin@test.com');
-        $admin->setPassword(password_hash('123456', PASSWORD_DEFAULT));
-        $admin->setFirstName('Admin');
-        $admin->setLastName('Test');
-        $admin->addRole($adminRole);
-
-        $this->getEntityManager()->persist($admin);
-        $this->getEntityManager()->flush();
-
-        return $admin;
-    }
-
-    private function createUser(array $data = [], bool $activated = false): User
-    {
-        /** @var RoleInterface $userRole */
-        $userRoleRepository = $this->getEntityManager()->getRepository(UserRole::class);
-        $userRole = $userRoleRepository->findOneBy(['name' => UserRole::ROLE_USER]);
-
-        $user = new User();
-        $userDetail = new UserDetail();
-
-        $user->setIdentity($data['identity'] ?? 'user@test.com');
-        $user->setPassword(password_hash($data['password'] ?? '123456', PASSWORD_DEFAULT));
-        if ($activated) {
-            $user->activate();
-        }
-        $userDetail->setFirstName($data['detail']['firstName'] ?? 'Test');
-        $userDetail->setLastName($data['detail']['firstName'] ?? 'User');
-        $userDetail->setEmail($data['detail']['email'] ?? 'user@test.com');
-        $userDetail->setUser($user);
-
-        $user->setDetail($userDetail);
-        $user->addRole($userRole);
-
-        $this->getEntityManager()->persist($user);
-        $this->getEntityManager()->flush();
-
-        return $user;
     }
 }

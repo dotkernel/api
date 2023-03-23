@@ -11,25 +11,16 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-/**
- * Class AuthenticationMiddleware
- * @package Api\App\Middleware
- */
 class AuthenticationMiddleware extends \Mezzio\Authentication\AuthenticationMiddleware
 {
-    /**
-     * @param ServerRequestInterface $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
-     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $user = $this->auth->authenticate($request);
-        if (!($user instanceof UserIdentity)) {
+        if (!$user instanceof UserIdentity) {
             $user = new UserIdentity('guest', [
-                UserRole::ROLE_GUEST
+                UserRole::ROLE_GUEST,
             ], [
-                'oauth_client_id' => 'guest'
+                'oauth_client_id' => 'guest',
             ]);
         }
 

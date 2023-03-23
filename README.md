@@ -65,7 +65,6 @@ composer development-status
 
 Optional:
 * duplicate `phpcs.xml.dist` as `phpcs.xml`
-* duplicate `phpunit.xml.dist` as `phpunit.xml`
 
 
 ### Step 5: Setup database

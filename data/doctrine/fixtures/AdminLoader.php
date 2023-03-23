@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Api\Fixtures;
 
 use Api\Admin\Entity\Admin;
@@ -15,26 +17,28 @@ use Doctrine\Persistence\ObjectManager;
  */
 class AdminLoader implements FixtureInterface, DependentFixtureInterface
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
-        $admin = new Admin();
-        $admin
-            ->setIdentity('admin')
-            ->setPassword(password_hash('dotadmin', PASSWORD_DEFAULT))
-            ->setFirstName('DotKernel')
-            ->setLastName('Admin')
-            ->setStatus(User::STATUS_ACTIVE);
-
         $adminRoleRepository = $manager->getRepository(AdminRole::class);
 
         /** @var AdminRole $adminRole */
-        $adminRole = $adminRoleRepository->findOneBy(['name' => AdminRole::ROLE_ADMIN]);
+        $adminRole = $adminRoleRepository->findOneBy([
+            'name' => AdminRole::ROLE_ADMIN,
+        ]);
 
         /** @var AdminRole $superUserRole */
-        $superUserRole = $adminRoleRepository->findOneBy(['name' => AdminRole::ROLE_SUPERUSER]);
+        $superUserRole = $adminRoleRepository->findOneBy([
+            'name' => AdminRole::ROLE_SUPERUSER,
+        ]);
 
-        $admin->addRole($adminRole);
-        $admin->addRole($superUserRole);
+        $admin = (new Admin())
+            ->setIdentity('admin')
+            ->usePassword('dotkernel')
+            ->setFirstName('DotKernel')
+            ->setLastName('Admin')
+            ->setStatus(User::STATUS_ACTIVE)
+            ->addRole($adminRole)
+            ->addRole($superUserRole);
 
         $manager->persist($admin);
         $manager->flush();

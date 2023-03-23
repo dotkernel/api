@@ -10,17 +10,10 @@ use Ramsey\Uuid\UuidFactory;
 use Ramsey\Uuid\UuidInterface;
 use Throwable;
 
-/**
- * Class UuidOrderedTimeGenerator
- * @package Api\App\Entity
- */
 final class UuidOrderedTimeGenerator
 {
     private static ?UuidFactory $factory = null;
 
-    /**
-     * @return UuidInterface|null
-     */
     public static function generateUuid(): ?UuidInterface
     {
         try {
@@ -32,15 +25,12 @@ final class UuidOrderedTimeGenerator
         return null;
     }
 
-    /**
-     * @return UuidFactory|null
-     *
-     * @psalm-suppress UndefinedInterfaceMethod
-     */
     private static function getFactory(): ?UuidFactory
     {
         if (!(self::$factory instanceof UuidFactory)) {
-            self::$factory = clone Uuid::getFactory();
+            /** @var UuidFactory $factory */
+            $factory = clone Uuid::getFactory();
+            self::$factory = $factory;
 
             $codec = new OrderedTimeCodec(
                 self::$factory->getUuidBuilder()

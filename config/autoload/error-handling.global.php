@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Api\App\Service\ErrorReportServiceInterface;
 use Laminas\Log\Logger;
 use Laminas\Log\Formatter\Json;

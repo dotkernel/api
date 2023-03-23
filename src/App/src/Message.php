@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Api\App;
 
-/**
- * Class Message
- * @package Api\App
- */
 class Message
 {
     public const ADMIN_CREATED = 'Admin account has been created.';
@@ -35,7 +31,8 @@ class Message
     public const MAIL_SENT_USER_ACTIVATION = 'User activation mail has been successfully sent to \'%s\'';
     public const MISSING_CONFIG = 'Missing configuration value: \'%s\'';
     public const MISSING_PARAMETER = 'Missing parameter: \'%s\'';
-    public const NOT_FOUND_BY_UUID = 'Unable to find %s identified by uuid: %s';
+    public const NOT_FOUND_BY_NAME = 'Unable to find %s identified by name: %s';
+    public const NOT_FOUND_BY_UUID = 'Unable to find %s identified by UUID: %s';
     public const RESET_PASSWORD_EXPIRED = 'Password reset request for hash: \'%s\' is invalid (expired).';
     public const RESET_PASSWORD_NOT_FOUND = 'Could not find password reset request identified by hash: \'%s\'';
     public const RESET_PASSWORD_OK = 'Password successfully modified.';
@@ -49,7 +46,12 @@ class Message
     public const USER_NOT_ACTIVATED = 'User account must be activated first.';
     public const USER_NOT_FOUND_BY_EMAIL = 'Could not find account identified by email \'%s\'';
     public const USER_NOT_FOUND_BY_IDENTITY = 'Could not find account by identity \'%s\'';
+    public const VALIDATOR_MIN_LENGTH = '%s must be at least %d characters long.';
+    public const VALIDATOR_MAX_LENGTH = '%s cannot be longer than %d characters.';
+    public const VALIDATOR_MIN_MAX_LENGTH = '%s length must be between %d and %d characters.';
+    public const VALIDATOR_PASSWORD_MISMATCH = 'Password confirmation does not match the provided password.';
     public const VALIDATOR_REQUIRED_FIELD = 'This field is required and cannot be empty.';
+    public const VALIDATOR_REQUIRED_FIELD_BY_NAME = '%s is required and cannot be empty.';
     public const VALIDATOR_SKIP_OR_FILL = 'If this field is specified, then it must be filled in.';
     public const VALIDATOR_REQUIRED_UPLOAD = 'A file must be uploaded first.';
 }
