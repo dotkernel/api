@@ -16,7 +16,7 @@ require 'vendor/autoload.php';
 /**
  * Self-called anonymous function that creates its own scope and keep the global namespace clean.
  */
-(function () {
+(static function () {
     /** @var ContainerInterface $container */
     $container = require 'config/container.php';
 

@@ -7,10 +7,6 @@ namespace Api\App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * Trait UuidAwareTrait
- * @package Api\App\Entity
- */
 trait UuidAwareTrait
 {
     /**
@@ -21,9 +17,6 @@ trait UuidAwareTrait
     */
     protected ?UuidInterface $uuid;
 
-    /**
-     * @return UuidInterface|null
-     */
     public function getUuid(): ?UuidInterface
     {
         if (!$this->uuid) {

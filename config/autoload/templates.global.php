@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'debug' => false,
     'templates' => [
-        'extension' => 'html.twig'
+        'extension' => 'html.twig',
     ],
     'twig' => [
         'assets_url' => '/',

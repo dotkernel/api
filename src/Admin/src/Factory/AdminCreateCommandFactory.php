@@ -7,17 +7,15 @@ namespace Api\Admin\Factory;
 use Api\Admin\Command\AdminCreateCommand;
 use Api\Admin\Service\AdminRoleService;
 use Api\Admin\Service\AdminService;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
-/**
- * Class AdminCreateCommandFactory
- * @package Api\Admin\Factory
- */
 class AdminCreateCommandFactory
 {
     /**
-     * @param ContainerInterface $container
-     * @return AdminCreateCommand
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container): AdminCreateCommand
     {

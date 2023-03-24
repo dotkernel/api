@@ -1,44 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Functional;
 
-use Api\App\Entity\RoleInterface;
 use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\Entity\UserAvatar;
-use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserResetPasswordEntity;
-use Api\User\Entity\UserRole;
 use Api\User\Service\UserAvatarService;
-use AppTest\Functional\Traits\AuthenticationTrait;
-use AppTest\Functional\Traits\DatabaseTrait;
+use DateInterval;
+use DateTimeImmutable;
 use Dot\Mail\Service\MailService;
 use Laminas\Diactoros\UploadedFile;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\UploadedFileInterface;
 
-/**
- * Class UserTest
- * @package AppTest\Functional
- */
 class UserTest extends AbstractFunctionalTest
 {
-    use DatabaseTrait, AuthenticationTrait;
-
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testRegisterAccountDuplicateIdentity()
     {
-        $user = $this->createUser();
+        $this->createUser([
+            'status' => User::STATUS_PENDING,
+        ]);
 
         $userAvatarService = $this->createMock(UserAvatarService::class);
         $this->replaceService(UserAvatarService::class, $userAvatarService);
 
-        $response = $this->post('/user', [
-            'identity' => $user->getIdentity(),
-            'password' => '123456',
-            'passwordConfirm' => '123456',
-            'detail' => [
-                'email' => 'test@test.com',
-            ]
-        ]);
+        $response = $this->post('/user', $this->getValidUserData());
 
         $this->assertResponseBadRequest($response);
 
@@ -50,25 +44,26 @@ class UserTest extends AbstractFunctionalTest
         $this->assertContains(Message::DUPLICATE_IDENTITY, $data['error']['messages']);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testRegisterAccountDuplicateEmail()
     {
-        $user = $this->createUser();
+        $this->createUser([
+            'identity' => 'foo@dotkernel.com',
+            'status' => User::STATUS_PENDING,
+        ]);
 
         $userAvatarService = $this->createMock(UserAvatarService::class);
         $this->replaceService(UserAvatarService::class, $userAvatarService);
 
-        $response = $this->post('/user', [
-            'identity' => 'dot@dotkernel.com',
-            'password' => '123456',
-            'passwordConfirm' => '123456',
-            'detail' => [
-                'email' => $user->getDetail()->getEmail(),
-            ]
-        ]);
+        $response = $this->post('/user', $this->getValidUserData());
 
         $this->assertResponseBadRequest($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
+
         $this->assertArrayHasKey('error', $data);
         $this->assertNotEmpty($data['error']);
         $this->assertArrayHasKey('messages', $data['error']);
@@ -82,17 +77,11 @@ class UserTest extends AbstractFunctionalTest
         $this->replaceService(UserAvatarService::class, $userAvatarService);
         $this->replaceService(MailService::class , $mailService);
 
-        $user = [
-            'identity' => 'dot@dotkernel.com',
-            'password' => '123456',
-            'passwordConfirm' => '123456',
-            'detail' => [
-                'email' => 'test@test.com',
-            ]
-        ];
+        $user = $this->getValidUserData([
+            'status' => User::STATUS_PENDING,
+        ]);
 
         $response = $this->post('/user', $user);
-
         $this->assertResponseOk($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
@@ -102,9 +91,15 @@ class UserTest extends AbstractFunctionalTest
         $this->assertFalse($data['isDeleted']);
         $this->assertArrayHasKey('detail', $data);
         $this->assertArrayHasKey('email', $data['detail']);
+        $this->assertArrayHasKey('firstName', $data['detail']);
+        $this->assertArrayHasKey('lastName', $data['detail']);
         $this->assertSame($user['detail']['email'], $data['detail']['email']);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testCreateMyAvatar()
     {
         $user = $this->createUser();
@@ -126,7 +121,7 @@ class UserTest extends AbstractFunctionalTest
 
         $this->replaceService(UserAvatarService::class, $userAvatarService);
 
-        $this->loginAs($user->getIdentity(), '123456');
+        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
         $response = $this->post('/user/my-avatar', [], [], ['avatar' => $uploadedFile]);
 
@@ -136,16 +131,24 @@ class UserTest extends AbstractFunctionalTest
         $this->assertResponseOk($response);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testViewMyAvatarNotFound()
     {
         $user = $this->createUser();
-        $this->loginAs($user->getIdentity(), '123456');
+        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
         $response = $this->get('/user/my-avatar');
 
         $this->assertResponseNotFound($response);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testViewMyAvatar()
     {
         $user = $this->createUser();
@@ -155,33 +158,41 @@ class UserTest extends AbstractFunctionalTest
         $this->getEntityManager()->persist($userAvatar);
         $this->getEntityManager()->flush();
 
-        $this->loginAs($user->getIdentity(), '123456');
+        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
         $response = $this->get('/user/my-avatar');
 
         $this->assertResponseOk($response);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testDeleteMyAvatarNotFound()
     {
         $user = $this->createUser();
-        $this->loginAs($user->getIdentity(), '123456');
+        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
         $response = $this->delete('/user/my-avatar');
 
         $this->assertResponseNotFound($response);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testDeleteMyAvatar()
     {
         $user = $this->createUser();
-        $userAvatar = new UserAvatar();
-        $userAvatar->setUser($user);
-        $userAvatar->setName('test');
+        $userAvatar = (new UserAvatar())
+            ->setUser($user)
+            ->setName('test');
         $this->getEntityManager()->persist($userAvatar);
         $this->getEntityManager()->flush();
 
-        $this->loginAs($user->getIdentity(), '123456');
+        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
         $response = $this->delete('/user/my-avatar');
 
@@ -194,6 +205,10 @@ class UserTest extends AbstractFunctionalTest
         $this->assertResponseBadRequest($response);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testActivateMyAccountAlreadyActivated()
     {
         $user = $this->createUser();
@@ -202,10 +217,16 @@ class UserTest extends AbstractFunctionalTest
         $this->assertResponseBadRequest($response);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testActivateMyAccount()
     {
         $userRepository = $this->getEntityManager()->getRepository(User::class);
-        $user = $this->createUser(false);
+        $user = $this->createUser([
+            'status' => User::STATUS_PENDING,
+        ]);
         $this->assertFalse($user->isActive());
 
         $response = $this->patch('/account/activate/' . $user->getHash());
@@ -215,10 +236,16 @@ class UserTest extends AbstractFunctionalTest
         $this->assertTrue($user->isActive());
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testActivateAccountByEmail()
     {
         $mailService = $this->createMock(MailService::class);
-        $user = $this->createUser(false);
+        $user = $this->createUser([
+            'status' => User::STATUS_PENDING,
+        ]);
 
         $this->replaceService(MailService::class, $mailService);
 
@@ -237,10 +264,14 @@ class UserTest extends AbstractFunctionalTest
         );
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testDeleteMyAccount()
     {
         $user = $this->createUser();
-        $this->loginAs($user->getIdentity(), '123456');
+        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
         $response = $this->delete('/user/my-account');
 
@@ -258,15 +289,22 @@ class UserTest extends AbstractFunctionalTest
         $this->assertResponseNotFound($response);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testRequestResetPasswordExpired()
     {
         $user = $this->createUser();
-        $resetPassword = new UserResetPasswordEntity();
-        $resetPassword->setUser($user);
-        $resetPassword->setStatus(UserResetPasswordEntity::STATUS_REQUESTED);
-        $resetPassword->setHash('test');
-        $resetPassword->setExpires((new \DateTimeImmutable())->sub(new \DateInterval('P1D')));
+
+        $resetPassword = (new UserResetPasswordEntity())
+            ->setUser($user)
+            ->setStatus(UserResetPasswordEntity::STATUS_REQUESTED)
+            ->setHash('test')
+            ->setExpires((new DateTimeImmutable())->sub(new DateInterval('P1D')));
+
         $user->addResetPassword($resetPassword);
+
         $this->getEntityManager()->persist($resetPassword);
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
@@ -291,6 +329,10 @@ class UserTest extends AbstractFunctionalTest
         );
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testRequestResetPasswordAlreadyUsed()
     {
         $user = $this->createUser();
@@ -298,7 +340,7 @@ class UserTest extends AbstractFunctionalTest
         $resetPassword->setUser($user);
         $resetPassword->setStatus(UserResetPasswordEntity::STATUS_COMPLETED);
         $resetPassword->setHash('test');
-        $resetPassword->setExpires((new \DateTimeImmutable())->add(new \DateInterval('P1D')));
+        $resetPassword->setExpires((new DateTimeImmutable())->add(new DateInterval('P1D')));
         $user->addResetPassword($resetPassword);
         $this->getEntityManager()->persist($resetPassword);
         $this->getEntityManager()->persist($user);
@@ -324,6 +366,10 @@ class UserTest extends AbstractFunctionalTest
         );
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function testResetPassword()
     {
         $user = $this->createUser();
@@ -331,7 +377,7 @@ class UserTest extends AbstractFunctionalTest
         $resetPassword->setUser($user);
         $resetPassword->setStatus(UserResetPasswordEntity::STATUS_REQUESTED);
         $resetPassword->setHash('test');
-        $resetPassword->setExpires((new \DateTimeImmutable())->add(new \DateInterval('P1D')));
+        $resetPassword->setExpires((new DateTimeImmutable())->add(new DateInterval('P1D')));
         $user->addResetPassword($resetPassword);
         $this->getEntityManager()->persist($resetPassword);
         $this->getEntityManager()->persist($user);
@@ -354,6 +400,10 @@ class UserTest extends AbstractFunctionalTest
         $this->assertSame(Message::RESET_PASSWORD_OK, $data['info']['messages'][0]);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testResetPasswordByEmail()
     {
         $user = $this->createUser();
@@ -369,21 +419,29 @@ class UserTest extends AbstractFunctionalTest
         $this->assertCount(1, $user->getResetPasswords());
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testViewMyAccount()
     {
         $user = $this->createUser();
 
-        $this->loginAs($user->getIdentity(), '123456');
+        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
         $response = $this->get('/user/my-account');
 
         $this->assertResponseOk($response);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testUpdateMyAccount()
     {
         $user = $this->createUser();
 
-        $this->loginAs($user->getIdentity(), '123456');
+        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
         $updateData = [
             'detail' => [
@@ -401,6 +459,10 @@ class UserTest extends AbstractFunctionalTest
         $this->assertSame($updateData['detail']['lastName'], $data['detail']['lastName']);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testRecoverAccountByIdentity()
     {
         $user = $this->createUser();
@@ -421,34 +483,6 @@ class UserTest extends AbstractFunctionalTest
         $this->assertSame(Message::MAIL_SENT_RECOVER_IDENTITY, $data['info']['messages'][0]);
     }
 
-    private function createUser(bool $activated = true): User
-    {
-        /** @var RoleInterface $userRole */
-        $userRoleRepository = $this->getEntityManager()->getRepository(UserRole::class);
-        $userRole = $userRoleRepository->findOneBy(['name' => UserRole::ROLE_USER]);
-
-        $user = new User();
-        $userDetail = new UserDetail();
-
-        $user->setIdentity('user@test.com');
-        $user->setPassword(password_hash('123456', PASSWORD_DEFAULT));
-        if ($activated) {
-            $user->activate();
-        }
-        $userDetail->setFirstName('Test');
-        $userDetail->setLastName('User');
-        $userDetail->setEmail('user@test.com');
-        $userDetail->setUser($user);
-
-        $user->setDetail($userDetail);
-        $user->addRole($userRole);
-
-        $this->getEntityManager()->persist($user);
-        $this->getEntityManager()->flush();
-
-        return $user;
-    }
-
     private function createUploadedFile(): UploadedFileInterface
     {
         $img = imagecreatetruecolor(120, 20);
@@ -457,7 +491,6 @@ class UserTest extends AbstractFunctionalTest
         $path = __DIR__ . DIRECTORY_SEPARATOR . 'test.jpg';
         imagejpeg($img, $path,100);
 
-        $uploadedFile = new UploadedFile($path, 10, UPLOAD_ERR_OK, 'test.jpg', 'image/jpg');
-        return $uploadedFile;
+        return new UploadedFile($path, 10, UPLOAD_ERR_OK, 'test.jpg', 'image/jpg');
     }
 }

@@ -9,42 +9,22 @@ use Api\User\Entity\UserRole;
 use Api\User\Repository\UserRoleRepository;
 use Dot\AnnotatedServices\Annotation\Inject;
 
-/**
- * Class UserRoleService
- * @package Api\User\Service
- */
-class UserRoleService
+class UserRoleService implements UserRoleServiceInterface
 {
-    protected UserRoleRepository $roleRepository;
-
     /**
-     * UserRoleService constructor.
-     * @param UserRoleRepository $roleRepository
-     *
-     * @Inject({UserRoleRepository::class})
+     * @Inject({
+     *     UserRoleRepository::class
+     * })
      */
-    public function __construct(UserRoleRepository $roleRepository)
-    {
-        $this->roleRepository = $roleRepository;
-    }
+    public function __construct(
+        protected UserRoleRepository $roleRepository
+    ) {}
 
-    /**
-     * @param array $params
-     * @return UserRole|null
-     */
     public function findOneBy(array $params = []): ?UserRole
     {
-        if (empty($params)) {
-            return null;
-        }
-
         return $this->roleRepository->findOneBy($params);
     }
 
-    /**
-     * @param array $params
-     * @return UserRoleCollection
-     */
     public function getRoles(array $params = []): UserRoleCollection
     {
         return $this->roleRepository->getRoles($params);

@@ -6,58 +6,44 @@ namespace Api\Admin\Handler;
 
 use Api\Admin\Entity\Admin;
 use Api\Admin\InputFilter\UpdateAdminInputFilter;
-use Api\Admin\Service\AdminService;
-use Api\App\Handler\DefaultHandler;
+use Api\Admin\Service\AdminServiceInterface;
+use Api\App\Handler\ResponseTrait;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 
-/**
- * Class AdminAccountHandler
- * @package Api\Admin\Handler
- */
-class AdminAccountHandler extends DefaultHandler
+class AdminAccountHandler implements RequestHandlerInterface
 {
-    protected AdminService $adminService;
+    use ResponseTrait;
 
     /**
-     * AdminAccountHandler constructor.
-     * @param HalResponseFactory $halResponseFactory
-     * @param ResourceGenerator $resourceGenerator
-     * @param AdminService $adminService
-     *
-     * @Inject({HalResponseFactory::class, ResourceGenerator::class, AdminService::class})
+     * @Inject({
+     *     HalResponseFactory::class,
+     *     ResourceGenerator::class,
+     *     AdminServiceInterface::class
+     * })
      */
     public function __construct(
-        HalResponseFactory $halResponseFactory,
-        ResourceGenerator $resourceGenerator,
-        AdminService $adminService
-    ) {
-        parent::__construct($halResponseFactory, $resourceGenerator);
+        protected HalResponseFactory $responseFactory,
+        protected ResourceGenerator $resourceGenerator,
+        protected AdminServiceInterface $adminService
+    ) {}
 
-        $this->adminService = $adminService;
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function get(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->createResponse($request, $request->getAttribute(Admin::class));
+        return $this->createResponse(
+            $request,
+            $request->getAttribute(Admin::class)
+        );
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function patch(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = new UpdateAdminInputFilter();
-        $inputFilter->setData($request->getParsedBody());
+        $inputFilter = (new UpdateAdminInputFilter())->setData($request->getParsedBody());
         if (!$inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
         }

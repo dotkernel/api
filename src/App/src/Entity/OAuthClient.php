@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Api\App\Entity;
 
 use Api\User\Entity\User;
-use Mezzio\Authentication\UserInterface;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
 
 /**
  * Class OauthClient

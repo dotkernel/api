@@ -8,6 +8,7 @@
 
 declare(strict_types=1);
 
+use Api\App\Entity\EntityListenerResolver;
 use Doctrine\Common\Cache\PhpFileCache;
 
 $baseUrl = 'http://localhost:8080';
@@ -33,18 +34,18 @@ return [
         'url' => $baseUrl
     ],
     'authentication' => [
-        'private_key'    => [
+        'private_key' => [
             'key_or_path' => getcwd() . '/data/oauth/private.key',
             'key_permissions_check' => false
         ],
-        'public_key'    => [
+        'public_key' => [
             'key_or_path' => getcwd() . '/data/oauth/public.key',
             'key_permissions_check' => false
         ],
         'encryption_key' => require getcwd() . '/data/oauth/encryption.key',
         'access_token_expire'  => 'P1D',
         'refresh_token_expire' => 'P1M',
-        'auth_code_expire'     => 'PT10M',
+        'auth_code_expire' => 'PT10M',
         'invalid_credentials' => [
             'error' => 'Invalid credentials.',
             'error_description' => 'Invalid credentials.',
@@ -55,7 +56,7 @@ return [
     'doctrine' => [
         'connection' => [
             'orm_default' => [
-                'params' => $databases['default']
+                'params' => $databases['default'],
             ]
         ],
         'configuration' => [
@@ -64,14 +65,15 @@ return [
                 // just comment any type of cache you don't want to be applied on development
                 'query_cache' => PhpFileCache::class,
                 'metadata_cache' => PhpFileCache::class,
-                'result_cache' => PhpFileCache::class
-            ]
+                'result_cache' => PhpFileCache::class,
+                'entity_listener_resolver' => EntityListenerResolver::class,
+            ],
         ],
     ],
     'uploads' => [
         'user' => [
-            'url'  => $baseUrl . '/uploads/user',
-            'path' => \realpath(__DIR__ . '/../../public/uploads/user'),
-        ]
+            'url' => $baseUrl . '/uploads/user',
+            'path' => realpath(__DIR__ . '/../../public/uploads/user'),
+        ],
     ],
 ];

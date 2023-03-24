@@ -7,14 +7,6 @@ namespace Api\App\Entity;
 use DateTimeImmutable;
 use Laminas\Stdlib\ArraySerializableInterface;
 
-use function is_array;
-use function method_exists;
-use function ucfirst;
-
-/**
- * Class AbstractEntity
- * @package Api\App\Entity
- */
 abstract class AbstractEntity implements UuidAwareInterface, TimestampAwareInterface, ArraySerializableInterface
 {
     use UuidAwareTrait;
@@ -30,13 +22,7 @@ abstract class AbstractEntity implements UuidAwareInterface, TimestampAwareInter
         $this->updated = new DateTimeImmutable();
     }
 
-    /**
-     * Exchange internal values from provided array
-     *
-     * @param array $array
-     * @return void
-     */
-    public function exchangeArray(array $array)
+    public function exchangeArray(array $array): void
     {
         foreach ($array as $property => $values) {
             if (is_array($values)) {

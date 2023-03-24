@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Api\Fixtures;
 
 use Api\Admin\Entity\AdminRole;
@@ -12,13 +14,13 @@ use Doctrine\Persistence\ObjectManager;
  */
 class AdminRoleLoader implements FixtureInterface
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
-        $admin = (new AdminRole())->setName(AdminRole::ROLE_ADMIN);
-        $superAdmin = (new AdminRole())->setName(AdminRole::ROLE_SUPERUSER);
+        $adminRole = (new AdminRole())->setName(AdminRole::ROLE_ADMIN);
+        $manager->persist($adminRole);
 
-        $manager->persist($admin);
-        $manager->persist($superAdmin);
+        $superUserRole = (new AdminRole())->setName(AdminRole::ROLE_SUPERUSER);
+        $manager->persist($superUserRole);
 
         $manager->flush();
     }

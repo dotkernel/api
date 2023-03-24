@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Api\App\Entity;
 
+use DateTimeImmutable;
+use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
-use Doctrine\ORM\Mapping as ORM;
-use DateTimeImmutable;
 
 /**
  * Class OAuthRefreshToken
@@ -69,7 +71,7 @@ class OAuthRefreshToken implements RefreshTokenEntityInterface
         return $this;
     }
 
-    public function getAccessToken(): AccessTokenEntityInterface
+    public function getAccessToken(): OAuthAccessToken|AccessTokenEntityInterface
     {
         return $this->accessToken;
     }
@@ -84,6 +86,13 @@ class OAuthRefreshToken implements RefreshTokenEntityInterface
     public function getIsRevoked(): bool
     {
         return $this->isRevoked;
+    }
+
+    public function revoke(): self
+    {
+        $this->isRevoked = true;
+
+        return $this;
     }
 
     public function getExpiryDateTime(): DateTimeImmutable

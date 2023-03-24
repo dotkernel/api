@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Unit;
 
 use Api\App\Middleware\AuthenticationMiddleware as Subject;
@@ -12,20 +14,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-/**
- * Class AuthenticationMiddlewareTest
- * @package Unit
- */
 class AuthenticationMiddlewareTest extends TestCase
 {
     private Subject $subject;
-
     private AuthenticationInterface $auth;
-
     private ServerRequestInterface $request;
-
     private RequestHandlerInterface $handler;
-
     private ResponseInterface $response;
 
     public function setUp(): void

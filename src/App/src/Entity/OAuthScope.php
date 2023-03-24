@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Api\App\Entity;
-
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\Traits\ScopeTrait;
-use Doctrine\ORM\Mapping as ORM;
-
 
 /**
  * Class OAuthScope
@@ -83,7 +82,7 @@ class OAuthScope implements ScopeEntityInterface
 
     public function addAccessToken(OAuthAccessToken $accessToken): self
     {
-        if (! $this->accessTokens->contains($accessToken)) {
+        if (!$this->accessTokens->contains($accessToken)) {
             $this->accessTokens->add($accessToken);
         }
 
@@ -101,7 +100,7 @@ class OAuthScope implements ScopeEntityInterface
 
     public function getAccessTokens(?Criteria $criteria = null): Collection
     {
-        if ($criteria === null) {
+        if (is_null($criteria)) {
             return $this->accessTokens;
         }
 
@@ -110,7 +109,7 @@ class OAuthScope implements ScopeEntityInterface
 
     public function addAuthCode(OAuthAuthCode $authCode): self
     {
-        if (! $this->authCodes->contains($authCode)) {
+        if (!$this->authCodes->contains($authCode)) {
             $this->authCodes->add($authCode);
         }
 
@@ -128,14 +127,14 @@ class OAuthScope implements ScopeEntityInterface
 
     public function getAuthCodes(?Criteria $criteria = null): Collection
     {
-        if ($criteria === null) {
+        if (is_null($criteria)) {
             return $this->authCodes;
         }
 
         return $this->authCodes->matching($criteria);
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): string
     {
         return $this->getIdentifier();
     }

@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Api\App\Repository;
 
 use Api\App\Entity\OAuthAuthCode;
 use Doctrine\ORM\EntityRepository;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
-use Doctrine\ORM as ORM;
 
 /**
  * Class OAuthAuthCodeRepository
@@ -19,32 +20,28 @@ class OAuthAuthCodeRepository extends EntityRepository implements AuthCodeReposi
         return new OAuthAuthCode();
     }
 
-    public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity)
+    public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity): void
     {
         $this->getEntityManager()->persist($authCodeEntity);
         $this->getEntityManager()->flush();
     }
 
-    public function revokeAuthCode($codeId)
+    public function revokeAuthCode($codeId): void
     {
-        /** @var ?OAuthAuthCode $authCodeEntity */
         $authCodeEntity = $this->find($codeId);
-        if (null === $authCodeEntity) {
-            return;
+        if ($authCodeEntity instanceof OAuthAuthCode) {
+            $this->getEntityManager()->persist($authCodeEntity->revoke());
+            $this->getEntityManager()->flush();
         }
-        $authCodeEntity->setIsRevoked(true);
-        $this->getEntityManager()->persist($authCodeEntity);
-        $this->getEntityManager()->flush();
     }
 
     public function isAuthCodeRevoked($codeId): bool
     {
-        /** @var ?OAuthAuthCode $authCodeEntity */
         $authCodeEntity = $this->find($codeId);
-        if (null === $authCodeEntity) {
-            return true;
+        if ($authCodeEntity instanceof OAuthAuthCode) {
+            return $authCodeEntity->getIsRevoked();
         }
 
-        return $authCodeEntity->getIsRevoked();
+        return true;
     }
 }

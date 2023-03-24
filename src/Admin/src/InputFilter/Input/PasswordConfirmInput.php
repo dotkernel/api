@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\Admin\InputFilter\Input;
 
+use Api\App\Message;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
 use Laminas\InputFilter\Input;
@@ -24,6 +25,7 @@ class PasswordConfirmInput extends Input
         $this->getValidatorChain()
             ->attachByName(Identical::class, [
                 'token' => 'password',
+                'message' => Message::VALIDATOR_PASSWORD_MISMATCH,
             ], true);
     }
 }

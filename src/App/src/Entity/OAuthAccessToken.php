@@ -1,20 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Api\App\Entity;
 
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Mapping as ORM;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
-use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Token;
-use DateTimeImmutable;
+use RuntimeException;
 
 /**
  * Class OAuthAccessToken
@@ -39,28 +42,25 @@ class OAuthAccessToken implements AccessTokenEntityInterface
 
     /**
      * @ORM\Column(name="user_id", type="string", nullable=true)
-     * @var string|null $userId
      */
     private ?string $userId;
 
     /**
      * @ORM\Column(name="token", type="string", length=100)
-     * @var string $token
      */
     private string $token;
 
     /**
      * @ORM\Column(name="revoked", type="boolean", options={"default":0})
-     * @var bool $isRevoked
      */
     private bool $isRevoked = false;
 
     /**
      * @ORM\ManyToMany(targetEntity="Api\App\Entity\OAuthScope", inversedBy="accessTokens", indexBy="id")
      * @ORM\JoinTable(name="oauth_access_token_scopes",
-     *      joinColumns={@ORM\JoinColumn(name="access_token_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="scope_id", referencedColumnName="id")}
-     *      )
+     *     joinColumns={@ORM\JoinColumn(name="access_token_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="scope_id", referencedColumnName="id")}
+     * )
      */
     protected Collection $scopes;
 
@@ -73,9 +73,6 @@ class OAuthAccessToken implements AccessTokenEntityInterface
 
     private ?Configuration $jwtConfiguration = null;
 
-    /**
-     * OAuthAccessToken constructor.
-     */
     public function __construct()
     {
         $this->scopes = new ArrayCollection();
@@ -129,6 +126,13 @@ class OAuthAccessToken implements AccessTokenEntityInterface
         return $this->isRevoked;
     }
 
+    public function revoke(): self
+    {
+        $this->isRevoked = true;
+
+        return $this;
+    }
+
     public function getIdentifier(): string
     {
         return $this->getToken();
@@ -153,7 +157,7 @@ class OAuthAccessToken implements AccessTokenEntityInterface
 
     public function addScope(ScopeEntityInterface $scope): self
     {
-        if (! $this->scopes->contains($scope)) {
+        if (!$this->scopes->contains($scope)) {
             $this->scopes->add($scope);
         }
 
@@ -171,7 +175,7 @@ class OAuthAccessToken implements AccessTokenEntityInterface
 
     public function getScopes(?Criteria $criteria = null): array
     {
-        if ($criteria === null) {
+        if (is_null($criteria)) {
             return $this->scopes->toArray();
         }
 
@@ -201,8 +205,9 @@ class OAuthAccessToken implements AccessTokenEntityInterface
     public function initJwtConfiguration(): self
     {
         if (null === $this->privateKey) {
-            throw new \RuntimeException('Unable to init JWT without private key');
+            throw new RuntimeException('Unable to init JWT without private key');
         }
+
         $this->jwtConfiguration = Configuration::forAsymmetricSigner(
             new Sha256(),
             InMemory::plainText(
@@ -215,31 +220,25 @@ class OAuthAccessToken implements AccessTokenEntityInterface
         return $this;
     }
 
-    /**
-     * Generate a JWT from the access token
-     */
     private function convertToJWT(): Token
     {
         $this->initJwtConfiguration();
 
-        if (null === $this->jwtConfiguration) {
-            throw new \RuntimeException('Unable to convert to JWT without config');
+        if (is_null($this->jwtConfiguration)) {
+            throw new RuntimeException('Unable to convert to JWT without config');
         }
 
         return $this->jwtConfiguration->builder()
             ->permittedFor($this->getClient()->getIdentifier())
             ->identifiedBy($this->getIdentifier())
-            ->issuedAt(new \DateTimeImmutable())
-            ->canOnlyBeUsedAfter(new \DateTimeImmutable())
+            ->issuedAt(new DateTimeImmutable())
+            ->canOnlyBeUsedAfter(new DateTimeImmutable())
             ->expiresAt($this->getExpiryDateTime())
             ->relatedTo($this->getUserIdentifier())
             ->withClaim('scopes', $this->getScopes())
             ->getToken($this->jwtConfiguration->signer(), $this->jwtConfiguration->signingKey());
     }
 
-    /**
-     * Generate a string representation from the access token
-     */
     public function __toString(): string
     {
         return $this->convertToJWT()->toString();

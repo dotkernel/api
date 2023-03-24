@@ -24,7 +24,7 @@ class IdentityInput extends Input
 
         $this->getValidatorChain()
             ->attachByName(NotEmpty::class, [
-                'message' => Message::VALIDATOR_REQUIRED_FIELD,
+                'message' => sprintf(Message::VALIDATOR_REQUIRED_FIELD_BY_NAME, 'Identity'),
             ], true);
     }
 }

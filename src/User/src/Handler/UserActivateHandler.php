@@ -4,44 +4,34 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
+use Api\App\Handler\ResponseTrait;
 use Api\App\Message;
-use Api\App\Handler\DefaultHandler;
 use Api\User\Entity\User;
-use Api\User\Service\UserService;
+use Api\User\Service\UserServiceInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 
-use function sprintf;
-
-/**
- * Class UserActivateHandler
- * @package Api\User\Handler
- */
-class UserActivateHandler extends DefaultHandler
+class UserActivateHandler implements RequestHandlerInterface
 {
-    protected UserService $userService;
+    use ResponseTrait;
 
     /**
-     * UserActivateHandler constructor.
-     * @param HalResponseFactory $halResponseFactory
-     * @param ResourceGenerator $resourceGenerator
-     * @param UserService $userService
-     *
-     * @Inject({HalResponseFactory::class, ResourceGenerator::class, UserService::class})
+     * @Inject({
+     *     HalResponseFactory::class,
+     *     ResourceGenerator::class,
+     *     UserServiceInterface::class
+     * })
      */
     public function __construct(
-        HalResponseFactory $halResponseFactory,
-        ResourceGenerator $resourceGenerator,
-        UserService $userService
-    ) {
-        parent::__construct($halResponseFactory, $resourceGenerator);
-
-        $this->userService = $userService;
-    }
+        protected HalResponseFactory $responseFactory,
+        protected ResourceGenerator $resourceGenerator,
+        protected UserServiceInterface $userService
+    ) {}
 
     /**
      * @param ServerRequestInterface $request
@@ -52,18 +42,20 @@ class UserActivateHandler extends DefaultHandler
         try {
             $uuid = $request->getAttribute('uuid');
             $user = $this->userService->findOneBy(['uuid' => $uuid]);
-            if (!($user instanceof User)) {
+            if (!$user instanceof User) {
                 return $this->notFoundResponse(
                     sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid)
                 );
             }
 
-            if ($user->getStatus() === User::STATUS_ACTIVE) {
+            if ($user->isActive()) {
                 return $this->errorResponse(Message::USER_ALREADY_ACTIVATED);
             }
 
             $user = $this->userService->activateUser($user);
+
             $this->userService->sendActivationMail($user);
+
             return $this->infoResponse(Message::USER_ACTIVATED);
         } catch (Throwable $exception) {
             return $this->errorResponse($exception->getMessage());

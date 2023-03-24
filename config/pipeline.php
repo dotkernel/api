@@ -8,29 +8,23 @@ use Api\App\Middleware\AuthorizationMiddleware;
 use Dot\ErrorHandler\ErrorHandlerInterface;
 use Dot\ResponseHeader\Middleware\ResponseHeaderMiddleware;
 use Mezzio\Cors\Middleware\CorsMiddleware;
-use Psr\Container\ContainerInterface;
 use Mezzio\Application;
 use Mezzio\Helper\BodyParams\BodyParamsMiddleware;
 use Mezzio\Helper\ServerUrlMiddleware;
 use Mezzio\Helper\UrlHelperMiddleware;
-use Mezzio\MiddlewareFactory;
 use Mezzio\Router\Middleware\DispatchMiddleware;
 use Mezzio\Router\Middleware\ImplicitHeadMiddleware;
 use Mezzio\Router\Middleware\ImplicitOptionsMiddleware;
 use Mezzio\Router\Middleware\MethodNotAllowedMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
-use Mezzio\ProblemDetails\ProblemDetailsMiddleware;
 
 /**
  * Setup middleware pipeline:
  */
-return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void {
+return function (Application $app): void {
     // The error handler should be the first (most outer) middleware to catch
     // all Exceptions.
     $app->pipe(ErrorHandlerInterface::class);
-
-    // Always use Problem Details format for calls to the API.
-    $app->pipe('/api', ProblemDetailsMiddleware::class);
 
     $app->pipe(BodyParamsMiddleware::class);
     $app->pipe(ServerUrlMiddleware::class);

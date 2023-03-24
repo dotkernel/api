@@ -7,7 +7,6 @@ namespace Api\User\InputFilter;
 use Api\User\InputFilter\Input\PasswordConfirmInput;
 use Api\User\InputFilter\Input\PasswordInput;
 use Api\User\InputFilter\Input\StatusInput;
-use Api\User\InputFilter\Input\UuidInput;
 use Laminas\InputFilter\CollectionInputFilter;
 use Laminas\InputFilter\InputFilter;
 

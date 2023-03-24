@@ -6,17 +6,15 @@ namespace Api\App\Factory;
 
 use Api\App\Command\RouteListCommand;
 use Mezzio\Application;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
-/**
- * Class RouteListCommandFactory
- * @package Api\App\Factory
- */
 class RouteListCommandFactory
 {
     /**
-     * @param ContainerInterface $container
-     * @return RouteListCommand
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container): RouteListCommand
     {

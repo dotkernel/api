@@ -22,42 +22,21 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authorization\AuthorizationInterface;
 
-/**
- * Class AuthorizationMiddleware
- * @package Api\App\Middleware
- */
 class AuthorizationMiddleware implements MiddlewareInterface
 {
-    protected AuthorizationInterface $authorization;
-
-    protected UserRepository $userRepository;
-
-    protected AdminRepository $adminRepository;
-
     /**
-     * AuthorizationMiddleware constructor.
-     * @param AuthorizationInterface $authorization
-     * @param UserRepository $userRepository
-     * @param AdminRepository $adminRepository
-     *
-     * @Inject({AuthorizationInterface::class, UserRepository::class, AdminRepository::class})
+     * @Inject({
+     *     AuthorizationInterface::class,
+     *     UserRepository::class,
+     *     AdminRepository::class
+     * })
      */
-    public function __construct
-    (
-        AuthorizationInterface $authorization,
-        UserRepository $userRepository,
-        AdminRepository $adminRepository
-    ) {
-        $this->authorization = $authorization;
-        $this->userRepository = $userRepository;
-        $this->adminRepository = $adminRepository;
-    }
+    public function __construct(
+        protected AuthorizationInterface $authorization,
+        protected UserRepository $userRepository,
+        protected AdminRepository $adminRepository
+    ) {}
 
-    /**
-     * @param ServerRequestInterface $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
-     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         /** @var UserIdentity $defaultUser */
@@ -65,20 +44,20 @@ class AuthorizationMiddleware implements MiddlewareInterface
         switch ($defaultUser->getDetail('oauth_client_id')) {
             case 'admin':
                 $user = $this->adminRepository->findOneBy(['identity' => $defaultUser->getIdentity()]);
-                if (! ($user instanceof Admin)) {
+                if (!$user instanceof Admin) {
                     return $this->unauthorizedResponse(sprintf(
                         Message::USER_NOT_FOUND_BY_IDENTITY,
                         $defaultUser->getIdentity()
                     ));
                 }
-                if (! $user->isActive()) {
+                if (!$user->isActive()) {
                     return $this->unauthorizedResponse(Message::ADMIN_NOT_ACTIVATED);
                 }
                 $request = $request->withAttribute(Admin::class, $user);
                 break;
             case 'frontend':
                 $user = $this->userRepository->findOneBy(['identity' => $defaultUser->getIdentity()]);
-                if (!($user instanceof User) || $user->isDeleted()) {
+                if (!$user instanceof User || $user->isDeleted()) {
                     return $this->unauthorizedResponse(sprintf(
                         Message::USER_NOT_FOUND_BY_IDENTITY,
                         $defaultUser->getIdentity()
@@ -118,10 +97,6 @@ class AuthorizationMiddleware implements MiddlewareInterface
         return $handler->handle($request);
     }
 
-    /**
-     * @param string $message
-     * @return ResponseInterface
-     */
     protected function unauthorizedResponse(string $message): ResponseInterface
     {
         return new JsonResponse([

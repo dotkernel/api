@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Api\App\Repository;
 
 use Api\App\Entity\OAuthRefreshToken;
@@ -7,10 +9,6 @@ use Doctrine\ORM\EntityRepository;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 
-/**
- * Class OAuthRefreshTokenRepository
- * @package Api\App\Repository
- */
 class OAuthRefreshTokenRepository extends EntityRepository implements RefreshTokenRepositoryInterface
 {
     public function getNewRefreshToken(): OAuthRefreshToken
@@ -20,35 +18,26 @@ class OAuthRefreshTokenRepository extends EntityRepository implements RefreshTok
 
     public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity): void
     {
-        $em = $this->getEntityManager();
-        $em->persist($refreshTokenEntity);
-        $em->flush();
+        $this->getEntityManager()->persist($refreshTokenEntity);
+        $this->getEntityManager()->flush();
     }
 
     public function revokeRefreshToken($tokenId): void
     {
-        /** @var ?OAuthRefreshToken $refreshTokenEntity */
         $refreshTokenEntity = $this->find($tokenId);
-
-        if (null === $refreshTokenEntity) {
-            return;
+        if ($refreshTokenEntity instanceof OAuthRefreshToken) {
+            $this->getEntityManager()->persist($refreshTokenEntity->revoke());
+            $this->getEntityManager()->flush();
         }
-
-        $refreshTokenEntity->setIsRevoked(true);
-        $em = $this->getEntityManager();
-        $em->persist($refreshTokenEntity);
-        $em->flush();
     }
 
     public function isRefreshTokenRevoked($tokenId): bool
     {
-        /** @var ?OAuthRefreshToken $refreshTokenEntity */
         $refreshTokenEntity = $this->find($tokenId);
-
-        if (null === $refreshTokenEntity) {
-            return true;
+        if ($refreshTokenEntity instanceof OAuthRefreshToken) {
+            return $refreshTokenEntity->getIsRevoked();
         }
 
-        return $refreshTokenEntity->getIsRevoked();
+        return true;
     }
 }

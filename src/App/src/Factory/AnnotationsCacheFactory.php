@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace Api\App\Factory;
 
 use Doctrine\Common\Cache\FilesystemCache;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
-/**
- * Class AnnotationsCacheFactory
- * @package Api\App\Factory
- */
 class AnnotationsCacheFactory
 {
     /**
-     * @param ContainerInterface $container
-     * @return FilesystemCache
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container): FilesystemCache
     {

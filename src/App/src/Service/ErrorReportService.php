@@ -14,19 +14,17 @@ use Symfony\Component\Filesystem\Filesystem;
 class ErrorReportService implements ErrorReportServiceInterface
 {
     private FileSystem $fileSystem;
-    private array $config;
     private const HEADER_NAME = 'Error-Reporting-Token';
     private ?string $token = null;
 
     /**
-     * @param array $config
-     *
      * @Inject({
      *     "config"
      * })
      */
-    public function __construct(array $config)
-    {
+    public function __construct(
+        protected array $config
+    ) {
         $this->fileSystem = new Filesystem();
         $this->config = $config[ErrorReportServiceInterface::class] ?? [];
     }
@@ -66,8 +64,6 @@ class ErrorReportService implements ErrorReportServiceInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @return bool
      * @throws Exception
      */
     private function hasValidToken(ServerRequestInterface $request): bool
@@ -86,8 +82,6 @@ class ErrorReportService implements ErrorReportServiceInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @return bool
      * @throws Exception
      */
     private function isMatchingDomain(ServerRequestInterface $request): bool
@@ -102,8 +96,6 @@ class ErrorReportService implements ErrorReportServiceInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @return bool
      * @throws Exception
      */
     private function isMatchingIpAddress(ServerRequestInterface $request): bool
@@ -118,7 +110,6 @@ class ErrorReportService implements ErrorReportServiceInterface
     }
 
     /**
-     * @return void
      * @throws Exception
      */
     private function validateConfigs(): void

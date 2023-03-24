@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'table_storage' => [
         'table_name' => 'doctrine_migration_versions',
@@ -9,7 +11,7 @@ return [
         'execution_time_column_name' => 'execution_time',
     ],
     'migrations_paths' => [
-        'Api\Migrations' => getcwd() . '/data/doctrine/migrations',
+        'Api\Migrations' => 'data/doctrine/migrations',
     ],
     'all_or_nothing' => true,
     'check_database_platform' => true,

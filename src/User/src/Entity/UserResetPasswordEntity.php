@@ -30,52 +30,38 @@ class UserResetPasswordEntity extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="User", cascade={"persist", "remove"}, inversedBy="resetPasswords")
      * @ORM\JoinColumn(name="userUuid", referencedColumnName="uuid")
-     * @var User $user
      */
     protected User $user;
 
     /**
      * @ORM\Column(name="expires", type="datetime_immutable")
-     * @var DateTimeImmutable $expires
      */
     protected DateTimeImmutable $expires;
 
     /**
      * @ORM\Column(name="hash", type="string", length=64, unique=true)
-     * @var string $hash
      */
     protected string $hash;
 
     /**
      * @ORM\Column(name="status", type="string", length=20)
-     * @var string $status
      */
     protected string $status = self::STATUS_REQUESTED;
 
-    /**
-     * UserResetPasswordEntity constructor.
-     */
     public function __construct()
     {
         parent::__construct();
 
-        $tomorrow = new DateTime();
-        $tomorrow->add(new DateInterval('P1D'));
-        $this->expires = DateTimeImmutable::createFromMutable($tomorrow);
+        $this->expires = DateTimeImmutable::createFromMutable(
+            (new DateTime())->add(new DateInterval('P1D'))
+        );
     }
 
-    /**
-     * @return User
-     */
     public function getUser(): User
     {
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     * @return $this
-     */
     public function setUser(User $user): self
     {
         $this->user = $user;
@@ -83,18 +69,11 @@ class UserResetPasswordEntity extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @return DateTimeImmutable
-     */
     public function getExpires(): DateTimeImmutable
     {
         return $this->expires;
     }
 
-    /**
-     * @param DateTimeImmutable $expires
-     * @return $this
-     */
     public function setExpires(DateTimeImmutable $expires): self
     {
         $this->expires = $expires;
@@ -102,18 +81,11 @@ class UserResetPasswordEntity extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getHash(): string
     {
         return $this->hash;
     }
 
-    /**
-     * @param $hash
-     * @return $this
-     */
     public function setHash(string $hash): self
     {
         $this->hash = $hash;
@@ -121,18 +93,11 @@ class UserResetPasswordEntity extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getStatus(): string
     {
         return $this->status;
     }
 
-    /**
-     * @param string $status
-     * @return $this
-     */
     public function setStatus(string $status): self
     {
         $this->status = $status;
@@ -144,30 +109,21 @@ class UserResetPasswordEntity extends AbstractEntity
      * Helper methods
      */
 
-    /**
-     * @return bool
-     */
     public function isCompleted(): bool
     {
         return $this->getStatus() === self::STATUS_COMPLETED;
     }
 
-    /**
-     * @return bool
-     */
     public function isValid(): bool
     {
         try {
             return $this->getExpires() > (new DateTimeImmutable());
-        } catch (Throwable $exception) {
+        } catch (Throwable) {
         }
 
         return false;
     }
 
-    /**
-     * @return $this
-     */
     public function markAsCompleted(): self
     {
         $this->status = self::STATUS_COMPLETED;
@@ -175,11 +131,6 @@ class UserResetPasswordEntity extends AbstractEntity
         return $this;
     }
 
-    /**
-     * Return an array representation of the object
-     *
-     * @return array
-     */
     public function getArrayCopy(): array
     {
         return [
