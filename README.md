@@ -1,6 +1,6 @@
 # DotKernel API
 
-DotKernel's PSR-15 API built around the Mezzio API skeleton based on [Enrico Zimuel's Zend Expressive API skeleton example](https://github.com/ezimuel/zend-expressive-api).
+Based on Enrico Zimuel's [Zend Expressive API - Skeleton example](https://github.com/ezimuel/zend-expressive-api), DotKernel API runs on [Laminas](https://github.com/laminas) and [Mezzio](https://github.com/mezzio) components and implements standards like PSR-3, PSR-4, PSR-7, PSR-11 and PSR-15.
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/api)
 
