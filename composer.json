@@ -21,7 +21,6 @@
         "sort-packages": true,
         "allow-plugins": {
             "dotkernel/*": true,
-            "laminas/laminas-dependency-plugin": true,
             "laminas/laminas-component-installer": true,
             "composer/package-versions-deprecated": true,
             "dealerdirect/phpcodesniffer-composer-installer": true
