@@ -14,6 +14,8 @@ Based on Enrico Zimuel's [Zend Expressive API - Skeleton example](https://github
 [![Build Static](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml/badge.svg?branch=4.0)](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml)
 [![Build Static](https://github.com/dotkernel/api/actions/workflows/run-tests.yml/badge.svg?branch=4.0)](https://github.com/dotkernel/api/actions/workflows/run-tests.yml)
 
+[![SymfonyInsight](https://insight.symfony.com/projects/7f9143cc-5e3c-4cfc-992c-377a001fde3e/big.svg)](https://insight.symfony.com/projects/7f9143cc-5e3c-4cfc-992c-377a001fde3e)
+
 ## Getting Started
 
 ### Step 1: Clone the project
