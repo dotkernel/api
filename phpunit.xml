@@ -12,4 +12,10 @@
             <exclude>./test/Functional/AbstractFunctionalTest.php</exclude>
         </testsuite>
     </testsuites>
+    <coverage/>
+    <source>
+        <include>
+            <directory suffix=".php">./src</directory>
+        </include>
+    </source>
 </phpunit>
