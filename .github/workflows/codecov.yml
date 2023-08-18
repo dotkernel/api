@@ -50,10 +50,8 @@ jobs:
           mv config/autoload/mail.local.php.dist config/autoload/mail.local.php
           mv config/autoload/local.test.php.dist config/autoload/local.test.php
 
-      - name: Run unit tests
-        run: vendor/bin/phpunit --testsuite=UnitTests --testdox --colors=always --coverage-clover clover.xml
-      - name: Run functional tests
-        run: vendor/bin/phpunit --testsuite=FunctionalTests --testdox --colors=always --coverage-clover clover.xml
+      - name: Collect code coverage with PHPUnit
+        run: vendor/bin/phpunit --colors=always --coverage-clover clover.xml
 
       - name: Send code coverage report to Codecov.io
         uses: codecov/codecov-action@v3
