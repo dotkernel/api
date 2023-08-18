@@ -9,21 +9,19 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\Token;
 use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
-use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Token;
 use RuntimeException;
 
 /**
- * Class OAuthAccessToken
  * @ORM\Entity(repositoryClass="Api\App\Repository\OAuthAccessTokenRepository")
  * @ORM\Table(name="oauth_access_tokens")
- * @package Api\App\Entity
  */
 class OAuthAccessToken implements AccessTokenEntityInterface
 {
@@ -40,19 +38,13 @@ class OAuthAccessToken implements AccessTokenEntityInterface
      */
     private ClientEntityInterface $client;
 
-    /**
-     * @ORM\Column(name="user_id", type="string", nullable=true)
-     */
+    /** @ORM\Column(name="user_id", type="string", nullable=true) */
     private ?string $userId;
 
-    /**
-     * @ORM\Column(name="token", type="string", length=100)
-     */
+    /** @ORM\Column(name="token", type="string", length=100) */
     private string $token;
 
-    /**
-     * @ORM\Column(name="revoked", type="boolean", options={"default":0})
-     */
+    /** @ORM\Column(name="revoked", type="boolean", options={"default":0}) */
     private bool $isRevoked = false;
 
     /**
@@ -64,9 +56,7 @@ class OAuthAccessToken implements AccessTokenEntityInterface
      */
     protected Collection $scopes;
 
-    /**
-     * @ORM\Column(name="expires_at", type="datetime_immutable")
-     */
+    /** @ORM\Column(name="expires_at", type="datetime_immutable") */
     private DateTimeImmutable $expiresAt;
 
     private ?CryptKey $privateKey = null;
@@ -138,11 +128,17 @@ class OAuthAccessToken implements AccessTokenEntityInterface
         return $this->getToken();
     }
 
+    /**
+     * @param mixed $identifier
+     */
     public function setIdentifier($identifier): self
     {
         return $this->setToken($identifier);
     }
 
+    /**
+     * @param string|int|null $identifier
+     */
     public function setUserIdentifier($identifier): self
     {
         $this->userId = $identifier;
@@ -157,7 +153,7 @@ class OAuthAccessToken implements AccessTokenEntityInterface
 
     public function addScope(ScopeEntityInterface $scope): self
     {
-        if (!$this->scopes->contains($scope)) {
+        if (! $this->scopes->contains($scope)) {
             $this->scopes->add($scope);
         }
 
@@ -175,11 +171,10 @@ class OAuthAccessToken implements AccessTokenEntityInterface
 
     public function getScopes(?Criteria $criteria = null): array
     {
-        if (is_null($criteria)) {
+        if ($criteria === null) {
             return $this->scopes->toArray();
         }
 
-        /** @psalm-suppress UndefinedInterfaceMethod */
         return $this->scopes->matching($criteria)->toArray();
     }
 
@@ -224,7 +219,7 @@ class OAuthAccessToken implements AccessTokenEntityInterface
     {
         $this->initJwtConfiguration();
 
-        if (is_null($this->jwtConfiguration)) {
+        if ($this->jwtConfiguration === null) {
             throw new RuntimeException('Unable to convert to JWT without config');
         }
 

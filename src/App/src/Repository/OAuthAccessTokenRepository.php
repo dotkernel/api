@@ -14,8 +14,14 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 
+/**
+ * @extends EntityRepository<object>
+ */
 class OAuthAccessTokenRepository extends EntityRepository implements AccessTokenRepositoryInterface
 {
+    /**
+     * @return OAuthAccessToken[]
+     */
     public function findAccessTokens(string $identifier): array
     {
         return $this
@@ -30,6 +36,9 @@ class OAuthAccessTokenRepository extends EntityRepository implements AccessToken
             ->getResult();
     }
 
+    /**
+     * @param mixed $userIdentifier
+     */
     public function getNewToken(
         ClientEntityInterface $clientEntity,
         array $scopes,
@@ -40,7 +49,7 @@ class OAuthAccessTokenRepository extends EntityRepository implements AccessToken
             $accessToken->addScope($scope);
         }
 
-        if (is_null($userIdentifier)) {
+        if ($userIdentifier === null) {
             return $accessToken;
         }
 
@@ -64,6 +73,9 @@ class OAuthAccessTokenRepository extends EntityRepository implements AccessToken
         $this->getEntityManager()->flush();
     }
 
+    /**
+     * @param string $tokenId
+     */
     public function revokeAccessToken($tokenId): void
     {
         $accessTokenEntity = $this->findOneBy(['token' => $tokenId]);
@@ -73,6 +85,9 @@ class OAuthAccessTokenRepository extends EntityRepository implements AccessToken
         }
     }
 
+    /**
+     * @param string $tokenId
+     */
     public function isAccessTokenRevoked($tokenId): bool
     {
         $accessTokenEntity = $this->findOneBy(['token' => $tokenId]);

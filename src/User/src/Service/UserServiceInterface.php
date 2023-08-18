@@ -62,15 +62,11 @@ interface UserServiceInterface
     public function sendResetPasswordRequestedMail(User $user): bool;
 
     /**
-     * @param User $user
-     * @return bool
      * @throws MailException
      */
     public function sendResetPasswordCompletedMail(User $user): bool;
 
     /**
-     * @param User $user
-     * @return bool
      * @throws MailException
      */
     public function sendWelcomeMail(User $user): bool;

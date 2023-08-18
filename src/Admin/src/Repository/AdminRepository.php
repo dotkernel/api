@@ -14,6 +14,7 @@ use Exception;
 
 /**
  * @Entity(name="Api\Admin\Entity\Admin")
+ * @extends EntityRepository<object>
  */
 class AdminRepository extends EntityRepository
 {
@@ -31,7 +32,7 @@ class AdminRepository extends EntityRepository
      */
     public function saveAdmin(Admin $admin): Admin
     {
-        if (!$admin->hasRoles()) {
+        if (! $admin->hasRoles()) {
             throw new Exception(Message::RESTRICTION_ROLES);
         }
 
@@ -50,7 +51,7 @@ class AdminRepository extends EntityRepository
             ->createQueryBuilder()
             ->select(['admin'])
             ->from(Admin::class, 'admin')
-            ->orderBy(($filters['order'] ?? 'admin.created'), $filters['dir'] ?? 'desc')
+            ->orderBy($filters['order'] ?? 'admin.created', $filters['dir'] ?? 'desc')
             ->setFirstResult($page['offset'])
             ->setMaxResults($page['limit'])
             ->getQuery()

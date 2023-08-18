@@ -12,12 +12,19 @@ use Dot\AnnotatedServices\Annotation\Inject;
 use Laminas\Diactoros\UploadedFile;
 use Psr\Http\Message\UploadedFileInterface;
 
+use function file_exists;
+use function is_readable;
+use function mkdir;
+use function rtrim;
+use function sprintf;
+use function unlink;
+
 class UserAvatarService implements UserAvatarServiceInterface
 {
     public const EXTENSIONS = [
-        'image/jpg' => 'jpg',
+        'image/jpg'  => 'jpg',
         'image/jpeg' => 'jpg',
-        'image/png' => 'png'
+        'image/png'  => 'png',
     ];
 
     /**
@@ -29,7 +36,8 @@ class UserAvatarService implements UserAvatarServiceInterface
     public function __construct(
         protected UserAvatarRepository $userAvatarRepository,
         protected array $config
-    ) {}
+    ) {
+    }
 
     public function createAvatar(User $user, UploadedFile $uploadedFile): UserAvatar
     {
@@ -53,7 +61,7 @@ class UserAvatarService implements UserAvatarServiceInterface
 
     public function removeAvatar(User $user): void
     {
-        if (!$user->hasAvatar()) {
+        if (! $user->hasAvatar()) {
             return;
         }
 
@@ -80,7 +88,7 @@ class UserAvatarService implements UserAvatarServiceInterface
 
     protected function ensureDirectoryExists(string $path): void
     {
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             mkdir($path, 0755);
         }
     }

@@ -15,8 +15,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function implode;
+use function sprintf;
+
+use const PHP_EOL;
+
 class AdminCreateCommand extends Command
 {
+    /** @var string $defaultName */
     protected static $defaultName = 'admin:create';
 
     public function __construct(
@@ -37,8 +43,7 @@ class AdminCreateCommand extends Command
             ->addOption('identity', 'i', InputOption::VALUE_REQUIRED, 'Admin identity')
             ->addOption('password', 'p', InputOption::VALUE_REQUIRED, 'Admin password')
             ->addOption('firstName', 'f', InputOption::VALUE_REQUIRED, 'Admin first name')
-            ->addOption('lastName', 'l', InputOption::VALUE_REQUIRED, 'Admin last name')
-        ;
+            ->addOption('lastName', 'l', InputOption::VALUE_REQUIRED, 'Admin last name');
     }
 
     /**
@@ -47,7 +52,7 @@ class AdminCreateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $inputFilter = (new CreateAdminInputFilter())->setData($this->getData($input));
-        if (!$inputFilter->isValid()) {
+        if (! $inputFilter->isValid()) {
             $messages = [];
             foreach ($inputFilter->getMessages() as $field => $errors) {
                 foreach ($errors as $error) {
@@ -71,21 +76,21 @@ class AdminCreateCommand extends Command
     private function getData(InputInterface $input): array
     {
         $role = $this->adminRoleService->findOneBy(['name' => AdminRole::ROLE_ADMIN]);
-        if (!($role instanceof AdminRole)) {
+        if (! $role instanceof AdminRole) {
             throw new Exception(
                 sprintf(Message::ADMIN_ROLE_MISSING, AdminRole::ROLE_ADMIN)
             );
         }
 
-        return  [
-            'identity' => $input->getOption('identity'),
-            'password' => $input->getOption('password'),
+        return [
+            'identity'        => $input->getOption('identity'),
+            'password'        => $input->getOption('password'),
             'passwordConfirm' => $input->getOption('password'),
-            'firstName' => $input->getOption('firstName'),
-            'lastName' => $input->getOption('lastName'),
-            'roles' => [
-                ['uuid' => $role->getUuid()->toString()]
-            ]
+            'firstName'       => $input->getOption('firstName'),
+            'lastName'        => $input->getOption('lastName'),
+            'roles'           => [
+                ['uuid' => $role->getUuid()->toString()],
+            ],
         ];
     }
 }

@@ -9,6 +9,9 @@ use Doctrine\ORM\EntityRepository;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 
+/**
+ * @extends EntityRepository<object>
+ */
 class OAuthRefreshTokenRepository extends EntityRepository implements RefreshTokenRepositoryInterface
 {
     public function getNewRefreshToken(): OAuthRefreshToken
@@ -22,6 +25,9 @@ class OAuthRefreshTokenRepository extends EntityRepository implements RefreshTok
         $this->getEntityManager()->flush();
     }
 
+    /**
+     * @param string $tokenId
+     */
     public function revokeRefreshToken($tokenId): void
     {
         $refreshTokenEntity = $this->find($tokenId);
@@ -31,6 +37,9 @@ class OAuthRefreshTokenRepository extends EntityRepository implements RefreshTok
         }
     }
 
+    /**
+     * @param string $tokenId
+     */
     public function isRefreshTokenRevoked($tokenId): bool
     {
         $refreshTokenEntity = $this->find($tokenId);

@@ -1,10 +1,4 @@
 <?php
-/**
- * Local configuration.
- *
- * Copy this file to `local.php` and change its settings as required.
- * `local.php` is ignored by git and safe to use for local and sensitive data like usernames and passwords.
- */
 
 declare(strict_types=1);
 
@@ -15,64 +9,64 @@ $baseUrl = 'http://localhost:8080';
 
 $databases = [
     'default' => [
-        'host' => 'localhost',
-        'dbname' => '',
-        'user' => '',
+        'host'     => 'localhost',
+        'dbname'   => '',
+        'user'     => '',
         'password' => '',
-        'port' => 3306,
-        'driver' => 'pdo_mysql',
-        'charset' => 'utf8mb4',
-        'collate' => 'utf8mb4_general_ci'
-    ]
+        'port'     => 3306,
+        'driver'   => 'pdo_mysql',
+        'charset'  => 'utf8mb4',
+        'collate'  => 'utf8mb4_general_ci',
+    ],
     // you can add more database connections into this array
 ];
 
 return [
     'annotations_cache_dir' => getcwd() . '/data/cache/annotations',
-    'application' => [
+    'application'           => [
         'name' => 'DotKernel API',
-        'url' => $baseUrl
+        'url'  => $baseUrl,
     ],
-    'authentication' => [
-        'private_key' => [
-            'key_or_path' => getcwd() . '/data/oauth/private.key',
-            'key_permissions_check' => false
+    'authentication'        => [
+        'private_key'          => [
+            'key_or_path'           => getcwd() . '/data/oauth/private.key',
+            'key_permissions_check' => false,
         ],
-        'public_key' => [
-            'key_or_path' => getcwd() . '/data/oauth/public.key',
-            'key_permissions_check' => false
+        'public_key'           => [
+            'key_or_path'           => getcwd() . '/data/oauth/public.key',
+            'key_permissions_check' => false,
         ],
-        'encryption_key' => require getcwd() . '/data/oauth/encryption.key',
+        'encryption_key'       => require getcwd() . '/data/oauth/encryption.key',
         'access_token_expire'  => 'P1D',
         'refresh_token_expire' => 'P1M',
-        'auth_code_expire' => 'PT10M',
-        'invalid_credentials' => [
-            'error' => 'Invalid credentials.',
+        'auth_code_expire'     => 'PT10M',
+        'invalid_credentials'  => [
+            'error'             => 'Invalid credentials.',
             'error_description' => 'Invalid credentials.',
-            'message' => 'Invalid credentials.',
-        ]
+            'message'           => 'Invalid credentials.',
+        ],
     ],
-    'databases' => $databases,
-    'doctrine' => [
-        'connection' => [
+    'databases'             => $databases,
+    'doctrine'              => [
+        'connection'    => [
             'orm_default' => [
                 'params' => $databases['default'],
-            ]
+            ],
         ],
         'configuration' => [
             'orm_default' => [
                 // it is recommended to disable doctrine cache on development
                 // just comment any type of cache you don't want to be applied on development
-                'query_cache' => PhpFileCache::class,
-                'metadata_cache' => PhpFileCache::class,
-                'result_cache' => PhpFileCache::class,
+                'query_cache'              => PhpFileCache::class,
+                'metadata_cache'           => PhpFileCache::class,
+                'result_cache'             => PhpFileCache::class,
                 'entity_listener_resolver' => EntityListenerResolver::class,
             ],
         ],
     ],
-    'uploads' => [
+    'uploads'               => [
         'user' => [
-            'url' => $baseUrl . '/uploads/user',
+            'url'  => $baseUrl . '/uploads/user',
             'path' => realpath(__DIR__ . '/../../public/uploads/user'),
         ],
     ],

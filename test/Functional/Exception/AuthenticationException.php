@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Functional\Exception;
+namespace ApiTest\Functional\Exception;
 
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
+
+use function sprintf;
 
 class AuthenticationException extends RuntimeException
 {
@@ -19,7 +21,7 @@ class AuthenticationException extends RuntimeException
     {
         return new self(
             sprintf('The `%s` key is missing from the response', $key),
-        StatusCodeInterface::STATUS_BAD_REQUEST
+            StatusCodeInterface::STATUS_BAD_REQUEST
         );
     }
 }

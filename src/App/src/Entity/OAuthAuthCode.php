@@ -15,10 +15,8 @@ use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\Traits\AuthCodeTrait;
 
 /**
- * Class OauthClient
  * @ORM\Entity(repositoryClass="Api\App\Repository\OAuthAuthCodeRepository")
  * @ORM\Table(name="oauth_auth_codes")
- * @package Api\App\Entity
  */
 class OAuthAuthCode implements AuthCodeEntityInterface
 {
@@ -37,9 +35,7 @@ class OAuthAuthCode implements AuthCodeEntityInterface
      */
     private ClientEntityInterface $client;
 
-    /**
-     * @ORM\Column(name="revoked", type="boolean", options={"default":0})
-     */
+    /** @ORM\Column(name="revoked", type="boolean", options={"default":0}) */
     private bool $isRevoked = false;
 
     /**
@@ -51,15 +47,13 @@ class OAuthAuthCode implements AuthCodeEntityInterface
      */
     protected Collection $scopes;
 
-    /**
-     * @ORM\Column(type="datetime_immutable", nullable=true)
-     */
+    /** @ORM\Column(type="datetime_immutable", nullable=true) */
     private DateTimeImmutable $expiresDatetime;
 
     public function __construct()
     {
         $this->expiresDatetime = new DateTimeImmutable();
-        $this->scopes = new ArrayCollection();
+        $this->scopes          = new ArrayCollection();
     }
 
     public function setId(int $id): self
@@ -91,6 +85,9 @@ class OAuthAuthCode implements AuthCodeEntityInterface
         return $this->getId();
     }
 
+    /**
+     * @param mixed $identifier
+     */
     public function setIdentifier($identifier): self
     {
         $this->setId($identifier);
@@ -98,6 +95,9 @@ class OAuthAuthCode implements AuthCodeEntityInterface
         return $this;
     }
 
+    /**
+     * @param string|int|null $identifier
+     */
     public function setUserIdentifier($identifier): self
     {
         return $this;
@@ -136,7 +136,7 @@ class OAuthAuthCode implements AuthCodeEntityInterface
 
     public function addScope(ScopeEntityInterface $scope): self
     {
-        if (!$this->scopes->contains($scope)) {
+        if (! $this->scopes->contains($scope)) {
             $this->scopes->add($scope);
         }
 
@@ -152,11 +152,10 @@ class OAuthAuthCode implements AuthCodeEntityInterface
 
     public function getScopes(?Criteria $criteria = null): array
     {
-        if (is_null($criteria)) {
+        if ($criteria === null) {
             return $this->scopes->toArray();
         }
 
-        /** @psalm-suppress UndefinedInterfaceMethod */
         return $this->scopes->matching($criteria)->toArray();
     }
 

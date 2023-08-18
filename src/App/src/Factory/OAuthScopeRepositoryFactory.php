@@ -14,8 +14,6 @@ use Psr\Container\NotFoundExceptionInterface;
 class OAuthScopeRepositoryFactory
 {
     /**
-     * @param ContainerInterface $container
-     * @return ObjectRepository
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

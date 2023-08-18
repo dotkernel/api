@@ -19,6 +19,6 @@ class ErrorResponseGeneratorFactory
     {
         $config = $container->has('config') ? $container->get('config') : [];
 
-        return new ErrorResponseGenerator(($config['debug'] ?? false));
+        return new ErrorResponseGenerator($config['debug'] ?? false);
     }
 }

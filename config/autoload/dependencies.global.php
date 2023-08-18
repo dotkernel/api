@@ -36,15 +36,15 @@ return [
         // Use 'aliases' to alias a service name to another service. The
         // key is the alias name, the value is the service to which it points.
         'aliases' => [
-            AccessTokenRepositoryInterface::class => OAuthAccessTokenRepository::class,
-            AuthCodeRepositoryInterface::class => OAuthAuthCodeRepository::class,
-            ClientRepositoryInterface::class => OAuthClientRepository::class,
-            RefreshTokenRepositoryInterface::class => OAuthRefreshTokenRepository::class,
-            ScopeRepositoryInterface::class => OAuthScopeRepository::class,
-            ErrorHandlerInterface::class => LogErrorHandler::class,
-            Mezzio\Authentication\UserInterface::class => UserIdentity::class,
+            AccessTokenRepositoryInterface::class              => OAuthAccessTokenRepository::class,
+            AuthCodeRepositoryInterface::class                 => OAuthAuthCodeRepository::class,
+            ClientRepositoryInterface::class                   => OAuthClientRepository::class,
+            RefreshTokenRepositoryInterface::class             => OAuthRefreshTokenRepository::class,
+            ScopeRepositoryInterface::class                    => OAuthScopeRepository::class,
+            ErrorHandlerInterface::class                       => LogErrorHandler::class,
+            Mezzio\Authentication\UserInterface::class         => UserIdentity::class,
             Mezzio\Authorization\AuthorizationInterface::class => Mezzio\Authorization\Rbac\LaminasRbac::class,
-            UserRepositoryInterface::class => UserRepository::class,
+            UserRepositoryInterface::class                     => UserRepository::class,
         ],
         // Use 'invokables' for constructor-less services, or services that do
         // not require arguments to the constructor. Map a service name to the
@@ -53,16 +53,16 @@ return [
             // Fully\Qualified\InterfaceName::class => Fully\Qualified\ClassName::class,
         ],
         // Use 'factories' for services provided by callbacks/factory classes.
-        'factories'  => [
-            ExecuteCommand::class => CommandFactory::class,
+        'factories' => [
+            ExecuteCommand::class                           => CommandFactory::class,
             Mezzio\Middleware\ErrorResponseGenerator::class => ErrorResponseGeneratorFactory::class,
-            OAuthAccessTokenRepository::class => OAuthAccessTokenRepositoryFactory::class,
-            OAuthAuthCodeRepository::class => OAuthAuthCodeRepositoryFactory::class,
-            OAuthClientRepository::class => OAuthClientRepositoryFactory::class,
-            OAuthRefreshTokenRepository::class => OAuthRefreshTokenRepositoryFactory::class,
-            OAuthScopeRepository::class => OAuthScopeRepositoryFactory::class,
-            UserRepository::class => UserRepositoryFactory::class,
-            UserIdentity::class => UserIdentityFactory::class,
+            OAuthAccessTokenRepository::class               => OAuthAccessTokenRepositoryFactory::class,
+            OAuthAuthCodeRepository::class                  => OAuthAuthCodeRepositoryFactory::class,
+            OAuthClientRepository::class                    => OAuthClientRepositoryFactory::class,
+            OAuthRefreshTokenRepository::class              => OAuthRefreshTokenRepositoryFactory::class,
+            OAuthScopeRepository::class                     => OAuthScopeRepositoryFactory::class,
+            UserRepository::class                           => UserRepositoryFactory::class,
+            UserIdentity::class                             => UserIdentityFactory::class,
         ],
     ],
 ];

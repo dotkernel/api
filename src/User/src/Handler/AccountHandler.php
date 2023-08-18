@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Api\User\Handler;
 
 use Api\App\Handler\ResponseTrait;
+use Api\User\Entity\User;
 use Api\User\InputFilter\CreateUserInputFilter;
 use Api\User\InputFilter\UpdateUserInputFilter;
 use Api\User\Service\UserServiceInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
-use Api\User\Entity\User;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
@@ -32,7 +32,8 @@ class AccountHandler implements RequestHandlerInterface
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected UserServiceInterface $userService
-    ) {}
+    ) {
+    }
 
     public function delete(ServerRequestInterface $request): ResponseInterface
     {
@@ -55,7 +56,7 @@ class AccountHandler implements RequestHandlerInterface
         $inputFilter = (new UpdateUserInputFilter())
             ->setValidationGroup(['password', 'passwordConfirm', 'detail'])
             ->setData($request->getParsedBody());
-        if (!$inputFilter->isValid()) {
+        if (! $inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
         }
 
@@ -73,7 +74,7 @@ class AccountHandler implements RequestHandlerInterface
         $inputFilter = (new CreateUserInputFilter())
             ->setValidationGroup(['identity', 'password', 'passwordConfirm', 'detail'])
             ->setData($request->getParsedBody());
-        if (!$inputFilter->isValid()) {
+        if (! $inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
         }
 

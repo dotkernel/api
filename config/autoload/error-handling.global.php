@@ -3,27 +3,26 @@
 declare(strict_types=1);
 
 use Api\App\Service\ErrorReportServiceInterface;
-use Laminas\Log\Logger;
 use Laminas\Log\Formatter\Json;
+use Laminas\Log\Logger;
 
 return [
     'dot-errorhandler' => [
         'loggerEnabled' => true,
-        'logger' => 'dot-log.default_logger'
+        'logger'        => 'dot-log.default_logger',
     ],
-    'dot_log' => [
+    'dot_log'          => [
         'loggers' => [
             'default_logger' => [
                 'writers' => [
                     'FileWriter' => [
-                        'name' => 'stream',
+                        'name'     => 'stream',
                         'priority' => Logger::ALERT,
-                        'options' => [
-                            'stream' => __DIR__ . '/../../log/error-log-{Y}-{m}-{d}.log',
-                            // explicitly log all messages
-                            'filters' => [
+                        'options'  => [
+                            'stream'    => __DIR__ . '/../../log/error-log-{Y}-{m}-{d}.log',
+                            'filters'   => [
                                 'allMessages' => [
-                                    'name' => 'priority',
+                                    'name'    => 'priority',
                                     'options' => [
                                         'operator' => '>=',
                                         'priority' => Logger::EMERG,
@@ -61,7 +60,7 @@ return [
         'path' => __DIR__ . '/../../log/error-report-endpoint-log.log',
 
         /**
-         * In order to be eligible for storing messages, Requests sent to the error reporting endpoint, must contain a header having:
+         * In order to store messages, requests sent to the error reporting endpoint, must contain a header having:
          * - name: the value of \Api\App\Service\ErrorReportService::HEADER_NAME
          * - value: one of the items in this array
          */
@@ -82,5 +81,5 @@ return [
          * 3. If you want to whitelist only specific IP addresses, add them to ip_whitelist.
          */
         'ip_whitelist' => [],
-    ]
+    ],
 ];

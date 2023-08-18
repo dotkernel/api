@@ -12,6 +12,9 @@ use Api\Admin\InputFilter\Input\StatusInput;
 use Laminas\InputFilter\CollectionInputFilter;
 use Laminas\InputFilter\InputFilter;
 
+/**
+ * @extends InputFilter<object>
+ */
 class UpdateAdminInputFilter extends InputFilter
 {
     public function __construct()
@@ -26,7 +29,6 @@ class UpdateAdminInputFilter extends InputFilter
             ->add(new FirstNameInput('firstName', false))
             ->add(new LastNameInput('lastName', false))
             ->add(new StatusInput('status', false))
-            ->add($roles, 'roles')
-        ;
+            ->add($roles, 'roles');
     }
 }

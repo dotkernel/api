@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Functional\Traits;
+namespace ApiTest\Functional\Traits;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\DataFixtures\Loader;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\Tools\SchemaTool;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -21,7 +21,7 @@ trait DatabaseTrait
     {
         $entityManager = $this->getEntityManager();
 
-        $metaData = $entityManager->getMetadataFactory()->getAllMetadata();
+        $metaData   = $entityManager->getMetadataFactory()->getAllMetadata();
         $schemaTool = new SchemaTool($entityManager);
         $schemaTool->updateSchema($metaData);
     }
@@ -33,8 +33,9 @@ trait DatabaseTrait
     public function runSeeders(): void
     {
         $entityManager = $this->getEntityManager();
-        $loader = new Loader();
-        $purger = new ORMPurger($entityManager);
+
+        $loader   = new Loader();
+        $purger   = new ORMPurger($entityManager);
         $executor = new ORMExecutor($entityManager, $purger);
 
         $path = $this->getContainer()->get('config')['doctrine']['fixtures'];

@@ -16,6 +16,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 
+use function sprintf;
+
 class UserActivateHandler implements RequestHandlerInterface
 {
     use ResponseTrait;
@@ -31,18 +33,15 @@ class UserActivateHandler implements RequestHandlerInterface
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected UserServiceInterface $userService
-    ) {}
+    ) {
+    }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
         try {
             $uuid = $request->getAttribute('uuid');
             $user = $this->userService->findOneBy(['uuid' => $uuid]);
-            if (!$user instanceof User) {
+            if (! $user instanceof User) {
                 return $this->notFoundResponse(
                     sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid)
                 );

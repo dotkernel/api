@@ -27,9 +27,9 @@ use Dot\Mail\Service\MailService;
 use Laminas\Hydrator\ArraySerializableHydrator;
 use Mezzio\Application;
 use Mezzio\Authentication;
+use Mezzio\Hal\Metadata\MetadataMap;
 use Mezzio\Hal\Metadata\RouteBasedCollectionMetadata;
 use Mezzio\Hal\Metadata\RouteBasedResourceMetadata;
-use Mezzio\Hal\Metadata\MetadataMap;
 use Mezzio\Template\TemplateRendererInterface;
 use Mezzio\Twig\TwigEnvironmentFactory;
 use Mezzio\Twig\TwigExtension;
@@ -44,8 +44,8 @@ class ConfigProvider
     public function __invoke(): array
     {
         return [
-            'dependencies' => $this->getDependencies(),
-            MetadataMap::class => $this->getHalConfig()
+            'dependencies'     => $this->getDependencies(),
+            MetadataMap::class => $this->getHalConfig(),
         ];
     }
 
@@ -57,32 +57,32 @@ class ConfigProvider
                     RoutesDelegator::class,
                     \Api\Admin\RoutesDelegator::class,
                     \Api\User\RoutesDelegator::class,
-                ]
+                ],
             ],
             'factories'  => [
-                'doctrine.entity_manager.orm_default' => EntityManagerFactory::class,
-                'dot-mail.options.default' => MailOptionsAbstractFactory::class,
-                'dot-mail.service.default' => MailServiceAbstractFactory::class,
+                'doctrine.entity_manager.orm_default'   => EntityManagerFactory::class,
+                'dot-mail.options.default'              => MailOptionsAbstractFactory::class,
+                'dot-mail.service.default'              => MailServiceAbstractFactory::class,
                 AbstractAnnotatedFactory::CACHE_SERVICE => AnnotationsCacheFactory::class,
-                AuthenticationMiddleware::class => AuthenticationMiddlewareFactory::class,
-                AuthorizationMiddleware::class => AnnotatedServiceFactory::class,
-                Environment::class => TwigEnvironmentFactory::class,
-                TwigExtension::class => TwigExtensionFactory::class,
-                TwigRenderer::class => TwigRendererFactory::class,
-                ErrorResponseMiddleware::class => AnnotatedServiceFactory::class,
-                RouteListCommand::class => RouteListCommandFactory::class,
-                TokenGenerateCommand::class => TokenGenerateCommandFactory::class,
-                ErrorReportService::class => AnnotatedServiceFactory::class,
-                EntityListenerResolver::class => EntityListenerResolverFactory::class,
+                AuthenticationMiddleware::class         => AuthenticationMiddlewareFactory::class,
+                AuthorizationMiddleware::class          => AnnotatedServiceFactory::class,
+                Environment::class                      => TwigEnvironmentFactory::class,
+                TwigExtension::class                    => TwigExtensionFactory::class,
+                TwigRenderer::class                     => TwigRendererFactory::class,
+                ErrorResponseMiddleware::class          => AnnotatedServiceFactory::class,
+                RouteListCommand::class                 => RouteListCommandFactory::class,
+                TokenGenerateCommand::class             => TokenGenerateCommandFactory::class,
+                ErrorReportService::class               => AnnotatedServiceFactory::class,
+                EntityListenerResolver::class           => EntityListenerResolverFactory::class,
             ],
-            'aliases' => [
+            'aliases'    => [
                 Authentication\AuthenticationInterface::class => Authentication\OAuth2\OAuth2Adapter::class,
-                MailService::class => 'dot-mail.service.default',
-                EntityManager::class => 'doctrine.entity_manager.orm_default',
-                EntityManagerInterface::class => 'doctrine.entity_manager.orm_default',
-                TemplateRendererInterface::class => TwigRenderer::class,
-                ErrorReportServiceInterface::class => ErrorReportService::class,
-            ]
+                MailService::class                            => 'dot-mail.service.default',
+                EntityManager::class                          => 'doctrine.entity_manager.orm_default',
+                EntityManagerInterface::class                 => 'doctrine.entity_manager.orm_default',
+                TemplateRendererInterface::class              => TwigRenderer::class,
+                ErrorReportServiceInterface::class            => ErrorReportService::class,
+            ],
         ];
     }
 
@@ -94,10 +94,10 @@ class ConfigProvider
     public static function getCollection(string $collectionClass, string $route, string $collectionRelation): array
     {
         return [
-            '__class__' => RouteBasedCollectionMetadata::class,
-            'collection_class' => $collectionClass,
+            '__class__'           => RouteBasedCollectionMetadata::class,
+            'collection_class'    => $collectionClass,
             'collection_relation' => $collectionRelation,
-            'route' => $route
+            'route'               => $route,
         ];
     }
 
@@ -106,15 +106,14 @@ class ConfigProvider
         string $route,
         string $resourceIdentifier = 'uuid',
         string $resourceIdentifierPlaceholder = 'uuid'
-    ): array
-    {
+    ): array {
         return [
-            '__class__' => RouteBasedResourceMetadata::class,
-            'resource_class' => $resourceClass,
-            'route' => $route,
-            'extractor' => ArraySerializableHydrator::class,
-            'resource_identifier' => $resourceIdentifier,
-            'route_identifier_placeholder' => $resourceIdentifierPlaceholder
+            '__class__'                    => RouteBasedResourceMetadata::class,
+            'resource_class'               => $resourceClass,
+            'route'                        => $route,
+            'extractor'                    => ArraySerializableHydrator::class,
+            'resource_identifier'          => $resourceIdentifier,
+            'route_identifier_placeholder' => $resourceIdentifierPlaceholder,
         ];
     }
 }

@@ -19,7 +19,7 @@ class AuthenticationMiddlewareFactory
      */
     public function __invoke(ContainerInterface $container): AuthenticationMiddleware
     {
-        if (!$container->has(AuthenticationInterface::class)) {
+        if (! $container->has(AuthenticationInterface::class)) {
             throw new InvalidConfigException('AuthenticationInterface service is missing');
         }
 

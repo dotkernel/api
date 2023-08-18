@@ -11,16 +11,19 @@ use Api\App\Message;
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use Dot\AnnotatedServices\Annotation\Entity;
 use Exception;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use Mezzio\Authentication\OAuth2\Entity\UserEntity;
-use Dot\AnnotatedServices\Annotation\Entity;
 use Throwable;
+
+use function password_verify;
 
 /**
  * @Entity(name="Api\User\Entity\User")
+ * @extends EntityRepository<object>
  */
 class UserRepository extends EntityRepository implements UserRepositoryInterface
 {
@@ -30,10 +33,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         $this->getEntityManager()->flush();
     }
 
-    /**
-     * @param string $hash
-     * @return User|null
-     */
     public function findByResetPasswordHash(string $hash): ?User
     {
         try {
@@ -53,10 +52,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         }
     }
 
-    /**
-     * @param array $filters
-     * @return UserCollection
-     */
     public function getUsers(array $filters = []): UserCollection
     {
         $page = PaginationHelper::getOffsetAndLimit($filters);
@@ -69,11 +64,11 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             ->leftJoin('user.avatar', 'avatar')
             ->leftJoin('user.detail', 'detail')
             ->leftJoin('user.roles', 'roles')
-            ->orderBy(($filters['order'] ?? 'user.created'), $filters['dir'] ?? 'desc')
+            ->orderBy($filters['order'] ?? 'user.created', $filters['dir'] ?? 'desc')
             ->setFirstResult($page['offset'])
             ->setMaxResults($page['limit']);
 
-        if (!empty($filters['status'])) {
+        if (! empty($filters['status'])) {
             $qb->andWhere('user.status = :status')->setParameter('status', $filters['status']);
         }
 
@@ -88,8 +83,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             }
         }
 
-        if (!empty($filters['search'])) {
-            /** @psalm-suppress TooManyArguments */
+        if (! empty($filters['search'])) {
             $qb->andWhere(
                 $qb->expr()->orX(
                     $qb->expr()->like('user.identity', ':search'),
@@ -100,7 +94,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             )->setParameter('search', '%' . $filters['search'] . '%');
         }
 
-        if (!empty($filters['role'])) {
+        if (! empty($filters['role'])) {
             $qb->andWhere('roles.name = :role')->setParameter('role', $filters['role']);
         }
 
@@ -114,7 +108,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      */
     public function saveUser(User $user): User
     {
-        if (!$user->hasRoles()) {
+        if (! $user->hasRoles()) {
             throw new Exception(Message::RESTRICTION_ROLES);
         }
 
@@ -125,6 +119,9 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
+     * @param string $username
+     * @param string $password
+     * @param string $grantType
      * @throws OAuthServerException
      */
     public function getUserEntityByUserCredentials(
@@ -135,13 +132,13 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     ): ?UserEntity {
         $qb = $this->getEntityManager()->createQueryBuilder();
         switch ($clientEntity->getName()) {
-            case OAuthClient::NAME_ADMIN :
+            case OAuthClient::NAME_ADMIN:
                 $qb->select('a.password')
                     ->from(Admin::class, 'a')
                     ->andWhere('a.identity = :identity')
                     ->setParameter('identity', $username);
                 break;
-            case OAuthClient::NAME_FRONTEND :
+            case OAuthClient::NAME_FRONTEND:
                 $qb->select(['u.password', 'u.status'])
                     ->from(User::class, 'u')
                     ->andWhere('u.identity = :identity')
@@ -159,11 +156,11 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
 
         $result = $result[0];
 
-        if (!password_verify($password, $result['password'])) {
+        if (! password_verify($password, $result['password'])) {
             return null;
         }
 
-        if ($clientEntity->getName() == 'frontend' && $result['status'] !== User::STATUS_ACTIVE) {
+        if ($clientEntity->getName() === 'frontend' && $result['status'] !== User::STATUS_ACTIVE) {
             throw new OAuthServerException(Message::USER_NOT_ACTIVATED, 6, 'inactive_user', 401);
         }
 

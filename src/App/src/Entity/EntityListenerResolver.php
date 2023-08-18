@@ -13,9 +13,11 @@ class EntityListenerResolver extends DefaultEntityListenerResolver
 {
     public function __construct(
         protected ContainerInterface $container
-    ) {}
+    ) {
+    }
 
     /**
+     * @param string $className
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

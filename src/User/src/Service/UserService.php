@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
-use Api\App\Entity\OAuthAccessToken;
 use Api\App\Message;
 use Api\App\Repository\OAuthAccessTokenRepository;
 use Api\App\Repository\OAuthRefreshTokenRepository;
 use Api\User\Collection\UserCollection;
-use Api\User\Entity\UserDetail;
 use Api\User\Entity\User;
+use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserRole;
 use Api\User\Repository\UserDetailRepository;
 use Api\User\Repository\UserRepository;
+use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\Mail\Exception\MailException;
 use Dot\Mail\Service\MailService;
-use Mezzio\Template\TemplateRendererInterface;
-use Dot\AnnotatedServices\Annotation\Inject;
 use Exception;
+use Mezzio\Template\TemplateRendererInterface;
+
+use function date;
 
 class UserService implements UserServiceInterface
 {
@@ -38,12 +39,13 @@ class UserService implements UserServiceInterface
         protected UserRoleServiceInterface $userRoleService,
         protected MailService $mailService,
         protected TemplateRendererInterface $templateRenderer,
-        protected OAuthAccessTokenRepository $OAuthAccessTokenRepository,
-        protected OAuthRefreshTokenRepository $OAuthRefreshTokenRepository,
+        protected OAuthAccessTokenRepository $oAuthAccessTokenRepository,
+        protected OAuthRefreshTokenRepository $oAuthRefreshTokenRepository,
         protected UserRepository $userRepository,
         protected UserDetailRepository $userDetailRepository,
         protected array $config = []
-    ) {}
+    ) {
+    }
 
     /**
      * @throws Exception
@@ -78,7 +80,7 @@ class UserService implements UserServiceInterface
             ->setStatus($data['status'] ?? User::STATUS_PENDING);
         $detail->setUser($user);
 
-        if (!empty($data['roles'])) {
+        if (! empty($data['roles'])) {
             foreach ($data['roles'] as $roleData) {
                 $role = $this->userRoleService->findOneBy(['uuid' => $roleData['uuid']]);
                 if ($role instanceof UserRole) {
@@ -97,11 +99,10 @@ class UserService implements UserServiceInterface
 
     public function revokeTokens(User $user): void
     {
-        /** @var OAuthAccessToken[] $accessTokens */
-        $accessTokens = $this->OAuthAccessTokenRepository->findAccessTokens($user->getIdentity());
+        $accessTokens = $this->oAuthAccessTokenRepository->findAccessTokens($user->getIdentity());
         foreach ($accessTokens as $accessToken) {
-            $this->OAuthAccessTokenRepository->revokeAccessToken($accessToken->getToken());
-            $this->OAuthRefreshTokenRepository->revokeRefreshToken($accessToken->getToken());
+            $this->oAuthAccessTokenRepository->revokeAccessToken($accessToken->getToken());
+            $this->oAuthRefreshTokenRepository->revokeRefreshToken($accessToken->getToken());
         }
     }
 
@@ -127,8 +128,7 @@ class UserService implements UserServiceInterface
             ->getDetail()
                 ->setFirstName($placeholder)
                 ->setLastName($placeholder)
-                ->setEmail($placeholder)
-        ;
+                ->setEmail($placeholder);
 
         return $this->userRepository->saveUser($user);
     }
@@ -141,7 +141,7 @@ class UserService implements UserServiceInterface
     public function existsOther(string $identity = '', string $uuid = ''): bool
     {
         $user = $this->findOneBy(['identity' => $identity]);
-        if (!$user instanceof User) {
+        if (! $user instanceof User) {
             return false;
         }
 
@@ -156,7 +156,7 @@ class UserService implements UserServiceInterface
     public function emailExistsOther(string $email = '', string $uuid = ''): bool
     {
         $user = $this->findByEmail($email);
-        if (!$user instanceof User) {
+        if (! $user instanceof User) {
             return false;
         }
 
@@ -202,7 +202,7 @@ class UserService implements UserServiceInterface
         $this->mailService->setBody(
             $this->templateRenderer->render('user::activate', [
                 'config' => $this->config,
-                'user' => $user
+                'user'   => $user,
             ])
         );
 
@@ -221,7 +221,7 @@ class UserService implements UserServiceInterface
         $this->mailService->setBody(
             $this->templateRenderer->render('user::reset-password-requested', [
                 'config' => $this->config,
-                'user' => $user
+                'user'   => $user,
             ])
         );
 
@@ -229,8 +229,6 @@ class UserService implements UserServiceInterface
     }
 
     /**
-     * @param User $user
-     * @return bool
      * @throws MailException
      */
     public function sendResetPasswordCompletedMail(User $user): bool
@@ -242,7 +240,7 @@ class UserService implements UserServiceInterface
         $this->mailService->setBody(
             $this->templateRenderer->render('user::reset-password-completed', [
                 'config' => $this->config,
-                'user' => $user
+                'user'   => $user,
             ])
         );
 
@@ -250,8 +248,6 @@ class UserService implements UserServiceInterface
     }
 
     /**
-     * @param User $user
-     * @return bool
      * @throws MailException
      */
     public function sendWelcomeMail(User $user): bool
@@ -261,7 +257,7 @@ class UserService implements UserServiceInterface
         $this->mailService->setBody(
             $this->templateRenderer->render('user::welcome', [
                 'config' => $this->config,
-                'user' => $user
+                'user'   => $user,
             ])
         );
 
@@ -310,12 +306,12 @@ class UserService implements UserServiceInterface
         }
 
         if (isset($data['detail']['email'])) {
-            if (!$this->emailExists($data['detail']['email'])) {
+            if (! $this->emailExists($data['detail']['email'])) {
                 $user->getDetail()->setEmail($data['detail']['email']);
             }
         }
 
-        if (!empty($data['roles'])) {
+        if (! empty($data['roles'])) {
             $user->resetRoles();
             foreach ($data['roles'] as $roleData) {
                 $role = $this->userRoleService->findOneBy(['uuid' => $roleData['uuid']]);
@@ -340,7 +336,7 @@ class UserService implements UserServiceInterface
         $this->mailService->setBody(
             $this->templateRenderer->render('user::recover-identity-requested', [
                 'config' => $this->config,
-                'user' => $user
+                'user'   => $user,
             ])
         );
 

@@ -23,28 +23,44 @@ class RoutesDelegator
         /**
          * Home page
          */
-        $app->get('/', function () {
-            return new JsonResponse(['message' => 'Welcome to DotKernel API!']);
-        }, 'home');
+        $app->get(
+            '/',
+            function () {
+                return new JsonResponse(['message' => 'Welcome to DotKernel API!']);
+            },
+            'home'
+        );
 
         /**
          * OAuth authentication
          */
-        $app->post('/security/generate-token', [
-            ErrorResponseMiddleware::class,
-            TokenEndpointHandler::class
-        ], 'security.generate-token');
-        $app->post('/security/refresh-token', [
-            ErrorResponseMiddleware::class,
-            TokenEndpointHandler::class
-        ], 'security.refresh-token');
+        $app->post(
+            '/security/generate-token',
+            [
+                ErrorResponseMiddleware::class,
+                TokenEndpointHandler::class,
+            ],
+            'security.generate-token'
+        );
+        $app->post(
+            '/security/refresh-token',
+            [
+                ErrorResponseMiddleware::class,
+                TokenEndpointHandler::class,
+            ],
+            'security.refresh-token'
+        );
 
         /**
          * Other application reports an error
          */
-        $app->post('/error-report', [
-            ErrorReportHandler::class
-        ], 'error.report');
+        $app->post(
+            '/error-report',
+            [
+                ErrorReportHandler::class,
+            ],
+            'error.report'
+        );
 
         return $app;
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Unit;
+namespace ApiTest\Unit;
 
 use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
@@ -13,20 +13,23 @@ use Api\App\Message;
 use Exception;
 use PHPUnit\Framework\TestCase;
 
+use function array_merge;
+use function count;
+
 class AdminServiceTest extends TestCase
 {
     private Subject $subject;
     private AdminRoleService $adminRoleService;
     private AdminRepository $adminRepository;
 
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function setUp(): void
     {
-        parent::setUp();
-
         $this->adminRoleService = $this->createMock(AdminRoleService::class);
-        $this->adminRepository = $this->createMock(AdminRepository::class);
-
-        $this->subject = $this->getMockBuilder(Subject::class)
+        $this->adminRepository  = $this->createMock(AdminRepository::class);
+        $this->subject          = $this->getMockBuilder(Subject::class)
             ->setConstructorArgs([
                 $this->adminRoleService,
                 $this->adminRepository,
@@ -40,7 +43,7 @@ class AdminServiceTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testCreateAdminThrowsDuplicateIdentity()
+    public function testCreateAdminThrowsDuplicateIdentity(): void
     {
         $this->expectException(Exception::class);
         $this->expectExceptionMessage(Message::DUPLICATE_IDENTITY);
@@ -50,7 +53,10 @@ class AdminServiceTest extends TestCase
         $this->subject->createAdmin(['identity' => 'admin@dotkernel.com']);
     }
 
-    public function testCreateAdminSuperAdminRole()
+    /**
+     * @throws Exception
+     */
+    public function testCreateAdminSuperAdminRole(): void
     {
         $data = $this->getAdmin([
             'roles' => [
@@ -80,10 +86,10 @@ class AdminServiceTest extends TestCase
     private function getAdmin(array $data = []): array
     {
         $admin = [
-            'identity' => 'admin@dotkernel.com',
-            'password' => 'dotkernel',
+            'identity'  => 'admin@dotkernel.com',
+            'password'  => 'dotkernel',
             'firstName' => 'firstname',
-            'lastName' => 'lastname',
+            'lastName'  => 'lastname',
         ];
 
         return array_merge($admin, $data);

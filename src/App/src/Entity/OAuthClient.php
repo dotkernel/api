@@ -9,14 +9,12 @@ use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 
 /**
- * Class OauthClient
  * @ORM\Entity(repositoryClass="Api\App\Repository\OAuthClientRepository")
  * @ORM\Table(name="oauth_clients")
- * @package Api\App\Entity
  */
 class OAuthClient implements ClientEntityInterface
 {
-    public const NAME_ADMIN = 'admin';
+    public const NAME_ADMIN    = 'admin';
     public const NAME_FRONTEND = 'frontend';
 
     /**
@@ -32,29 +30,19 @@ class OAuthClient implements ClientEntityInterface
      */
     private ?User $user = null;
 
-    /**
-     * @ORM\Column(name="name", type="string", length=40)
-     */
+    /** @ORM\Column(name="name", type="string", length=40) */
     private string $name = '';
 
-    /**
-     * @ORM\Column(name="secret", type="string", length=100, nullable=true)
-     */
+    /** @ORM\Column(name="secret", type="string", length=100, nullable=true) */
     private ?string $secret = null;
 
-    /**
-     * @ORM\Column(name="redirect", type="string", length=191)
-     */
+    /** @ORM\Column(name="redirect", type="string", length=191) */
     private string $redirect = '';
 
-    /**
-     * @ORM\Column(name="revoked", type="boolean", options={"default":0})
-     */
+    /** @ORM\Column(name="revoked", type="boolean", options={"default":0}) */
     private bool $isRevoked = false;
 
-    /**
-     * @ORM\Column(name="isConfidential", type="boolean", options={"default":0})
-     */
+    /** @ORM\Column(name="isConfidential", type="boolean", options={"default":0}) */
     private bool $isConfidential = false;
 
     public function setId(int $id): self

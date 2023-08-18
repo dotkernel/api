@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Functional;
+namespace ApiTest\Functional;
 
 use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
@@ -10,8 +10,8 @@ use Api\App\Entity\RoleInterface;
 use Api\User\Entity\User;
 use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserRole;
-use AppTest\Functional\Traits\AuthenticationTrait;
-use AppTest\Functional\Traits\DatabaseTrait;
+use ApiTest\Functional\Traits\AuthenticationTrait;
+use ApiTest\Functional\Traits\DatabaseTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;
@@ -26,9 +26,16 @@ use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-abstract class AbstractFunctionalTest extends TestCase
+use function array_merge;
+use function getenv;
+use function method_exists;
+use function putenv;
+use function realpath;
+
+class AbstractFunctionalTest extends TestCase
 {
-    use DatabaseTrait, AuthenticationTrait;
+    use AuthenticationTrait;
+    use DatabaseTrait;
 
     protected Application $app;
     protected ContainerInterface|ServiceManager $container;
@@ -40,8 +47,6 @@ abstract class AbstractFunctionalTest extends TestCase
      */
     public function setUp(): void
     {
-        parent::setUp();
-
         $this->enableTestMode();
 
         $this->initContainer();
@@ -81,7 +86,7 @@ abstract class AbstractFunctionalTest extends TestCase
 
     private function initContainer(): void
     {
-        $this->container = require realpath(__DIR__ . '/../../../../config/container.php');
+        $this->container = require realpath(__DIR__ . '/../../config/container.php');
     }
 
     /**
@@ -100,7 +105,7 @@ abstract class AbstractFunctionalTest extends TestCase
     private function initPipeline(): void
     {
         $factory = $this->container->get(MiddlewareFactory::class);
-        (require realpath(__DIR__ . '/../../../../config/pipeline.php'))($this->app, $factory, $this->container);
+        (require realpath(__DIR__ . '/../../config/pipeline.php'))($this->app, $factory, $this->container);
     }
 
     /**
@@ -110,7 +115,7 @@ abstract class AbstractFunctionalTest extends TestCase
     private function initRoutes(): void
     {
         $factory = $this->container->get(MiddlewareFactory::class);
-        (require realpath(__DIR__ . '/../../../../config/routes.php'))($this->app, $factory, $this->container);
+        (require realpath(__DIR__ . '/../../config/routes.php'))($this->app, $factory, $this->container);
     }
 
     /**
@@ -127,15 +132,13 @@ abstract class AbstractFunctionalTest extends TestCase
         return $this->container;
     }
 
-    protected function get
-    (
+    protected function get(
         string $uri,
         array $queryParams = [],
         array $uploadedFiles = [],
         array $headers = [],
         array $cookies = []
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         $request = $this->createRequest(
             $uri,
             RequestMethodInterface::METHOD_GET,
@@ -149,16 +152,14 @@ abstract class AbstractFunctionalTest extends TestCase
         return $this->getResponse($request);
     }
 
-    protected function post
-    (
+    protected function post(
         string $uri,
         array $parsedBody = [],
         array $queryParams = [],
         array $uploadedFiles = [],
         array $headers = [],
         array $cookies = []
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         $request = $this->createRequest(
             $uri,
             RequestMethodInterface::METHOD_POST,
@@ -172,16 +173,14 @@ abstract class AbstractFunctionalTest extends TestCase
         return $this->getResponse($request);
     }
 
-    protected function patch
-    (
+    protected function patch(
         string $uri,
         array $parsedBody = [],
         array $queryParams = [],
         array $uploadedFiles = [],
         array $headers = [],
         array $cookies = []
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         $request = $this->createRequest(
             $uri,
             RequestMethodInterface::METHOD_PATCH,
@@ -195,16 +194,14 @@ abstract class AbstractFunctionalTest extends TestCase
         return $this->getResponse($request);
     }
 
-    protected function put
-    (
+    protected function put(
         string $uri,
         array $parsedBody = [],
         array $queryParams = [],
         array $uploadedFiles = [],
         array $headers = [],
         array $cookies = []
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         $request = $this->createRequest(
             $uri,
             RequestMethodInterface::METHOD_PUT,
@@ -218,14 +215,12 @@ abstract class AbstractFunctionalTest extends TestCase
         return $this->getResponse($request);
     }
 
-    protected function delete
-    (
+    protected function delete(
         string $uri,
         array $queryParams = [],
         array $headers = [],
         array $cookies = []
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         $request = $this->createRequest(
             $uri,
             RequestMethodInterface::METHOD_DELETE,
@@ -239,21 +234,7 @@ abstract class AbstractFunctionalTest extends TestCase
         return $this->getResponse($request);
     }
 
-    /**
-     * @param string $uri
-     * @param string $method
-     * @param array $parsedBody
-     * @param array $queryParams
-     * @param array $uploadedFiles
-     * @param array $headers
-     * @param array $cookies
-     * @param array $serverParams
-     * @param string $body
-     * @param string $protocol
-     * @return ServerRequestInterface
-     */
-    private function createRequest
-    (
+    private function createRequest(
         string $uri,
         string $method,
         array $parsedBody = [],
@@ -264,8 +245,7 @@ abstract class AbstractFunctionalTest extends TestCase
         array $serverParams = [],
         string $body = 'php://input',
         string $protocol = '1.1'
-    ): ServerRequestInterface
-    {
+    ): ServerRequestInterface {
         if (method_exists($this, 'isAuthenticated') && $this->isAuthenticated()) {
             $headers = array_merge($headers, $this->getAuthorizationHeader());
         }
@@ -284,13 +264,6 @@ abstract class AbstractFunctionalTest extends TestCase
         );
     }
 
-    /**
-     *
-     * Process response and set cursor at position(0)
-     *
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     private function getResponse(ServerRequestInterface $request): ResponseInterface
     {
         $response = $this->app->handle($request);
@@ -304,7 +277,7 @@ abstract class AbstractFunctionalTest extends TestCase
         $this->assertSame(StatusCodeInterface::STATUS_OK, $response->getStatusCode());
     }
 
-    protected function assertResponseSuccessful(ResponseInterface $response)
+    protected function assertResponseSuccessful(ResponseInterface $response): void
     {
         $this->assertBetween(
             $response->getStatusCode(),
@@ -328,12 +301,12 @@ abstract class AbstractFunctionalTest extends TestCase
         $this->assertSame(StatusCodeInterface::STATUS_BAD_REQUEST, $response->getStatusCode());
     }
 
-    protected function assertResponseNotFound(ResponseInterface $response)
+    protected function assertResponseNotFound(ResponseInterface $response): void
     {
         $this->assertSame(StatusCodeInterface::STATUS_NOT_FOUND, $response->getStatusCode());
     }
 
-    protected function assertBetween($value, $from, $to)
+    protected function assertBetween(int $value, int $from, int $to): void
     {
         $this->assertThat(
             $value,
@@ -344,13 +317,7 @@ abstract class AbstractFunctionalTest extends TestCase
         );
     }
 
-    /**
-     * Replaces an actual service with a mock instance
-     *
-     * @param $service
-     * @param $mockInstance
-     */
-    protected function replaceService($service, $mockInstance)
+    protected function replaceService(string $service, object $mockInstance): void
     {
         $this->getContainer()->setAllowOverride(true);
         $this->getContainer()->setService($service, $mockInstance);
@@ -360,29 +327,29 @@ abstract class AbstractFunctionalTest extends TestCase
     protected function getValidUserData(array $data = []): array
     {
         return [
-            'detail' => [
+            'detail'          => [
                 'firstName' => $data['detail']['firstName'] ?? 'First',
-                'lastName' => $data['detail']['lastName'] ?? 'Last',
-                'email' => $data['detail']['email'] ?? 'user@dotkernel.com',
+                'lastName'  => $data['detail']['lastName'] ?? 'Last',
+                'email'     => $data['detail']['email'] ?? 'user@dotkernel.com',
             ],
-            'identity' => $data['identity'] ?? 'user@dotkernel.com',
-            'password' => $data['password'] ?? self::DEFAULT_PASSWORD,
+            'identity'        => $data['identity'] ?? 'user@dotkernel.com',
+            'password'        => $data['password'] ?? self::DEFAULT_PASSWORD,
             'passwordConfirm' => $data['password'] ?? self::DEFAULT_PASSWORD,
-            'status' => $data['status'] ?? User::STATUS_ACTIVE,
+            'status'          => $data['status'] ?? User::STATUS_ACTIVE,
         ];
     }
 
     protected function getInvalidUserData(): array
     {
         return [
-            'detail' => [
+            'detail'   => [
                 'firstName' => 'invalid',
-                'lastName' => 'invalid',
-                'email' => 'invalid@dotkernel.com',
+                'lastName'  => 'invalid',
+                'email'     => 'invalid@dotkernel.com',
             ],
             'identity' => 'invalid',
             'password' => 'invalid',
-            'status' => Admin::STATUS_INACTIVE,
+            'status'   => Admin::STATUS_INACTIVE,
         ];
     }
 
@@ -390,10 +357,10 @@ abstract class AbstractFunctionalTest extends TestCase
     {
         return [
             'firstName' => 'First',
-            'identity' => 'admin@dotkernel.com',
-            'lastName' => 'Last',
-            'password' => self::DEFAULT_PASSWORD,
-            'status' => Admin::STATUS_ACTIVE,
+            'identity'  => 'admin@dotkernel.com',
+            'lastName'  => 'Last',
+            'password'  => self::DEFAULT_PASSWORD,
+            'status'    => Admin::STATUS_ACTIVE,
         ];
     }
 
@@ -401,10 +368,10 @@ abstract class AbstractFunctionalTest extends TestCase
     {
         return [
             'firstName' => 'invalid',
-            'identity' => 'invalid',
-            'lastName' => 'invalid',
-            'password' => 'invalid',
-            'status' => Admin::STATUS_INACTIVE,
+            'identity'  => 'invalid',
+            'lastName'  => 'invalid',
+            'password'  => 'invalid',
+            'status'    => Admin::STATUS_INACTIVE,
         ];
     }
 
@@ -412,34 +379,34 @@ abstract class AbstractFunctionalTest extends TestCase
     {
         $userData = $this->getValidUserData();
         return [
-            'client_id' => 'frontend',
+            'client_id'     => 'frontend',
             'client_secret' => 'frontend',
-            'grant_type' => 'password',
-            'password' => $data['password'] ?? $userData['password'],
-            'scope' => 'api',
-            'username' => $data['username'] ?? $userData['identity'],
+            'grant_type'    => 'password',
+            'password'      => $data['password'] ?? $userData['password'],
+            'scope'         => 'api',
+            'username'      => $data['username'] ?? $userData['identity'],
         ];
     }
 
     protected function getInvalidFrontendAccessTokenCredentials(): array
     {
         return [
-            'client_id' => 'frontend',
+            'client_id'     => 'frontend',
             'client_secret' => 'frontend',
-            'grant_type' => 'password',
-            'password' => 'invalid',
-            'scope' => 'api',
-            'username' => 'invalid@dotkernel.com',
+            'grant_type'    => 'password',
+            'password'      => 'invalid',
+            'scope'         => 'api',
+            'username'      => 'invalid@dotkernel.com',
         ];
     }
 
     protected function getValidFrontendRefreshTokenCredentials(): array
     {
         return [
-            'grant_type' => 'refresh_token',
-            'client_id' => 'frontend',
+            'grant_type'    => 'refresh_token',
+            'client_id'     => 'frontend',
             'client_secret' => 'frontend',
-            'scope' => 'api',
+            'scope'         => 'api',
             'refresh_token' => $this->getRefreshToken(),
         ];
     }
@@ -447,10 +414,10 @@ abstract class AbstractFunctionalTest extends TestCase
     protected function getInvalidFrontendRefreshTokenCredentials(): array
     {
         return [
-            'grant_type' => 'refresh_token',
-            'client_id' => 'frontend',
+            'grant_type'    => 'refresh_token',
+            'client_id'     => 'frontend',
             'client_secret' => 'frontend',
-            'scope' => 'api',
+            'scope'         => 'api',
             'refresh_token' => 'invalid',
         ];
     }
@@ -459,24 +426,24 @@ abstract class AbstractFunctionalTest extends TestCase
     {
         $adminData = $this->getValidAdminData();
         return [
-            'client_id' => 'admin',
+            'client_id'     => 'admin',
             'client_secret' => 'admin',
-            'grant_type' => 'password',
-            'password' => $data['password'] ?? $adminData['password'],
-            'scope' => 'api',
-            'username' => $data['username'] ?? $adminData['identity'],
+            'grant_type'    => 'password',
+            'password'      => $data['password'] ?? $adminData['password'],
+            'scope'         => 'api',
+            'username'      => $data['username'] ?? $adminData['identity'],
         ];
     }
 
     protected function getInvalidAdminAccessTokenCredentials(): array
     {
         return [
-            'client_id' => 'admin',
+            'client_id'     => 'admin',
             'client_secret' => 'admin',
-            'grant_type' => 'password',
-            'password' => 'invalid',
-            'scope' => 'api',
-            'username' => 'invalid@dotkernel.com',
+            'grant_type'    => 'password',
+            'password'      => 'invalid',
+            'scope'         => 'api',
+            'username'      => 'invalid@dotkernel.com',
         ];
     }
 
@@ -486,8 +453,9 @@ abstract class AbstractFunctionalTest extends TestCase
      */
     protected function createAdmin(): Admin
     {
-        /** @var RoleInterface $adminRole */
         $adminRoleRepository = $this->getEntityManager()->getRepository(AdminRole::class);
+
+        /** @var RoleInterface $adminRole */
         $adminRole = $adminRoleRepository->findOneBy(['name' => AdminRole::ROLE_ADMIN]);
 
         $data = $this->getValidAdminData();
@@ -512,13 +480,14 @@ abstract class AbstractFunctionalTest extends TestCase
      */
     protected function createUser(array $data = []): User
     {
-        /** @var RoleInterface $userRole */
         $userRoleRepository = $this->getEntityManager()->getRepository(UserRole::class);
+
+        /** @var RoleInterface $userRole */
         $userRole = $userRoleRepository->findOneBy(['name' => UserRole::ROLE_USER]);
 
         $userData = $this->getValidUserData();
 
-        $user = new User();
+        $user       = new User();
         $userDetail = (new UserDetail())
             ->setUser($user)
             ->setFirstName($data['detail']['firstName'] ?? $userData['detail']['firstName'])

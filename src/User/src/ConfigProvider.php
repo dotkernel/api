@@ -38,9 +38,9 @@ class ConfigProvider
     public function __invoke(): array
     {
         return [
-            'dependencies' => $this->getDependencies(),
+            'dependencies'     => $this->getDependencies(),
             MetadataMap::class => $this->getHalConfig(),
-            'templates' => $this->getTemplates()
+            'templates'        => $this->getTemplates(),
         ];
     }
 
@@ -48,27 +48,27 @@ class ConfigProvider
     {
         return [
             'factories' => [
-                AccountActivateHandler::class => AnnotatedServiceFactory::class,
-                AccountAvatarHandler::class => AnnotatedServiceFactory::class,
-                AccountHandler::class => AnnotatedServiceFactory::class,
+                AccountActivateHandler::class      => AnnotatedServiceFactory::class,
+                AccountAvatarHandler::class        => AnnotatedServiceFactory::class,
+                AccountHandler::class              => AnnotatedServiceFactory::class,
                 AccountResetPasswordHandler::class => AnnotatedServiceFactory::class,
-                AccountRecoveryHandler::class => AnnotatedServiceFactory::class,
-                UserActivateHandler::class => AnnotatedServiceFactory::class,
-                UserAvatarHandler::class => AnnotatedServiceFactory::class,
-                UserHandler::class => AnnotatedServiceFactory::class,
-                UserRoleHandler::class => AnnotatedServiceFactory::class,
-                UserService::class => AnnotatedServiceFactory::class,
-                UserRoleService::class => AnnotatedServiceFactory::class,
-                UserAvatarService::class => AnnotatedServiceFactory::class,
-                UserRepository::class => AnnotatedRepositoryFactory::class,
-                UserDetailRepository::class => AnnotatedRepositoryFactory::class,
-                UserRoleRepository::class => AnnotatedRepositoryFactory::class,
-                UserAvatarRepository::class => AnnotatedRepositoryFactory::class,
+                AccountRecoveryHandler::class      => AnnotatedServiceFactory::class,
+                UserActivateHandler::class         => AnnotatedServiceFactory::class,
+                UserAvatarHandler::class           => AnnotatedServiceFactory::class,
+                UserHandler::class                 => AnnotatedServiceFactory::class,
+                UserRoleHandler::class             => AnnotatedServiceFactory::class,
+                UserService::class                 => AnnotatedServiceFactory::class,
+                UserRoleService::class             => AnnotatedServiceFactory::class,
+                UserAvatarService::class           => AnnotatedServiceFactory::class,
+                UserRepository::class              => AnnotatedRepositoryFactory::class,
+                UserDetailRepository::class        => AnnotatedRepositoryFactory::class,
+                UserRoleRepository::class          => AnnotatedRepositoryFactory::class,
+                UserAvatarRepository::class        => AnnotatedRepositoryFactory::class,
             ],
-            'aliases' => [
+            'aliases'   => [
                 UserAvatarServiceInterface::class => UserAvatarService::class,
-                UserRoleServiceInterface::class => UserRoleService::class,
-                UserServiceInterface::class => UserService::class,
+                UserRoleServiceInterface::class   => UserRoleService::class,
+                UserServiceInterface::class       => UserService::class,
             ],
         ];
     }
@@ -88,8 +88,10 @@ class ConfigProvider
     {
         return [
             'paths' => [
-                'user' => [__DIR__ . '/../templates/user']
-            ]
+                'user' => [
+                    __DIR__ . '/../templates/user',
+                ],
+            ],
         ];
     }
 }

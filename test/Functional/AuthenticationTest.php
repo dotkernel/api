@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Functional;
+namespace ApiTest\Functional;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+
+use function json_decode;
 
 class AuthenticationTest extends AbstractFunctionalTest
 {
@@ -13,7 +15,7 @@ class AuthenticationTest extends AbstractFunctionalTest
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function testAuthenticateInvalidUser()
+    public function testAuthenticateInvalidUser(): void
     {
         $this->authenticateInvalidIdentity($this->getInvalidFrontendAccessTokenCredentials());
     }
@@ -22,7 +24,7 @@ class AuthenticationTest extends AbstractFunctionalTest
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function testAuthenticateInvalidAdmin()
+    public function testAuthenticateInvalidAdmin(): void
     {
         $this->authenticateInvalidIdentity($this->getInvalidAdminAccessTokenCredentials());
     }
@@ -31,7 +33,7 @@ class AuthenticationTest extends AbstractFunctionalTest
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function testAuthenticateAdmin()
+    public function testAuthenticateAdmin(): void
     {
         $this->createAdmin();
 
@@ -53,7 +55,7 @@ class AuthenticationTest extends AbstractFunctionalTest
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function testAuthenticateUser()
+    public function testAuthenticateUser(): void
     {
         $this->createUser();
 
@@ -72,7 +74,7 @@ class AuthenticationTest extends AbstractFunctionalTest
         $this->assertNotEmpty($data['refresh_token']);
     }
 
-    public function testInvalidRefreshToken()
+    public function testInvalidRefreshToken(): void
     {
         $response = $this->post('/security/refresh-token', $this->getInvalidFrontendRefreshTokenCredentials());
 
@@ -91,7 +93,7 @@ class AuthenticationTest extends AbstractFunctionalTest
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function testRefreshToken()
+    public function testRefreshToken(): void
     {
         $user = $this->createUser();
 
@@ -115,13 +117,13 @@ class AuthenticationTest extends AbstractFunctionalTest
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function testAdminCannotAuthenticateAsUser()
+    public function testAdminCannotAuthenticateAsUser(): void
     {
-        $admin = $this->createAdmin();
+        $admin         = $this->createAdmin();
         $errorMessages = $this->getContainer()->get('config')['authentication']['invalid_credentials'];
 
         $response = $this->post('/security/generate-token', $this->getValidFrontendAccessTokenCredentials([
-            'username' => $admin->getIdentity()
+            'username' => $admin->getIdentity(),
         ]));
 
         $data = json_decode($response->getBody()->getContents(), true);
@@ -139,13 +141,13 @@ class AuthenticationTest extends AbstractFunctionalTest
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function testUserCannotAuthenticateAsAdmin()
+    public function testUserCannotAuthenticateAsAdmin(): void
     {
-        $user = $this->createUser();
         $errorMessages = $this->getContainer()->get('config')['authentication']['invalid_credentials'];
 
+        $user     = $this->createUser();
         $response = $this->post('/security/generate-token', $this->getValidAdminAccessTokenCredentials([
-            'username' => $user->getIdentity()
+            'username' => $user->getIdentity(),
         ]));
 
         $data = json_decode($response->getBody()->getContents(), true);
@@ -163,14 +165,14 @@ class AuthenticationTest extends AbstractFunctionalTest
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    private function authenticateInvalidIdentity(array $credentials)
+    private function authenticateInvalidIdentity(array $credentials): void
     {
         $errorMessages = $this->getContainer()->get('config')['authentication']['invalid_credentials'];
 
         $response = $this->post('/security/generate-token', $credentials);
-        $data = json_decode($response->getBody()->getContents(), true);
-
         $this->assertResponseBadRequest($response);
+
+        $data = json_decode($response->getBody()->getContents(), true);
         $this->assertArrayHasKey('error', $data);
         $this->assertArrayHasKey('error_description', $data);
         $this->assertArrayHasKey('message', $data);

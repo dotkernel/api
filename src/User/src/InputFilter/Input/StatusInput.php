@@ -11,9 +11,11 @@ use Laminas\Filter\StripTags;
 use Laminas\InputFilter\Input;
 use Laminas\Validator\InArray;
 
+use function sprintf;
+
 class StatusInput extends Input
 {
-    public function __construct(string $name = null, bool $isRequired = true)
+    public function __construct(?string $name = null, bool $isRequired = true)
     {
         parent::__construct($name);
 
@@ -26,7 +28,7 @@ class StatusInput extends Input
         $this->getValidatorChain()
             ->attachByName(InArray::class, [
                 'haystack' => User::STATUSES,
-                'message' => sprintf(Message::INVALID_VALUE, 'status'),
+                'message'  => sprintf(Message::INVALID_VALUE, 'status'),
             ], true);
     }
 }

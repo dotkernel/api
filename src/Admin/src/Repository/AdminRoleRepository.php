@@ -12,13 +12,10 @@ use Dot\AnnotatedServices\Annotation\Entity;
 
 /**
  * @Entity(name="Api\Admin\Entity\AdminRole")
+ * @extends EntityRepository<object>
  */
 class AdminRoleRepository extends EntityRepository
 {
-    /**
-     * @param array $filters
-     * @return AdminRoleCollection
-     */
     public function getAdminRoles(array $filters = []): AdminRoleCollection
     {
         $page = PaginationHelper::getOffsetAndLimit($filters);
@@ -28,7 +25,7 @@ class AdminRoleRepository extends EntityRepository
             ->createQueryBuilder()
             ->select(['role'])
             ->from(AdminRole::class, 'role')
-            ->orderBy(($filters['order'] ?? 'role.created'), $filters['dir'] ?? 'desc')
+            ->orderBy($filters['order'] ?? 'role.created', $filters['dir'] ?? 'desc')
             ->setFirstResult($page['offset'])
             ->setMaxResults($page['limit'])
             ->getQuery()

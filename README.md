@@ -3,16 +3,16 @@
 Based on Enrico Zimuel's [Zend Expressive API - Skeleton example](https://github.com/ezimuel/zend-expressive-api), DotKernel API runs on [Laminas](https://github.com/laminas) and [Mezzio](https://github.com/mezzio) components and implements standards like PSR-3, PSR-4, PSR-7, PSR-11 and PSR-15.
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/api)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/4.2.0)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/api)](https://github.com/dotkernel/api/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/api)](https://github.com/dotkernel/api/network)
 [![GitHub stars](https://img.shields.io/github/stars/dotkernel/api)](https://github.com/dotkernel/api/stargazers)
 [![GitHub license](https://img.shields.io/github/license/dotkernel/api)](https://github.com/dotkernel/api/blob/4.0/LICENSE.md)
 
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/4.0.x-dev)
-
 [![Build Static](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml/badge.svg?branch=4.0)](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml)
 [![Build Static](https://github.com/dotkernel/api/actions/workflows/run-tests.yml/badge.svg?branch=4.0)](https://github.com/dotkernel/api/actions/workflows/run-tests.yml)
+[![codecov](https://codecov.io/gh/dotkernel/api/graph/badge.svg?token=53FN78G5CK)](https://codecov.io/gh/dotkernel/api)
 
 [![SymfonyInsight](https://insight.symfony.com/projects/7f9143cc-5e3c-4cfc-992c-377a001fde3e/big.svg)](https://insight.symfony.com/projects/7f9143cc-5e3c-4cfc-992c-377a001fde3e)
 
@@ -64,9 +64,6 @@ composer development-status
 * duplicate `config/autoload/cors.local.php.dist` as `config/autoload/cors.local.php` <- if your API will be consumed by another application, make sure configure the `allowed_origins`
 * duplicate `config/autoload/local.php.dist` as `config/autoload/local.php`
 * duplicate `config/autoload/mail.local.php.dist` as `config/autoload/mail.local.php` <- if your API will send emails, make sure you fill in SMTP connection params
-
-Optional:
-* duplicate `phpcs.xml.dist` as `phpcs.xml`
 
 
 ### Step 5: Setup database

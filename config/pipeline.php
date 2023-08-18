@@ -7,8 +7,8 @@ use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
 use Dot\ErrorHandler\ErrorHandlerInterface;
 use Dot\ResponseHeader\Middleware\ResponseHeaderMiddleware;
-use Mezzio\Cors\Middleware\CorsMiddleware;
 use Mezzio\Application;
+use Mezzio\Cors\Middleware\CorsMiddleware;
 use Mezzio\Helper\BodyParams\BodyParamsMiddleware;
 use Mezzio\Helper\ServerUrlMiddleware;
 use Mezzio\Helper\UrlHelperMiddleware;
@@ -18,9 +18,6 @@ use Mezzio\Router\Middleware\ImplicitOptionsMiddleware;
 use Mezzio\Router\Middleware\MethodNotAllowedMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
 
-/**
- * Setup middleware pipeline:
- */
 return function (Application $app): void {
     // The error handler should be the first (most outer) middleware to catch
     // all Exceptions.

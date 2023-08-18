@@ -9,24 +9,20 @@ use Api\App\Entity\RoleInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class UserRole
  * @ORM\Entity(repositoryClass="Api\User\Repository\UserRoleRepository")
  * @ORM\Table(name="user_role")
  * @ORM\HasLifecycleCallbacks()
- * @package Api\User\Entity
  */
 class UserRole extends AbstractEntity implements RoleInterface
 {
     public const ROLE_GUEST = 'guest';
-    public const ROLE_USER = 'user';
-    public const ROLES = [
+    public const ROLE_USER  = 'user';
+    public const ROLES      = [
         self::ROLE_GUEST,
-        self::ROLE_USER
+        self::ROLE_USER,
     ];
 
-    /**
-     * @ORM\Column(name="name", type="string", length=20, unique=true)
-     */
+    /** @ORM\Column(name="name", type="string", length=20, unique=true) */
     protected string $name;
 
     public function getName(): string

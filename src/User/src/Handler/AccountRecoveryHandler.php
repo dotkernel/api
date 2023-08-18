@@ -18,6 +18,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 
+use function sprintf;
+
 class AccountRecoveryHandler implements RequestHandlerInterface
 {
     use ResponseTrait;
@@ -33,12 +35,13 @@ class AccountRecoveryHandler implements RequestHandlerInterface
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected UserServiceInterface $userService
-    ) {}
+    ) {
+    }
 
     public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new RecoverIdentityInputFilter())->setData($request->getParsedBody());
-        if (!$inputFilter->isValid()) {
+        if (! $inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
         }
 
@@ -46,7 +49,7 @@ class AccountRecoveryHandler implements RequestHandlerInterface
             $email = $inputFilter->getValue('email');
 
             $user = $this->userService->findByEmail($email);
-            if (!$user instanceof User) {
+            if (! $user instanceof User) {
                 throw new Exception(
                     sprintf(Message::USER_NOT_FOUND_BY_EMAIL, $email)
                 );

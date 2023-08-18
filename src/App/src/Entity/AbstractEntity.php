@@ -7,17 +7,18 @@ namespace Api\App\Entity;
 use DateTimeImmutable;
 use Laminas\Stdlib\ArraySerializableInterface;
 
+use function is_array;
+use function method_exists;
+use function ucfirst;
+
 abstract class AbstractEntity implements UuidAwareInterface, TimestampAwareInterface, ArraySerializableInterface
 {
-    use UuidAwareTrait;
     use TimestampAwareTrait;
+    use UuidAwareTrait;
 
-    /**
-     * AbstractEntity constructor.
-     */
     public function __construct()
     {
-        $this->uuid = UuidOrderedTimeGenerator::generateUuid();
+        $this->uuid    = UuidOrderedTimeGenerator::generateUuid();
         $this->created = new DateTimeImmutable();
         $this->updated = new DateTimeImmutable();
     }
@@ -27,7 +28,7 @@ abstract class AbstractEntity implements UuidAwareInterface, TimestampAwareInter
         foreach ($array as $property => $values) {
             if (is_array($values)) {
                 $method = 'add' . ucfirst($property);
-                if (!method_exists($this, $method)) {
+                if (! method_exists($this, $method)) {
                     continue;
                 }
                 foreach ($values as $value) {
@@ -35,7 +36,7 @@ abstract class AbstractEntity implements UuidAwareInterface, TimestampAwareInter
                 }
             } else {
                 $method = 'set' . ucfirst($property);
-                if (!method_exists($this, $method)) {
+                if (! method_exists($this, $method)) {
                     continue;
                 }
                 $this->$method($values);

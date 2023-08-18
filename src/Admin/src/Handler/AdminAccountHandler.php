@@ -31,7 +31,8 @@ class AdminAccountHandler implements RequestHandlerInterface
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected AdminServiceInterface $adminService
-    ) {}
+    ) {
+    }
 
     public function get(ServerRequestInterface $request): ResponseInterface
     {
@@ -44,7 +45,7 @@ class AdminAccountHandler implements RequestHandlerInterface
     public function patch(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new UpdateAdminInputFilter())->setData($request->getParsedBody());
-        if (!$inputFilter->isValid()) {
+        if (! $inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
         }
 

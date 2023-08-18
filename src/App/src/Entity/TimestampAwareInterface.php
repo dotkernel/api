@@ -6,10 +6,6 @@ namespace Api\App\Entity;
 
 use DateTimeImmutable;
 
-/**
- * Interface TimestampAwareInterface
- * @package Api\App\Entity
- */
 interface TimestampAwareInterface
 {
     public function getCreated(): ?DateTimeImmutable;

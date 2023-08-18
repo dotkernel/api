@@ -12,7 +12,7 @@ use Laminas\Validator\Identical;
 
 class PasswordConfirmInput extends Input
 {
-    public function __construct(string $name = null, bool $isRequired = true)
+    public function __construct(?string $name = null, bool $isRequired = true)
     {
         parent::__construct($name);
 
@@ -24,7 +24,7 @@ class PasswordConfirmInput extends Input
 
         $this->getValidatorChain()
             ->attachByName(Identical::class, [
-                'token' => 'password',
+                'token'   => 'password',
                 'message' => Message::VALIDATOR_PASSWORD_MISMATCH,
             ], true);
     }

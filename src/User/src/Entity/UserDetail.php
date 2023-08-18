@@ -8,11 +8,9 @@ use Api\App\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class UserDetail
  * @ORM\Entity(repositoryClass="Api\User\Repository\UserDetailRepository")
  * @ORM\Table(name="user_detail")
  * @ORM\HasLifecycleCallbacks()
- * @package Api\User\Entity
  */
 class UserDetail extends AbstractEntity
 {
@@ -22,19 +20,13 @@ class UserDetail extends AbstractEntity
      */
     protected User $user;
 
-    /**
-     * @ORM\Column(name="firstName", type="string", length=191, nullable=true)
-     */
+    /** @ORM\Column(name="firstName", type="string", length=191, nullable=true) */
     protected ?string $firstName = null;
 
-    /**
-     * @ORM\Column(name="lastName", type="string", length=191, nullable=true)
-     */
+    /** @ORM\Column(name="lastName", type="string", length=191, nullable=true) */
     protected ?string $lastName = null;
 
-    /**
-     * @ORM\Column(name="email", type="string", length=191)
-     */
+    /** @ORM\Column(name="email", type="string", length=191) */
     protected string $email;
 
     public function getUser(): User
@@ -89,10 +81,10 @@ class UserDetail extends AbstractEntity
     {
         return [
             'firstName' => $this->getFirstName(),
-            'lastName' => $this->getLastName(),
-            'email' => $this->getEmail(),
-            'created' => $this->getCreated(),
-            'updated' => $this->getUpdated()
+            'lastName'  => $this->getLastName(),
+            'email'     => $this->getEmail(),
+            'created'   => $this->getCreated(),
+            'updated'   => $this->getUpdated(),
         ];
     }
 }

@@ -18,7 +18,8 @@ class UserRoleService implements UserRoleServiceInterface
      */
     public function __construct(
         protected UserRoleRepository $roleRepository
-    ) {}
+    ) {
+    }
 
     public function findOneBy(array $params = []): ?UserRole
     {

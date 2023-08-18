@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="5.14.1@086b94371304750d1c673315321a55d15fc59015">
+    <file src="src/App/src/Repository/OAuthClientRepository.php">
+        <UndefinedInterfaceMethod>
+            <code>getSecret</code>
+            <code>getSecret</code>
+        </UndefinedInterfaceMethod>
+    </file>
+    <file src="src/App/src/Entity/OAuthScope.php">
+        <UndefinedInterfaceMethod>
+            <code>matching</code>
+            <code>matching</code>
+        </UndefinedInterfaceMethod>
+    </file>
+    <file src="src/User/src/Repository/UserRepository.php">
+        <TooManyArguments>
+            <code>orX</code>
+        </TooManyArguments>
+    </file>
+    <file src="src/App/src/Entity/OAuthAccessToken.php">
+        <UndefinedInterfaceMethod>
+            <code>matching</code>
+        </UndefinedInterfaceMethod>
+    </file>
+    <file src="src/App/src/Entity/OAuthAuthCode.php">
+        <UndefinedInterfaceMethod>
+            <code>matching</code>
+        </UndefinedInterfaceMethod>
+    </file>
+</files>

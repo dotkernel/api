@@ -18,7 +18,8 @@ class AdminRoleService implements AdminRoleServiceInterface
      */
     public function __construct(
         protected AdminRoleRepository $adminRoleRepository
-    ) {}
+    ) {
+    }
 
     public function findOneBy(array $params = []): ?AdminRole
     {

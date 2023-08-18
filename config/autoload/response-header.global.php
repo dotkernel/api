@@ -9,7 +9,7 @@ return [
          */
         '*' => [
             'permissions-policy' => [
-                'value' => 'interest-cohort=()',
+                'value'     => 'interest-cohort=()',
                 'overwrite' => true,
             ],
         ],
@@ -23,5 +23,5 @@ return [
 //                'overwrite' => true,
 //            ]
 //        ],
-    ]
+    ],
 ];

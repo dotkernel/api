@@ -12,12 +12,8 @@ use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\Traits\ScopeTrait;
 
 /**
- * Class OAuthScope
  * @ORM\Entity(repositoryClass="Api\App\Repository\OAuthScopeRepository")
  * @ORM\Table(name="oauth_scopes")
- * @package Api\App\Entity
- *
- * @psalm-suppress UndefinedInterfaceMethod
  */
 class OAuthScope implements ScopeEntityInterface
 {
@@ -30,25 +26,19 @@ class OAuthScope implements ScopeEntityInterface
      */
     private int $id;
 
-    /**
-     * @ORM\Column(name="scope", type="string", length=191)
-     */
+    /** @ORM\Column(name="scope", type="string", length=191) */
     private string $scope = '';
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Api\App\Entity\OAuthAccessToken", mappedBy="scopes")
-     */
+    /** @ORM\ManyToMany(targetEntity="Api\App\Entity\OAuthAccessToken", mappedBy="scopes") */
     protected Collection $accessTokens;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Api\App\Entity\OAuthAuthCode", mappedBy="scopes")
-     */
+    /** @ORM\ManyToMany(targetEntity="Api\App\Entity\OAuthAuthCode", mappedBy="scopes") */
     protected Collection $authCodes;
 
     public function __construct()
     {
         $this->accessTokens = new ArrayCollection();
-        $this->authCodes = new ArrayCollection();
+        $this->authCodes    = new ArrayCollection();
     }
 
     public function setId(int $id): self
@@ -82,7 +72,7 @@ class OAuthScope implements ScopeEntityInterface
 
     public function addAccessToken(OAuthAccessToken $accessToken): self
     {
-        if (!$this->accessTokens->contains($accessToken)) {
+        if (! $this->accessTokens->contains($accessToken)) {
             $this->accessTokens->add($accessToken);
         }
 
@@ -100,7 +90,7 @@ class OAuthScope implements ScopeEntityInterface
 
     public function getAccessTokens(?Criteria $criteria = null): Collection
     {
-        if (is_null($criteria)) {
+        if ($criteria === null) {
             return $this->accessTokens;
         }
 
@@ -109,7 +99,7 @@ class OAuthScope implements ScopeEntityInterface
 
     public function addAuthCode(OAuthAuthCode $authCode): self
     {
-        if (!$this->authCodes->contains($authCode)) {
+        if (! $this->authCodes->contains($authCode)) {
             $this->authCodes->add($authCode);
         }
 
@@ -127,7 +117,7 @@ class OAuthScope implements ScopeEntityInterface
 
     public function getAuthCodes(?Criteria $criteria = null): Collection
     {
-        if (is_null($criteria)) {
+        if ($criteria === null) {
             return $this->authCodes;
         }
 

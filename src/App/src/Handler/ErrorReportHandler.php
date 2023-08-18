@@ -35,11 +35,10 @@ class ErrorReportHandler implements RequestHandlerInterface
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected ErrorReportServiceInterface $errorReportService
-    ) {}
+    ) {
+    }
 
     /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
      * @throws Throwable
      */
     public function post(ServerRequestInterface $request): ResponseInterface

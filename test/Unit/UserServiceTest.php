@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Unit;
+namespace ApiTest\Unit;
 
 use Api\App\Repository\OAuthAccessTokenRepository;
 use Api\App\Repository\OAuthRefreshTokenRepository;
@@ -18,6 +18,9 @@ use Exception;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
 
+use function array_merge;
+use function count;
+
 class UserServiceTest extends TestCase
 {
     private Subject $subject;
@@ -25,29 +28,27 @@ class UserServiceTest extends TestCase
     private UserRepository $userRepository;
     private UserDetailRepository $userDetailRepository;
 
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function setUp(): void
     {
-        $mailService = $this->createMock(MailService::class);
-        $this->userRoleService = $this->createMock(UserRoleService::class);
-        $templateRendererInterface = $this->createMock(TemplateRendererInterface::class);
-        $oAuthAccessTokenRepository = $this->createMock(OAuthAccessTokenRepository::class);
-        $oAuthRefreshTokenRepository = $this->createMock(OAuthRefreshTokenRepository::class);
-        $this->userRepository = $this->createMock(UserRepository::class);
+        $this->userRoleService      = $this->createMock(UserRoleService::class);
+        $this->userRepository       = $this->createMock(UserRepository::class);
         $this->userDetailRepository = $this->createMock(UserDetailRepository::class);
-
-        $this->subject = new Subject(
+        $this->subject              = new Subject(
             $this->userRoleService,
-            $mailService,
-            $templateRendererInterface,
-            $oAuthAccessTokenRepository,
-            $oAuthRefreshTokenRepository,
+            $this->createMock(MailService::class),
+            $this->createMock(TemplateRendererInterface::class),
+            $this->createMock(OAuthAccessTokenRepository::class),
+            $this->createMock(OAuthRefreshTokenRepository::class),
             $this->userRepository,
             $this->userDetailRepository,
-            [],
+            []
         );
     }
 
-    public function testCreateUserThrowsExceptionDuplicateIdentity()
+    public function testCreateUserThrowsExceptionDuplicateIdentity(): void
     {
         $this->userRepository->method('findOneBy')->willReturn(
             $this->getUserEntity($this->getUser())
@@ -60,7 +61,10 @@ class UserServiceTest extends TestCase
         ]);
     }
 
-    public function testCreateUserWithMultipleRoles()
+    /**
+     * @throws Exception
+     */
+    public function testCreateUserWithMultipleRoles(): void
     {
         $data = $this->getUser([
             'roles' => [
@@ -72,7 +76,7 @@ class UserServiceTest extends TestCase
                     'uuid' => 'uuid',
                     'name' => UserRole::ROLE_USER,
                 ],
-            ]
+            ],
         ]);
 
         $this->userRoleService->method('findOneBy')->willReturn(new UserRole());
@@ -84,15 +88,18 @@ class UserServiceTest extends TestCase
         $this->assertCount(count($data['roles']), $user->getRoles());
     }
 
-    public function testCreateUserWithDefaultRole()
+    /**
+     * @throws Exception
+     */
+    public function testCreateUserWithDefaultRole(): void
     {
         $data = $this->getUser([
             'roles' => [
                 [
                     'uuid' => 'uuid',
                     'name' => UserRole::ROLE_USER,
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $defaultRole = (new UserRole())->setName(UserRole::ROLE_USER);
@@ -107,7 +114,10 @@ class UserServiceTest extends TestCase
         $this->assertSame($defaultRole->getName(), ($user->getRoles()->first())->getName());
     }
 
-    public function testCreateUser()
+    /**
+     * @throws Exception
+     */
+    public function testCreateUser(): void
     {
         $this->userRoleService->method('findOneBy')->willReturn(new UserRole());
         $this->userRepository->method('saveUser')->willReturn(
@@ -128,7 +138,7 @@ class UserServiceTest extends TestCase
         $this->assertFalse($user->isActive());
     }
 
-    public function testUpdateUserThrowsExceptionDuplicateUserDetailEmail()
+    public function testUpdateUserThrowsExceptionDuplicateUserDetailEmail(): void
     {
         $this->userDetailRepository->method('findOneBy')->willReturn($this->getUserEntity()->getDetail());
 
@@ -136,12 +146,15 @@ class UserServiceTest extends TestCase
 
         $this->subject->updateUser($this->getUserEntity(), [
             'detail' => [
-                'email' => 'test@dotkernel.com'
+                'email' => 'test@dotkernel.com',
             ],
         ]);
     }
 
-    public function testUpdateUser()
+    /**
+     * @throws Exception
+     */
+    public function testUpdateUser(): void
     {
         $user = $this->getUserEntity($this->getUser());
 
@@ -150,10 +163,10 @@ class UserServiceTest extends TestCase
         $updateData = [
             'identity' => 'test@test.com',
             'password' => '654321',
-            'detail' => [
+            'detail'   => [
                 'firstName' => 'firstname',
-                'lastName' => 'lastname',
-                'email' => 'email@test.com',
+                'lastName'  => 'lastname',
+                'email'     => 'email@test.com',
             ],
         ];
 
@@ -170,11 +183,11 @@ class UserServiceTest extends TestCase
         $user = [
             'identity' => 'test@dotkernel.com',
             'password' => 'dotkernel',
-            'detail' => [
+            'detail'   => [
                 'firstName' => 'first',
-                'lastName' => 'last',
-                'email' => 'test@dotkernel2.com',
-            ]
+                'lastName'  => 'last',
+                'email'     => 'test@dotkernel2.com',
+            ],
         ];
 
         return array_merge($user, $data);
@@ -204,4 +217,3 @@ class UserServiceTest extends TestCase
         return $user;
     }
 }
-
