@@ -5,10 +5,17 @@
          colors="true">
     <testsuites>
         <testsuite name="UnitTests">
-            <directory>./tests/AppTest/Unit</directory>
+            <directory>./test/Unit</directory>
         </testsuite>
         <testsuite name="FunctionalTests">
-            <directory>./tests/AppTest/Functional</directory>
+            <directory>./test/Functional</directory>
+            <exclude>./test/Functional/AbstractFunctionalTest.php</exclude>
         </testsuite>
     </testsuites>
+    <coverage/>
+    <source>
+        <include>
+            <directory suffix=".php">./src</directory>
+        </include>
+    </source>
 </phpunit>

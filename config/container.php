@@ -7,7 +7,7 @@ use Laminas\ServiceManager\ServiceManager;
 // Load configuration
 $config = require 'config/config.php';
 
-$dependencies = $config['dependencies'];
+$dependencies                       = $config['dependencies'];
 $dependencies['services']['config'] = $config;
 
 // Build container

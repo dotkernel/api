@@ -11,11 +11,13 @@ use Laminas\InputFilter\Input;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\StringLength;
 
+use function sprintf;
+
 class PasswordInput extends Input
 {
     public const PASSWORD_MIN_LENGTH = 6;
 
-    public function __construct(string $name = null, bool $isRequired = true)
+    public function __construct(?string $name = null, bool $isRequired = true)
     {
         parent::__construct($name);
 
@@ -27,7 +29,7 @@ class PasswordInput extends Input
 
         $this->getValidatorChain()
             ->attachByName(StringLength::class, [
-                'min' => self::PASSWORD_MIN_LENGTH,
+                'min'     => self::PASSWORD_MIN_LENGTH,
                 'message' => sprintf(Message::VALIDATOR_MIN_LENGTH, 'Password', self::PASSWORD_MIN_LENGTH),
             ], true)
             ->attachByName(NotEmpty::class, [

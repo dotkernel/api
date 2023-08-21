@@ -29,7 +29,7 @@ class ConfigProvider
     public function __invoke(): array
     {
         return [
-            'dependencies' => $this->getDependencies(),
+            'dependencies'     => $this->getDependencies(),
             MetadataMap::class => $this->getHalConfig(),
         ];
     }
@@ -38,17 +38,17 @@ class ConfigProvider
     {
         return [
             'factories' => [
-                AdminHandler::class => AnnotatedServiceFactory::class,
+                AdminHandler::class        => AnnotatedServiceFactory::class,
                 AdminAccountHandler::class => AnnotatedServiceFactory::class,
-                AdminRoleHandler::class => AnnotatedServiceFactory::class,
-                AdminService::class => AnnotatedServiceFactory::class,
-                AdminRoleService::class => AnnotatedServiceFactory::class,
-                AdminCreateCommand::class => AdminCreateCommandFactory::class,
-                AdminRepository::class => AnnotatedRepositoryFactory::class,
+                AdminRoleHandler::class    => AnnotatedServiceFactory::class,
+                AdminService::class        => AnnotatedServiceFactory::class,
+                AdminRoleService::class    => AnnotatedServiceFactory::class,
+                AdminCreateCommand::class  => AdminCreateCommandFactory::class,
+                AdminRepository::class     => AnnotatedRepositoryFactory::class,
                 AdminRoleRepository::class => AnnotatedRepositoryFactory::class,
             ],
-            'aliases' => [
-                AdminServiceInterface::class => AdminService::class,
+            'aliases'   => [
+                AdminServiceInterface::class     => AdminService::class,
                 AdminRoleServiceInterface::class => AdminRoleService::class,
             ],
         ];

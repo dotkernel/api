@@ -9,12 +9,10 @@ use Api\User\EventListener\UserAvatarEventListener;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class UserAvatar
  * @ORM\Entity(repositoryClass="Api\User\Repository\UserAvatarRepository")
  * @ORM\Table(name="user_avatar")
  * @ORM\HasLifecycleCallbacks()
  * @ORM\EntityListeners({UserAvatarEventListener::class})
- * @package Api\User\Entity
  */
 class UserAvatar extends AbstractEntity
 {
@@ -24,9 +22,7 @@ class UserAvatar extends AbstractEntity
      */
     protected User $user;
 
-    /**
-     * @ORM\Column(name="name", type="string", length=191)
-     */
+    /** @ORM\Column(name="name", type="string", length=191) */
     protected string $name;
 
     protected ?string $url = null;
@@ -55,10 +51,6 @@ class UserAvatar extends AbstractEntity
         return $this;
     }
 
-    /**
-     * Helper methods
-     */
-
     public function getUrl(): ?string
     {
         return $this->url;
@@ -74,10 +66,10 @@ class UserAvatar extends AbstractEntity
     public function getArrayCopy(): array
     {
         return [
-            'uuid' => $this->getUuid()->toString(),
-            'url' => $this->getUrl(),
+            'uuid'    => $this->getUuid()->toString(),
+            'url'     => $this->getUrl(),
             'created' => $this->getCreated(),
-            'updated' => $this->getUpdated()
+            'updated' => $this->getUpdated(),
         ];
     }
 }

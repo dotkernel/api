@@ -10,8 +10,8 @@ class PaginationHelper
 
     public static function getOffsetAndLimit(array $filters = []): array
     {
-        $page = (int)($filters['page'] ?? 1);
-        $limit = (int)($filters['limit'] ?? self::LIMIT);
+        $page  = (int) ($filters['page'] ?? 1);
+        $limit = (int) ($filters['limit'] ?? self::LIMIT);
 
         $offset = 0;
         if ($page > 0) {
@@ -19,8 +19,8 @@ class PaginationHelper
         }
 
         return [
-            'offset' => (int)$offset,
-            'limit' => $limit
+            'offset' => (int) $offset,
+            'limit'  => $limit,
         ];
     }
 }

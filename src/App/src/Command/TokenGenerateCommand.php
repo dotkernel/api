@@ -11,9 +11,12 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function sprintf;
+
 class TokenGenerateCommand extends Command
 {
-    protected static $defaultName = 'token:generate';
+    /** @var string $defaultName */
+    protected static $defaultName      = 'token:generate';
     private string $typeErrorReporting = 'error-reporting';
 
     public function __construct(
@@ -29,7 +32,9 @@ class TokenGenerateCommand extends Command
             ->setDescription('Generic token generator.')
             ->addArgument('type', InputArgument::REQUIRED, 'The type of token to be generated.')
             ->addUsage($this->typeErrorReporting)
-            ->setHelp(<<<MSG
+            ->setHelp(
+            // @codingStandardsIgnoreStart
+                <<<MSG
 <info>%command.name%</info> is a multipurpose command that allows creating tokens required by different parts of the API.
 
 Usage:
@@ -39,6 +44,7 @@ Usage:
 * open <comment>config/autoload/error-handling.global.php</comment>
 * paste the copied string inside the <comment>tokens</comment> array found under the <comment>ErrorReportServiceInterface::class</comment> key.
 MSG
+            // @codingStandardsIgnoreEnd
             );
     }
 
@@ -48,7 +54,7 @@ MSG
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $type = $input->getArgument('type');
-        match($type) {
+        match ($type) {
             $this->typeErrorReporting => $this->generateErrorReportingToken($output),
             default => throw new Exception(
                 sprintf('Unknown token type: %s', $type)
@@ -62,7 +68,9 @@ MSG
     {
         $token = $this->errorReportService->generateToken();
 
-        $output->writeln(<<<MSG
+        $output->writeln(
+        // @codingStandardsIgnoreStart
+            <<<MSG
 Error reporting token:
 
     <info>$token</info>
@@ -71,6 +79,7 @@ Error reporting token:
 * open <comment>config/autoload/error-handling.global.php</comment>
 * paste the copied string inside the <comment>tokens</comment> array found under the <comment>ErrorReportServiceInterface::class</comment> key.
 MSG
-);
+        // @codingStandardsIgnoreEnd
+        );
     }
 }

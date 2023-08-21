@@ -1,0 +1,59 @@
+on:
+  - push
+
+name: Run Codecov checks
+
+jobs:
+  code-coverage:
+    name: Code Coverage
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+
+        php:
+          - "8.1"
+          - "8.2"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "${{ matrix.php }}"
+          coverage: pcov
+          ini-values: assert.exception=1, zend.assertions=1, error_reporting=-1, log_errors_max_len=0, display_errors=On
+          tools: composer:v2, cs2pr
+
+      - name: Determine composer cache directory
+        run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
+
+      - name: Cache dependencies installed with composer
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: php${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            php${{ matrix.php }}-composer-
+
+      - name: Install dependencies with composer
+        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
+
+      - name: Setup project
+        run: |
+          mv config/autoload/local.php.dist config/autoload/local.php
+          mv config/autoload/mail.local.php.dist config/autoload/mail.local.php
+          mv config/autoload/local.test.php.dist config/autoload/local.test.php
+
+      - name: Collect code coverage with PHPUnit
+        run: vendor/bin/phpunit --colors=always --coverage-clover clover.xml
+
+      - name: Send code coverage report to Codecov.io
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

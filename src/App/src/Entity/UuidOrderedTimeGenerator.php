@@ -10,6 +10,8 @@ use Ramsey\Uuid\UuidFactory;
 use Ramsey\Uuid\UuidInterface;
 use Throwable;
 
+use function error_log;
+
 final class UuidOrderedTimeGenerator
 {
     private static ?UuidFactory $factory = null;
@@ -27,9 +29,9 @@ final class UuidOrderedTimeGenerator
 
     private static function getFactory(): ?UuidFactory
     {
-        if (!(self::$factory instanceof UuidFactory)) {
+        if (! self::$factory instanceof UuidFactory) {
             /** @var UuidFactory $factory */
-            $factory = clone Uuid::getFactory();
+            $factory       = clone Uuid::getFactory();
             self::$factory = $factory;
 
             $codec = new OrderedTimeCodec(

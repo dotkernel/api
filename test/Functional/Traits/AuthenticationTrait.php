@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Functional\Traits;
+namespace ApiTest\Functional\Traits;
 
-use AppTest\Functional\Exception\AuthenticationException;
+use ApiTest\Functional\Exception\AuthenticationException;
 use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\ServerRequest;
@@ -14,10 +14,13 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 
+use function json_decode;
+use function sprintf;
+
 trait AuthenticationTrait
 {
-    private string $tokenType = 'Bearer';
-    private ?string $accessToken = null;
+    private string $tokenType     = 'Bearer';
+    private ?string $accessToken  = null;
     private ?string $refreshToken = null;
 
     private function setAccessToken(string $accessToken): self
@@ -58,36 +61,34 @@ trait AuthenticationTrait
 
     public function isAuthenticated(): bool
     {
-        return ! is_null($this->accessToken);
+        return $this->accessToken !== null;
     }
 
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function loginAs
-    (
+    public function loginAs(
         string $identity,
         string $password,
         string $clientId = 'frontend',
         string $clientSecret = 'frontend',
         string $scope = 'api'
-    ): void
-    {
+    ): void {
         $request = $this->createLoginRequest([
-            'grant_type' => 'password',
-            'client_id' => $clientId,
+            'grant_type'    => 'password',
+            'client_id'     => $clientId,
             'client_secret' => $clientSecret,
-            'scope' => $scope,
-            'username' => $identity,
-            'password' => $password,
+            'scope'         => $scope,
+            'username'      => $identity,
+            'password'      => $password,
         ]);
 
         $authorizationServer = $this->getContainer()->get(AuthorizationServer::class);
-        $responseFactory = $this->getContainer()->get(ResponseFactoryInterface::class);
-        $response = $responseFactory->createResponse();
+        $responseFactory     = $this->getContainer()->get(ResponseFactoryInterface::class);
+        $response            = $responseFactory->createResponse();
         try {
-            $response = $authorizationServer->respondToAccessTokenRequest($request, $responseFactory->createResponse());
+            $response = $authorizationServer->respondToAccessTokenRequest($request, $response);
         } catch (OAuthServerException $exception) {
             $response = $exception->generateHttpResponse($response);
         }
@@ -97,7 +98,7 @@ trait AuthenticationTrait
             throw AuthenticationException::fromResponse($response);
         }
 
-        $body = json_decode($response->getBody()->getContents(),true);
+        $body = json_decode($response->getBody()->getContents(), true);
         if (! isset($body['token_type'])) {
             throw AuthenticationException::invalidResponse('token_type');
         }
@@ -133,7 +134,7 @@ trait AuthenticationTrait
     public function getAuthorizationHeader(): array
     {
         return [
-            'Authorization' => sprintf('%s %s', $this->getTokenType(), $this->getAccessToken())
+            'Authorization' => sprintf('%s %s', $this->getTokenType(), $this->getAccessToken()),
         ];
     }
 }

@@ -10,8 +10,7 @@ use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 
 /**
- * Class OAuthAuthCodeRepository
- * @package Api\App\Repository
+ * @extends EntityRepository<object>
  */
 class OAuthAuthCodeRepository extends EntityRepository implements AuthCodeRepositoryInterface
 {
@@ -26,6 +25,9 @@ class OAuthAuthCodeRepository extends EntityRepository implements AuthCodeReposi
         $this->getEntityManager()->flush();
     }
 
+    /**
+     * @param string $codeId
+     */
     public function revokeAuthCode($codeId): void
     {
         $authCodeEntity = $this->find($codeId);
@@ -35,6 +37,9 @@ class OAuthAuthCodeRepository extends EntityRepository implements AuthCodeReposi
         }
     }
 
+    /**
+     * @param string $codeId
+     */
     public function isAuthCodeRevoked($codeId): bool
     {
         $authCodeEntity = $this->find($codeId);

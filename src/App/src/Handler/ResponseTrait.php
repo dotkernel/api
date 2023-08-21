@@ -12,6 +12,12 @@ use Mezzio\Hal\ResourceGenerator\Exception\OutOfBoundsException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+use function is_array;
+use function method_exists;
+use function sprintf;
+use function strtolower;
+use function strtoupper;
+
 trait ResponseTrait
 {
     /**
@@ -49,7 +55,7 @@ trait ResponseTrait
         return $this->restResponse([
             'error' => [
                 'messages' => is_array($messages) ? $messages : [$messages],
-            ]
+            ],
         ], $status);
     }
 
@@ -60,7 +66,7 @@ trait ResponseTrait
         return $this->restResponse([
             'info' => [
                 'messages' => is_array($messages) ? $messages : [$messages],
-            ]
+            ],
         ], $status);
     }
 
@@ -77,7 +83,7 @@ trait ResponseTrait
     public function restResponse(
         array|string $messages = [],
         int $status = Response::STATUS_CODE_200
-    ): ResponseInterface{
+    ): ResponseInterface {
         return new JsonResponse($messages, $status);
     }
 }

@@ -9,6 +9,8 @@ use Dot\AnnotatedServices\Annotation\Entity;
 
 /**
  * @Entity(name="Api\User\Entity\UserDetail")
+ * @extends EntityRepository<object>
  */
 class UserDetailRepository extends EntityRepository
-{}
+{
+}

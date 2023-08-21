@@ -16,7 +16,7 @@ class AuthenticationMiddleware extends \Mezzio\Authentication\AuthenticationMidd
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $user = $this->auth->authenticate($request);
-        if (!$user instanceof UserIdentity) {
+        if (! $user instanceof UserIdentity) {
             $user = new UserIdentity('guest', [
                 UserRole::ROLE_GUEST,
             ], [

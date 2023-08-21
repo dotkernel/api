@@ -12,8 +12,15 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function array_map;
+use function ksort;
+use function sprintf;
+use function str_contains;
+use function str_replace;
+
 class RouteListCommand extends Command
 {
+    /** @var string $defaultName */
     protected static $defaultName = 'route:list';
 
     public function __construct(
@@ -30,32 +37,31 @@ class RouteListCommand extends Command
             ->addUsage('[-i|--name[=NAME]] [-p|--path[=PATH]] [-m|--method[=METHOD]]')
             ->addOption('name', 'i', InputOption::VALUE_OPTIONAL, 'Filter routes by name')
             ->addOption('path', 'p', InputOption::VALUE_OPTIONAL, 'Filter routes by path')
-            ->addOption('method', 'm', InputOption::VALUE_OPTIONAL, 'Filter routes by method')
-        ;
+            ->addOption('method', 'm', InputOption::VALUE_OPTIONAL, 'Filter routes by method');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $nameFilter = (string)$input->getOption('name');
-        $pathFilter = (string)$input->getOption('path');
-        $methodFilter = (string)$input->getOption('method');
+        $nameFilter   = (string) $input->getOption('name');
+        $pathFilter   = (string) $input->getOption('path');
+        $methodFilter = (string) $input->getOption('method');
 
         $routes = [];
         foreach ($this->application->getRoutes() as $route) {
             foreach ($route->getAllowedMethods() as $method) {
-                if (stripos($route->getName(), $nameFilter) === false) {
+                if (! str_contains($route->getName(), $nameFilter)) {
                     continue;
                 }
-                if (stripos($route->getPath(), $pathFilter) === false) {
+                if (! str_contains($route->getPath(), $pathFilter)) {
                     continue;
                 }
-                if (stripos($method, $methodFilter) === false) {
+                if (! str_contains($method, $methodFilter)) {
                     continue;
                 }
 
                 $routes[sprintf('%s:%s', $method, $route->getPath())] = [
-                    'name' => $route->getName(),
-                    'path' => $route->getPath(),
+                    'name'   => $route->getName(),
+                    'path'   => $route->getPath(),
                     'method' => $method,
                 ];
             }

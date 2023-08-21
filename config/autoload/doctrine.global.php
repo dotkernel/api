@@ -10,52 +10,52 @@ use Ramsey\Uuid\Doctrine\UuidBinaryType;
 use Ramsey\Uuid\Doctrine\UuidType;
 
 return [
-    'doctrine' => [
+    'doctrine'            => [
         'connection' => [
             'orm_default' => [
                 'doctrine_mapping_types' => [
-                    UuidBinaryType::NAME => 'binary',
+                    UuidBinaryType::NAME            => 'binary',
                     UuidBinaryOrderedTimeType::NAME => 'binary',
-                ]
-            ]
+                ],
+            ],
         ],
-        'driver' => [
-            'orm_default' => [
-                'class' => MappingDriverChain::class,
+        'driver'     => [
+            'orm_default'   => [
+                'class'   => MappingDriverChain::class,
                 'drivers' => [
-                    'Api\\User\\Entity' => 'UserEntities',
+                    'Api\\User\\Entity'  => 'UserEntities',
                     'Api\\Admin\\Entity' => 'AdminEntities',
-                    'Api\\App\Entity' => 'AppEntities',
-                ]
+                    'Api\\App\Entity'    => 'AppEntities',
+                ],
             ],
             'AdminEntities' => [
                 'class' => AnnotationDriver::class,
                 'cache' => 'array',
                 'paths' => __DIR__ . '/../../src/Admin/src/Entity',
             ],
-            'UserEntities' => [
+            'UserEntities'  => [
                 'class' => AnnotationDriver::class,
                 'cache' => 'array',
                 'paths' => __DIR__ . '/../../src/User/src/Entity',
             ],
-            'AppEntities' => [
+            'AppEntities'   => [
                 'class' => AnnotationDriver::class,
                 'cache' => 'array',
                 'paths' => __DIR__ . '/../../src/App/src/Entity',
-            ]
+            ],
         ],
-        'types' => [
-            UuidType::NAME => UuidType::class,
-            UuidBinaryType::NAME => UuidBinaryType::class,
+        'types'      => [
+            UuidType::NAME                  => UuidType::class,
+            UuidBinaryType::NAME            => UuidBinaryType::class,
             UuidBinaryOrderedTimeType::NAME => UuidBinaryOrderedTimeType::class,
         ],
-        'cache' => [
+        'cache'      => [
             PhpFileCache::class => [
-                'class' => PhpFileCache::class,
+                'class'     => PhpFileCache::class,
                 'directory' => getcwd() . '/data/cache/doctrine',
-            ]
+            ],
         ],
-        'fixtures' => getcwd() . '/data/doctrine/fixtures',
+        'fixtures'   => getcwd() . '/data/doctrine/fixtures',
     ],
     'resultCacheLifetime' => 3600,
 ];

@@ -19,41 +19,50 @@ class RoutesDelegator
 
         $uuid = \Api\App\RoutesDelegator::REGEXP_UUID;
 
-        $app->get('/admin/my-account',
+        $app->get(
+            '/admin/my-account',
             AdminAccountHandler::class,
             'admin.my-account.view'
         );
-        $app->patch('/admin/my-account',
+        $app->patch(
+            '/admin/my-account',
             AdminAccountHandler::class,
             'admin.my-account.update'
         );
 
-        $app->post('/admin',
+        $app->post(
+            '/admin',
             AdminHandler::class,
             'admin.create'
         );
-        $app->delete('/admin/' . $uuid,
+        $app->delete(
+            '/admin/' . $uuid,
             AdminHandler::class,
             'admin.delete'
         );
-        $app->get('/admin',
+        $app->get(
+            '/admin',
             AdminHandler::class,
             'admin.list'
         );
-        $app->patch('/admin/' . $uuid,
+        $app->patch(
+            '/admin/' . $uuid,
             AdminHandler::class,
             'admin.update'
         );
-        $app->get('/admin/' . $uuid,
+        $app->get(
+            '/admin/' . $uuid,
             AdminHandler::class,
             'admin.view'
         );
 
-        $app->get('/admin/role',
+        $app->get(
+            '/admin/role',
             AdminRoleHandler::class,
             'admin.role.list'
         );
-        $app->get('/admin/role/' . $uuid,
+        $app->get(
+            '/admin/role/' . $uuid,
             AdminRoleHandler::class,
             'admin.role.view'
         );

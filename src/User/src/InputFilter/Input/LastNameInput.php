@@ -10,7 +10,7 @@ use Laminas\InputFilter\Input;
 
 class LastNameInput extends Input
 {
-    public function __construct(string $name = null, bool $isRequired = true)
+    public function __construct(?string $name = null, bool $isRequired = true)
     {
         parent::__construct($name);
 

@@ -1,5 +1,4 @@
 on:
-#  - pull_request
   - push
 
 name: Run PHPUnit tests
@@ -17,6 +16,7 @@ jobs:
 
         php:
           - "8.1"
+          - "8.2"
 
     steps:
       - name: Checkout

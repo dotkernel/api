@@ -12,6 +12,8 @@ use Api\App\Message;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Exception;
 
+use function sprintf;
+
 class AdminService implements AdminServiceInterface
 {
     /**
@@ -23,7 +25,8 @@ class AdminService implements AdminServiceInterface
     public function __construct(
         protected AdminRoleService $adminRoleService,
         protected AdminRepository $adminRepository
-    ) {}
+    ) {
+    }
 
     /**
      * @throws Exception
@@ -41,10 +44,10 @@ class AdminService implements AdminServiceInterface
             ->setLastName($data['lastName'])
             ->setStatus($data['status'] ?? Admin::STATUS_ACTIVE);
 
-        if (!empty($data['roles'])) {
+        if (! empty($data['roles'])) {
             foreach ($data['roles'] as $roleData) {
                 $role = $this->adminRoleService->findOneBy(['uuid' => $roleData['uuid']]);
-                if (!$role instanceof AdminRole) {
+                if (! $role instanceof AdminRole) {
                     throw new Exception(
                         sprintf(Message::NOT_FOUND_BY_UUID, 'role', $roleData['uuid'])
                     );
@@ -53,7 +56,7 @@ class AdminService implements AdminServiceInterface
             }
         } else {
             $role = $this->adminRoleService->findOneBy(['name' => AdminRole::ROLE_ADMIN]);
-            if (!$role instanceof AdminRole) {
+            if (! $role instanceof AdminRole) {
                 throw new Exception(
                     sprintf(Message::NOT_FOUND_BY_NAME, 'role', AdminRole::ROLE_ADMIN)
                 );
@@ -94,7 +97,7 @@ class AdminService implements AdminServiceInterface
      */
     public function updateAdmin(Admin $admin, array $data = []): Admin
     {
-        if (!empty($data['password'])) {
+        if (! empty($data['password'])) {
             $admin->usePassword($data['password']);
         }
 
@@ -110,11 +113,11 @@ class AdminService implements AdminServiceInterface
             $admin->setStatus($data['status']);
         }
 
-        if (!empty($data['roles'])) {
+        if (! empty($data['roles'])) {
             $admin->resetRoles();
             foreach ($data['roles'] as $roleData) {
                 $role = $this->adminRoleService->findOneBy(['uuid' => $roleData['uuid']]);
-                if (!$role instanceof AdminRole) {
+                if (! $role instanceof AdminRole) {
                     throw new Exception(
                         sprintf(Message::NOT_FOUND_BY_UUID, 'role', $roleData['uuid'])
                     );

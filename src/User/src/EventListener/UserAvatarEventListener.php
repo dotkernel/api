@@ -8,6 +8,9 @@ use Api\User\Entity\UserAvatar;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\AnnotatedServices\Annotation\Service;
 
+use function rtrim;
+use function sprintf;
+
 /**
  * @Service
  */
@@ -20,7 +23,8 @@ class UserAvatarEventListener
      */
     public function __construct(
         protected array $config = []
-    ) {}
+    ) {
+    }
 
     public function postLoad(UserAvatar $avatar): void
     {

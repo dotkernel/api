@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Api\App\Entity;
 
+use function password_hash;
+use function password_verify;
+
+use const PASSWORD_DEFAULT;
+
 trait PasswordTrait
 {
     public function usePassword(string $password): self

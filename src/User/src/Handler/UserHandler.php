@@ -18,6 +18,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 
+use function sprintf;
+
 class UserHandler implements RequestHandlerInterface
 {
     use ResponseTrait;
@@ -33,14 +35,15 @@ class UserHandler implements RequestHandlerInterface
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected UserServiceInterface $userService
-    ) {}
+    ) {
+    }
 
     public function delete(ServerRequestInterface $request): ResponseInterface
     {
         try {
             $uuid = $request->getAttribute('uuid');
             $user = $this->userService->findOneBy(['uuid' => $uuid]);
-            if (!$user instanceof User) {
+            if (! $user instanceof User) {
                 return $this->notFoundResponse(sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid));
             }
 
@@ -56,7 +59,7 @@ class UserHandler implements RequestHandlerInterface
     {
         try {
             $uuid = $request->getAttribute('uuid');
-            if (!empty($uuid)) {
+            if (! empty($uuid)) {
                 return $this->view($request, $uuid);
             }
 
@@ -69,14 +72,14 @@ class UserHandler implements RequestHandlerInterface
     public function patch(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new UpdateUserInputFilter())->setData($request->getParsedBody());
-        if (!$inputFilter->isValid()) {
+        if (! $inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
         }
 
         try {
             $uuid = $request->getAttribute('uuid');
             $user = $this->userService->findOneBy(['uuid' => $uuid]);
-            if (!$user instanceof User) {
+            if (! $user instanceof User) {
                 return $this->notFoundResponse(sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid));
             }
 
@@ -91,7 +94,7 @@ class UserHandler implements RequestHandlerInterface
     public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new CreateUserInputFilter())->setData($request->getParsedBody());
-        if (!$inputFilter->isValid()) {
+        if (! $inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
         }
 
@@ -117,7 +120,7 @@ class UserHandler implements RequestHandlerInterface
     private function view(ServerRequestInterface $request, string $uuid): ResponseInterface
     {
         $user = $this->userService->findOneBy(['uuid' => $uuid]);
-        if (!$user instanceof User) {
+        if (! $user instanceof User) {
             return $this->notFoundResponse(sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid));
         }
         return $this->createResponse($request, $user);

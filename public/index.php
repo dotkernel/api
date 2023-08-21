@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-use Psr\Container\ContainerInterface;
 use Mezzio\Application;
+use Mezzio\MiddlewareFactory;
+use Psr\Container\ContainerInterface;
 
 // Delegate static file requests back to the PHP built-in webserver
 if (PHP_SAPI === 'cli-server' && $_SERVER['SCRIPT_FILENAME'] !== __FILE__) {
@@ -21,8 +22,8 @@ require 'vendor/autoload.php';
     $container = require 'config/container.php';
 
     /** @var Application $app */
-    $app = $container->get(Application::class);
-    $factory = $container->get(\Mezzio\MiddlewareFactory::class);
+    $app     = $container->get(Application::class);
+    $factory = $container->get(MiddlewareFactory::class);
 
     // Execute programmatic/declarative middleware pipeline and routing
     // configuration statements

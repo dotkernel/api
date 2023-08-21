@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Api\User\Entity\UserRole;
 use Api\Admin\Entity\AdminRole;
+use Api\User\Entity\UserRole;
 
 return [
     /**
@@ -18,14 +18,18 @@ return [
      * C has B as a parent. That means B inherits the permissions of C, and A inherits the permissions of C.
      */
     'mezzio-authorization-rbac' => [
-        'roles' => [
+        'roles'       => [
             AdminRole::ROLE_SUPERUSER => [],
-            AdminRole::ROLE_ADMIN => [AdminRole::ROLE_SUPERUSER],
-            UserRole::ROLE_GUEST => [UserRole::ROLE_USER]
+            AdminRole::ROLE_ADMIN     => [
+                AdminRole::ROLE_SUPERUSER,
+            ],
+            UserRole::ROLE_GUEST      => [
+                UserRole::ROLE_USER,
+            ],
         ],
         'permissions' => [
             AdminRole::ROLE_SUPERUSER => [],
-            AdminRole::ROLE_ADMIN => [
+            AdminRole::ROLE_ADMIN     => [
                 'admin.my-account.update',
                 'admin.my-account.view',
                 'admin.create',
@@ -49,7 +53,7 @@ return [
                 'error.report',
                 'home',
             ],
-            UserRole::ROLE_USER => [
+            UserRole::ROLE_USER       => [
                 'user.my-account.delete',
                 'user.my-account.update',
                 'user.my-account.view',
@@ -57,7 +61,7 @@ return [
                 'user.my-avatar.delete',
                 'user.my-avatar.view',
             ],
-            UserRole::ROLE_GUEST => [
+            UserRole::ROLE_GUEST      => [
                 'account.activate.request',
                 'account.activate',
                 'account.register',
@@ -70,7 +74,7 @@ return [
                 'error.report',
                 'home',
                 'user.create',
-            ]
+            ],
         ],
-    ]
+    ],
 ];

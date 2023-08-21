@@ -10,9 +10,11 @@ use Laminas\Filter\StripTags;
 use Laminas\InputFilter\Input;
 use Laminas\Validator\NotEmpty;
 
+use function sprintf;
+
 class FirstNameInput extends Input
 {
-    public function __construct(string $name = null, bool $isRequired = true)
+    public function __construct(?string $name = null, bool $isRequired = true)
     {
         parent::__construct($name);
 

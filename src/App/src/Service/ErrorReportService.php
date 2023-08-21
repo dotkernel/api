@@ -11,10 +11,22 @@ use Exception;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
+use function array_intersect;
+use function array_key_exists;
+use function date;
+use function in_array;
+use function parse_url;
+use function sha1;
+use function sprintf;
+use function uniqid;
+
+use const PHP_EOL;
+use const PHP_URL_HOST;
+
 class ErrorReportService implements ErrorReportServiceInterface
 {
-    private FileSystem $fileSystem;
     private const HEADER_NAME = 'Error-Reporting-Token';
+    private Filesystem $fileSystem;
     private ?string $token = null;
 
     /**
@@ -26,7 +38,7 @@ class ErrorReportService implements ErrorReportServiceInterface
         protected array $config
     ) {
         $this->fileSystem = new Filesystem();
-        $this->config = $config[ErrorReportServiceInterface::class] ?? [];
+        $this->config     = $config[ErrorReportServiceInterface::class] ?? [];
     }
 
     /**
@@ -47,11 +59,11 @@ class ErrorReportService implements ErrorReportServiceInterface
     {
         $this->validateConfigs();
 
-        if (!$this->hasValidToken($request)) {
+        if (! $this->hasValidToken($request)) {
             throw new ForbiddenException(Message::ERROR_REPORT_NOT_ALLOWED);
         }
 
-        if (!$this->isMatchingDomain($request) && !$this->isMatchingIpAddress($request)) {
+        if (! $this->isMatchingDomain($request) && ! $this->isMatchingIpAddress($request)) {
             throw new ForbiddenException(Message::ERROR_REPORT_NOT_ALLOWED);
         }
 
@@ -74,7 +86,7 @@ class ErrorReportService implements ErrorReportServiceInterface
         }
 
         $this->token = $tokens[0];
-        if (!in_array($this->token, $this->config['tokens'])) {
+        if (! in_array($this->token, $this->config['tokens'])) {
             return false;
         }
 
@@ -87,12 +99,10 @@ class ErrorReportService implements ErrorReportServiceInterface
     private function isMatchingDomain(ServerRequestInterface $request): bool
     {
         $domain = parse_url($request->getServerParams()['HTTP_ORIGIN'] ?? '', PHP_URL_HOST);
-        $intersection = array_intersect($this->config['domain_whitelist'], ['*', $domain]);
-        if (empty($intersection)) {
-            return false;
-        }
 
-        return true;
+        $intersection = array_intersect($this->config['domain_whitelist'], ['*', $domain]);
+
+        return ! empty($intersection);
     }
 
     /**
@@ -101,12 +111,10 @@ class ErrorReportService implements ErrorReportServiceInterface
     private function isMatchingIpAddress(ServerRequestInterface $request): bool
     {
         $ipAddress = $request->getServerParams()['REMOTE_ADDR'] ?? null;
-        $intersection = array_intersect($this->config['ip_whitelist'], ['*', $ipAddress]);
-        if (empty($intersection)) {
-            return false;
-        }
 
-        return true;
+        $intersection = array_intersect($this->config['ip_whitelist'], ['*', $ipAddress]);
+
+        return ! empty($intersection);
     }
 
     /**
@@ -114,7 +122,7 @@ class ErrorReportService implements ErrorReportServiceInterface
      */
     private function validateConfigs(): void
     {
-        if (!array_key_exists('enabled', $this->config)) {
+        if (! array_key_exists('enabled', $this->config)) {
             throw new Exception(
                 sprintf(Message::MISSING_CONFIG, 'config.ErrorReportServiceInterface::class.enabled')
             );
@@ -124,7 +132,7 @@ class ErrorReportService implements ErrorReportServiceInterface
             throw new Exception(Message::ERROR_REPORT_NOT_ENABLED);
         }
 
-        if (!array_key_exists('path', $this->config)) {
+        if (! array_key_exists('path', $this->config)) {
             throw new Exception(
                 sprintf(Message::MISSING_CONFIG, 'config.ErrorReportServiceInterface::class.path')
             );
@@ -136,7 +144,7 @@ class ErrorReportService implements ErrorReportServiceInterface
             );
         }
 
-        if (!array_key_exists('tokens', $this->config)) {
+        if (! array_key_exists('tokens', $this->config)) {
             throw new Exception(
                 sprintf(Message::MISSING_CONFIG, 'config.ErrorReportServiceInterface::class.tokens')
             );
@@ -148,7 +156,7 @@ class ErrorReportService implements ErrorReportServiceInterface
             );
         }
 
-        if (!array_key_exists('domain_whitelist', $this->config)) {
+        if (! array_key_exists('domain_whitelist', $this->config)) {
             throw new Exception(
                 sprintf(
                     Message::MISSING_CONFIG,
@@ -157,7 +165,7 @@ class ErrorReportService implements ErrorReportServiceInterface
             );
         }
 
-        if (!array_key_exists('ip_whitelist', $this->config)) {
+        if (! array_key_exists('ip_whitelist', $this->config)) {
             throw new Exception(
                 sprintf(
                     Message::MISSING_CONFIG,

@@ -11,6 +11,9 @@ use Api\User\InputFilter\Input\StatusInput;
 use Laminas\InputFilter\CollectionInputFilter;
 use Laminas\InputFilter\InputFilter;
 
+/**
+ * @extends InputFilter<object>
+ */
 class CreateUserInputFilter extends InputFilter
 {
     public function __construct()

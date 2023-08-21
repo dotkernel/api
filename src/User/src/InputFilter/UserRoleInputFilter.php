@@ -7,6 +7,9 @@ namespace Api\User\InputFilter;
 use Api\User\InputFilter\Input\UuidInput;
 use Laminas\InputFilter\InputFilter;
 
+/**
+ * @extends InputFilter<object>
+ */
 class UserRoleInputFilter extends InputFilter
 {
     public function __construct()

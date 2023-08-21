@@ -32,14 +32,15 @@ class AccountAvatarHandler implements RequestHandlerInterface
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected UserAvatarServiceInterface $userAvatarService
-    ) {}
+    ) {
+    }
 
     public function delete(ServerRequestInterface $request): ResponseInterface
     {
         try {
             /** @var User $user */
             $user = $request->getAttribute(User::class);
-            if (!$user->hasAvatar()) {
+            if (! $user->hasAvatar()) {
                 return $this->notFoundResponse(Message::AVATAR_MISSING);
             }
 
@@ -55,7 +56,7 @@ class AccountAvatarHandler implements RequestHandlerInterface
     {
         /** @var User $user */
         $user = $request->getAttribute(User::class);
-        if (!$user->hasAvatar()) {
+        if (! $user->hasAvatar()) {
             return $this->notFoundResponse(Message::AVATAR_MISSING);
         }
 
@@ -65,7 +66,7 @@ class AccountAvatarHandler implements RequestHandlerInterface
     public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new UpdateAvatarInputFilter())->setData($request->getUploadedFiles());
-        if (!$inputFilter->isValid()) {
+        if (! $inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
         }
 

@@ -9,24 +9,20 @@ use Api\App\Entity\RoleInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class AdminRole
  * @ORM\Entity(repositoryClass="Api\Admin\Repository\AdminRoleRepository")
  * @ORM\Table(name="admin_role")
  * @ORM\HasLifecycleCallbacks()
- * @package Api\Admin\Entity
  */
 class AdminRole extends AbstractEntity implements RoleInterface
 {
-    public const ROLE_ADMIN = 'admin';
+    public const ROLE_ADMIN     = 'admin';
     public const ROLE_SUPERUSER = 'superuser';
-    public const ROLES = [
+    public const ROLES          = [
         self::ROLE_ADMIN,
-        self::ROLE_SUPERUSER
+        self::ROLE_SUPERUSER,
     ];
 
-    /**
-     * @ORM\Column(name="name", type="string", length=30, unique=true)
-     */
+    /** @ORM\Column(name="name", type="string", length=30, unique=true) */
     protected string $name;
 
     public function getName(): string

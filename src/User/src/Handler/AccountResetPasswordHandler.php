@@ -19,6 +19,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 
+use function sprintf;
+
 class AccountResetPasswordHandler implements RequestHandlerInterface
 {
     use ResponseTrait;
@@ -34,13 +36,14 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected UserServiceInterface $userService
-    ) {}
+    ) {
+    }
 
     public function get(ServerRequestInterface $request): ResponseInterface
     {
         $hash = $request->getAttribute('hash');
         $user = $this->userService->findByResetPasswordHash($hash);
-        if (!$user instanceof User) {
+        if (! $user instanceof User) {
             return $this->notFoundResponse(
                 sprintf(Message::RESET_PASSWORD_NOT_FOUND, $hash)
             );
@@ -49,10 +52,10 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
         /** @var UserResetPasswordEntity $resetPassword */
         $resetPassword = $user->getResetPasswords()->filter(
             function (UserResetPasswordEntity $resetPassword) use ($hash) {
-                return $resetPassword->getHash() == $hash;
+                return $resetPassword->getHash() === $hash;
             }
         )->current();
-        if (!$resetPassword->isValid()) {
+        if (! $resetPassword->isValid()) {
             return $this->errorResponse(sprintf(Message::RESET_PASSWORD_EXPIRED, $hash));
         }
         if ($resetPassword->isCompleted()) {
@@ -66,7 +69,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
     {
         $hash = $request->getAttribute('hash');
         $user = $this->userService->findByResetPasswordHash($hash);
-        if (!$user instanceof User) {
+        if (! $user instanceof User) {
             return $this->notFoundResponse(
                 sprintf(Message::RESET_PASSWORD_NOT_FOUND, $hash)
             );
@@ -75,10 +78,10 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
         /** @var UserResetPasswordEntity $resetPassword */
         $resetPassword = $user->getResetPasswords()->filter(
             function (UserResetPasswordEntity $resetPassword) use ($hash) {
-                return $resetPassword->getHash() == $hash;
+                return $resetPassword->getHash() === $hash;
             }
         )->current();
-        if (!$resetPassword->isValid()) {
+        if (! $resetPassword->isValid()) {
             return $this->errorResponse(sprintf(Message::RESET_PASSWORD_EXPIRED, $hash));
         }
         if ($resetPassword->isCompleted()) {
@@ -86,7 +89,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
         }
 
         $inputFilter = (new UpdatePasswordInputFilter())->setData($request->getParsedBody());
-        if (!$inputFilter->isValid()) {
+        if (! $inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
         }
 
@@ -107,20 +110,20 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
     public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new ResetPasswordInputFilter())->setData($request->getParsedBody());
-        if (!$inputFilter->isValid()) {
+        if (! $inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
         }
 
         try {
-            if (!empty($inputFilter->getValue('email'))) {
+            if (! empty($inputFilter->getValue('email'))) {
                 $user = $this->userService->findByEmail($inputFilter->getValue('email'));
-            } elseif (!empty($inputFilter->getValue('identity'))) {
+            } elseif (! empty($inputFilter->getValue('identity'))) {
                 $user = $this->userService->findByIdentity($inputFilter->getValue('identity'));
             } else {
                 $user = null;
             }
 
-            if (!$user instanceof User) {
+            if (! $user instanceof User) {
                 return $this->infoResponse(Message::MAIL_SENT_RESET_PASSWORD);
             }
 

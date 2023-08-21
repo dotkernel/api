@@ -12,6 +12,7 @@ use Dot\AnnotatedServices\Annotation\Entity;
 
 /**
  * @Entity(name="Api\User\Entity\UserRole")
+ * @extends EntityRepository<object>
  */
 class UserRoleRepository extends EntityRepository
 {
@@ -24,7 +25,7 @@ class UserRoleRepository extends EntityRepository
             ->createQueryBuilder()
             ->select(['role'])
             ->from(UserRole::class, 'role')
-            ->orderBy(($params['order'] ?? 'role.created'), $params['dir'] ?? 'desc')
+            ->orderBy($params['order'] ?? 'role.created', $params['dir'] ?? 'desc')
             ->setFirstResult($page['offset'])
             ->setMaxResults($page['limit'])
             ->getQuery()

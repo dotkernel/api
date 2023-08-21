@@ -9,6 +9,7 @@ $cacheConfig = [
     'config_cache_path' => 'data/cache/config-cache.php',
 ];
 
+// @codingStandardsIgnoreStart
 $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
     Mezzio\Authorization\Acl\ConfigProvider::class,
     Mezzio\Authorization\Rbac\ConfigProvider::class,
@@ -58,5 +59,6 @@ $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
         realpath(__DIR__) . '/development.config.php'
     ),
 ], $cacheConfig['config_cache_path']);
+// @codingStandardsIgnoreEnd
 
 return $aggregator->getMergedConfig();

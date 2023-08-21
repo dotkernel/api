@@ -18,6 +18,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 
+use function sprintf;
+
 class UserAvatarHandler implements RequestHandlerInterface
 {
     use ResponseTrait;
@@ -35,14 +37,15 @@ class UserAvatarHandler implements RequestHandlerInterface
         protected ResourceGenerator $resourceGenerator,
         protected UserServiceInterface $userService,
         protected UserAvatarServiceInterface $userAvatarService
-    ) {}
+    ) {
+    }
 
     public function delete(ServerRequestInterface $request): ResponseInterface
     {
         try {
             $uuid = $request->getAttribute('uuid');
             $user = $this->userService->findOneBy(['uuid' => $uuid]);
-            if (!$user->hasAvatar()) {
+            if (! $user->hasAvatar()) {
                 return $this->notFoundResponse(Message::AVATAR_MISSING);
             }
 
@@ -58,7 +61,7 @@ class UserAvatarHandler implements RequestHandlerInterface
     {
         $uuid = $request->getAttribute('uuid');
         $user = $this->userService->findOneBy(['uuid' => $uuid]);
-        if (!$user->hasAvatar()) {
+        if (! $user->hasAvatar()) {
             return $this->notFoundResponse(Message::AVATAR_MISSING);
         }
 
@@ -68,14 +71,14 @@ class UserAvatarHandler implements RequestHandlerInterface
     public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new UpdateAvatarInputFilter())->setData($request->getUploadedFiles());
-        if (!$inputFilter->isValid()) {
+        if (! $inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
         }
 
         try {
             $uuid = $request->getAttribute('uuid');
             $user = $this->userService->findOneBy(['uuid' => $uuid]);
-            if (!$user instanceof User) {
+            if (! $user instanceof User) {
                 return $this->notFoundResponse(
                     sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid)
                 );

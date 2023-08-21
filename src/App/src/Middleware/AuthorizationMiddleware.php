@@ -6,21 +6,23 @@ namespace Api\App\Middleware;
 
 use Api\Admin\Entity\Admin;
 use Api\Admin\Repository\AdminRepository;
-use Api\User\Repository\UserRepository;
-use Dot\AnnotatedServices\Annotation\Inject;
 use Api\App\Entity\Guest;
 use Api\App\Entity\RoleInterface;
 use Api\App\Message;
 use Api\App\UserIdentity;
 use Api\User\Entity\User;
+use Api\User\Repository\UserRepository;
+use Dot\AnnotatedServices\Annotation\Inject;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Http\Response;
+use Mezzio\Authentication\UserInterface;
+use Mezzio\Authorization\AuthorizationInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Mezzio\Authentication\UserInterface;
-use Mezzio\Authorization\AuthorizationInterface;
+
+use function sprintf;
 
 class AuthorizationMiddleware implements MiddlewareInterface
 {
@@ -35,7 +37,8 @@ class AuthorizationMiddleware implements MiddlewareInterface
         protected AuthorizationInterface $authorization,
         protected UserRepository $userRepository,
         protected AdminRepository $adminRepository
-    ) {}
+    ) {
+    }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -44,20 +47,20 @@ class AuthorizationMiddleware implements MiddlewareInterface
         switch ($defaultUser->getDetail('oauth_client_id')) {
             case 'admin':
                 $user = $this->adminRepository->findOneBy(['identity' => $defaultUser->getIdentity()]);
-                if (!$user instanceof Admin) {
+                if (! $user instanceof Admin) {
                     return $this->unauthorizedResponse(sprintf(
                         Message::USER_NOT_FOUND_BY_IDENTITY,
                         $defaultUser->getIdentity()
                     ));
                 }
-                if (!$user->isActive()) {
+                if (! $user->isActive()) {
                     return $this->unauthorizedResponse(Message::ADMIN_NOT_ACTIVATED);
                 }
                 $request = $request->withAttribute(Admin::class, $user);
                 break;
             case 'frontend':
                 $user = $this->userRepository->findOneBy(['identity' => $defaultUser->getIdentity()]);
-                if (!$user instanceof User || $user->isDeleted()) {
+                if (! $user instanceof User || $user->isDeleted()) {
                     return $this->unauthorizedResponse(sprintf(
                         Message::USER_NOT_FOUND_BY_IDENTITY,
                         $defaultUser->getIdentity()
@@ -69,7 +72,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
                 $request = $request->withAttribute(User::class, $user);
                 break;
             case 'guest':
-                $user = new Guest();
+                $user    = new Guest();
                 $request = $request->withAttribute(Guest::class, $user);
                 break;
             default:
@@ -90,7 +93,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
             }
         }
 
-        if (!$isGranted) {
+        if (! $isGranted) {
             return $this->unauthorizedResponse(Message::RESOURCE_NOT_ALLOWED);
         }
 
@@ -102,9 +105,9 @@ class AuthorizationMiddleware implements MiddlewareInterface
         return new JsonResponse([
             'error' => [
                 'messages' => [
-                    $message
-                ]
-            ]
+                    $message,
+                ],
+            ],
         ], Response::STATUS_CODE_403);
     }
 }

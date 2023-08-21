@@ -16,6 +16,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 
+use function sprintf;
+
 class AdminRoleHandler implements RequestHandlerInterface
 {
     use ResponseTrait;
@@ -31,13 +33,14 @@ class AdminRoleHandler implements RequestHandlerInterface
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected AdminRoleServiceInterface $roleService
-    ) {}
+    ) {
+    }
 
     public function get(ServerRequestInterface $request): ResponseInterface
     {
         try {
             $uuid = $request->getAttribute('uuid');
-            if (!empty($uuid)) {
+            if (! empty($uuid)) {
                 return $this->view($request, $uuid);
             }
 
@@ -58,7 +61,7 @@ class AdminRoleHandler implements RequestHandlerInterface
     private function view(ServerRequestInterface $request, string $uuid): ResponseInterface
     {
         $role = $this->roleService->findOneBy(['uuid' => $uuid]);
-        if (!$role instanceof AdminRole) {
+        if (! $role instanceof AdminRole) {
             return $this->notFoundResponse(sprintf(Message::NOT_FOUND_BY_UUID, 'role', $uuid));
         }
 

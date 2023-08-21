@@ -10,41 +10,36 @@ use Api\App\Entity\RoleInterface;
 use Api\App\Entity\UuidOrderedTimeGenerator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use League\OAuth2\Server\Entities\UserEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
+use League\OAuth2\Server\Entities\UserEntityInterface;
 use Throwable;
 
+use function bin2hex;
+use function random_bytes;
+
 /**
- * Class User
  * @ORM\Entity(repositoryClass="Api\User\Repository\UserRepository")
  * @ORM\Table(name="user")
  * @ORM\HasLifecycleCallbacks()
- * @package Api\User\Entity
  */
 class User extends AbstractEntity implements UserEntityInterface
 {
     use PasswordTrait;
 
     public const STATUS_PENDING = 'pending';
-    public const STATUS_ACTIVE = 'active';
-    public const STATUSES = [
+    public const STATUS_ACTIVE  = 'active';
+    public const STATUSES       = [
         self::STATUS_PENDING,
-        self::STATUS_ACTIVE
+        self::STATUS_ACTIVE,
     ];
 
-    /**
-     * @ORM\OneToOne(targetEntity="UserAvatar", cascade={"persist", "remove"}, mappedBy="user")
-     */
+    /** @ORM\OneToOne(targetEntity="UserAvatar", cascade={"persist", "remove"}, mappedBy="user") */
     protected ?UserAvatar $avatar = null;
 
-    /**
-     * @ORM\OneToOne(targetEntity="UserDetail", cascade={"persist", "remove"}, mappedBy="user")
-     */
+    /** @ORM\OneToOne(targetEntity="UserDetail", cascade={"persist", "remove"}, mappedBy="user") */
     protected UserDetail $detail;
 
-    /**
-     * @ORM\OneToMany(targetEntity="UserResetPasswordEntity", cascade={"persist", "remove"}, mappedBy="user")
-     */
+    /** @ORM\OneToMany(targetEntity="UserResetPasswordEntity", cascade={"persist", "remove"}, mappedBy="user") */
     protected Collection $resetPasswords;
 
     /**
@@ -57,36 +52,26 @@ class User extends AbstractEntity implements UserEntityInterface
      */
     protected Collection $roles;
 
-    /**
-     * @ORM\Column(name="identity", type="string", length=191, unique=true)
-     */
+    /** @ORM\Column(name="identity", type="string", length=191, unique=true) */
     protected string $identity;
 
-    /**
-     * @ORM\Column(name="password", type="string", length=191)
-     */
+    /** @ORM\Column(name="password", type="string", length=191) */
     protected string $password;
 
-    /**
-     * @ORM\Column(name="status", type="string", length=20)
-     */
+    /** @ORM\Column(name="status", type="string", length=20) */
     protected string $status = self::STATUS_PENDING;
 
-    /**
-     * @ORM\Column(name="isDeleted", type="boolean")
-     */
+    /** @ORM\Column(name="isDeleted", type="boolean") */
     protected bool $isDeleted = false;
 
-    /**
-     * @ORM\Column(name="hash", type="string", length=64, unique=true)
-     */
+    /** @ORM\Column(name="hash", type="string", length=64, unique=true) */
     protected string $hash;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->roles = new ArrayCollection();
+        $this->roles          = new ArrayCollection();
         $this->resetPasswords = new ArrayCollection();
 
         $this->renewHash();
@@ -270,10 +255,6 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this;
     }
 
-    /**
-     * Helper methods
-     */
-
     public function activate(): self
     {
         return $this->setStatus(self::STATUS_ACTIVE);
@@ -338,27 +319,27 @@ class User extends AbstractEntity implements UserEntityInterface
 
     public function hasEmail(): bool
     {
-        return !empty($this->getDetail()->getEmail());
+        return ! empty($this->getDetail()->getEmail());
     }
 
     public function getArrayCopy(): array
     {
         return [
-            'uuid' => $this->getUuid()->toString(),
-            'hash' => $this->getHash(),
-            'identity' => $this->getIdentity(),
-            'status' => $this->getStatus(),
-            'isDeleted' => $this->isDeleted(),
-            'avatar' => $this->getAvatar()?->getArrayCopy(),
-            'detail' => $this->getDetail()->getArrayCopy(),
-            'roles' => $this->getRoles()->map(function (UserRole $userRole) {
+            'uuid'           => $this->getUuid()->toString(),
+            'hash'           => $this->getHash(),
+            'identity'       => $this->getIdentity(),
+            'status'         => $this->getStatus(),
+            'isDeleted'      => $this->isDeleted(),
+            'avatar'         => $this->getAvatar()?->getArrayCopy(),
+            'detail'         => $this->getDetail()->getArrayCopy(),
+            'roles'          => $this->getRoles()->map(function (UserRole $userRole) {
                 return $userRole->getArrayCopy();
             })->toArray(),
             'resetPasswords' => $this->getResetPasswords()->map(function (UserResetPasswordEntity $resetPassword) {
                 return $resetPassword->getArrayCopy();
             })->toArray(),
-            'created' => $this->getCreated(),
-            'updated' => $this->getUpdated(),
+            'created'        => $this->getCreated(),
+            'updated'        => $this->getUpdated(),
         ];
     }
 }

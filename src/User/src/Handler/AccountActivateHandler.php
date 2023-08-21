@@ -18,6 +18,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 
+use function sprintf;
+
 class AccountActivateHandler implements RequestHandlerInterface
 {
     use ResponseTrait;
@@ -35,13 +37,14 @@ class AccountActivateHandler implements RequestHandlerInterface
         protected ResourceGenerator $resourceGenerator,
         protected UserServiceInterface $userService,
         protected UrlHelper $urlHelper
-    ) {}
+    ) {
+    }
 
     public function patch(ServerRequestInterface $request): ResponseInterface
     {
         $hash = $request->getAttribute('hash');
         $user = $this->userService->findOneBy(['hash' => $hash]);
-        if (!$user instanceof User) {
+        if (! $user instanceof User) {
             return $this->errorResponse(Message::INVALID_ACTIVATION_CODE);
         }
 
@@ -61,13 +64,13 @@ class AccountActivateHandler implements RequestHandlerInterface
     public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new ActivateAccountInputFilter())->setData($request->getParsedBody());
-        if (!$inputFilter->isValid()) {
+        if (! $inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
         }
 
         $email = $inputFilter->getValue('email');
-        $user = $this->userService->findByEmail($email);
-        if (!$user instanceof User) {
+        $user  = $this->userService->findByEmail($email);
+        if (! $user instanceof User) {
             return $this->notFoundResponse(
                 sprintf(Message::USER_NOT_FOUND_BY_EMAIL, $email)
             );

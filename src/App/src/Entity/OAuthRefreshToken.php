@@ -10,10 +10,8 @@ use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 
 /**
- * Class OAuthRefreshToken
  * @ORM\Entity(repositoryClass="Api\App\Repository\OAuthRefreshTokenRepository")
  * @ORM\Table(name="oauth_refresh_tokens")
- * @package Api\App\Entity
  */
 class OAuthRefreshToken implements RefreshTokenEntityInterface
 {
@@ -30,14 +28,10 @@ class OAuthRefreshToken implements RefreshTokenEntityInterface
      */
     private AccessTokenEntityInterface $accessToken;
 
-    /**
-     * @ORM\Column(name="revoked", type="boolean", options={"default":0})
-     */
+    /** @ORM\Column(name="revoked", type="boolean", options={"default":0}) */
     private bool $isRevoked = false;
 
-    /**
-     * @ORM\Column(name="expires_at", type="datetime_immutable")
-     */
+    /** @ORM\Column(name="expires_at", type="datetime_immutable") */
     private DateTimeImmutable $expiresAt;
 
     public function setId(int $id): self
@@ -54,12 +48,12 @@ class OAuthRefreshToken implements RefreshTokenEntityInterface
 
     public function getIdentifier(): string
     {
-        return (string)$this->getId();
+        return (string) $this->getId();
     }
 
-    public function setIdentifier($identifier): self
+    public function setIdentifier(mixed $identifier): self
     {
-        $this->setId((int)$identifier);
+        $this->setId((int) $identifier);
 
         return $this;
     }

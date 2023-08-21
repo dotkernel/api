@@ -18,6 +18,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 
+use function sprintf;
+
 class AdminHandler implements RequestHandlerInterface
 {
     use ResponseTrait;
@@ -33,14 +35,15 @@ class AdminHandler implements RequestHandlerInterface
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected AdminServiceInterface $adminService
-    ) {}
+    ) {
+    }
 
     public function delete(ServerRequestInterface $request): ResponseInterface
     {
         try {
-            $uuid = $request->getAttribute('uuid');
+            $uuid  = $request->getAttribute('uuid');
             $admin = $this->adminService->findOneBy(['uuid' => $uuid]);
-            if (!$admin instanceof Admin) {
+            if (! $admin instanceof Admin) {
                 return $this->notFoundResponse(sprintf(Message::NOT_FOUND_BY_UUID, 'admin', $uuid));
             }
 
@@ -56,7 +59,7 @@ class AdminHandler implements RequestHandlerInterface
     {
         try {
             $uuid = $request->getAttribute('uuid');
-            if (!empty($uuid)) {
+            if (! empty($uuid)) {
                 return $this->view($request, $uuid);
             }
 
@@ -69,14 +72,14 @@ class AdminHandler implements RequestHandlerInterface
     public function patch(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new UpdateAdminInputFilter())->setData($request->getParsedBody());
-        if (!$inputFilter->isValid()) {
+        if (! $inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
         }
 
         try {
-            $uuid = $request->getAttribute('uuid');
+            $uuid  = $request->getAttribute('uuid');
             $admin = $this->adminService->findOneBy(['uuid' => $uuid]);
-            if (!$admin instanceof Admin) {
+            if (! $admin instanceof Admin) {
                 return $this->notFoundResponse(sprintf(Message::NOT_FOUND_BY_UUID, 'admin', $uuid));
             }
 
@@ -91,7 +94,7 @@ class AdminHandler implements RequestHandlerInterface
     public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new CreateAdminInputFilter())->setData($request->getParsedBody());
-        if (!$inputFilter->isValid()) {
+        if (! $inputFilter->isValid()) {
             return $this->errorResponse($inputFilter->getMessages());
         }
 
@@ -112,7 +115,7 @@ class AdminHandler implements RequestHandlerInterface
     private function view(ServerRequestInterface $request, string $uuid): ResponseInterface
     {
         $admin = $this->adminService->findOneBy(['uuid' => $uuid]);
-        if (!$admin instanceof Admin) {
+        if (! $admin instanceof Admin) {
             return $this->notFoundResponse(sprintf(Message::NOT_FOUND_BY_UUID, 'admin', $uuid));
         }
 

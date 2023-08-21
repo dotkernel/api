@@ -14,46 +14,34 @@ use Exception;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 
 /**
- * Class Admin
  * @ORM\Entity(repositoryClass="Api\Admin\Repository\AdminRepository")
  * @ORM\Table(name="admin")
  * @ORM\HasLifecycleCallbacks()
- * @package Api\Admin\Entity
  */
 class Admin extends AbstractEntity implements UserEntityInterface
 {
     use PasswordTrait;
 
-    public const STATUS_ACTIVE = 'active';
+    public const STATUS_ACTIVE   = 'active';
     public const STATUS_INACTIVE = 'inactive';
-    public const STATUSES = [
+    public const STATUSES        = [
         self::STATUS_ACTIVE,
-        self::STATUS_INACTIVE
+        self::STATUS_INACTIVE,
     ];
 
-    /**
-     * @ORM\Column(name="identity", type="string", length=100, unique=true)
-     */
+    /** @ORM\Column(name="identity", type="string", length=100, unique=true) */
     protected string $identity;
 
-    /**
-     * @ORM\Column(name="firstName", type="string", length=255)
-     */
+    /** @ORM\Column(name="firstName", type="string", length=255) */
     protected string $firstName;
 
-    /**
-     * @ORM\Column(name="lastName", type="string", length=255)
-     */
+    /** @ORM\Column(name="lastName", type="string", length=255) */
     protected string $lastName;
 
-    /**
-     * @ORM\Column(name="password", type="string", length=100)
-     */
+    /** @ORM\Column(name="password", type="string", length=100) */
     protected string $password;
 
-    /**
-     * @ORM\Column(name="status", type="string", length=20)
-     */
+    /** @ORM\Column(name="status", type="string", length=20) */
     protected string $status = self::STATUS_ACTIVE;
 
     /**
@@ -79,16 +67,16 @@ class Admin extends AbstractEntity implements UserEntityInterface
     public function getArrayCopy(): array
     {
         return [
-            'uuid' => $this->getUuid()->toString(),
-            'identity' => $this->getIdentity(),
+            'uuid'      => $this->getUuid()->toString(),
+            'identity'  => $this->getIdentity(),
             'firstName' => $this->getFirstName(),
-            'lastName' => $this->getLastName(),
-            'status' => $this->getStatus(),
-            'roles' => $this->getRoles()->map(function (AdminRole $role) {
-               return $role->getArrayCopy();
+            'lastName'  => $this->getLastName(),
+            'status'    => $this->getStatus(),
+            'roles'     => $this->getRoles()->map(function (AdminRole $role) {
+                return $role->getArrayCopy();
             })->toArray(),
-            'created' => $this->getCreated(),
-            'updated' => $this->getUpdated()
+            'created'   => $this->getCreated(),
+            'updated'   => $this->getUpdated(),
         ];
     }
 
@@ -166,7 +154,7 @@ class Admin extends AbstractEntity implements UserEntityInterface
 
     public function addRole(RoleInterface $role): self
     {
-        if (!$this->roles->contains($role)) {
+        if (! $this->roles->contains($role)) {
             $this->roles->add($role);
         }
 
@@ -175,7 +163,7 @@ class Admin extends AbstractEntity implements UserEntityInterface
 
     public function removeRole(RoleInterface $role): self
     {
-        if (!$this->roles->contains($role)) {
+        if (! $this->roles->contains($role)) {
             $this->roles->removeElement($role);
         }
 

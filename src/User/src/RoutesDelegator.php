@@ -29,50 +29,61 @@ class RoutesDelegator
          * Admins manage user accounts
          */
 
-        $app->post('/user',
+        $app->post(
+            '/user',
             UserHandler::class,
             'user.create'
         );
-        $app->delete('/user/' . $uuid,
+        $app->delete(
+            '/user/' . $uuid,
             UserHandler::class,
             'user.delete'
         );
-        $app->get('/user',
+        $app->get(
+            '/user',
             UserHandler::class,
             'user.list'
         );
-        $app->patch('/user/' . $uuid,
+        $app->patch(
+            '/user/' . $uuid,
             UserHandler::class,
             'user.update'
         );
-        $app->get('/user/' . $uuid,
+        $app->get(
+            '/user/' . $uuid,
             UserHandler::class,
             'user.view'
         );
 
-        $app->post('/user/' . $uuid . '/activate',
+        $app->post(
+            '/user/' . $uuid . '/activate',
             UserActivateHandler::class,
             'user.activate'
         );
 
-        $app->delete('/user/' . $uuid . '/avatar',
+        $app->delete(
+            '/user/' . $uuid . '/avatar',
             UserAvatarHandler::class,
             'user.avatar.delete'
         );
-        $app->get('/user/' . $uuid . '/avatar',
+        $app->get(
+            '/user/' . $uuid . '/avatar',
             UserAvatarHandler::class,
             'user.avatar.view'
         );
-        $app->post('/user/' . $uuid . '/avatar',
+        $app->post(
+            '/user/' . $uuid . '/avatar',
             UserAvatarHandler::class,
             'user.avatar.create'
         );
 
-        $app->get('/user/role',
+        $app->get(
+            '/user/role',
             UserRoleHandler::class,
             'user.role.list'
         );
-        $app->get('/user/role/' . $uuid,
+        $app->get(
+            '/user/role/' . $uuid,
             UserRoleHandler::class,
             'user.role.view'
         );
@@ -81,28 +92,34 @@ class RoutesDelegator
          * Users manage their own accounts
          */
 
-        $app->delete('/user/my-account',
+        $app->delete(
+            '/user/my-account',
             AccountHandler::class,
             'user.my-account.delete'
         );
-        $app->get('/user/my-account',
+        $app->get(
+            '/user/my-account',
             AccountHandler::class,
             'user.my-account.view'
         );
-        $app->patch('/user/my-account',
+        $app->patch(
+            '/user/my-account',
             AccountHandler::class,
             'user.my-account.update'
         );
 
-        $app->post('/user/my-avatar',
+        $app->post(
+            '/user/my-avatar',
             AccountAvatarHandler::class,
             'user.my-avatar.create'
         );
-        $app->delete('/user/my-avatar',
+        $app->delete(
+            '/user/my-avatar',
             AccountAvatarHandler::class,
             'user.my-avatar.delete'
         );
-        $app->get('/user/my-avatar',
+        $app->get(
+            '/user/my-avatar',
             AccountAvatarHandler::class,
             'user.my-avatar.view'
         );
@@ -111,34 +128,41 @@ class RoutesDelegator
          * Guests manage their accounts
          */
 
-        $app->post('/account/register',
+        $app->post(
+            '/account/register',
             AccountHandler::class,
             'account.register'
         );
 
-        $app->get('/account/reset-password/{hash}',
+        $app->get(
+            '/account/reset-password/{hash}',
             AccountResetPasswordHandler::class,
             'account.reset-password.validate'
         );
-        $app->patch('/account/reset-password/{hash}',
+        $app->patch(
+            '/account/reset-password/{hash}',
             AccountResetPasswordHandler::class,
             'account.modify-password'
         );
-        $app->post('/account/reset-password',
+        $app->post(
+            '/account/reset-password',
             AccountResetPasswordHandler::class,
             'account.reset-password.request'
         );
 
-        $app->post('/account/recover-identity',
+        $app->post(
+            '/account/recover-identity',
             AccountRecoveryHandler::class,
             'account.recover-identity'
         );
 
-        $app->patch('/account/activate/{hash}',
+        $app->patch(
+            '/account/activate/{hash}',
             AccountActivateHandler::class,
             'account.activate'
         );
-        $app->post('/account/activate',
+        $app->post(
+            '/account/activate',
             AccountActivateHandler::class,
             'account.activate.request'
         );

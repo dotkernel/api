@@ -8,6 +8,9 @@ use Api\User\InputFilter\Input\PasswordConfirmInput;
 use Api\User\InputFilter\Input\PasswordInput;
 use Laminas\InputFilter\InputFilter;
 
+/**
+ * @extends InputFilter<object>
+ */
 class UpdatePasswordInputFilter extends InputFilter
 {
     public function __construct()

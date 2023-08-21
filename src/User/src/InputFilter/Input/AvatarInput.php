@@ -14,7 +14,7 @@ use Laminas\Validator\NotEmpty;
 
 class AvatarInput extends FileInput
 {
-    public function __construct(string $name = null, bool $isRequired = true)
+    public function __construct(?string $name = null, bool $isRequired = true)
     {
         parent::__construct($name);
 
@@ -29,9 +29,9 @@ class AvatarInput extends FileInput
                 'message' => Message::VALIDATOR_REQUIRED_FIELD,
             ], true)
             ->attachByName(UploadFile::class, [
-                'message' => Message::VALIDATOR_REQUIRED_UPLOAD
+                'message' => Message::VALIDATOR_REQUIRED_UPLOAD,
             ], true)->attachByName(IsImage::class, [
-                'message' => Message::RESTRICTION_IMAGE
+                'message' => Message::RESTRICTION_IMAGE,
             ], true);
     }
 }

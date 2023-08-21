@@ -9,18 +9,18 @@ use Dot\Cli\Command\DemoCommand;
 use Dot\Cli\FileLockerInterface;
 
 return [
-    'dot_cli' => [
-        'version' => '1.0.0',
-        'name' => 'DotKernel CLI',
+    'dot_cli'                  => [
+        'version'  => '1.0.0',
+        'name'     => 'DotKernel CLI',
         'commands' => [
-            DemoCommand::getDefaultName() => DemoCommand::class,
-            RouteListCommand::getDefaultName() => RouteListCommand::class,
-            AdminCreateCommand::getDefaultName() => AdminCreateCommand::class,
+            DemoCommand::getDefaultName()          => DemoCommand::class,
+            RouteListCommand::getDefaultName()     => RouteListCommand::class,
+            AdminCreateCommand::getDefaultName()   => AdminCreateCommand::class,
             TokenGenerateCommand::getDefaultName() => TokenGenerateCommand::class,
-        ]
+        ],
     ],
     FileLockerInterface::class => [
         'enabled' => true,
         'dirPath' => getcwd() . '/data/lock',
-    ]
+    ],
 ];

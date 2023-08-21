@@ -10,6 +10,7 @@ use Dot\AnnotatedServices\Annotation\Entity;
 
 /**
  * @Entity(name="Api\User\Entity\UserAvatar")
+ * @extends EntityRepository<object>
  */
 class UserAvatarRepository extends EntityRepository
 {

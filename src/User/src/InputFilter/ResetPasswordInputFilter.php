@@ -8,6 +8,9 @@ use Api\User\InputFilter\Input\EmailInput;
 use Api\User\InputFilter\Input\IdentityInput;
 use Laminas\InputFilter\InputFilter;
 
+/**
+ * @extends InputFilter<object>
+ */
 class ResetPasswordInputFilter extends InputFilter
 {
     public function __construct()

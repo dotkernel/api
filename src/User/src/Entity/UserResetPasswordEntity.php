@@ -12,19 +12,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Throwable;
 
 /**
- * Class UserResetPasswordEntity
  * @ORM\Entity()
  * @ORM\Table(name="user_reset_password")
  * @ORM\HasLifecycleCallbacks()
- * @package Api\User\Entity
  */
 class UserResetPasswordEntity extends AbstractEntity
 {
     public const STATUS_COMPLETED = 'completed';
     public const STATUS_REQUESTED = 'requested';
-    public const STATUSES = [
+    public const STATUSES         = [
         self::STATUS_COMPLETED,
-        self::STATUS_REQUESTED
+        self::STATUS_REQUESTED,
     ];
 
     /**
@@ -33,19 +31,13 @@ class UserResetPasswordEntity extends AbstractEntity
      */
     protected User $user;
 
-    /**
-     * @ORM\Column(name="expires", type="datetime_immutable")
-     */
+    /** @ORM\Column(name="expires", type="datetime_immutable") */
     protected DateTimeImmutable $expires;
 
-    /**
-     * @ORM\Column(name="hash", type="string", length=64, unique=true)
-     */
+    /** @ORM\Column(name="hash", type="string", length=64, unique=true) */
     protected string $hash;
 
-    /**
-     * @ORM\Column(name="status", type="string", length=20)
-     */
+    /** @ORM\Column(name="status", type="string", length=20) */
     protected string $status = self::STATUS_REQUESTED;
 
     public function __construct()
@@ -105,10 +97,6 @@ class UserResetPasswordEntity extends AbstractEntity
         return $this;
     }
 
-    /**
-     * Helper methods
-     */
-
     public function isCompleted(): bool
     {
         return $this->getStatus() === self::STATUS_COMPLETED;
@@ -117,7 +105,7 @@ class UserResetPasswordEntity extends AbstractEntity
     public function isValid(): bool
     {
         try {
-            return $this->getExpires() > (new DateTimeImmutable());
+            return $this->getExpires() > new DateTimeImmutable();
         } catch (Throwable) {
         }
 
@@ -134,12 +122,12 @@ class UserResetPasswordEntity extends AbstractEntity
     public function getArrayCopy(): array
     {
         return [
-            'uuid' => $this->getUuid()->toString(),
+            'uuid'    => $this->getUuid()->toString(),
             'expires' => $this->getExpires(),
-            'hash' => $this->getHash(),
-            'status' => $this->getStatus(),
+            'hash'    => $this->getHash(),
+            'status'  => $this->getStatus(),
             'created' => $this->getCreated(),
-            'updated' => $this->getUpdated()
+            'updated' => $this->getUpdated(),
         ];
     }
 }

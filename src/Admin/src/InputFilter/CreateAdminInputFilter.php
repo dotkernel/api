@@ -13,6 +13,9 @@ use Api\Admin\InputFilter\Input\StatusInput;
 use Laminas\InputFilter\CollectionInputFilter;
 use Laminas\InputFilter\InputFilter;
 
+/**
+ * @extends InputFilter<object>
+ */
 class CreateAdminInputFilter extends InputFilter
 {
     public function __construct()
