@@ -24,7 +24,7 @@ Using your terminal, navigate inside the directory you want to download the proj
     git clone https://github.com/dotkernel/api.git .
 
 
-### Step 2: Install the project
+### Step 2: Install project's dependencies
 
     composer install
 
