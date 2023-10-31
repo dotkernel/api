@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\App\Entity;
 
+use Api\App\Repository\OAuthAccessTokenRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -19,44 +20,35 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use RuntimeException;
 
-/**
- * @ORM\Entity(repositoryClass="Api\App\Repository\OAuthAccessTokenRepository")
- * @ORM\Table(name="oauth_access_tokens")
- */
+#[ORM\Entity(repositoryClass: OAuthAccessTokenRepository::class)]
+#[ORM\Table(name: "oauth_access_tokens")]
 class OAuthAccessToken implements AccessTokenEntityInterface
 {
-    /**
-     * @ORM\Id()
-     * @ORM\Column(name="id", type="integer", options={"unsigned":true})
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Id]
+    #[ORM\Column(name: "id", type: "integer", options: ['unsigned' => true])]
+    #[ORM\GeneratedValue(strategy: "IDENTITY")]
     private int $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Api\App\Entity\OAuthClient")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: OAuthClient::class)]
+    #[ORM\JoinColumn(name: "client_id", referencedColumnName: "id")]
     private ClientEntityInterface $client;
 
-    /** @ORM\Column(name="user_id", type="string", nullable=true) */
+    #[ORM\Column(name: "user_id", type: "string", nullable: true)]
     private ?string $userId;
 
-    /** @ORM\Column(name="token", type="string", length=100) */
+    #[ORM\Column(name: "token", type: "string", length: 100)]
     private string $token;
 
-    /** @ORM\Column(name="revoked", type="boolean", options={"default":0}) */
+    #[ORM\Column(name: "revoked", type: "boolean", options: ['default' => false])]
     private bool $isRevoked = false;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Api\App\Entity\OAuthScope", inversedBy="accessTokens", indexBy="id")
-     * @ORM\JoinTable(name="oauth_access_token_scopes",
-     *     joinColumns={@ORM\JoinColumn(name="access_token_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="scope_id", referencedColumnName="id")}
-     * )
-     */
+    #[ORM\ManyToMany(targetEntity: OAuthScope::class, inversedBy: "accessTokens", indexBy: "id")]
+    #[ORM\JoinTable(name: "oauth_access_token_scopes")]
+    #[ORM\JoinColumn(name: "access_token_id", referencedColumnName: "id")]
+    #[ORM\InverseJoinColumn(name: "scope_id", referencedColumnName: "id")]
     protected Collection $scopes;
 
-    /** @ORM\Column(name="expires_at", type="datetime_immutable") */
+    #[ORM\Column(name: 'expires_at', type: "datetime_immutable")]
     private DateTimeImmutable $expiresAt;
 
     private ?CryptKey $privateKey = null;
