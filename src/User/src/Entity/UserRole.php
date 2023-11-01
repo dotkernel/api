@@ -14,12 +14,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\HasLifecycleCallbacks]
 class UserRole extends AbstractEntity implements RoleInterface
 {
-    public const ROLE_GUEST    = 'guest';
-    public const ROLE_API_USER = 'api_user';
-    public const ROLE_USER     = 'user';
-    public const ROLES         = [
+    public const ROLE_GUEST = 'guest';
+    public const ROLE_USER  = 'user';
+    public const ROLES      = [
         self::ROLE_GUEST,
-        self::ROLE_API_USER,
         self::ROLE_USER,
     ];
 

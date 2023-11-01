@@ -11,7 +11,9 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Throwable;
 
-#[ORM\Entity, ORM\Table(name: "user_reset_password"), ORM\HasLifecycleCallbacks]
+#[ORM\Entity]
+#[ORM\Table(name: "user_reset_password")]
+#[ORM\HasLifecycleCallbacks]
 class UserResetPasswordEntity extends AbstractEntity
 {
     public const STATUS_COMPLETED = 'completed';
@@ -21,7 +23,7 @@ class UserResetPasswordEntity extends AbstractEntity
         self::STATUS_REQUESTED,
     ];
 
-    #[ORM\ManyToOne(targetEntity: "User", cascade: ['persist', 'remove'], inversedBy: "resetPasswords")]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist', 'remove'], inversedBy: "resetPasswords")]
     #[ORM\JoinColumn(name: "userUuid", referencedColumnName: "uuid")]
     protected User $user;
 

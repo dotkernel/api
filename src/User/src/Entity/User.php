@@ -53,10 +53,10 @@ class User extends AbstractEntity implements UserEntityInterface
     #[ORM\Column(name: "password", type: "string", length: 191)]
     protected string $password;
 
-    #[ORM\Column("status", type: "string", length: 20)]
+    #[ORM\Column(name: "status", type: "string", length: 20)]
     protected string $status = self::STATUS_PENDING;
 
-    #[ORM\Column("isDeleted", type: "boolean")]
+    #[ORM\Column(name: "isDeleted", type: "boolean")]
     protected bool $isDeleted = false;
 
     #[ORM\Column(name: "hash", type: "string", length: 64, unique: true)]
