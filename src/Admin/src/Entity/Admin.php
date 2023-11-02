@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\Admin\Entity;
 
+use Api\Admin\Repository\AdminRepository;
 use Api\App\Entity\AbstractEntity;
 use Api\App\Entity\PasswordTrait;
 use Api\App\Entity\RoleInterface;
@@ -13,11 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 
-/**
- * @ORM\Entity(repositoryClass="Api\Admin\Repository\AdminRepository")
- * @ORM\Table(name="admin")
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: AdminRepository::class)]
+#[ORM\Table("admin")]
+#[ORM\HasLifecycleCallbacks]
 class Admin extends AbstractEntity implements UserEntityInterface
 {
     use PasswordTrait;
@@ -29,29 +28,25 @@ class Admin extends AbstractEntity implements UserEntityInterface
         self::STATUS_INACTIVE,
     ];
 
-    /** @ORM\Column(name="identity", type="string", length=100, unique=true) */
+    #[ORM\Column(name: "identity", type: "string", length: 100, unique: true)]
     protected string $identity;
 
-    /** @ORM\Column(name="firstName", type="string", length=255) */
+    #[ORM\Column(name: "firstName", type: "string", length: 255)]
     protected string $firstName;
 
-    /** @ORM\Column(name="lastName", type="string", length=255) */
+    #[ORM\Column(name: "lastName", type: "string", length: 255)]
     protected string $lastName;
 
-    /** @ORM\Column(name="password", type="string", length=100) */
+    #[ORM\Column(name: "password", type: "string", length: 100)]
     protected string $password;
 
-    /** @ORM\Column(name="status", type="string", length=20) */
+    #[ORM\Column(name: "status", type: "string", length: 20)]
     protected string $status = self::STATUS_ACTIVE;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Api\Admin\Entity\AdminRole")
-     * @ORM\JoinTable(
-     *     name="admin_roles",
-     *     joinColumns={@ORM\JoinColumn(name="userUuid", referencedColumnName="uuid")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="roleUuid", referencedColumnName="uuid")}
-     * )
-     */
+    #[ORM\ManyToMany(targetEntity: AdminRole::class)]
+    #[ORM\JoinTable(name: "admin_roles")]
+    #[ORM\JoinColumn(name: "userUuid", referencedColumnName: "uuid")]
+    #[ORM\InverseJoinColumn(name: "roleUuid", referencedColumnName: "uuid")]
     protected Collection $roles;
 
     public function __construct()

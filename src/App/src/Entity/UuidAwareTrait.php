@@ -9,12 +9,10 @@ use Ramsey\Uuid\UuidInterface;
 
 trait UuidAwareTrait
 {
-    /**
-     * @ORM\Id()
-     * @ORM\Column(name="uuid", type="uuid_binary_ordered_time", unique=true)
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidOrderedTimeGenerator")
-     */
+    #[ORM\Id]
+    #[ORM\Column(name: 'uuid', type: "uuid_binary_ordered_time", unique: true)]
+    #[ORM\GeneratedValue(strategy: "CUSTOM")]
+    #[ORM\CustomIdGenerator(\Ramsey\Uuid\Doctrine\UuidOrderedTimeGenerator::class)]
     protected ?UuidInterface $uuid;
 
     public function getUuid(): ?UuidInterface

@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Api\Admin\Entity;
 
+use Api\Admin\Repository\AdminRoleRepository;
 use Api\App\Entity\AbstractEntity;
 use Api\App\Entity\RoleInterface;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Api\Admin\Repository\AdminRoleRepository")
- * @ORM\Table(name="admin_role")
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: AdminRoleRepository::class)]
+#[ORM\Table("admin_role")]
+#[ORM\HasLifecycleCallbacks]
 class AdminRole extends AbstractEntity implements RoleInterface
 {
     public const ROLE_ADMIN     = 'admin';
@@ -22,7 +21,7 @@ class AdminRole extends AbstractEntity implements RoleInterface
         self::ROLE_SUPERUSER,
     ];
 
-    /** @ORM\Column(name="name", type="string", length=30, unique=true) */
+    #[ORM\Column(name: "name", type: "string", length: 30, unique: true)]
     protected string $name;
 
     public function getName(): string

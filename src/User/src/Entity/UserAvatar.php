@@ -6,23 +6,20 @@ namespace Api\User\Entity;
 
 use Api\App\Entity\AbstractEntity;
 use Api\User\EventListener\UserAvatarEventListener;
+use Api\User\Repository\UserAvatarRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Api\User\Repository\UserAvatarRepository")
- * @ORM\Table(name="user_avatar")
- * @ORM\HasLifecycleCallbacks()
- * @ORM\EntityListeners({UserAvatarEventListener::class})
- */
+#[ORM\Entity(repositoryClass: UserAvatarRepository::class)]
+#[ORM\Table(name: "user_avatar")]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\EntityListeners([UserAvatarEventListener::class])]
 class UserAvatar extends AbstractEntity
 {
-    /**
-     * @ORM\OneToOne(targetEntity="User", inversedBy="avatar")
-     * @ORM\JoinColumn(name="userUuid", referencedColumnName="uuid")
-     */
+    #[ORM\OneToOne(inversedBy: "avatar", targetEntity: User::class)]
+    #[ORM\JoinColumn(name: "userUuid", referencedColumnName: "uuid")]
     protected User $user;
 
-    /** @ORM\Column(name="name", type="string", length=191) */
+    #[ORM\Column(name: "name", type: "string", length: 191)]
     protected string $name;
 
     protected ?string $url = null;

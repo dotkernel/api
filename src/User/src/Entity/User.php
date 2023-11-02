@@ -8,6 +8,7 @@ use Api\App\Entity\AbstractEntity;
 use Api\App\Entity\PasswordTrait;
 use Api\App\Entity\RoleInterface;
 use Api\App\Entity\UuidOrderedTimeGenerator;
+use Api\User\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,11 +18,9 @@ use Throwable;
 use function bin2hex;
 use function random_bytes;
 
-/**
- * @ORM\Entity(repositoryClass="Api\User\Repository\UserRepository")
- * @ORM\Table(name="user")
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: "user")]
+#[ORM\HasLifecycleCallbacks]
 class User extends AbstractEntity implements UserEntityInterface
 {
     use PasswordTrait;
@@ -33,38 +32,34 @@ class User extends AbstractEntity implements UserEntityInterface
         self::STATUS_ACTIVE,
     ];
 
-    /** @ORM\OneToOne(targetEntity="UserAvatar", cascade={"persist", "remove"}, mappedBy="user") */
+    #[ORM\OneToOne(mappedBy: "user", targetEntity: UserAvatar::class, cascade: ['persist', 'remove'])]
     protected ?UserAvatar $avatar = null;
 
-    /** @ORM\OneToOne(targetEntity="UserDetail", cascade={"persist", "remove"}, mappedBy="user") */
+    #[ORM\OneToOne(mappedBy: "user", targetEntity: UserDetail::class, cascade: ['persist', 'remove'])]
     protected UserDetail $detail;
 
-    /** @ORM\OneToMany(targetEntity="UserResetPasswordEntity", cascade={"persist", "remove"}, mappedBy="user") */
+    #[ORM\OneToMany(mappedBy: "user", targetEntity: UserResetPasswordEntity::class, cascade: ['persist', 'remove'])]
     protected Collection $resetPasswords;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="UserRole")
-     * @ORM\JoinTable(
-     *     name="user_roles",
-     *     joinColumns={@ORM\JoinColumn(name="userUuid", referencedColumnName="uuid")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="roleUuid", referencedColumnName="uuid")}
-     * )
-     */
+    #[ORM\ManyToMany(targetEntity: UserRole::class)]
+    #[ORM\JoinTable(name: "user_roles")]
+    #[ORM\JoinColumn(name: "userUuid", referencedColumnName: "uuid")]
+    #[ORM\InverseJoinColumn(name: "roleUuid", referencedColumnName: "uuid")]
     protected Collection $roles;
 
-    /** @ORM\Column(name="identity", type="string", length=191, unique=true) */
+    #[ORM\Column(name: "identity", type: "string", length: 191, unique: true)]
     protected string $identity;
 
-    /** @ORM\Column(name="password", type="string", length=191) */
+    #[ORM\Column(name: "password", type: "string", length: 191)]
     protected string $password;
 
-    /** @ORM\Column(name="status", type="string", length=20) */
+    #[ORM\Column(name: "status", type: "string", length: 20)]
     protected string $status = self::STATUS_PENDING;
 
-    /** @ORM\Column(name="isDeleted", type="boolean") */
+    #[ORM\Column(name: "isDeleted", type: "boolean")]
     protected bool $isDeleted = false;
 
-    /** @ORM\Column(name="hash", type="string", length=64, unique=true) */
+    #[ORM\Column(name: "hash", type: "string", length: 64, unique: true)]
     protected string $hash;
 
     public function __construct()

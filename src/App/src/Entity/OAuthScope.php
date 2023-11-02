@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\App\Entity;
 
+use Api\App\Repository\OAuthScopeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -11,28 +12,24 @@ use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\Traits\ScopeTrait;
 
-/**
- * @ORM\Entity(repositoryClass="Api\App\Repository\OAuthScopeRepository")
- * @ORM\Table(name="oauth_scopes")
- */
+#[ORM\Entity(repositoryClass: OAuthScopeRepository::class)]
+#[ORM\Table(name: "oauth_scopes")]
 class OAuthScope implements ScopeEntityInterface
 {
     use ScopeTrait;
 
-    /**
-     * @ORM\Id()
-     * @ORM\Column(name="id", type="integer", options={"unsigned":true})
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Id]
+    #[ORM\Column(name: "id", type: "integer", options: ['unsigned' => true])]
+    #[ORM\GeneratedValue(strategy: "IDENTITY")]
     private int $id;
 
-    /** @ORM\Column(name="scope", type="string", length=191) */
+    #[ORM\Column(name: "scope", type: "string", length: 191)]
     private string $scope = '';
 
-    /** @ORM\ManyToMany(targetEntity="Api\App\Entity\OAuthAccessToken", mappedBy="scopes") */
+    #[ORM\ManyToMany(targetEntity: OAuthAccessToken::class, mappedBy: "scopes")]
     protected Collection $accessTokens;
 
-    /** @ORM\ManyToMany(targetEntity="Api\App\Entity\OAuthAuthCode", mappedBy="scopes") */
+    #[ORM\ManyToMany(targetEntity: OAuthAuthCode::class, mappedBy: "scopes")]
     protected Collection $authCodes;
 
     public function __construct()

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\App\Entity;
 
+use Api\App\Repository\OAuthAuthCodeRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,40 +15,31 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\Traits\AuthCodeTrait;
 
-/**
- * @ORM\Entity(repositoryClass="Api\App\Repository\OAuthAuthCodeRepository")
- * @ORM\Table(name="oauth_auth_codes")
- */
+#[ORM\Entity(repositoryClass: OAuthAuthCodeRepository::class)]
+#[ORM\Table(name: "oauth_auth_codes")]
 class OAuthAuthCode implements AuthCodeEntityInterface
 {
     use AuthCodeTrait;
 
-    /**
-     * @ORM\Id()
-     * @ORM\Column(name="id", type="integer", options={"unsigned":true})
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Id]
+    #[ORM\Column(name: "id", type: "integer", options: ['unsigned' => true])]
+    #[ORM\GeneratedValue(strategy: "IDENTITY")]
     private int $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Api\App\Entity\OAuthClient")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: OAuthClient::class)]
+    #[ORM\JoinColumn(name: "client_id", referencedColumnName: "id")]
     private ClientEntityInterface $client;
 
-    /** @ORM\Column(name="revoked", type="boolean", options={"default":0}) */
+    #[ORM\Column(name: "revoked", type: "boolean", options: ['default' => false])]
     private bool $isRevoked = false;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Api\App\Entity\OAuthSCope", inversedBy="authCodes", indexBy="id")
-     * @ORM\JoinTable(name="oauth_auth_code_scopes",
-     *     joinColumns={@ORM\JoinColumn(name="auth_code_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="scope_id", referencedColumnName="id")}
-     * )
-     */
+    #[ORM\ManyToMany(targetEntity: OAuthScope::class, inversedBy: "authCodes", indexBy: "id")]
+    #[ORM\JoinTable(name: "oauth_auth_code_scopes")]
+    #[ORM\JoinColumn(name: "auth_code_id", referencedColumnName: "id")]
+    #[ORM\InverseJoinColumn(name: "scope_id", referencedColumnName: "id")]
     protected Collection $scopes;
 
-    /** @ORM\Column(type="datetime_immutable", nullable=true) */
+    #[ORM\Column(type: "datetime_immutable", nullable: true)]
     private DateTimeImmutable $expiresDatetime;
 
     public function __construct()

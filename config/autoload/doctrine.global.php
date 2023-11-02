@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Doctrine\Common\Cache\PhpFileCache;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType;
 use Ramsey\Uuid\Doctrine\UuidBinaryType;
@@ -29,17 +29,17 @@ return [
                 ],
             ],
             'AdminEntities' => [
-                'class' => AnnotationDriver::class,
+                'class' => AttributeDriver::class,
                 'cache' => 'array',
                 'paths' => __DIR__ . '/../../src/Admin/src/Entity',
             ],
             'UserEntities'  => [
-                'class' => AnnotationDriver::class,
+                'class' => AttributeDriver::class,
                 'cache' => 'array',
                 'paths' => __DIR__ . '/../../src/User/src/Entity',
             ],
             'AppEntities'   => [
-                'class' => AnnotationDriver::class,
+                'class' => AttributeDriver::class,
                 'cache' => 'array',
                 'paths' => __DIR__ . '/../../src/App/src/Entity',
             ],

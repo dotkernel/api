@@ -4,45 +4,40 @@ declare(strict_types=1);
 
 namespace Api\App\Entity;
 
+use Api\App\Repository\OAuthClientRepository;
 use Api\User\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 
-/**
- * @ORM\Entity(repositoryClass="Api\App\Repository\OAuthClientRepository")
- * @ORM\Table(name="oauth_clients")
- */
+#[ORM\Entity(repositoryClass: OAuthClientRepository::class)]
+#[ORM\Table(name: "oauth_clients")]
 class OAuthClient implements ClientEntityInterface
 {
     public const NAME_ADMIN    = 'admin';
     public const NAME_FRONTEND = 'frontend';
 
-    /**
-     * @ORM\Id()
-     * @ORM\Column(name="id", type="integer", options={"unsigned":true})
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Id]
+    #[ORM\Column(name: "id", type: "integer", options: ['unsigned' => true])]
+    #[ORM\GeneratedValue(strategy: "IDENTITY")]
     private int $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Api\User\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="uuid", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "uuid", nullable: true)]
     private ?User $user = null;
 
-    /** @ORM\Column(name="name", type="string", length=40) */
+    #[ORM\Column(name: "name", type: "string", length: 40)]
     private string $name = '';
 
-    /** @ORM\Column(name="secret", type="string", length=100, nullable=true) */
+    #[ORM\Column(name: "secret", type: "string", length: 100, nullable: true)]
     private ?string $secret = null;
 
-    /** @ORM\Column(name="redirect", type="string", length=191) */
+    #[ORM\Column(name: "redirect", type: "string", length: 191)]
     private string $redirect = '';
 
-    /** @ORM\Column(name="revoked", type="boolean", options={"default":0}) */
+    #[ORM\Column(name: "revoked", type: "boolean", options: ['default' => false])]
     private bool $isRevoked = false;
 
-    /** @ORM\Column(name="isConfidential", type="boolean", options={"default":0}) */
+    #[ORM\Column(name: "isConfidential", type: "boolean", options: ['default' => false])]
     private bool $isConfidential = false;
 
     public function setId(int $id): self

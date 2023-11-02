@@ -4,34 +4,29 @@ declare(strict_types=1);
 
 namespace Api\App\Entity;
 
+use Api\App\Repository\OAuthRefreshTokenRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 
-/**
- * @ORM\Entity(repositoryClass="Api\App\Repository\OAuthRefreshTokenRepository")
- * @ORM\Table(name="oauth_refresh_tokens")
- */
+#[ORM\Entity(repositoryClass: OAuthRefreshTokenRepository::class)]
+#[ORM\Table(name: "oauth_refresh_tokens")]
 class OAuthRefreshToken implements RefreshTokenEntityInterface
 {
-    /**
-     * @ORM\Id()
-     * @ORM\Column(name="id", type="integer", options={"unsigned":true})
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Id]
+    #[ORM\Column(name: "id", type: "integer", options: ['unsigned' => true])]
+    #[ORM\GeneratedValue(strategy: "IDENTITY")]
     private int $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Api\App\Entity\OAuthAccessToken")
-     * @ORM\JoinColumn(name="access_token_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: OAuthAccessToken::class)]
+    #[ORM\JoinColumn(name: "access_token_id", referencedColumnName: "id")]
     private AccessTokenEntityInterface $accessToken;
 
-    /** @ORM\Column(name="revoked", type="boolean", options={"default":0}) */
+    #[ORM\Column(name: "revoked", type: "boolean", options: ['default' => false])]
     private bool $isRevoked = false;
 
-    /** @ORM\Column(name="expires_at", type="datetime_immutable") */
+    #[ORM\Column(name: "expires_at", type: "datetime_immutable")]
     private DateTimeImmutable $expiresAt;
 
     public function setId(int $id): self
