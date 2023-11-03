@@ -25,6 +25,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use RuntimeException;
 
 use function array_merge;
 use function getenv;
@@ -54,6 +55,12 @@ class AbstractFunctionalTest extends TestCase
         $this->initPipeline();
         $this->initRoutes();
 
+        if ($this->isTestMode() && ! $this->getEntityManager()->getConnection()->getParams()['memory']) {
+            throw new RuntimeException(
+                'You are running tests in a non in-memory database.
+                Did you forgot to create the local.test.php file?'
+            );
+        }
         if (method_exists($this, 'runMigrations')) {
             $this->runMigrations();
         }
