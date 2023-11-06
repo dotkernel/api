@@ -55,12 +55,8 @@ class AbstractFunctionalTest extends TestCase
         $this->initPipeline();
         $this->initRoutes();
 
-        if ($this->isTestMode() && ! $this->getEntityManager()->getConnection()->getParams()['memory']) {
-            throw new RuntimeException(
-                'You are running tests in a non in-memory database.
-                Did you forgot to create the local.test.php file?'
-            );
-        }
+        $this->ensureTestMode();
+
         if (method_exists($this, 'runMigrations')) {
             $this->runMigrations();
         }
@@ -137,6 +133,26 @@ class AbstractFunctionalTest extends TestCase
     protected function getContainer(): ContainerInterface|ServiceManager
     {
         return $this->container;
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws RuntimeException
+     */
+    private function ensureTestMode(): void
+    {
+        if (! $this->isTestMode()) {
+            throw new RuntimeException(
+                'You are running tests, but test mode is NOT enabled. Did you forget to create local.test.php?'
+            );
+        }
+
+        if (! $this->getEntityManager()->getConnection()->getParams()['memory'] ?? false) {
+            throw new RuntimeException(
+                'You are running tests in a non in-memory database. Did you forget to create local.test.php?'
+            );
+        }
     }
 
     protected function get(
