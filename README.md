@@ -16,6 +16,21 @@ Based on Enrico Zimuel's [Zend Expressive API - Skeleton example](https://github
 
 [![SymfonyInsight](https://insight.symfony.com/projects/7f9143cc-5e3c-4cfc-992c-377a001fde3e/big.svg)](https://insight.symfony.com/projects/7f9143cc-5e3c-4cfc-992c-377a001fde3e)
 
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=dotkernel_api)](https://sonarcloud.io/summary/new_code?id=dotkernel_api)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=dotkernel_api&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=dotkernel_api)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=dotkernel_api&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=dotkernel_api)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=dotkernel_api&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=dotkernel_api)
+
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=dotkernel_api&metric=bugs)](https://sonarcloud.io/summary/new_code?id=dotkernel_api)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=dotkernel_api&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=dotkernel_api)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=dotkernel_api&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=dotkernel_api)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=dotkernel_api&metric=coverage)](https://sonarcloud.io/summary/new_code?id=dotkernel_api)
+
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=dotkernel_api&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=dotkernel_api)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=dotkernel_api&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=dotkernel_api)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=dotkernel_api&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=dotkernel_api)
+
+
 ## Getting Started
 
 ### Step 1: Clone the project
