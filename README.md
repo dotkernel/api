@@ -16,7 +16,7 @@ Based on Enrico Zimuel's [Zend Expressive API - Skeleton example](https://github
 
 [![SymfonyInsight](https://insight.symfony.com/projects/7f9143cc-5e3c-4cfc-992c-377a001fde3e/big.svg)](https://insight.symfony.com/projects/7f9143cc-5e3c-4cfc-992c-377a001fde3e)
 
-[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=dotkernel_api)](https://sonarcloud.io/summary/new_code?id=dotkernel_api)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=dotkernel_api&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=dotkernel_api)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=dotkernel_api&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=dotkernel_api)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=dotkernel_api&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=dotkernel_api)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=dotkernel_api&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=dotkernel_api)
