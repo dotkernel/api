@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-//use Doctrine\Common\Cache\PhpFileCache;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType;
@@ -49,12 +48,6 @@ return [
             UuidBinaryType::NAME            => UuidBinaryType::class,
             UuidBinaryOrderedTimeType::NAME => UuidBinaryOrderedTimeType::class,
         ],
-//        'cache'      => [
-//            PhpFileCache::class => [
-//                'class'     => PhpFileCache::class,
-//                'directory' => getcwd() . '/data/cache/doctrine',
-//            ],
-//        ],
         'fixtures'   => getcwd() . '/data/doctrine/fixtures',
     ],
     'resultCacheLifetime' => 3600,
