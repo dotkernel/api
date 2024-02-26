@@ -21,7 +21,6 @@ $databases = [
 ];
 
 return [
-    'annotations_cache_dir' => getcwd() . '/data/cache/annotations',
     'application'           => [
         'name' => 'DotKernel API',
         'url'  => $baseUrl,
