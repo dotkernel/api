@@ -7,7 +7,6 @@ namespace Api\App;
 use Api\App\Command\RouteListCommand;
 use Api\App\Command\TokenGenerateCommand;
 use Api\App\Entity\EntityListenerResolver;
-use Api\App\Factory\AnnotationsCacheFactory;
 use Api\App\Factory\AuthenticationMiddlewareFactory;
 use Api\App\Factory\EntityListenerResolverFactory;
 use Api\App\Factory\RouteListCommandFactory;
@@ -19,7 +18,6 @@ use Api\App\Service\ErrorReportService;
 use Api\App\Service\ErrorReportServiceInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Dot\AnnotatedServices\Factory\AbstractAnnotatedFactory;
 use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
 use Dot\Mail\Factory\MailOptionsAbstractFactory;
 use Dot\Mail\Factory\MailServiceAbstractFactory;
@@ -60,20 +58,19 @@ class ConfigProvider
                 ],
             ],
             'factories'  => [
-                'doctrine.entity_manager.orm_default'   => EntityManagerFactory::class,
-                'dot-mail.options.default'              => MailOptionsAbstractFactory::class,
-                'dot-mail.service.default'              => MailServiceAbstractFactory::class,
-                AbstractAnnotatedFactory::CACHE_SERVICE => AnnotationsCacheFactory::class,
-                AuthenticationMiddleware::class         => AuthenticationMiddlewareFactory::class,
-                AuthorizationMiddleware::class          => AnnotatedServiceFactory::class,
-                Environment::class                      => TwigEnvironmentFactory::class,
-                TwigExtension::class                    => TwigExtensionFactory::class,
-                TwigRenderer::class                     => TwigRendererFactory::class,
-                ErrorResponseMiddleware::class          => AnnotatedServiceFactory::class,
-                RouteListCommand::class                 => RouteListCommandFactory::class,
-                TokenGenerateCommand::class             => TokenGenerateCommandFactory::class,
-                ErrorReportService::class               => AnnotatedServiceFactory::class,
-                EntityListenerResolver::class           => EntityListenerResolverFactory::class,
+                'doctrine.entity_manager.orm_default' => EntityManagerFactory::class,
+                'dot-mail.options.default'            => MailOptionsAbstractFactory::class,
+                'dot-mail.service.default'            => MailServiceAbstractFactory::class,
+                AuthenticationMiddleware::class       => AuthenticationMiddlewareFactory::class,
+                AuthorizationMiddleware::class        => AnnotatedServiceFactory::class,
+                Environment::class                    => TwigEnvironmentFactory::class,
+                TwigExtension::class                  => TwigExtensionFactory::class,
+                TwigRenderer::class                   => TwigRendererFactory::class,
+                ErrorResponseMiddleware::class        => AnnotatedServiceFactory::class,
+                RouteListCommand::class               => RouteListCommandFactory::class,
+                TokenGenerateCommand::class           => TokenGenerateCommandFactory::class,
+                ErrorReportService::class             => AnnotatedServiceFactory::class,
+                EntityListenerResolver::class         => EntityListenerResolverFactory::class,
             ],
             'aliases'    => [
                 Authentication\AuthenticationInterface::class => Authentication\OAuth2\OAuth2Adapter::class,

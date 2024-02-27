@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Api\App\Entity\EntityListenerResolver;
-use Doctrine\Common\Cache\PhpFileCache;
 
 $baseUrl = 'http://localhost:8080';
 
@@ -22,7 +21,6 @@ $databases = [
 ];
 
 return [
-    'annotations_cache_dir' => getcwd() . '/data/cache/annotations',
     'application'           => [
         'name' => 'DotKernel API',
         'url'  => $baseUrl,
@@ -55,11 +53,6 @@ return [
         ],
         'configuration' => [
             'orm_default' => [
-                // it is recommended to disable doctrine cache on development
-                // just comment any type of cache you don't want to be applied on development
-                'query_cache'              => PhpFileCache::class,
-                'metadata_cache'           => PhpFileCache::class,
-                'result_cache'             => PhpFileCache::class,
                 'entity_listener_resolver' => EntityListenerResolver::class,
             ],
         ],
