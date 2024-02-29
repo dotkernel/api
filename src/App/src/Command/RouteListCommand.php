@@ -6,6 +6,7 @@ namespace Api\App\Command;
 
 use Api\App\RoutesDelegator;
 use Mezzio\Application;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,6 +19,10 @@ use function sprintf;
 use function str_contains;
 use function str_replace;
 
+#[AsCommand(
+    name: 'route:list',
+    description: 'List API routes',
+)]
 class RouteListCommand extends Command
 {
     /** @var string $defaultName */
