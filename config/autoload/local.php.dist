@@ -51,11 +51,6 @@ return [
                 'params' => $databases['default'],
             ],
         ],
-        'configuration' => [
-            'orm_default' => [
-                'entity_listener_resolver' => EntityListenerResolver::class,
-            ],
-        ],
     ],
     'uploads'               => [
         'user' => [
