@@ -55,7 +55,7 @@ class AdminRepository extends EntityRepository
             ->setFirstResult($page['offset'])
             ->setMaxResults($page['limit'])
             ->getQuery()
-            ->useQueryCache(true);
+            ->setCacheable(true);
 
         return new AdminCollection($query, false);
     }

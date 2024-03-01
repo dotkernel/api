@@ -45,7 +45,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
                 ->andWhere('resetPasswords.hash = :hash')
                 ->setParameter('hash', $hash)
                 ->getQuery()
-                ->useQueryCache(true)
+                ->setCacheable(true)
                 ->getSingleResult();
         } catch (Throwable) {
             return null;
@@ -98,7 +98,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             $qb->andWhere('roles.name = :role')->setParameter('role', $filters['role']);
         }
 
-        $qb->getQuery()->useQueryCache(true);
+        $qb->getQuery()->setCacheable(true);
 
         return new UserCollection($qb, false);
     }

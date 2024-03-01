@@ -29,7 +29,7 @@ class AdminRoleRepository extends EntityRepository
             ->setFirstResult($page['offset'])
             ->setMaxResults($page['limit'])
             ->getQuery()
-            ->useQueryCache(true);
+            ->setCacheable(true);
 
         return new AdminRoleCollection($query, false);
     }

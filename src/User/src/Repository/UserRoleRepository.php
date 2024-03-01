@@ -29,7 +29,7 @@ class UserRoleRepository extends EntityRepository
             ->setFirstResult($page['offset'])
             ->setMaxResults($page['limit'])
             ->getQuery()
-            ->useQueryCache(true);
+            ->setCacheable(true);
 
         return new UserRoleCollection($query, false);
     }
