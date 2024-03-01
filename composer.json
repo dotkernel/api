@@ -46,6 +46,7 @@
         "ext-gd": "*",
         "ext-json": "*",
         "dotkernel/dot-annotated-services": "^4.1.7",
+        "dotkernel/dot-cache": "^4.0",
         "dotkernel/dot-cli": "^3.5.0",
         "dotkernel/dot-data-fixtures": "^1.1.3",
         "dotkernel/dot-doctrine-metadata": "^3.2.2",
