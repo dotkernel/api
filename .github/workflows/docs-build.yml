@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build Docs
-        uses: dotkernel/documentation-theme/github-actions/docs@dev
+        uses: dotkernel/documentation-theme/github-actions/docs@main
         env:
           DEPLOY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
