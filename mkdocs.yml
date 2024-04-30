@@ -1,0 +1,24 @@
+docs_dir: docs/book
+site_dir: docs/html
+extra:
+  project: DotKernel 3 API
+  current_version: v4
+  versions:
+    - v4
+nav:
+  - Home: index.md
+  - v4:
+      - Introduction:
+          - "Introduction": v4/introduction/introduction.md
+          - "Getting Started": v4/introduction/getting-started.md
+          - "Server Requirements": v4/introduction/server-requirements.md
+          - "File Structure": v4/introduction/file-structure.md
+          - "Installation": v4/introduction/installation.md
+          - "Packages": v4/introduction/packages.md
+      - Tutorials:
+          - "Creating a book module": v4/tutorials/create-book-module.md
+site_name: api
+site_description: "DotKernel 3 API"
+repo_url: "https://github.com/dotkernel/api"
+plugins:
+  - search
