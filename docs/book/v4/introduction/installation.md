@@ -68,11 +68,9 @@ More details on how fixtures work can be found here: https://github.com/dotkerne
 
 Sending a GET request to the [home page](http://localhost:8080/) should output the following message:
 
-  ```
-  {
-    "message": "Welcome to DotKernel API!"
-  }
-  ```
+    {
+      "message": "Welcome to DotKernel API!"
+    }
 
 ## Running tests
 

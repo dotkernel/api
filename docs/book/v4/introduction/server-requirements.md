@@ -6,7 +6,7 @@ For production, we highly recommend a *nix based system.
 
 * Apache >= 2.2
 *  mod_rewrite
-   * .htaccess support `(AllowOverride All)`
+* .htaccess support `(AllowOverride All)`
 * Nginx
 
 ## PHP >= 8.2
