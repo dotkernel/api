@@ -1,4 +1,4 @@
-## Packages
+# Packages
 
 * `dotkernel/dot-annotated-services` - Dependency injection component using class attributes.
 * `dotkernel/dot-cache` - Cache component extending symfony-cache
@@ -28,13 +28,3 @@
 * `ramsey/uuid-doctrine` - Use ramsey/uuid as a Doctrine field type
 * `roave/psr-container-doctrine` - Doctrine Factories for PSR-11 Containers
 * `symfony/filesystem` - Provides basic utilities for the filesystem
-
-
-
-
-
-
-
-
-
-

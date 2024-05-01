@@ -1,4 +1,4 @@
-### Introduction 
+# Introduction 
 
 Based on Enrico Zimuel’s Zend Expressive API – Skeleton example, DotKernel API runs on Laminas and Mezzio components and implements standards like PSR-3, PSR-4, PSR-7, PSR-11 and PSR-15.
 
@@ -97,10 +97,10 @@ We have 2 types of tests: functional and unit tests, you can run both types at t
 
     php vendor/bin/phpunit
 
-#### Running unit tests
+## Running unit tests
 
     vendor/bin/phpunit --testsuite=UnitTests --testdox --colors=always
 
-#### Running functional tests
+## Running functional tests
 
     vendor/bin/phpunit --testsuite=FunctionalTests --testdox --colors=always
