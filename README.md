@@ -51,7 +51,7 @@ You can check if you have development mode enabled by running:
 
 ## Step 5: Setup database
 
-## Running migrations:
+## Running migrations
 
 * create a new MySQL database - set collation to `utf8mb4_general_ci`
 * fill out the database connection params in `config/autoload/local.php` under `$databases['default']`
@@ -65,9 +65,9 @@ This command will prompt you to confirm that you want to run it:
 
 Hit `Enter` to confirm the operation.
 
-## Executing fixtures:
+## Executing fixtures
 
-**Fixtures are used to seed the database with initial values and should be executed after migrating the database.** 
+**Fixtures are used to seed the database with initial values and should be executed after migrating the database.**
 
 To list all the fixtures, run: 
 
@@ -75,7 +75,7 @@ To list all the fixtures, run:
 
 This will output all the fixtures in the order of execution.
 
-To execute all fixtures, run: 
+To execute all fixtures, run:
 
     php bin/doctrine fixtures:execute
 
@@ -90,16 +90,19 @@ More details on how fixtures work can be found here: https://github.com/dotkerne
     php -S 0.0.0.0:8080 -t public
 
 Sending a GET request to the [home page](http://localhost:8080/) should output the following message:
-```json
+
+```
 {
-  "message": "Welcome to DotKernel API!"
-}
+"message": "Welcome to DotKernel API!"
+} 
 ```
 
 ## Documentation
+
 In order to access DotKernel API documentation, check the provided [readme file](documentation/README.md).
 
 Additionally, each CLI command available has it's own documentation:
+
 * [Create admin account](documentation/command/admin-create.md)
 * [Generate database migrations](documentation/command/migrations-diff.md)
 * [Display available endpoints](documentation/command/route-list.md)
