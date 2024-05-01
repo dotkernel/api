@@ -69,7 +69,7 @@ Hit `Enter` to confirm the operation.
 
 **Fixtures are used to seed the database with initial values and should be executed after migrating the database.**
 
-To list all the fixtures, run: 
+To list all the fixtures, run:
 
     php bin/doctrine fixtures:list
 
@@ -91,11 +91,11 @@ More details on how fixtures work can be found here: https://github.com/dotkerne
 
 Sending a GET request to the [home page](http://localhost:8080/) should output the following message:
 
-```
-{
-"message": "Welcome to DotKernel API!"
-} 
-```
+  ```
+  {
+  "message": "Welcome to DotKernel API!"
+  }
+  ```
 
 ## Documentation
 
