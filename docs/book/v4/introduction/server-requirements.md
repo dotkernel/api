@@ -5,7 +5,7 @@ For production, we highly recommend a *nix based system.
 ## Webserver
 
 * Apache >= 2.2
-*  mod_rewrite
+* mod_rewrite
 * .htaccess support `(AllowOverride All)`
 * Nginx
 

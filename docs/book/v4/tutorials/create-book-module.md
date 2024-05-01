@@ -508,7 +508,7 @@ Once you set up all the files as in the example above, you will need to do a few
 * Register the module by adding `Api\Book\ConfigProvider::class,` under `Api\User\ConfigProvider::class,`.
 * Register the module's routes by adding `\Api\Book\RoutesDelegator::class,` under `\Api\User\RoutesDelegator::class,` in `src/App/src/ConfigProvider.php`.
 
-It should look like this: 
+It should look like this:
 
       public function getDependencies(): array
       {
@@ -533,11 +533,12 @@ It should look like this:
           'cache' => 'array',
           'paths' => __DIR__ . '/../../src/Book/src/Entity',
       ],
-    
-    add this under the `doctrine.driver` key:
-  * ``'Api\\Book\Entity'    => 'BookEntities',`` add this under the `doctrine.driver.drivers` class
 
-Example: 
+* add this under the `doctrine.driver` key:
+
+  ``'Api\\Book\Entity'    => 'BookEntities',`` add this under the `doctrine.driver.drivers` class
+
+Example:
 
     <?php
     ...
@@ -590,7 +591,7 @@ Doctrine can handle the table creation, run the following command:
 
 This will check for differences between your entities and database structure and create migration files if necessary, in `data/doctrine/migrations`.
 
-To execute the migrations run: 
+To execute the migrations run:
 
     vendor/bin/doctrine-migrations migrate
 

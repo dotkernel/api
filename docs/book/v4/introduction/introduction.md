@@ -1,4 +1,4 @@
-# Introduction 
+# Introduction
 
 Based on Enrico Zimuel’s Zend Expressive API – Skeleton example, DotKernel API runs on Laminas and Mezzio components and implements standards like PSR-3, PSR-4, PSR-7, PSR-11 and PSR-15.
 
@@ -45,7 +45,6 @@ For our API payloads ( a value object for describing the API resource, its relat
 ## CORS
 
 By using `MezzioCorsMiddlewareCorsMiddleware`, the CORS preflight will be recognized and the middleware will start to detect the proper CORS configuration. The Router is used to detect every allowed request method by executing a route match with all possible request methods. Therefore, for every preflight request, there is at least one Router request.
-
 
 ## OAuth 2
 
