@@ -1,6 +1,6 @@
-## Implementing a book module in DotKernel 3 API
+# Implementing a book module in DotKernel 3 API
 
-### File structure
+## File structure
 
 The below file structure is just an example, you can have multiple components such as event listeners, wrappers, etc.
 
@@ -26,7 +26,6 @@ The below file structure is just an example, you can have multiple components su
             ConfigProvider.php
             RoutesDelegator.php
 
-
 * `src/Book/src/Collection/BookCollection.php` - a collection refers to a container for a group of related objects, typically used to manage sets of related entities fetched from a database
 * `src/Book/src/Entity/Book.php` - an entity refers to a PHP class that represents a persistent object or data structure
 * `src/Book/src/Handler/BookHandler.php` - handlers are middleware that can handle requests based on an action
@@ -37,22 +36,22 @@ The below file structure is just an example, you can have multiple components su
 * `src/Book/src/InputFilter/BookInputFilter.php` - input filters and validators
 * `src/Book/src/InputFilter/Input/*` - input filters and validator configurations
 
-### File creation and contents
+## File creation and contents
 
 * `src/Book/src/Collection/BookCollection.php`
 
 ```php
-<?php
-
-declare(strict_types=1);
-
-namespace Api\Book\Collection;
-
-use Api\App\Collection\ResourceCollection;
-
-class BookCollection extends ResourceCollection
-{
-}
+  <?php
+  
+  declare(strict_types=1);
+  
+  namespace Api\Book\Collection;
+  
+  use Api\App\Collection\ResourceCollection;
+  
+  class BookCollection extends ResourceCollection
+  {
+  }
 ```
 
 * `src/Book/src/Entity/Book.php`
@@ -60,85 +59,85 @@ class BookCollection extends ResourceCollection
 To keep things simple in this tutorial our book will have 3 properties: `name`, `author` and `release date`.
 
 ```php
-<?php
-
-declare(strict_types=1);
-
-namespace Api\Book\Entity;
-
-use Api\App\Entity\AbstractEntity;
-use Api\Book\Repository\BookRepository;
-use DateTimeImmutable;
-use Doctrine\ORM\Mapping as ORM;
-
-#[ORM\Entity(repositoryClass: BookRepository::class)]
-#[ORM\Table("book")]
-class Book extends AbstractEntity
-{
-    #[ORM\Column(name: "name", type: "string", length: 100)]
-    protected string $name;
-
-    #[ORM\Column(name: "author", type: "string", length: 100)]
-    protected string $author;
-
-    #[ORM\Column(name: "releaseDate", type: "datetime_immutable")]
-    protected DateTimeImmutable $releaseDate;
-
-    public function __construct(string $name, string $author, DateTimeImmutable $releaseDate)
-    {
-        parent::__construct();
-
-        $this->setName($name);
-        $this->setAuthor($author);
-        $this->setReleaseDate($releaseDate);
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getAuthor(): string
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(string $author): self
-    {
-        $this->author = $author;
-
-        return $this;
-    }
-
-    public function getReleaseDate(): DateTimeImmutable
-    {
-        return $this->releaseDate;
-    }
-
-    public function setReleaseDate(DateTimeImmutable $releaseDate): self
-    {
-        $this->releaseDate = $releaseDate;
-
-        return $this;
-    }
-
-    public function getArrayCopy(): array
-    {
-        return [
-            'uuid' => $this->getUuid()->toString(),
-            'name' => $this->getName(),
-            'author' => $this->getAuthor(),
-            'releaseDate' => $this->getReleaseDate(),
-        ];
-    }
-}
+  <?php
+  
+  declare(strict_types=1);
+  
+  namespace Api\Book\Entity;
+  
+  use Api\App\Entity\AbstractEntity;
+  use Api\Book\Repository\BookRepository;
+  use DateTimeImmutable;
+  use Doctrine\ORM\Mapping as ORM;
+  
+  #[ORM\Entity(repositoryClass: BookRepository::class)]
+  #[ORM\Table("book")]
+  class Book extends AbstractEntity
+  {
+      #[ORM\Column(name: "name", type: "string", length: 100)]
+      protected string $name;
+  
+      #[ORM\Column(name: "author", type: "string", length: 100)]
+      protected string $author;
+  
+      #[ORM\Column(name: "releaseDate", type: "datetime_immutable")]
+      protected DateTimeImmutable $releaseDate;
+  
+      public function __construct(string $name, string $author, DateTimeImmutable $releaseDate)
+      {
+          parent::__construct();
+  
+          $this->setName($name);
+          $this->setAuthor($author);
+          $this->setReleaseDate($releaseDate);
+      }
+  
+      public function getName(): string
+      {
+          return $this->name;
+      }
+  
+      public function setName(string $name): self
+      {
+          $this->name = $name;
+  
+          return $this;
+      }
+  
+      public function getAuthor(): string
+      {
+          return $this->author;
+      }
+  
+      public function setAuthor(string $author): self
+      {
+          $this->author = $author;
+  
+          return $this;
+      }
+  
+      public function getReleaseDate(): DateTimeImmutable
+      {
+          return $this->releaseDate;
+      }
+  
+      public function setReleaseDate(DateTimeImmutable $releaseDate): self
+      {
+          $this->releaseDate = $releaseDate;
+  
+          return $this;
+      }
+  
+      public function getArrayCopy(): array
+      {
+          return [
+              'uuid' => $this->getUuid()->toString(),
+              'name' => $this->getName(),
+              'author' => $this->getAuthor(),
+              'releaseDate' => $this->getReleaseDate(),
+          ];
+      }
+  }
 ```
 
 * `src/Book/src/Repository/BookRepository.php`
@@ -189,6 +188,7 @@ class BookRepository extends EntityRepository
     }
 }
 ```
+
 * `src/Book/src/Service/BookService.php`
 
 ```php
@@ -336,7 +336,6 @@ class RoutesDelegator
 ```
 
 * `src/Book/src/InputFilter/BookInputFilter.php`
-
 
 ```php
 <?php
@@ -525,7 +524,7 @@ class BookHandler implements RequestHandlerInterface
 }
 ```
 
-### Configuring and registering the new module
+## Configuring and registering the new module
 
 Once you set up all the files as in the example above, you will need to do a few additional configurations:
 
@@ -554,6 +553,7 @@ public function getDependencies(): array
 ```
 
 * In `src/config/autoload/doctrine.global.php` add under the `doctrine.driver` key:
+
   * ```php
       'BookEntities'  => [
           'class' => AttributeDriver::class,
@@ -561,6 +561,7 @@ public function getDependencies(): array
           'paths' => __DIR__ . '/../../src/Book/src/Entity',
       ],
       ```
+    
     add this under the `doctrine.driver` key:
   * ``'Api\\Book\Entity'    => 'BookEntities',`` add this under the `doctrine.driver.drivers` class
 
@@ -609,7 +610,7 @@ return [
 Next we need to configure access to the newly created endpoints, add `books.list` and `book.create` to the authorization rbac array, under the `UserRole::ROLE_GUEST` key.
 > Make sure you read and understand the rbac documentation.
 
-### Migrations
+## Migrations
 
 We created the `Book` entity, but we didn't create the associated table for it.
 
@@ -623,7 +624,7 @@ To execute the migrations run:
 
     vendor/bin/doctrine-migrations migrate
 
-### Checking endpoints
+## Checking endpoints
 
 If we did everything as planned we can call the `http://localhost/books` endpoint and create a new book:
 

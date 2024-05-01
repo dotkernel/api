@@ -5,8 +5,8 @@ For production, we highly recommend a *nix based system.
 ## Webserver
 
 * Apache >= 2.2
-  *  mod_rewrite
-     .htaccess support `(AllowOverride All)`
+*  mod_rewrite
+   * .htaccess support `(AllowOverride All)`
 * Nginx
 
 ## PHP >= 8.2
@@ -22,6 +22,7 @@ Both mod_php and FCGI (FPM) are supported.
 * Composer (added to $PATH)
 
 ## RDBMS
+
 * MySQL / MariaDB >= 5.5.3
 
 ## Recommended extensions

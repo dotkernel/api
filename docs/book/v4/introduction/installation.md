@@ -25,12 +25,11 @@ You can check if you have development mode enabled by running:
 * duplicate `config/autoload/mail.local.php.dist` as `config/autoload/mail.local.php` <- if your API will send emails, make sure you fill in SMTP connection params
 * **optional**: in order to run/create tests, duplicate `config/autoload/local.test.php.dist` as `config/autoload/local.test.php` <- this creates a new in-memory database that your tests will run on.
 
-
 ## Setup database
 
 Make sure you fill out the database credentials in `config/autoload/local.php` under `$databases['default']`.
 
-## Running migrations:
+## Running migrations
 
 * create a new MySQL database - set collation to `utf8mb4_general_ci`
 * run the database migrations by using the following command:
@@ -43,7 +42,7 @@ This command will prompt you to confirm that you want to run it.
 
 Hit `Enter` to confirm the operation.
 
-## Executing fixtures:
+## Executing fixtures
 
 **Fixtures are used to seed the database with initial values and should be executed after migrating the database.**
 
@@ -68,6 +67,7 @@ More details on how fixtures work can be found here: https://github.com/dotkerne
     php -S 0.0.0.0:8080 -t public
 
 Sending a GET request to the [home page](http://localhost:8080/) should output the following message:
+
 ```json
 {
   "message": "Welcome to DotKernel API!"
