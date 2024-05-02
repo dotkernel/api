@@ -3,10 +3,10 @@ COMMAND=$(echo "${JOB}" | jq -r '.command')
 
 echo "Running $COMMAND"
 
-pecl install sqlite
-pecl install pdo_sqlite
+#pecl install sqlite
+pecl install php8.2-sqlite3
 
-php -i | grep sqlite
+#php -i | grep sqlite
 
 if [[ ${COMMAND} =~ phpunit ]];then
   mv config/autoload/local.php.dist config/autoload/local.php
