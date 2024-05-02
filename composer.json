@@ -43,7 +43,6 @@
     },
     "require": {
         "php": "~8.2.0 || ~8.3.0",
-        "ext-gd": "*",
         "ext-json": "*",
         "dotkernel/dot-annotated-services": "^4.1.7",
         "dotkernel/dot-cache": "^4.0",
