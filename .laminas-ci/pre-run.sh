@@ -1,7 +1,9 @@
 JOB=$3
+PHP_VERSION=$5
 COMMAND=$(echo "${JOB}" | jq -r '.command')
 
-echo "Running $COMMAND"
+echo "Running $COMMAND @@@@@@@@@@@@@@@"
+echo "$PHP_VERSION"
 
 #pecl install sqlite
 #pecl install php8-sqlite3
@@ -11,8 +13,8 @@ apt-get install php8.3-sqlite3
 
 echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 
-apt-get install php8.2-sqlite
-apt-get install php8.3-sqlite
+#apt-get install php8.2-sqlite
+#apt-get install php8.3-sqlite
 
 #php -i | grep sqlite
 
