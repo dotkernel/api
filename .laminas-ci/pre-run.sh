@@ -7,7 +7,7 @@ echo "Running $COMMAND"
 if [[ ${COMMAND} =~ phpunit ]];then
 
 #  apt-get update
-  apt-get install php"${PHP_VERSION}"-sqlite3 >= 8.2.18
+  apt-get install php"${PHP_VERSION}"-sqlite3=8.2.18
 #  apt-get install php8.2-sqlite3
 #  apt-get install php8.3-sqlite3
 
