@@ -4,7 +4,13 @@ COMMAND=$(echo "${JOB}" | jq -r '.command')
 echo "Running $COMMAND"
 
 #pecl install sqlite
-pecl install php8.2-sqlite3
+#pecl install php8-sqlite3
+
+apt-get install php8.2-sqlite3
+
+echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+
+apt-get install php8.2-sqlite
 
 #php -i | grep sqlite
 
