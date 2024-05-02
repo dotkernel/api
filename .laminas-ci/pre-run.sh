@@ -1,5 +1,5 @@
 JOB=$3
-PHP_VERSION=$5
+PHP_VERSION=$4
 COMMAND=$(echo "${JOB}" | jq -r '.command')
 
 echo "Running $COMMAND @@@@@@@@@@@@@@@"
