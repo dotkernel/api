@@ -6,8 +6,6 @@ echo "Running $COMMAND"
 
 if [[ ${COMMAND} =~ phpunit ]];then
 
-#  apt-get update -y
-#  apt-get upgrade -y
   apt-get install php"${PHP_VERSION}"-sqlite3
 
   cp config/autoload/local.php.dist config/autoload/local.php
