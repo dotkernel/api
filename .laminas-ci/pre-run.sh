@@ -1,14 +1,9 @@
-#echo "$PWD"
+JOB=$3
+COMMAND=$(echo "${JOB}" | jq -r '.command')
 
-#echo "$2"
+echo "Running $COMMAND"
 
-#JOB=$3
-#COMMAND=$(echo "${JOB}" | jq -r '.command')
-
-#ls -la
-
-#echo "$COMMAND"
-if [[ ${COMMAND} =~ phpunit ]];then
+if [[ ${COMMAND} =~ phpunit || ${COMMAND} =~ psalm ]];then
   mv config/autoload/local.php.dist config/autoload/local.php
   mv config/autoload/mail.local.php.dist config/autoload/mail.local.php
   mv config/autoload/local.test.php.dist config/autoload/local.test.php
