@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="description" content="DotKernel API">
+        
+        
+
+        
+        
+            
+        
+        <meta name="docsearch:version" content="4.0.0,latest">
+        <meta name="docsearch:language" content="en">
+        <meta name="docsearch:component" content="api">
+
+        
+        <link rel="canonical" href="https://docs.dotkernel.org/api/v4/tutorials/create-book-module/">
+        
+        
+        <link rel="shortcut icon" href="https://docs.dotkernel.org/img/dk_logomark_3colors.svg">
+        
+
+        <title>Creating a book module - api - DotKernel Documentation</title>
+
+        <link rel="stylesheet" href="https://docs.dotkernel.org/css/bootstrap.css">
+        <link rel="stylesheet" href="https://docs.dotkernel.org/css/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="https://docs.dotkernel.org/css/docs.css">
+        <script src="https://docs.dotkernel.org//js/bootstrap.js" defer></script>
+        <script src="https://docs.dotkernel.org//js/docs.js" defer></script>
+        <script src="https://docs.dotkernel.org//js/scripts.js" defer></script>
+    </head>
+    <body data-bs-spy="scroll" data-bs-target=".toc" data-bs-offset="100">
+
+        
+        <nav class="navbar navbar-expand-lg bg-body-tertiary bg-light dk-nav py-3" data-bs-theme="light">
+    <div class="container justify-content-between">
+        <div class="dk-nav-icon d-flex align-items-center">
+            <a class="navbar-brand" href="https://docs.dotkernel.org/">
+                <img src="https://docs.dotkernel.org//img/dk_logomark_white.svg" alt="DotKernel Logo" width="45" height="50" class="d-inline-block align-text-top" />
+            </a>
+
+            <div class="dk-nav-icon-items">
+                <span style="font-size: 12px; line-height: 13px">DotKernel Documentation</span>
+
+                <div class="dropdown" data-bs-theme="light">
+                    <span class="fw-bold dropdown-toggle dk-pkg-name" data-bs-toggle="dropdown" aria-expanded="false">Packages</span>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item">
+                            <a href="https://docs.dotkernel.org/api/" class="nav-link d-flex gap-4 align-items-center">
+                                <img src="https://docs.dotkernel.org/img/dk_logomark.svg" alt="DotKernel Logo" width="45" height="50" class="d-inline-block align-text-top" />
+                                <div>
+                                    <span class="fw-bold d-block">API</span>
+                                    <span>DotKernel API</span>
+                                </div>
+                            </a>
+                        </li>
+
+                        <li class="dropdown-item">
+                            <a href="https://docs.dotkernel.org/admin/" class="nav-link d-flex gap-4 align-items-center">
+                                <img src="https://docs.dotkernel.org/img/dk_logomark.svg" alt="DotKernel Logo" width="45" height="50" class="d-inline-block align-text-top" />
+                                <div>
+                                    <span class="fw-bold d-block">Admin</span>
+                                    <span>DotKernel admin application</span>
+                                </div>
+                            </a>
+                        </li>
+
+                        <li class="dropdown-item">
+                            <a href="https://docs.dotkernel.org/frontend/" class="nav-link d-flex gap-4 align-items-center">
+                                <img src="https://docs.dotkernel.org/img/dk_logomark.svg" alt="DotKernel Logo" width="45" height="50" class="d-inline-block align-text-top" />
+                                <div>
+                                    <span class="fw-bold d-block">Frontend</span>
+                                    <span>DotKernel frontend application</span>
+                                </div>
+                            </a>
+                        </li>
+
+                        <li class="dropdown-item bg-light">
+                            <a href="https://docs.dotkernel.org/packages/" class="nav-link d-flex gap-4 align-items-center">
+                                <img src="https://docs.dotkernel.org/img/dk_logomark.svg" alt="DotKernel Logo" width="45" height="50" class="d-inline-block align-text-top" />
+                                <div>
+                                    <span class="fw-bold d-block">Packages</span>
+                                    <span>DotKernel packages</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+<!--                <li class="nav-item">-->
+<!--                    <a href="#" class="nav-link fw-bold text-white" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal" title="Open search">-->
+<!--                        <i class="bi bi-search"></i> Search-->
+<!--                    </a>-->
+<!--                </li>-->
+                <li class="nav-item">
+                    <a class="nav-link fw-bold text-white" href="https://github.com/dotkernel/api" title="Go to api repository" target="_blank">
+                        <i class="bi bi-github"></i>
+                        GitHub
+                    </a>
+                </li>
+                <li class="nav-item">
+                    
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+        
+        <div class="container">
+    <nav aria-label="breadcrumb" class="nav_breadcrumb">
+        <ol class="breadcrumb">
+            
+                <li class="breadcrumb-item"><a href="https://docs.dotkernel.org/">Overview</a></li>
+                <li class="breadcrumb-item"><a href="https://docs.dotkernel.org/api/">DotKernel API</a></li>
+
+                
+                    <li class="breadcrumb-item"><a href="../../..">api</a></li>
+
+                    
+                        
+                            
+                            
+                        
+                    
+                        
+                            
+                            
+                                <li class="breadcrumb-item">Tutorials</li>
+                            
+                        
+                    
+
+                    <li class="breadcrumb-item active" aria-current="page">Creating a book module</li>
+                
+            
+        </ol>
+    </nav>
+</div>
+
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 right_sidebar">
+                    
+                    
+    <div class="subnavigation hidden-print">
+<!--        <h4 class="subnavigation__title">-->
+<!--            <a href="../../..">api</a>-->
+<!--        </h4>-->
+
+        <h5 class="subnavigation__title">Table of Contents</h5>
+
+        <ul class="subnavigation__list">
+            
+
+                
+                
+                    
+                        
+    <li class="subnavigation__list-item">
+        <span class="subnavigation__headline">Introduction</span>
+        <ul class="subnavigation__list">
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../../introduction/introduction/" class="subnavigation__link">Introduction</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../../introduction/getting-started/" class="subnavigation__link">Getting Started</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../../introduction/server-requirements/" class="subnavigation__link">Server Requirements</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../../introduction/file-structure/" class="subnavigation__link">File Structure</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../../introduction/installation/" class="subnavigation__link">Installation</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../../introduction/packages/" class="subnavigation__link">Packages</a>
+    </li>
+
+            
+        </ul>
+    </li>
+
+                    
+                        
+    <li class="subnavigation__list-item">
+        <span class="subnavigation__headline">Tutorials</span>
+        <ul class="subnavigation__list">
+            
+                
+    <li class="subnavigation__list-item subnavigation__list-item--active">
+        <a href="./" class="subnavigation__link">Creating a book module</a>
+    </li>
+
+            
+        </ul>
+    </li>
+
+                    
+                
+            
+        </ul>
+    </div>
+
+                    
+
+                    
+                    
+                    
+    
+
+    
+    
+        <div class="toc">
+            <h6 class="toc__headline">On this page</h6>
+            <ul class="toc__list">
+            
+                <li class="toc__entry">
+                    <a href="#file-structure" class="toc__link nav-link">File structure</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#file-creation-and-contents" class="toc__link nav-link">File creation and contents</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#configuring-and-registering-the-new-module" class="toc__link nav-link">Configuring and registering the new module</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#migrations" class="toc__link nav-link">Migrations</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#checking-endpoints" class="toc__link nav-link">Checking endpoints</a>
+                </li>
+            
+            </ul>
+        </div>
+    
+
+                    
+                </div>
+                <div class="col-lg-9 main_docs">
+                    
+                    
+
+
+
+
+    
+    
+<!--        <h2 class="chapter__headline text-black-50">Tutorials</h2>-->
+    
+
+    <h1 id="implementing-a-book-module-in-dotkernel-api">Implementing a book module in DotKernel API</h1>
+<h2 id="file-structure">File structure</h2>
+<p>The below file structure is just an example, you can have multiple components such as event listeners, wrappers, etc.</p>
+<pre class="codehilite"><code>/src/
+    /Book/
+        /src/
+            /Collection/
+                /BookCollection.php
+            /Entity/
+                /Book.php
+            /Handler/
+                /BookHandler.php
+            /Repository/
+                /BookRepository.php
+            /Service/
+                /BookService.php
+            /InputFilter/
+                /Input/
+                    /NameInput.php
+                    /AuthorInput.php
+                    /ReleaseDateInput.php
+                /BookInputFilter.php
+        ConfigProvider.php
+        RoutesDelegator.php
+</code></pre>
+
+<ul>
+<li><code>src/Book/src/Collection/BookCollection.php</code> - a collection refers to a container for a group of related objects, typically used to manage sets of related entities fetched from a database</li>
+<li><code>src/Book/src/Entity/Book.php</code> - an entity refers to a PHP class that represents a persistent object or data structure</li>
+<li><code>src/Book/src/Handler/BookHandler.php</code> - handlers are middleware that can handle requests based on an action</li>
+<li><code>src/Book/src/Repository/BookRepository.php</code> - a repository is a class responsible for querying and retrieving entities from the database</li>
+<li><code>src/Book/src/Service/BookService.php</code> - is a class or component responsible for performing a specific task or providing functionality to other parts of the application</li>
+<li><code>src/Book/src/ConfigProvider.php</code> -  is a class that provides configuration for various aspects of the framework or application</li>
+<li><code>src/Book/src/RoutesDelegator.php</code> - a routes delegator is a delegator factory responsible for configuring routing middleware based on routing configuration provided by the application</li>
+<li><code>src/Book/src/InputFilter/BookInputFilter.php</code> - input filters and validators</li>
+<li><code>src/Book/src/InputFilter/Input/*</code> - input filters and validator configurations</li>
+</ul>
+<h2 id="file-creation-and-contents">File creation and contents</h2>
+<ul>
+<li>
+<p><code>src/Book/src/Collection/BookCollection.php</code></p>
+<p>&lt;?php</p>
+<p>declare(strict_types=1);</p>
+<p>namespace Api\Book\Collection;</p>
+<p>use Api\App\Collection\ResourceCollection;</p>
+<p>class BookCollection extends ResourceCollection
+  {
+  }</p>
+</li>
+<li>
+<p><code>src/Book/src/Entity/Book.php</code></p>
+</li>
+</ul>
+<p>To keep things simple in this tutorial our book will have 3 properties: <code>name</code>, <code>author</code> and <code>release date</code>.</p>
+<pre class="codehilite"><code>&lt;?php
+
+declare(strict_types=1);
+
+namespace Api\Book\Entity;
+
+use Api\App\Entity\AbstractEntity;
+use Api\Book\Repository\BookRepository;
+use DateTimeImmutable;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: BookRepository::class)]
+#[ORM\Table(&quot;book&quot;)]
+class Book extends AbstractEntity
+{
+    #[ORM\Column(name: &quot;name&quot;, type: &quot;string&quot;, length: 100)]
+    protected string $name;
+
+    #[ORM\Column(name: &quot;author&quot;, type: &quot;string&quot;, length: 100)]
+    protected string $author;
+
+    #[ORM\Column(name: &quot;releaseDate&quot;, type: &quot;datetime_immutable&quot;)]
+    protected DateTimeImmutable $releaseDate;
+
+    public function __construct(string $name, string $author, DateTimeImmutable $releaseDate)
+    {
+        parent::__construct();
+
+        $this-&gt;setName($name);
+        $this-&gt;setAuthor($author);
+        $this-&gt;setReleaseDate($releaseDate);
+    }
+
+    public function getName(): string
+    {
+        return $this-&gt;name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this-&gt;name = $name;
+
+        return $this;
+    }
+
+    public function getAuthor(): string
+    {
+        return $this-&gt;author;
+    }
+
+    public function setAuthor(string $author): self
+    {
+        $this-&gt;author = $author;
+
+        return $this;
+    }
+
+    public function getReleaseDate(): DateTimeImmutable
+    {
+        return $this-&gt;releaseDate;
+    }
+
+    public function setReleaseDate(DateTimeImmutable $releaseDate): self
+    {
+        $this-&gt;releaseDate = $releaseDate;
+
+        return $this;
+    }
+
+    public function getArrayCopy(): array
+    {
+        return [
+            'uuid' =&gt; $this-&gt;getUuid()-&gt;toString(),
+            'name' =&gt; $this-&gt;getName(),
+            'author' =&gt; $this-&gt;getAuthor(),
+            'releaseDate' =&gt; $this-&gt;getReleaseDate(),
+        ];
+    }
+}
+</code></pre>
+
+<ul>
+<li>
+<p><code>src/Book/src/Repository/BookRepository.php</code></p>
+<p>&lt;?php</p>
+<p>declare(strict_types=1);</p>
+<p>namespace Api\Book\Repository;</p>
+<p>use Api\App\Helper\PaginationHelper;
+  use Api\Book\Collection\BookCollection;
+  use Api\Book\Entity\Book;
+  use Doctrine\ORM\EntityRepository;
+  use Dot\AnnotatedServices\Annotation\Entity;</p>
+<p>/*<em>
+   * @Entity(name="Api\Book\Entity\Book")
+   * @extends EntityRepository<object>
+   </em>/
+  class BookRepository extends EntityRepository
+  {
+      public function saveBook(Book $book): Book
+      {
+          $this-&gt;getEntityManager()-&gt;persist($book);
+          $this-&gt;getEntityManager()-&gt;flush();</p>
+<pre class="codehilite"><code>      return $book;
+  }
+
+  public function getBooks(array $filters = []): BookCollection
+  {
+      $page = PaginationHelper::getOffsetAndLimit($filters);
+
+      $qb = $this
+          -&gt;getEntityManager()
+          -&gt;createQueryBuilder()
+          -&gt;select('book')
+          -&gt;from(Book::class, 'book')
+          -&gt;orderBy($filters['order'] ?? 'book.created', $filters['dir'] ?? 'desc')
+          -&gt;setFirstResult($page['offset'])
+          -&gt;setMaxResults($page['limit']);
+
+      $qb-&gt;getQuery()-&gt;useQueryCache(true);
+
+      return new BookCollection($qb, false);
+  }
+</code></pre>
+
+<p>}</p>
+</li>
+<li>
+<p><code>src/Book/src/Service/BookService.php</code></p>
+<p>&lt;?php</p>
+<p>declare(strict_types=1);</p>
+<p>namespace Api\Book\Service;</p>
+<p>use Api\Book\Entity\Book;
+  use Api\Book\Repository\BookRepository;
+  use Dot\AnnotatedServices\Annotation\Inject;
+  use DateTimeImmutable;</p>
+<p>class BookService implements BookServiceInterface
+  {
+      /*<em>
+       * @Inject({
+       *     BookRepository::class,
+       * })
+       </em>/
+      public function __construct(protected BookRepository $bookRepository)
+      {
+      }</p>
+<pre class="codehilite"><code>  public function createBook(array $data): Book
+  {
+      $book = new Book(
+          $data['name'],
+          $data['author'],
+          new DateTimeImmutable($data['releaseDate'])
+      );
+
+      return $this-&gt;bookRepository-&gt;saveBook($book);
+  }
+
+  public function getBooks(array $filters = [])
+  {
+      return $this-&gt;bookRepository-&gt;getBooks($filters);
+  }
+</code></pre>
+
+<p>}</p>
+</li>
+<li>
+<p><code>src/Book/src/Service/BookServiceInterface.php</code></p>
+<p>&lt;?php</p>
+<p>declare(strict_types=1);</p>
+<p>namespace Api\Book\Service;</p>
+<p>interface BookServiceInterface
+  {
+  }</p>
+</li>
+<li>
+<p><code>src/Book/src/ConfigProvider.php</code></p>
+<p>&lt;?php</p>
+<p>declare(strict_types=1);</p>
+<p>namespace Api\Book;</p>
+<p>use Api\Book\Collection\BookCollection;
+  use Api\Book\Entity\Book;
+  use Api\Book\Handler\BookHandler;
+  use Api\Book\Repository\BookRepository;
+  use Api\Book\Service\BookService;
+  use Api\Book\Service\BookServiceInterface;
+  use Dot\AnnotatedServices\Factory\AnnotatedRepositoryFactory;
+  use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
+  use Mezzio\Hal\Metadata\MetadataMap;
+  use Api\App\ConfigProvider as AppConfigProvider;</p>
+<p>class ConfigProvider
+  {
+      public function __invoke(): array
+      {
+          return [
+              'dependencies'     =&gt; $this-&gt;getDependencies(),
+              MetadataMap::class =&gt; $this-&gt;getHalConfig(),
+          ];
+      }</p>
+<pre class="codehilite"><code>  public function getDependencies(): array
+  {
+      return [
+          'factories' =&gt; [
+              BookHandler::class        =&gt; AnnotatedServiceFactory::class,
+              BookService::class =&gt; AnnotatedServiceFactory::class,
+              BookRepository::class =&gt; AnnotatedRepositoryFactory::class,
+          ],
+          'aliases'   =&gt; [
+              BookServiceInterface::class     =&gt; BookService::class,
+          ],
+      ];
+  }
+
+  public function getHalConfig(): array
+  {
+      return [
+          AppConfigProvider::getCollection(BookCollection::class, 'books.list', 'books'),
+          AppConfigProvider::getResource(Book::class, 'book.create'),
+      ];
+  }
+</code></pre>
+
+<p>}</p>
+</li>
+<li>
+<p><code>src/Book/src/RoutesDelegator.php</code></p>
+<p>&lt;?php</p>
+<p>namespace Api\Book;</p>
+<p>use Api\Book\Handler\BookHandler;
+  use Mezzio\Application;
+  use Psr\Container\ContainerInterface;</p>
+<p>class RoutesDelegator
+  {
+      public function __invoke(ContainerInterface $container, string $serviceName, callable $callback): Application
+      {
+          /*<em> @var Application $app </em>/
+          $app = $callback();</p>
+<pre class="codehilite"><code>      $app-&gt;get(
+          '/books',
+          BookHandler::class,
+          'books.list'
+      );
+
+      $app-&gt;post(
+          '/book',
+          BookHandler::class,
+          'book.create'
+      );
+
+      return $app;
+  }
+</code></pre>
+
+<p>}</p>
+</li>
+<li>
+<p><code>src/Book/src/InputFilter/BookInputFilter.php</code></p>
+<p>&lt;?php</p>
+<p>declare(strict_types=1);</p>
+<p>namespace Api\Book\InputFilter;</p>
+<p>use Api\Book\InputFilter\Input\AuthorInput;
+  use Api\Book\InputFilter\Input\NameInput;
+  use Api\Book\InputFilter\Input\ReleaseDateInput;
+  use Laminas\InputFilter\InputFilter;</p>
+<p>class BookInputFilter extends InputFilter
+  {
+      public function __construct()
+      {
+          $this-&gt;add(new NameInput('name'));
+          $this-&gt;add(new AuthorInput('author'));
+          $this-&gt;add(new ReleaseDateInput('releaseDate'));
+      }
+  }</p>
+</li>
+<li>
+<p><code>src/Book/src/InputFilter/Input/AuthorInput.php</code></p>
+<p>&lt;?php</p>
+<p>declare(strict_types=1);</p>
+<p>namespace Api\Book\InputFilter\Input;</p>
+<p>use Api\App\Message;
+  use Laminas\Filter\StringTrim;
+  use Laminas\Filter\StripTags;
+  use Laminas\InputFilter\Input;
+  use Laminas\Validator\NotEmpty;</p>
+<p>class AuthorInput extends Input
+  {
+      public function __construct(?string $name = null, bool $isRequired = true)
+      {
+          parent::__construct($name);</p>
+<pre class="codehilite"><code>      $this-&gt;setRequired($isRequired);
+
+      $this-&gt;getFilterChain()
+          -&gt;attachByName(StringTrim::class)
+          -&gt;attachByName(StripTags::class);
+
+      $this-&gt;getValidatorChain()
+          -&gt;attachByName(NotEmpty::class, [
+              'message' =&gt; sprintf(Message::VALIDATOR_REQUIRED_FIELD_BY_NAME, 'author'),
+          ], true);
+  }
+</code></pre>
+
+<p>}</p>
+</li>
+<li>
+<p><code>src/Book/src/InputFilter/Input/NameInput.php</code></p>
+<p>&lt;?php</p>
+<p>declare(strict_types=1);</p>
+<p>namespace Api\Book\InputFilter\Input;</p>
+<p>use Api\App\Message;
+  use Laminas\Filter\StringTrim;
+  use Laminas\Filter\StripTags;
+  use Laminas\InputFilter\Input;
+  use Laminas\Validator\NotEmpty;</p>
+<p>class NameInput extends Input
+  {
+      public function __construct(?string $name = null, bool $isRequired = true)
+      {
+          parent::__construct($name);</p>
+<pre class="codehilite"><code>      $this-&gt;setRequired($isRequired);
+
+      $this-&gt;getFilterChain()
+          -&gt;attachByName(StringTrim::class)
+          -&gt;attachByName(StripTags::class);
+
+      $this-&gt;getValidatorChain()
+          -&gt;attachByName(NotEmpty::class, [
+              'message' =&gt; sprintf(Message::VALIDATOR_REQUIRED_FIELD_BY_NAME, 'name'),
+          ], true);
+  }
+</code></pre>
+
+<p>}</p>
+</li>
+<li>
+<p><code>src/Book/src/InputFilter/Input/ReleaseDateInput.php</code></p>
+<p>&lt;?php</p>
+<p>declare(strict_types=1);</p>
+<p>namespace Api\Book\InputFilter\Input;</p>
+<p>use Api\App\Message;
+  use Laminas\Filter\StringTrim;
+  use Laminas\Filter\StripTags;
+  use Laminas\InputFilter\Input;
+  use Laminas\Validator\Date;
+  use Laminas\Validator\NotEmpty;</p>
+<p>class ReleaseDateInput extends Input
+  {
+      public function __construct(?string $name = null, bool $isRequired = true)
+      {
+          parent::__construct($name);</p>
+<pre class="codehilite"><code>      $this-&gt;setRequired($isRequired);
+
+      $this-&gt;getFilterChain()
+          -&gt;attachByName(StringTrim::class)
+          -&gt;attachByName(StripTags::class);
+
+      $this-&gt;getValidatorChain()
+          -&gt;attachByName(Date::class, [
+              'message' =&gt; sprintf(Message::INVALID_VALUE, 'releaseDate'),
+          ], true);
+  }
+</code></pre>
+
+<p>}</p>
+</li>
+<li>
+<p><code>src/Book/src/Handler/BookHandler.php</code></p>
+<p>&lt;?php</p>
+<p>declare(strict_types=1);</p>
+<p>namespace Api\Book\Handler;</p>
+<p>use Api\App\Handler\ResponseTrait;
+  use Api\Book\InputFilter\BookInputFilter;
+  use Api\Book\Service\BookServiceInterface;
+  use Mezzio\Hal\HalResponseFactory;
+  use Mezzio\Hal\ResourceGenerator;
+  use Psr\Http\Message\ResponseInterface;
+  use Psr\Http\Message\ServerRequestInterface;
+  use Psr\Http\Server\RequestHandlerInterface;
+  use Dot\AnnotatedServices\Annotation\Inject;</p>
+<p>class BookHandler implements RequestHandlerInterface
+  {
+      use ResponseTrait;</p>
+<pre class="codehilite"><code>  /**
+   * @Inject({
+   *     HalResponseFactory::class,
+   *     ResourceGenerator::class,
+   *     BookServiceInterface::class
+   * })
+   */
+  public function __construct(
+      protected HalResponseFactory $responseFactory,
+      protected ResourceGenerator $resourceGenerator,
+      protected BookServiceInterface $bookService
+  ) {
+  }
+
+  public function get(ServerRequestInterface $request): ResponseInterface
+  {
+      $books = $this-&gt;bookService-&gt;getBooks($request-&gt;getQueryParams());
+
+      return $this-&gt;createResponse($request, $books);
+  }
+
+  public function post(ServerRequestInterface $request): ResponseInterface
+  {
+      $inputFilter = (new BookInputFilter())-&gt;setData($request-&gt;getParsedBody());
+      if (! $inputFilter-&gt;isValid()) {
+          return $this-&gt;errorResponse($inputFilter-&gt;getMessages());
+      }
+
+      $book = $this-&gt;bookService-&gt;createBook($inputFilter-&gt;getValues());
+
+      return $this-&gt;createResponse($request, $book);
+  }
+</code></pre>
+
+<p>}</p>
+</li>
+</ul>
+<h2 id="configuring-and-registering-the-new-module">Configuring and registering the new module</h2>
+<p>Once you set up all the files as in the example above, you will need to do a few additional configurations:</p>
+<ul>
+<li>Register the namespace by adding this line <code>"Api\\Book\\": "src/Book/src/",</code> in <code>composer.json</code> under the <code>autoload.psr-4</code> key.</li>
+<li>Register the module by adding <code>Api\Book\ConfigProvider::class,</code> under <code>Api\User\ConfigProvider::class,</code>.</li>
+<li>Register the module's routes by adding <code>\Api\Book\RoutesDelegator::class,</code> under <code>\Api\User\RoutesDelegator::class,</code> in <code>src/App/src/ConfigProvider.php</code>.</li>
+</ul>
+<p>It should look like this:</p>
+<pre class="codehilite"><code>  public function getDependencies(): array
+  {
+      return [
+          'delegators' =&gt; [
+              Application::class =&gt; [
+                  RoutesDelegator::class,
+                  \Api\Admin\RoutesDelegator::class,
+                  \Api\User\RoutesDelegator::class,
+                  \Api\Book\RoutesDelegator::class,
+              ],
+          ],
+          'factories'  =&gt; [
+              ...
+          ]
+          ...
+</code></pre>
+
+<ul>
+<li>
+<p>In <code>src/config/autoload/doctrine.global.php</code> add this under the <code>doctrine.driver</code> key:</p>
+<p>'BookEntities'  =&gt; [
+      'class' =&gt; AttributeDriver::class,
+      'cache' =&gt; 'array',
+      'paths' =&gt; <strong>DIR</strong> . '/../../src/Book/src/Entity',
+  ],</p>
+</li>
+<li>
+<p><code>Api\\Book\Entity'    =&gt; 'BookEntities',</code> add this under the <code>doctrine.driver.drivers</code> key</p>
+</li>
+</ul>
+<p>Example:</p>
+<pre class="codehilite"><code>&lt;?php
+...
+return [
+    'doctrine'            =&gt; [
+        ...
+        'driver'        =&gt; [
+            'orm_default'   =&gt; [
+                'class'   =&gt; MappingDriverChain::class,
+                'drivers' =&gt; [
+                    'Api\\App\Entity'    =&gt; 'AppEntities',
+                    'Api\\Admin\\Entity' =&gt; 'AdminEntities',
+                    'Api\\User\\Entity'  =&gt; 'UserEntities',
+                    'Api\\Book\Entity'    =&gt; 'BookEntities',
+                ],
+            ],
+            'AdminEntities' =&gt; [
+                'class' =&gt; AttributeDriver::class,
+                'cache' =&gt; 'array',
+                'paths' =&gt; __DIR__ . '/../../src/Admin/src/Entity',
+            ],
+            'UserEntities'  =&gt; [
+                'class' =&gt; AttributeDriver::class,
+                'cache' =&gt; 'array',
+                'paths' =&gt; __DIR__ . '/../../src/User/src/Entity',
+            ],
+            'AppEntities'   =&gt; [
+                'class' =&gt; AttributeDriver::class,
+                'cache' =&gt; 'array',
+                'paths' =&gt; __DIR__ . '/../../src/App/src/Entity',
+            ],
+            'BookEntities'  =&gt; [
+                'class' =&gt; AttributeDriver::class,
+                'cache' =&gt; 'array',
+                'paths' =&gt; __DIR__ . '/../../src/Book/src/Entity',
+            ],
+        ],
+        ...
+</code></pre>
+
+<p>Next we need to configure access to the newly created endpoints, add <code>books.list</code> and <code>book.create</code> to the authorization rbac array, under the <code>UserRole::ROLE_GUEST</code> key.</p>
+<blockquote>
+<p>Make sure you read and understand the rbac documentation.</p>
+</blockquote>
+<h2 id="migrations">Migrations</h2>
+<p>We created the <code>Book</code> entity, but we didn't create the associated table for it.</p>
+<p>Doctrine can handle the table creation, run the following command:</p>
+<pre class="codehilite"><code>vendor/bin/doctrine-migrations diff --filter-expression='/^(?!oauth_)/'
+</code></pre>
+
+<p>This will check for differences between your entities and database structure and create migration files if necessary, in <code>data/doctrine/migrations</code>.</p>
+<p>To execute the migrations run:</p>
+<pre class="codehilite"><code>vendor/bin/doctrine-migrations migrate
+</code></pre>
+
+<h2 id="checking-endpoints">Checking endpoints</h2>
+<p>If we did everything as planned we can call the <code>http://0.0.0.0:8080/book</code> endpoint and create a new book:</p>
+<pre class="codehilite"><code>curl -X POST http://0.0.0.0:8080/book
+  -H &quot;Content-Type: application/json&quot;
+  -d '{&quot;name&quot;: &quot;test&quot;, &quot;author&quot;: &quot;author name&quot;, &quot;releaseDate&quot;: &quot;2023-03-03&quot;}'
+</code></pre>
+
+<p>To list the books use :</p>
+<pre class="codehilite"><code>curl http://0.0.0.0:8080/books
+</code></pre>
+
+
+
+
+    <nav>
+    <ul class="page-nav hidden-print">
+        
+        <li class="page-nav__item">
+            
+                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../../introduction/packages/">
+                    <small class="page-nav__label">Previous</small>
+                    <i class="bi bi-chevron-left"></i>
+                    Packages
+                </a>
+            
+        </li>
+
+        
+        <li class="page-nav__item">
+            
+        </li>
+    </ul>
+</nav>
+
+
+
+                    
+                </div>
+            </div>
+        </div>
+
+        
+        <footer class="footer">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-9">
+                <div class="footer_head">
+                    <p>DotKernel</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 dk_widget">
+                        <p>DotKernel Frontend</p>
+                        <a href="https://docs.dotkernel.org/frontend/" target="_blank">
+                            <i class="bi bi-arrow-return-right"></i>
+                            DotKernel web starter project suitable for frontend applications
+                        </a>
+                    </div>
+
+                    <div class="col-md-6 dk_widget">
+                        <p>DotKernel API</p>
+                        <a href="https://docs.dotkernel.org/api/" target="_blank">
+                            <i class="bi bi-arrow-return-right"></i>
+                            DotKernel web starter project suitable for building RESTful APIs
+                        </a>
+                    </div>
+
+                    <div class="col-md-6 dk_widget">
+                        <p>DotKernel Admin</p>
+
+                        <a href="https://docs.dotkernel.org/admin/" target="_blank">
+                            <i class="bi bi-arrow-return-right"></i>
+                            DotKernel web starter project suitable for admin applications
+                        </a>
+                    </div>
+
+                    <div class="col-md-6 dk_widget">
+                        <p>DotKernel Packages</p>
+                        <a href="https://docs.dotkernel.org/packages/" target="_blank">
+                            <i class="bi bi-arrow-return-right"></i>
+                            DotKernel packages offering a wide range of tools
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+                <div class="footer_head">
+                    <p>Support</p>
+                </div>
+                <ul class="support__list">
+                    <li class="support__list-item">
+                        <a href="https://github.com/dotkernel" class="support__link" title="GitHub" target="_blank">
+                            <i class="bi bi-github"></i> GitHub
+                        </a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://dotkernel.slack.com" class="support__link" title="Slack" target="_blank">
+                            <i class="bi bi-slack"></i> Slack
+                        </a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://twitter.com/dotkernel" class="support__link" title="X (Twitter)" target="_blank">
+                            <i class="bi bi-twitter-x"></i> Twitter
+                        </a>
+                    </li>
+
+                    <li class="support__list-item">
+                        <a href="https://www.dotkernel.com/blog/" class="support__link" title="Blog" target="_blank">
+                            <i class="bi bi-file-post"></i> Blog
+                        </a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://www.dotkernel.com/feed/" class="support__link" title="Blog feed" target="_blank">
+                            <i class="bi bi-rss-fill"></i> Feed
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer_copy">
+            &#169; 2024 by <a href="https://www.dotkernel.com/" target="_blank">DotKernel</a> a collection of PSR-7 Middleware applications and libraries
+        </div>
+    </div>
+</footer>
+
+        <script>
+            let base_url = '../../..',
+                project  = "dotkernel-api",
+                siteName = 'api';
+        </script>
+<!--        -->
+<!--        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Search</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search in api" id="mkdocs-search-query">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+        </div>
+    </div>
+</div>-->
+    </body>
+</html>

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="description" content="DotKernel API">
+        
+        
+
+        
+        
+            
+        
+        <meta name="docsearch:version" content="4.0.0,latest">
+        <meta name="docsearch:language" content="en">
+        <meta name="docsearch:component" content="api">
+
+        
+        <link rel="canonical" href="https://docs.dotkernel.org/api/v4/introduction/introduction/">
+        
+        
+        <link rel="shortcut icon" href="https://docs.dotkernel.org/img/dk_logomark_3colors.svg">
+        
+
+        <title>Introduction - api - DotKernel Documentation</title>
+
+        <link rel="stylesheet" href="https://docs.dotkernel.org/css/bootstrap.css">
+        <link rel="stylesheet" href="https://docs.dotkernel.org/css/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="https://docs.dotkernel.org/css/docs.css">
+        <script src="https://docs.dotkernel.org//js/bootstrap.js" defer></script>
+        <script src="https://docs.dotkernel.org//js/docs.js" defer></script>
+        <script src="https://docs.dotkernel.org//js/scripts.js" defer></script>
+    </head>
+    <body data-bs-spy="scroll" data-bs-target=".toc" data-bs-offset="100">
+
+        
+        <nav class="navbar navbar-expand-lg bg-body-tertiary bg-light dk-nav py-3" data-bs-theme="light">
+    <div class="container justify-content-between">
+        <div class="dk-nav-icon d-flex align-items-center">
+            <a class="navbar-brand" href="https://docs.dotkernel.org/">
+                <img src="https://docs.dotkernel.org//img/dk_logomark_white.svg" alt="DotKernel Logo" width="45" height="50" class="d-inline-block align-text-top" />
+            </a>
+
+            <div class="dk-nav-icon-items">
+                <span style="font-size: 12px; line-height: 13px">DotKernel Documentation</span>
+
+                <div class="dropdown" data-bs-theme="light">
+                    <span class="fw-bold dropdown-toggle dk-pkg-name" data-bs-toggle="dropdown" aria-expanded="false">Packages</span>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item">
+                            <a href="https://docs.dotkernel.org/api/" class="nav-link d-flex gap-4 align-items-center">
+                                <img src="https://docs.dotkernel.org/img/dk_logomark.svg" alt="DotKernel Logo" width="45" height="50" class="d-inline-block align-text-top" />
+                                <div>
+                                    <span class="fw-bold d-block">API</span>
+                                    <span>DotKernel API</span>
+                                </div>
+                            </a>
+                        </li>
+
+                        <li class="dropdown-item">
+                            <a href="https://docs.dotkernel.org/admin/" class="nav-link d-flex gap-4 align-items-center">
+                                <img src="https://docs.dotkernel.org/img/dk_logomark.svg" alt="DotKernel Logo" width="45" height="50" class="d-inline-block align-text-top" />
+                                <div>
+                                    <span class="fw-bold d-block">Admin</span>
+                                    <span>DotKernel admin application</span>
+                                </div>
+                            </a>
+                        </li>
+
+                        <li class="dropdown-item">
+                            <a href="https://docs.dotkernel.org/frontend/" class="nav-link d-flex gap-4 align-items-center">
+                                <img src="https://docs.dotkernel.org/img/dk_logomark.svg" alt="DotKernel Logo" width="45" height="50" class="d-inline-block align-text-top" />
+                                <div>
+                                    <span class="fw-bold d-block">Frontend</span>
+                                    <span>DotKernel frontend application</span>
+                                </div>
+                            </a>
+                        </li>
+
+                        <li class="dropdown-item bg-light">
+                            <a href="https://docs.dotkernel.org/packages/" class="nav-link d-flex gap-4 align-items-center">
+                                <img src="https://docs.dotkernel.org/img/dk_logomark.svg" alt="DotKernel Logo" width="45" height="50" class="d-inline-block align-text-top" />
+                                <div>
+                                    <span class="fw-bold d-block">Packages</span>
+                                    <span>DotKernel packages</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+<!--                <li class="nav-item">-->
+<!--                    <a href="#" class="nav-link fw-bold text-white" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal" title="Open search">-->
+<!--                        <i class="bi bi-search"></i> Search-->
+<!--                    </a>-->
+<!--                </li>-->
+                <li class="nav-item">
+                    <a class="nav-link fw-bold text-white" href="https://github.com/dotkernel/api" title="Go to api repository" target="_blank">
+                        <i class="bi bi-github"></i>
+                        GitHub
+                    </a>
+                </li>
+                <li class="nav-item">
+                    
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+        
+        <div class="container">
+    <nav aria-label="breadcrumb" class="nav_breadcrumb">
+        <ol class="breadcrumb">
+            
+                <li class="breadcrumb-item"><a href="https://docs.dotkernel.org/">Overview</a></li>
+                <li class="breadcrumb-item"><a href="https://docs.dotkernel.org/api/">DotKernel API</a></li>
+
+                
+                    <li class="breadcrumb-item"><a href="../../..">api</a></li>
+
+                    
+                        
+                            
+                            
+                        
+                    
+                        
+                            
+                            
+                                <li class="breadcrumb-item">Introduction</li>
+                            
+                        
+                    
+
+                    <li class="breadcrumb-item active" aria-current="page">Introduction</li>
+                
+            
+        </ol>
+    </nav>
+</div>
+
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 right_sidebar">
+                    
+                    
+    <div class="subnavigation hidden-print">
+<!--        <h4 class="subnavigation__title">-->
+<!--            <a href="../../..">api</a>-->
+<!--        </h4>-->
+
+        <h5 class="subnavigation__title">Table of Contents</h5>
+
+        <ul class="subnavigation__list">
+            
+
+                
+                
+                    
+                        
+    <li class="subnavigation__list-item">
+        <span class="subnavigation__headline">Introduction</span>
+        <ul class="subnavigation__list">
+            
+                
+    <li class="subnavigation__list-item subnavigation__list-item--active">
+        <a href="./" class="subnavigation__link">Introduction</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../getting-started/" class="subnavigation__link">Getting Started</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../server-requirements/" class="subnavigation__link">Server Requirements</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../file-structure/" class="subnavigation__link">File Structure</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../installation/" class="subnavigation__link">Installation</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../packages/" class="subnavigation__link">Packages</a>
+    </li>
+
+            
+        </ul>
+    </li>
+
+                    
+                        
+    <li class="subnavigation__list-item">
+        <span class="subnavigation__headline">Tutorials</span>
+        <ul class="subnavigation__list">
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../../tutorials/create-book-module/" class="subnavigation__link">Creating a book module</a>
+    </li>
+
+            
+        </ul>
+    </li>
+
+                    
+                
+            
+        </ul>
+    </div>
+
+                    
+
+                    
+                    
+                    
+    
+
+    
+    
+        <div class="toc">
+            <h6 class="toc__headline">On this page</h6>
+            <ul class="toc__list">
+            
+                <li class="toc__entry">
+                    <a href="#doctrine-2-orm" class="toc__link nav-link">Doctrine 2 ORM</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#documentation" class="toc__link nav-link">Documentation</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#hypertext-application-language" class="toc__link nav-link">Hypertext Application Language</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#cors" class="toc__link nav-link">CORS</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#oauth-2" class="toc__link nav-link">OAuth 2</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#email" class="toc__link nav-link">Email</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#configuration" class="toc__link nav-link">Configuration</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#routing" class="toc__link nav-link">Routing</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#commands" class="toc__link nav-link">Commands</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#file-locker" class="toc__link nav-link">File locker</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#psr-standards" class="toc__link nav-link">PSR Standards</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#tests" class="toc__link nav-link">Tests</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#running-unit-tests" class="toc__link nav-link">Running unit tests</a>
+                </li>
+            
+                <li class="toc__entry">
+                    <a href="#running-functional-tests" class="toc__link nav-link">Running functional tests</a>
+                </li>
+            
+            </ul>
+        </div>
+    
+
+                    
+                </div>
+                <div class="col-lg-9 main_docs">
+                    
+                    
+
+
+
+
+    
+    
+<!--        <h2 class="chapter__headline text-black-50">Introduction</h2>-->
+    
+
+    <h1 id="introduction">Introduction</h1>
+<p>Based on Enrico Zimuel’s Zend Expressive API – Skeleton example, DotKernel API runs on Laminas and Mezzio components and implements standards like PSR-3, PSR-4, PSR-7, PSR-11 and PSR-15.</p>
+<p>Here is a list of the core components:</p>
+<ul>
+<li>Middleware Microframework (mezzio/mezzio)</li>
+<li>Error Handler (dotkernel/dot-errorhandler)</li>
+<li>Problem Details (mezzio-problem-details)</li>
+<li>CORS (mezzio-cors)</li>
+<li>Routing (mezzio/mezzio-fastroute)</li>
+<li>Authentication (mezzio-authentication)</li>
+<li>Authorization (mezzio-authorization)</li>
+<li>Config Aggregator (laminas/laminas-config-aggregator)</li>
+<li>Container (roave/psr-container-doctrine)</li>
+<li>Implicit Head, Options and Method Not Allowed</li>
+<li>Annotations (dotkernel/dot-annotated-services)</li>
+<li>Input Filter (laminas/laminas-inputfilter)</li>
+<li>Doctrine</li>
+<li>Hydrator (laminas/laminas-hydrator)</li>
+<li>Paginator (laminas/laminas-paginator)</li>
+<li>HAL (mezzio-hal)</li>
+<li>CLI (dotkernel/dot-cli)</li>
+<li>TwigRenderer (mezzio/mezzio-twigrenderer)</li>
+<li>Fixtures (dotkernel/dot-data-fixtures)</li>
+<li>UUID (ramsey/uuid-doctrine)</li>
+</ul>
+<h2 id="doctrine-2-orm">Doctrine 2 ORM</h2>
+<p>For the persistence in a relational database management system we chose Doctrine ORM (object-relational mapper) .</p>
+<p>The benefit of Doctrine for the programmer is the ability to focus on the object-oriented business logic and worry about persistence only as a secondary priority.</p>
+<h2 id="documentation">Documentation</h2>
+<p>Our documentation is Postman based. We use the following files in which we store information about every available endpoint ready to be tested:</p>
+<pre class="codehilite"><code>documentation/DotKernel_API.postman_collection.json
+documentation/DotKernel_API.postman_environment.json
+</code></pre>
+
+<h2 id="hypertext-application-language">Hypertext Application Language</h2>
+<p>For our API payloads ( a value object for describing the API resource, its relational links and any embedded/child resources related to it ) we chose mezzio-hal.</p>
+<h2 id="cors">CORS</h2>
+<p>By using <code>MezzioCorsMiddlewareCorsMiddleware</code>, the CORS preflight will be recognized and the middleware will start to detect the proper CORS configuration. The Router is used to detect every allowed request method by executing a route match with all possible request methods. Therefore, for every preflight request, there is at least one Router request.</p>
+<h2 id="oauth-2">OAuth 2</h2>
+<p>OAuth 2 is an authorization framework that enables applications to obtain limited access to user accounts on your DotKernel API. We are using mezzio/mezzio-authentication-oauth2 which provides OAuth2 authentication for Mezzio and PSR-7/PSR-15 applications by using league/oauth2-server package.</p>
+<h2 id="email">Email</h2>
+<p>It is not unlikely for an API to send emails depending on the use case. Here is another area where DotKernel API shines. Using <code>DotMailServiceMailService</code> provided by dotkernel/dot-mail you can easily send custom email templates.</p>
+<h2 id="configuration">Configuration</h2>
+<p>From authorization at request route level to API keys for your application, you can find every configuration variable in the config directory.</p>
+<p>Registering a new module can be done by including its ConfigProvider.php in config.php.</p>
+<p>Brand new middlewares should go into pipeline.php. Here you can edit the order in which they run and find more info about the currently included ones.</p>
+<p>You can further customize your api within the autoload directory where each configuration category has its own file.</p>
+<h2 id="routing">Routing</h2>
+<p>Each Module has a <code>RoutesDelegator.php</code> file for managing existing routes inside that specific module. It also allows a quick way of adding new routes by providing the route path, Middlewares that the route will use and the route name.</p>
+<p>You can allocate permissions per route name in order to restrict access for a user role to a specific route in <code>config/autoload/authorization.global.php</code>.</p>
+<h2 id="commands">Commands</h2>
+<p>For registering new commands first make sure your command class extends <code>SymfonyComponentConsoleCommandCommand</code>. Then you can enable it by registering it in <code>config/autoload/cli.global.php</code>.</p>
+<h2 id="file-locker">File locker</h2>
+<p>Here you will also find our brand-new file locker configuration, so you can easily turn it on or off ( by default: <code>'enabled' =&gt; true</code> )</p>
+<p>Note: The File Locker System will create a <code>command-{command-default-name}.lock</code> file which will not let another instance of the same command to run until the previous one has finished.</p>
+<h2 id="psr-standards">PSR Standards</h2>
+<ul>
+<li>PSR-3: Logger Interface – the application uses <code>LoggerInterface</code> for error logging</li>
+<li>PSR-4: Autoloader – the application locates classes using an autoloader</li>
+<li>PSR-7: HTTP message interfaces – the handlers return <code>ResponseInterface</code></li>
+<li>PSR-11: Container interface – the application is container-based</li>
+<li>PSR-15: HTTP Server Request Handlers – the handlers implement <code>RequestHandlerInterface</code></li>
+</ul>
+<h2 id="tests">Tests</h2>
+<p>One of the best ways to ensure the quality of your product is to create and run functional and unit tests. You can find factory-made tests in the tests/AppTest/ folder, and you can also register your own.</p>
+<p>We have 2 types of tests: functional and unit tests, you can run both types at the same type by executing this command:</p>
+<pre class="codehilite"><code>php vendor/bin/phpunit
+</code></pre>
+
+<h2 id="running-unit-tests">Running unit tests</h2>
+<pre class="codehilite"><code>vendor/bin/phpunit --testsuite=UnitTests --testdox --colors=always
+</code></pre>
+
+<h2 id="running-functional-tests">Running functional tests</h2>
+<pre class="codehilite"><code>vendor/bin/phpunit --testsuite=FunctionalTests --testdox --colors=always
+</code></pre>
+
+
+
+
+    <nav>
+    <ul class="page-nav hidden-print">
+        
+        <li class="page-nav__item">
+            
+                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../../..">
+                    <small class="page-nav__label">Previous</small>
+                    <i class="bi bi-chevron-left"></i>
+                    Home
+                </a>
+            
+        </li>
+
+        
+        <li class="page-nav__item">
+            
+                <a rel="next" class="page-nav__link page-nav__link--next" href="../getting-started/">
+                    <small class="page-nav__label">Next</small>
+                    Getting Started
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            
+        </li>
+    </ul>
+</nav>
+
+
+
+                    
+                </div>
+            </div>
+        </div>
+
+        
+        <footer class="footer">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-9">
+                <div class="footer_head">
+                    <p>DotKernel</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 dk_widget">
+                        <p>DotKernel Frontend</p>
+                        <a href="https://docs.dotkernel.org/frontend/" target="_blank">
+                            <i class="bi bi-arrow-return-right"></i>
+                            DotKernel web starter project suitable for frontend applications
+                        </a>
+                    </div>
+
+                    <div class="col-md-6 dk_widget">
+                        <p>DotKernel API</p>
+                        <a href="https://docs.dotkernel.org/api/" target="_blank">
+                            <i class="bi bi-arrow-return-right"></i>
+                            DotKernel web starter project suitable for building RESTful APIs
+                        </a>
+                    </div>
+
+                    <div class="col-md-6 dk_widget">
+                        <p>DotKernel Admin</p>
+
+                        <a href="https://docs.dotkernel.org/admin/" target="_blank">
+                            <i class="bi bi-arrow-return-right"></i>
+                            DotKernel web starter project suitable for admin applications
+                        </a>
+                    </div>
+
+                    <div class="col-md-6 dk_widget">
+                        <p>DotKernel Packages</p>
+                        <a href="https://docs.dotkernel.org/packages/" target="_blank">
+                            <i class="bi bi-arrow-return-right"></i>
+                            DotKernel packages offering a wide range of tools
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+                <div class="footer_head">
+                    <p>Support</p>
+                </div>
+                <ul class="support__list">
+                    <li class="support__list-item">
+                        <a href="https://github.com/dotkernel" class="support__link" title="GitHub" target="_blank">
+                            <i class="bi bi-github"></i> GitHub
+                        </a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://dotkernel.slack.com" class="support__link" title="Slack" target="_blank">
+                            <i class="bi bi-slack"></i> Slack
+                        </a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://twitter.com/dotkernel" class="support__link" title="X (Twitter)" target="_blank">
+                            <i class="bi bi-twitter-x"></i> Twitter
+                        </a>
+                    </li>
+
+                    <li class="support__list-item">
+                        <a href="https://www.dotkernel.com/blog/" class="support__link" title="Blog" target="_blank">
+                            <i class="bi bi-file-post"></i> Blog
+                        </a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://www.dotkernel.com/feed/" class="support__link" title="Blog feed" target="_blank">
+                            <i class="bi bi-rss-fill"></i> Feed
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer_copy">
+            &#169; 2024 by <a href="https://www.dotkernel.com/" target="_blank">DotKernel</a> a collection of PSR-7 Middleware applications and libraries
+        </div>
+    </div>
+</footer>
+
+        <script>
+            let base_url = '../../..',
+                project  = "dotkernel-api",
+                siteName = 'api';
+        </script>
+<!--        -->
+<!--        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Search</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search in api" id="mkdocs-search-query">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+        </div>
+    </div>
+</div>-->
+    </body>
+</html>
