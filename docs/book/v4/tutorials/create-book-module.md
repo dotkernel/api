@@ -595,7 +595,7 @@ To execute the migrations run:
 
 ## Checking endpoints
 
-If we did everything as planned we can call the `http://localhost/books` endpoint and create a new book:
+If we did everything as planned we can call the `http://0.0.0.0:8080/books` endpoint and create a new book:
 
     curl -X POST http://0.0.0.0:8080/book
       -H "Content-Type: application/json"

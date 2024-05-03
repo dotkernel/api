@@ -90,7 +90,7 @@ More details on how fixtures work can be found here: https://github.com/dotkerne
 
     php -S 0.0.0.0:8080 -t public
 
-Sending a GET request to the [home page](http://localhost:8080/) should output the following message:
+Sending a GET request to the [home page](http://0.0.0.0:8080/) should output the following message:
 
     {
     "message": "Welcome to DotKernel API!"

@@ -17,7 +17,7 @@ At this point, we assume you already have Postman installed. The following steps
 You should see a new collection (`DotKernel_API`) added to your collection list, containing the documentation of all DotKernel API endpoints.
 
 Also, you should see a new environment (`DotKernel_API`) added to your environments.
-This contains a variable, called `APPLICATION_URL` set to `http://localhost:8080`.
+This contains a variable, called `APPLICATION_URL` set to `http://0.0.0.0:8080`.
 If your application runs on a different URL/port, modify this variable accordingly.
 
 ## Usage
