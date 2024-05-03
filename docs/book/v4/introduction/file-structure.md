@@ -39,7 +39,7 @@ The `src` directory should also contain 2 files:
 
 This directory contains the template files, used for example to help render e-mail templates.
 
-> DotKernel3 API uses twig as Templating Engine. All template files have the extension .html.twig
+> DotKernel API uses twig as Templating Engine. All template files have the extension .html.twig
 
 ## The `data` directory
 
