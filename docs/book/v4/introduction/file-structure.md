@@ -2,7 +2,7 @@
 
 It is a good practice to standardize the file structure of projects. This way it’s easier to keep a clean overview of multiple projects, and less time is wasted trying to find the correct class.
 
-When using DotKernel 3 API the following structure is recommended:
+When using DotKernel API the following structure is recommended:
 
 ## Main directories
 

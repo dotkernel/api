@@ -1,4 +1,4 @@
-# Implementing a book module in DotKernel 3 API
+# Implementing a book module in DotKernel API
 
 ## File structure
 
@@ -534,9 +534,7 @@ It should look like this:
           'paths' => __DIR__ . '/../../src/Book/src/Entity',
       ],
 
-* add this under the `doctrine.driver` key:
-
-  ``'Api\\Book\Entity'    => 'BookEntities',`` add this under the `doctrine.driver.drivers` class
+* `Api\\Book\Entity'    => 'BookEntities',` add this under the `doctrine.driver.drivers` key
 
 Example:
 

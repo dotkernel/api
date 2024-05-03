@@ -48,11 +48,11 @@ By using `MezzioCorsMiddlewareCorsMiddleware`, the CORS preflight will be recogn
 
 ## OAuth 2
 
-OAuth 2 is an authorization framework that enables applications to obtain limited access to user accounts on your Dotkernel API. We are using mezzio/mezzio-authentication-oauth2 which provides OAuth2 authentication for Mezzio and PSR-7/PSR-15 applications by using league/oauth2-server package.
+OAuth 2 is an authorization framework that enables applications to obtain limited access to user accounts on your DotKernel API. We are using mezzio/mezzio-authentication-oauth2 which provides OAuth2 authentication for Mezzio and PSR-7/PSR-15 applications by using league/oauth2-server package.
 
 ## Email
 
-It is not unlikely for an API to send emails depending on the use case. Here is another area where Dotkernel API shines. Using `DotMailServiceMailService` provided by dotkernel/dot-mail you can easily send custom email templates.
+It is not unlikely for an API to send emails depending on the use case. Here is another area where DotKernel API shines. Using `DotMailServiceMailService` provided by dotkernel/dot-mail you can easily send custom email templates.
 
 ## Configuration
 
