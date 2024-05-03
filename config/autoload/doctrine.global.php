@@ -12,7 +12,7 @@ use Ramsey\Uuid\Doctrine\UuidBinaryType;
 use Ramsey\Uuid\Doctrine\UuidType;
 
 return [
-    'doctrine'            => [
+    'doctrine' => [
         'connection'    => [
             'orm_default' => [
                 'doctrine_mapping_types' => [
