@@ -48,7 +48,7 @@ php vendor/bin/doctrine-migrations migrate
 
 This command will prompt you to confirm that you want to run it.
 
-    WARNING! You are about to execute a migration in database "..." that could result in schema changes and data loss. Are you sure you wish to continue? (yes/no) [yes]:
+> WARNING! You are about to execute a migration in database "..." that could result in schema changes and data loss. Are you sure you wish to continue? (yes/no) [yes]:
 
 Hit `Enter` to confirm the operation.
 
@@ -86,9 +86,9 @@ php -S 0.0.0.0:8080 -t public
 
 Sending a GET request to the [home page](http://0.0.0.0:8080/) should output the following message:
 
-    {
-      "message": "Welcome to DotKernel API!"
-    }
+> {
+"message": "Welcome to DotKernel API!"
+}
 
 ## Running tests
 

@@ -4,7 +4,6 @@
 
 The below file structure is just an example, you can have multiple components such as event listeners, wrappers, etc.
 
-
     /src/
         /Book/
             /src/
@@ -26,7 +25,6 @@ The below file structure is just an example, you can have multiple components su
                     /BookInputFilter.php
             ConfigProvider.php
             RoutesDelegator.php
-
 
 * `src/Book/src/Collection/BookCollection.php` - a collection refers to a container for a group of related objects, typically used to manage sets of related entities fetched from a database
 * `src/Book/src/Entity/Book.php` - an entity refers to a PHP class that represents a persistent object or data structure
