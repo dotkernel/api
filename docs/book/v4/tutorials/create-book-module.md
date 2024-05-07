@@ -4,28 +4,30 @@
 
 The below file structure is just an example, you can have multiple components such as event listeners, wrappers, etc.
 
-```
-/src/
-    /Book/
-        /src/
-            /Collection/
-                /BookCollection.php
-            /Entity/
-                /Book.php
-            /Handler/
-                /BookHandler.php
-            /Repository/
-                /BookRepository.php
-            /Service/
-                /BookService.php
-            /InputFilter/
-                /Input/
-                    /NameInput.php
-                    /AuthorInput.php
-                    /ReleaseDateInput.php
-                /BookInputFilter.php
-        ConfigProvider.php
-        RoutesDelegator.php
+```markdown
+.
+└── src/
+└── Book/
+└── src/
+├── Collection/
+│   └── BookCollection.php
+├── Entity/
+│   └── Book.php
+├── Handler/
+│   └── BookHandler.php
+├── InputFilter/
+│   ├── Input/
+│   │   ├── AuthorInput.php
+│   │   ├── NameInput.php
+│   │   └── ReleaseDateInput.php
+│   └── BookInputFilter.php
+├── Repository/
+│   └── BookRepository.php
+├── Service/
+│   ├── BookService.php
+│   └── BookServiceInterface.php
+├── ConfigProvider.php
+└── RoutesDelegator.php
 ```
 
 * `src/Book/src/Collection/BookCollection.php` - a collection refers to a container for a group of related objects, typically used to manage sets of related entities fetched from a database
