@@ -246,7 +246,7 @@ namespace Api\Book\Service;
 interface BookServiceInterface
 {
 }
-```        
+```
 
 * `src/Book/src/ConfigProvider.php`
 
@@ -617,13 +617,17 @@ We created the `Book` entity, but we didn't create the associated table for it.
 
 Doctrine can handle the table creation, run the following command:
 
-    vendor/bin/doctrine-migrations diff --filter-expression='/^(?!oauth_)/'
+```shell
+vendor/bin/doctrine-migrations diff --filter-expression='/^(?!oauth_)/'
+```
 
 This will check for differences between your entities and database structure and create migration files if necessary, in `data/doctrine/migrations`.
 
 To execute the migrations run:
 
-    vendor/bin/doctrine-migrations migrate
+```shell
+vendor/bin/doctrine-migrations migrate
+```
 
 ## Checking endpoints
 
