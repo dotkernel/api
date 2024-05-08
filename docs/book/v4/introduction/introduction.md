@@ -35,8 +35,8 @@ The benefit of Doctrine for the programmer is the ability to focus on the object
 
 Our documentation is Postman based. We use the following files in which we store information about every available endpoint ready to be tested:
 
-    documentation/DotKernel_API.postman_collection.json
-    documentation/DotKernel_API.postman_environment.json
+* documentation/DotKernel_API.postman_collection.json
+* documentation/DotKernel_API.postman_environment.json
 
 ## Hypertext Application Language
 
@@ -94,12 +94,18 @@ One of the best ways to ensure the quality of your product is to create and run 
 
 We have 2 types of tests: functional and unit tests, you can run both types at the same type by executing this command:
 
-    php vendor/bin/phpunit
+```shell
+php vendor/bin/phpunit
+```
 
 ## Running unit tests
 
-    vendor/bin/phpunit --testsuite=UnitTests --testdox --colors=always
+```shell
+vendor/bin/phpunit --testsuite=UnitTests --testdox --colors=always
+```
 
 ## Running functional tests
 
-    vendor/bin/phpunit --testsuite=FunctionalTests --testdox --colors=always
+```shell
+vendor/bin/phpunit --testsuite=FunctionalTests --testdox --colors=always
+```

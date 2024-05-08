@@ -2,21 +2,29 @@
 
 ## Install dependencies
 
-    composer install
+```shell
+composer install
+```
 
 ## Development mode
 
 If you're installing the project for development, make sure you have development mode enabled, by running:
 
-    composer development-enable
+```shell
+composer development-enable
+```
 
 You can disable development mode by running:
 
-    composer development-disable
+```shell
+composer development-disable
+```
 
 You can check if you have development mode enabled by running:
 
-    composer development-status
+```shell
+composer development-status
+```
 
 ## Prepare config files
 
@@ -34,11 +42,13 @@ Make sure you fill out the database credentials in `config/autoload/local.php` u
 * create a new MySQL database - set collation to `utf8mb4_general_ci`
 * run the database migrations by using the following command:
 
-    php vendor/bin/doctrine-migrations migrate
+```shell
+php vendor/bin/doctrine-migrations migrate
+```
 
 This command will prompt you to confirm that you want to run it.
 
-    WARNING! You are about to execute a migration in database "..." that could result in schema changes and data loss. Are you sure you wish to continue? (yes/no) [yes]:
+> WARNING! You are about to execute a migration in database "..." that could result in schema changes and data loss. Are you sure you wish to continue? (yes/no) [yes]:
 
 Hit `Enter` to confirm the operation.
 
@@ -48,40 +58,52 @@ Hit `Enter` to confirm the operation.
 
 To list all the fixtures, run:
 
-    php bin/doctrine fixtures:list
+```shell
+php bin/doctrine fixtures:list
+```
 
 This will output all the fixtures in the order of execution.
 
 To execute all fixtures, run:
 
-    php bin/doctrine fixtures:execute
+```shell
+php bin/doctrine fixtures:execute
+```
 
 To execute a specific fixture, run:
 
-    php bin/doctrine fixtures:execute --class=FixtureClassName
+```shell
+php bin/doctrine fixtures:execute --class=FixtureClassName
+```
 
 More details on how fixtures work can be found here: https://github.com/dotkernel/dot-data-fixtures#creating-fixtures
 
 ## Test the installation
 
-    php -S 0.0.0.0:8080 -t public
+```shell
+php -S 0.0.0.0:8080 -t public
+```
 
 Sending a GET request to the [home page](http://0.0.0.0:8080/) should output the following message:
 
-    {
-      "message": "Welcome to DotKernel API!"
-    }
+> {"message": "Welcome to DotKernel API!"}
 
 ## Running tests
 
 The project has 2 types of tests : functional and unit tests, you can run both types at the same type by executing this command:
 
-    php vendor/bin/phpunit
+```shell
+php vendor/bin/phpunit
+```
 
 ## Running unit tests
 
-    vendor/bin/phpunit --testsuite=UnitTests --testdox --colors=always
+```shell
+vendor/bin/phpunit --testsuite=UnitTests --testdox --colors=always
+```
 
 ## Running functional tests
 
-    vendor/bin/phpunit --testsuite=FunctionalTests --testdox --colors=always
+```shell
+vendor/bin/phpunit --testsuite=FunctionalTests --testdox --colors=always
+```
