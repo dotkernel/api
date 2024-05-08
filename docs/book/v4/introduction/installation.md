@@ -86,9 +86,7 @@ php -S 0.0.0.0:8080 -t public
 
 Sending a GET request to the [home page](http://0.0.0.0:8080/) should output the following message:
 
-> {
-"message": "Welcome to DotKernel API!"
-}
+> {"message": "Welcome to DotKernel API!"}
 
 ## Running tests
 
