@@ -20,7 +20,7 @@
         
         <link rel="canonical" href="https://docs.dotkernel.org/api/v4/tutorials/create-book-module/">
         
-        <link rel="shortcut icon" href="https://docs.dotkernel.org/img/dk_logomark.svg">
+        <link rel="shortcut icon" href="https://docs.dotkernel.org/img/dk_docs_favicon_white.svg">
 
         <title>Creating a book module - api - DotKernel Documentation</title>
 
@@ -285,29 +285,29 @@
     <h1 id="implementing-a-book-module-in-dotkernel-api">Implementing a book module in DotKernel API</h1>
 <h2 id="file-structure">File structure</h2>
 <p>The below file structure is just an example, you can have multiple components such as event listeners, wrappers, etc.</p>
-<pre class="codehilite"><code>/src/
-    /Book/
-        /src/
-            /Collection/
-                /BookCollection.php
-            /Entity/
-                /Book.php
-            /Handler/
-                /BookHandler.php
-            /Repository/
-                /BookRepository.php
-            /Service/
-                /BookService.php
-            /InputFilter/
-                /Input/
-                    /NameInput.php
-                    /AuthorInput.php
-                    /ReleaseDateInput.php
-                /BookInputFilter.php
-        ConfigProvider.php
-        RoutesDelegator.php
-</code></pre>
-
+<pre class="highlight"><code class="language-markdown">.
+└── src/
+└── Book/
+└── src/
+├── Collection/
+│   └── BookCollection.php
+├── Entity/
+│   └── Book.php
+├── Handler/
+│   └── BookHandler.php
+├── InputFilter/
+│   ├── Input/
+│   │   ├── AuthorInput.php
+│   │   ├── NameInput.php
+│   │   └── ReleaseDateInput.php
+│   └── BookInputFilter.php
+├── Repository/
+│   └── BookRepository.php
+├── Service/
+│   ├── BookService.php
+│   └── BookServiceInterface.php
+├── ConfigProvider.php
+└── RoutesDelegator.php</code></pre>
 <ul>
 <li><code>src/Book/src/Collection/BookCollection.php</code> - a collection refers to a container for a group of related objects, typically used to manage sets of related entities fetched from a database</li>
 <li><code>src/Book/src/Entity/Book.php</code> - an entity refers to a PHP class that represents a persistent object or data structure</li>
@@ -321,22 +321,24 @@
 </ul>
 <h2 id="file-creation-and-contents">File creation and contents</h2>
 <ul>
-<li>
-<p><code>src/Book/src/Collection/BookCollection.php</code></p>
-<p>&lt;?php</p>
-<p>declare(strict_types=1);</p>
-<p>namespace Api\Book\Collection;</p>
-<p>use Api\App\Collection\ResourceCollection;</p>
-<p>class BookCollection extends ResourceCollection
-  {
-  }</p>
-</li>
-<li>
-<p><code>src/Book/src/Entity/Book.php</code></p>
-</li>
+<li><code>src/Book/src/Collection/BookCollection.php</code></li>
+</ul>
+<pre class="highlight"><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace Api\Book\Collection;
+
+use Api\App\Collection\ResourceCollection;
+
+class BookCollection extends ResourceCollection
+{
+}</code></pre>
+<ul>
+<li><code>src/Book/src/Entity/Book.php</code></li>
 </ul>
 <p>To keep things simple in this tutorial our book will have 3 properties: <code>name</code>, <code>author</code> and <code>release date</code>.</p>
-<pre class="codehilite"><code>&lt;?php
+<pre class="highlight"><code class="language-php">&lt;?php
 
 declare(strict_types=1);
 
@@ -348,16 +350,16 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
-#[ORM\Table(&quot;book&quot;)]
+#[ORM\Table("book")]
 class Book extends AbstractEntity
 {
-    #[ORM\Column(name: &quot;name&quot;, type: &quot;string&quot;, length: 100)]
+    #[ORM\Column(name: "name", type: "string", length: 100)]
     protected string $name;
 
-    #[ORM\Column(name: &quot;author&quot;, type: &quot;string&quot;, length: 100)]
+    #[ORM\Column(name: "author", type: "string", length: 100)]
     protected string $author;
 
-    #[ORM\Column(name: &quot;releaseDate&quot;, type: &quot;datetime_immutable&quot;)]
+    #[ORM\Column(name: "releaseDate", type: "datetime_immutable")]
     protected DateTimeImmutable $releaseDate;
 
     public function __construct(string $name, string $author, DateTimeImmutable $releaseDate)
@@ -414,345 +416,371 @@ class Book extends AbstractEntity
             'releaseDate' =&gt; $this-&gt;getReleaseDate(),
         ];
     }
-}
-</code></pre>
-
+}</code></pre>
 <ul>
-<li>
-<p><code>src/Book/src/Repository/BookRepository.php</code></p>
-<p>&lt;?php</p>
-<p>declare(strict_types=1);</p>
-<p>namespace Api\Book\Repository;</p>
-<p>use Api\App\Helper\PaginationHelper;
-  use Api\Book\Collection\BookCollection;
-  use Api\Book\Entity\Book;
-  use Doctrine\ORM\EntityRepository;
-  use Dot\AnnotatedServices\Annotation\Entity;</p>
-<p>/*<em>
-   * @Entity(name="Api\Book\Entity\Book")
-   * @extends EntityRepository<object>
-   </em>/
-  class BookRepository extends EntityRepository
-  {
-      public function saveBook(Book $book): Book
-      {
-          $this-&gt;getEntityManager()-&gt;persist($book);
-          $this-&gt;getEntityManager()-&gt;flush();</p>
-<pre class="codehilite"><code>      return $book;
-  }
-
-  public function getBooks(array $filters = []): BookCollection
-  {
-      $page = PaginationHelper::getOffsetAndLimit($filters);
-
-      $qb = $this
-          -&gt;getEntityManager()
-          -&gt;createQueryBuilder()
-          -&gt;select('book')
-          -&gt;from(Book::class, 'book')
-          -&gt;orderBy($filters['order'] ?? 'book.created', $filters['dir'] ?? 'desc')
-          -&gt;setFirstResult($page['offset'])
-          -&gt;setMaxResults($page['limit']);
-
-      $qb-&gt;getQuery()-&gt;useQueryCache(true);
-
-      return new BookCollection($qb, false);
-  }
-</code></pre>
-
-<p>}</p>
-</li>
-<li>
-<p><code>src/Book/src/Service/BookService.php</code></p>
-<p>&lt;?php</p>
-<p>declare(strict_types=1);</p>
-<p>namespace Api\Book\Service;</p>
-<p>use Api\Book\Entity\Book;
-  use Api\Book\Repository\BookRepository;
-  use Dot\AnnotatedServices\Annotation\Inject;
-  use DateTimeImmutable;</p>
-<p>class BookService implements BookServiceInterface
-  {
-      /*<em>
-       * @Inject({
-       *     BookRepository::class,
-       * })
-       </em>/
-      public function __construct(protected BookRepository $bookRepository)
-      {
-      }</p>
-<pre class="codehilite"><code>  public function createBook(array $data): Book
-  {
-      $book = new Book(
-          $data['name'],
-          $data['author'],
-          new DateTimeImmutable($data['releaseDate'])
-      );
-
-      return $this-&gt;bookRepository-&gt;saveBook($book);
-  }
-
-  public function getBooks(array $filters = [])
-  {
-      return $this-&gt;bookRepository-&gt;getBooks($filters);
-  }
-</code></pre>
-
-<p>}</p>
-</li>
-<li>
-<p><code>src/Book/src/Service/BookServiceInterface.php</code></p>
-<p>&lt;?php</p>
-<p>declare(strict_types=1);</p>
-<p>namespace Api\Book\Service;</p>
-<p>interface BookServiceInterface
-  {
-  }</p>
-</li>
-<li>
-<p><code>src/Book/src/ConfigProvider.php</code></p>
-<p>&lt;?php</p>
-<p>declare(strict_types=1);</p>
-<p>namespace Api\Book;</p>
-<p>use Api\Book\Collection\BookCollection;
-  use Api\Book\Entity\Book;
-  use Api\Book\Handler\BookHandler;
-  use Api\Book\Repository\BookRepository;
-  use Api\Book\Service\BookService;
-  use Api\Book\Service\BookServiceInterface;
-  use Dot\AnnotatedServices\Factory\AnnotatedRepositoryFactory;
-  use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
-  use Mezzio\Hal\Metadata\MetadataMap;
-  use Api\App\ConfigProvider as AppConfigProvider;</p>
-<p>class ConfigProvider
-  {
-      public function __invoke(): array
-      {
-          return [
-              'dependencies'     =&gt; $this-&gt;getDependencies(),
-              MetadataMap::class =&gt; $this-&gt;getHalConfig(),
-          ];
-      }</p>
-<pre class="codehilite"><code>  public function getDependencies(): array
-  {
-      return [
-          'factories' =&gt; [
-              BookHandler::class        =&gt; AnnotatedServiceFactory::class,
-              BookService::class =&gt; AnnotatedServiceFactory::class,
-              BookRepository::class =&gt; AnnotatedRepositoryFactory::class,
-          ],
-          'aliases'   =&gt; [
-              BookServiceInterface::class     =&gt; BookService::class,
-          ],
-      ];
-  }
-
-  public function getHalConfig(): array
-  {
-      return [
-          AppConfigProvider::getCollection(BookCollection::class, 'books.list', 'books'),
-          AppConfigProvider::getResource(Book::class, 'book.create'),
-      ];
-  }
-</code></pre>
-
-<p>}</p>
-</li>
-<li>
-<p><code>src/Book/src/RoutesDelegator.php</code></p>
-<p>&lt;?php</p>
-<p>namespace Api\Book;</p>
-<p>use Api\Book\Handler\BookHandler;
-  use Mezzio\Application;
-  use Psr\Container\ContainerInterface;</p>
-<p>class RoutesDelegator
-  {
-      public function __invoke(ContainerInterface $container, string $serviceName, callable $callback): Application
-      {
-          /*<em> @var Application $app </em>/
-          $app = $callback();</p>
-<pre class="codehilite"><code>      $app-&gt;get(
-          '/books',
-          BookHandler::class,
-          'books.list'
-      );
-
-      $app-&gt;post(
-          '/book',
-          BookHandler::class,
-          'book.create'
-      );
-
-      return $app;
-  }
-</code></pre>
-
-<p>}</p>
-</li>
-<li>
-<p><code>src/Book/src/InputFilter/BookInputFilter.php</code></p>
-<p>&lt;?php</p>
-<p>declare(strict_types=1);</p>
-<p>namespace Api\Book\InputFilter;</p>
-<p>use Api\Book\InputFilter\Input\AuthorInput;
-  use Api\Book\InputFilter\Input\NameInput;
-  use Api\Book\InputFilter\Input\ReleaseDateInput;
-  use Laminas\InputFilter\InputFilter;</p>
-<p>class BookInputFilter extends InputFilter
-  {
-      public function __construct()
-      {
-          $this-&gt;add(new NameInput('name'));
-          $this-&gt;add(new AuthorInput('author'));
-          $this-&gt;add(new ReleaseDateInput('releaseDate'));
-      }
-  }</p>
-</li>
-<li>
-<p><code>src/Book/src/InputFilter/Input/AuthorInput.php</code></p>
-<p>&lt;?php</p>
-<p>declare(strict_types=1);</p>
-<p>namespace Api\Book\InputFilter\Input;</p>
-<p>use Api\App\Message;
-  use Laminas\Filter\StringTrim;
-  use Laminas\Filter\StripTags;
-  use Laminas\InputFilter\Input;
-  use Laminas\Validator\NotEmpty;</p>
-<p>class AuthorInput extends Input
-  {
-      public function __construct(?string $name = null, bool $isRequired = true)
-      {
-          parent::__construct($name);</p>
-<pre class="codehilite"><code>      $this-&gt;setRequired($isRequired);
-
-      $this-&gt;getFilterChain()
-          -&gt;attachByName(StringTrim::class)
-          -&gt;attachByName(StripTags::class);
-
-      $this-&gt;getValidatorChain()
-          -&gt;attachByName(NotEmpty::class, [
-              'message' =&gt; sprintf(Message::VALIDATOR_REQUIRED_FIELD_BY_NAME, 'author'),
-          ], true);
-  }
-</code></pre>
-
-<p>}</p>
-</li>
-<li>
-<p><code>src/Book/src/InputFilter/Input/NameInput.php</code></p>
-<p>&lt;?php</p>
-<p>declare(strict_types=1);</p>
-<p>namespace Api\Book\InputFilter\Input;</p>
-<p>use Api\App\Message;
-  use Laminas\Filter\StringTrim;
-  use Laminas\Filter\StripTags;
-  use Laminas\InputFilter\Input;
-  use Laminas\Validator\NotEmpty;</p>
-<p>class NameInput extends Input
-  {
-      public function __construct(?string $name = null, bool $isRequired = true)
-      {
-          parent::__construct($name);</p>
-<pre class="codehilite"><code>      $this-&gt;setRequired($isRequired);
-
-      $this-&gt;getFilterChain()
-          -&gt;attachByName(StringTrim::class)
-          -&gt;attachByName(StripTags::class);
-
-      $this-&gt;getValidatorChain()
-          -&gt;attachByName(NotEmpty::class, [
-              'message' =&gt; sprintf(Message::VALIDATOR_REQUIRED_FIELD_BY_NAME, 'name'),
-          ], true);
-  }
-</code></pre>
-
-<p>}</p>
-</li>
-<li>
-<p><code>src/Book/src/InputFilter/Input/ReleaseDateInput.php</code></p>
-<p>&lt;?php</p>
-<p>declare(strict_types=1);</p>
-<p>namespace Api\Book\InputFilter\Input;</p>
-<p>use Api\App\Message;
-  use Laminas\Filter\StringTrim;
-  use Laminas\Filter\StripTags;
-  use Laminas\InputFilter\Input;
-  use Laminas\Validator\Date;
-  use Laminas\Validator\NotEmpty;</p>
-<p>class ReleaseDateInput extends Input
-  {
-      public function __construct(?string $name = null, bool $isRequired = true)
-      {
-          parent::__construct($name);</p>
-<pre class="codehilite"><code>      $this-&gt;setRequired($isRequired);
-
-      $this-&gt;getFilterChain()
-          -&gt;attachByName(StringTrim::class)
-          -&gt;attachByName(StripTags::class);
-
-      $this-&gt;getValidatorChain()
-          -&gt;attachByName(Date::class, [
-              'message' =&gt; sprintf(Message::INVALID_VALUE, 'releaseDate'),
-          ], true);
-  }
-</code></pre>
-
-<p>}</p>
-</li>
-<li>
-<p><code>src/Book/src/Handler/BookHandler.php</code></p>
-<p>&lt;?php</p>
-<p>declare(strict_types=1);</p>
-<p>namespace Api\Book\Handler;</p>
-<p>use Api\App\Handler\ResponseTrait;
-  use Api\Book\InputFilter\BookInputFilter;
-  use Api\Book\Service\BookServiceInterface;
-  use Mezzio\Hal\HalResponseFactory;
-  use Mezzio\Hal\ResourceGenerator;
-  use Psr\Http\Message\ResponseInterface;
-  use Psr\Http\Message\ServerRequestInterface;
-  use Psr\Http\Server\RequestHandlerInterface;
-  use Dot\AnnotatedServices\Annotation\Inject;</p>
-<p>class BookHandler implements RequestHandlerInterface
-  {
-      use ResponseTrait;</p>
-<pre class="codehilite"><code>  /**
-   * @Inject({
-   *     HalResponseFactory::class,
-   *     ResourceGenerator::class,
-   *     BookServiceInterface::class
-   * })
-   */
-  public function __construct(
-      protected HalResponseFactory $responseFactory,
-      protected ResourceGenerator $resourceGenerator,
-      protected BookServiceInterface $bookService
-  ) {
-  }
-
-  public function get(ServerRequestInterface $request): ResponseInterface
-  {
-      $books = $this-&gt;bookService-&gt;getBooks($request-&gt;getQueryParams());
-
-      return $this-&gt;createResponse($request, $books);
-  }
-
-  public function post(ServerRequestInterface $request): ResponseInterface
-  {
-      $inputFilter = (new BookInputFilter())-&gt;setData($request-&gt;getParsedBody());
-      if (! $inputFilter-&gt;isValid()) {
-          return $this-&gt;errorResponse($inputFilter-&gt;getMessages());
-      }
-
-      $book = $this-&gt;bookService-&gt;createBook($inputFilter-&gt;getValues());
-
-      return $this-&gt;createResponse($request, $book);
-  }
-</code></pre>
-
-<p>}</p>
-</li>
+<li><code>src/Book/src/Repository/BookRepository.php</code></li>
 </ul>
+<pre class="highlight"><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace Api\Book\Repository;
+
+use Api\App\Helper\PaginationHelper;
+use Api\Book\Collection\BookCollection;
+use Api\Book\Entity\Book;
+use Doctrine\ORM\EntityRepository;
+use Dot\AnnotatedServices\Annotation\Entity;
+
+/**
+ * @Entity(name="Api\Book\Entity\Book")
+ * @extends EntityRepository&lt;object&gt;
+ */
+class BookRepository extends EntityRepository
+{
+    public function saveBook(Book $book): Book
+    {
+        $this-&gt;getEntityManager()-&gt;persist($book);
+        $this-&gt;getEntityManager()-&gt;flush();
+
+        return $book;
+    }
+
+    public function getBooks(array $filters = []): BookCollection
+    {
+        $page = PaginationHelper::getOffsetAndLimit($filters);
+
+        $qb = $this
+            -&gt;getEntityManager()
+            -&gt;createQueryBuilder()
+            -&gt;select('book')
+            -&gt;from(Book::class, 'book')
+            -&gt;orderBy($filters['order'] ?? 'book.created', $filters['dir'] ?? 'desc')
+            -&gt;setFirstResult($page['offset'])
+            -&gt;setMaxResults($page['limit']);
+
+        $qb-&gt;getQuery()-&gt;useQueryCache(true);
+
+        return new BookCollection($qb, false);
+    }
+}</code></pre>
+<ul>
+<li><code>src/Book/src/Service/BookService.php</code></li>
+</ul>
+<pre class="highlight"><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace Api\Book\Service;
+
+use Api\Book\Entity\Book;
+use Api\Book\Repository\BookRepository;
+use Dot\AnnotatedServices\Annotation\Inject;
+use DateTimeImmutable;
+
+class BookService implements BookServiceInterface
+{
+    /**
+     * @Inject({
+     *     BookRepository::class,
+     * })
+     */
+    public function __construct(protected BookRepository $bookRepository)
+    {
+    }
+
+    public function createBook(array $data): Book
+    {
+        $book = new Book(
+            $data['name'],
+            $data['author'],
+            new DateTimeImmutable($data['releaseDate'])
+        );
+
+        return $this-&gt;bookRepository-&gt;saveBook($book);
+    }
+
+    public function getBooks(array $filters = [])
+    {
+        return $this-&gt;bookRepository-&gt;getBooks($filters);
+    }
+}</code></pre>
+<ul>
+<li><code>src/Book/src/Service/BookServiceInterface.php</code></li>
+</ul>
+<pre class="highlight"><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace Api\Book\Service;
+
+interface BookServiceInterface
+{
+}</code></pre>
+<ul>
+<li><code>src/Book/src/ConfigProvider.php</code></li>
+</ul>
+<pre class="highlight"><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace Api\Book;
+
+use Api\Book\Collection\BookCollection;
+use Api\Book\Entity\Book;
+use Api\Book\Handler\BookHandler;
+use Api\Book\Repository\BookRepository;
+use Api\Book\Service\BookService;
+use Api\Book\Service\BookServiceInterface;
+use Dot\AnnotatedServices\Factory\AnnotatedRepositoryFactory;
+use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
+use Mezzio\Hal\Metadata\MetadataMap;
+use Api\App\ConfigProvider as AppConfigProvider;
+
+class ConfigProvider
+{
+    public function __invoke(): array
+    {
+        return [
+            'dependencies'     =&gt; $this-&gt;getDependencies(),
+            MetadataMap::class =&gt; $this-&gt;getHalConfig(),
+        ];
+    }
+
+    public function getDependencies(): array
+    {
+        return [
+            'factories' =&gt; [
+                BookHandler::class        =&gt; AnnotatedServiceFactory::class,
+                BookService::class =&gt; AnnotatedServiceFactory::class,
+                BookRepository::class =&gt; AnnotatedRepositoryFactory::class,
+            ],
+            'aliases'   =&gt; [
+                BookServiceInterface::class     =&gt; BookService::class,
+            ],
+        ];
+    }
+
+    public function getHalConfig(): array
+    {
+        return [
+            AppConfigProvider::getCollection(BookCollection::class, 'books.list', 'books'),
+            AppConfigProvider::getResource(Book::class, 'book.create'),
+        ];
+    }
+}</code></pre>
+<ul>
+<li><code>src/Book/src/RoutesDelegator.php</code></li>
+</ul>
+<pre class="highlight"><code class="language-php">&lt;?php
+
+namespace Api\Book;
+
+use Api\Book\Handler\BookHandler;
+use Mezzio\Application;
+use Psr\Container\ContainerInterface;
+
+class RoutesDelegator
+{
+    public function __invoke(ContainerInterface $container, string $serviceName, callable $callback): Application
+    {
+        /** @var Application $app */
+        $app = $callback();
+
+        $app-&gt;get(
+            '/books',
+            BookHandler::class,
+            'books.list'
+        );
+
+        $app-&gt;post(
+            '/book',
+            BookHandler::class,
+            'book.create'
+        );
+
+        return $app;
+    }
+}</code></pre>
+<ul>
+<li><code>src/Book/src/InputFilter/BookInputFilter.php</code></li>
+</ul>
+<pre class="highlight"><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace Api\Book\InputFilter;
+
+use Api\Book\InputFilter\Input\AuthorInput;
+use Api\Book\InputFilter\Input\NameInput;
+use Api\Book\InputFilter\Input\ReleaseDateInput;
+use Laminas\InputFilter\InputFilter;
+
+class BookInputFilter extends InputFilter
+{
+    public function __construct()
+    {
+        $this-&gt;add(new NameInput('name'));
+        $this-&gt;add(new AuthorInput('author'));
+        $this-&gt;add(new ReleaseDateInput('releaseDate'));
+    }
+}</code></pre>
+<ul>
+<li><code>src/Book/src/InputFilter/Input/AuthorInput.php</code></li>
+</ul>
+<pre class="highlight"><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace Api\Book\InputFilter\Input;
+
+use Api\App\Message;
+use Laminas\Filter\StringTrim;
+use Laminas\Filter\StripTags;
+use Laminas\InputFilter\Input;
+use Laminas\Validator\NotEmpty;
+
+class AuthorInput extends Input
+{
+    public function __construct(?string $name = null, bool $isRequired = true)
+    {
+        parent::__construct($name);
+
+        $this-&gt;setRequired($isRequired);
+
+        $this-&gt;getFilterChain()
+            -&gt;attachByName(StringTrim::class)
+            -&gt;attachByName(StripTags::class);
+
+        $this-&gt;getValidatorChain()
+            -&gt;attachByName(NotEmpty::class, [
+                'message' =&gt; sprintf(Message::VALIDATOR_REQUIRED_FIELD_BY_NAME, 'author'),
+            ], true);
+    }
+}</code></pre>
+<ul>
+<li><code>src/Book/src/InputFilter/Input/NameInput.php</code></li>
+</ul>
+<pre class="highlight"><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace Api\Book\InputFilter\Input;
+
+use Api\App\Message;
+use Laminas\Filter\StringTrim;
+use Laminas\Filter\StripTags;
+use Laminas\InputFilter\Input;
+use Laminas\Validator\NotEmpty;
+
+class NameInput extends Input
+{
+    public function __construct(?string $name = null, bool $isRequired = true)
+    {
+        parent::__construct($name);
+
+        $this-&gt;setRequired($isRequired);
+
+        $this-&gt;getFilterChain()
+            -&gt;attachByName(StringTrim::class)
+            -&gt;attachByName(StripTags::class);
+
+        $this-&gt;getValidatorChain()
+            -&gt;attachByName(NotEmpty::class, [
+                'message' =&gt; sprintf(Message::VALIDATOR_REQUIRED_FIELD_BY_NAME, 'name'),
+            ], true);
+    }
+}</code></pre>
+<ul>
+<li><code>src/Book/src/InputFilter/Input/ReleaseDateInput.php</code></li>
+</ul>
+<pre class="highlight"><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace Api\Book\InputFilter\Input;
+
+use Api\App\Message;
+use Laminas\Filter\StringTrim;
+use Laminas\Filter\StripTags;
+use Laminas\InputFilter\Input;
+use Laminas\Validator\Date;
+use Laminas\Validator\NotEmpty;
+
+class ReleaseDateInput extends Input
+{
+    public function __construct(?string $name = null, bool $isRequired = true)
+    {
+        parent::__construct($name);
+
+        $this-&gt;setRequired($isRequired);
+
+        $this-&gt;getFilterChain()
+            -&gt;attachByName(StringTrim::class)
+            -&gt;attachByName(StripTags::class);
+
+        $this-&gt;getValidatorChain()
+            -&gt;attachByName(Date::class, [
+                'message' =&gt; sprintf(Message::INVALID_VALUE, 'releaseDate'),
+            ], true);
+    }
+}</code></pre>
+<ul>
+<li><code>src/Book/src/Handler/BookHandler.php</code></li>
+</ul>
+<pre class="highlight"><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace Api\Book\Handler;
+
+use Api\App\Handler\ResponseTrait;
+use Api\Book\InputFilter\BookInputFilter;
+use Api\Book\Service\BookServiceInterface;
+use Mezzio\Hal\HalResponseFactory;
+use Mezzio\Hal\ResourceGenerator;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Dot\AnnotatedServices\Annotation\Inject;
+
+class BookHandler implements RequestHandlerInterface
+{
+    use ResponseTrait;
+
+    /**
+     * @Inject({
+     *     HalResponseFactory::class,
+     *     ResourceGenerator::class,
+     *     BookServiceInterface::class
+     * })
+     */
+    public function __construct(
+        protected HalResponseFactory $responseFactory,
+        protected ResourceGenerator $resourceGenerator,
+        protected BookServiceInterface $bookService
+    ) {
+    }
+
+    public function get(ServerRequestInterface $request): ResponseInterface
+    {
+        $books = $this-&gt;bookService-&gt;getBooks($request-&gt;getQueryParams());
+
+        return $this-&gt;createResponse($request, $books);
+    }
+
+    public function post(ServerRequestInterface $request): ResponseInterface
+    {
+        $inputFilter = (new BookInputFilter())-&gt;setData($request-&gt;getParsedBody());
+        if (! $inputFilter-&gt;isValid()) {
+            return $this-&gt;errorResponse($inputFilter-&gt;getMessages());
+        }
+
+        $book = $this-&gt;bookService-&gt;createBook($inputFilter-&gt;getValues());
+
+        return $this-&gt;createResponse($request, $book);
+    }
+}</code></pre>
 <h2 id="configuring-and-registering-the-new-module">Configuring and registering the new module</h2>
 <p>Once you set up all the files as in the example above, you will need to do a few additional configurations:</p>
 <ul>
@@ -761,38 +789,34 @@ class Book extends AbstractEntity
 <li>Register the module's routes by adding <code>\Api\Book\RoutesDelegator::class,</code> under <code>\Api\User\RoutesDelegator::class,</code> in <code>src/App/src/ConfigProvider.php</code>.</li>
 </ul>
 <p>It should look like this:</p>
-<pre class="codehilite"><code>  public function getDependencies(): array
-  {
-      return [
-          'delegators' =&gt; [
-              Application::class =&gt; [
-                  RoutesDelegator::class,
-                  \Api\Admin\RoutesDelegator::class,
-                  \Api\User\RoutesDelegator::class,
-                  \Api\Book\RoutesDelegator::class,
-              ],
-          ],
-          'factories'  =&gt; [
-              ...
-          ]
-          ...
-</code></pre>
-
+<pre class="highlight"><code class="language-php">public function getDependencies(): array
+{
+    return [
+        'delegators' =&gt; [
+            Application::class =&gt; [
+                RoutesDelegator::class,
+                \Api\Admin\RoutesDelegator::class,
+                \Api\User\RoutesDelegator::class,
+                \Api\Book\RoutesDelegator::class,
+            ],
+        ],
+        'factories'  =&gt; [
+            ...
+        ]
+        ...</code></pre>
 <ul>
-<li>
-<p>In <code>src/config/autoload/doctrine.global.php</code> add this under the <code>doctrine.driver</code> key:</p>
-<p>'BookEntities'  =&gt; [
-      'class' =&gt; AttributeDriver::class,
-      'cache' =&gt; 'array',
-      'paths' =&gt; <strong>DIR</strong> . '/../../src/Book/src/Entity',
-  ],</p>
-</li>
-<li>
-<p><code>Api\\Book\Entity'    =&gt; 'BookEntities',</code> add this under the <code>doctrine.driver.drivers</code> key</p>
-</li>
+<li>In <code>src/config/autoload/doctrine.global.php</code> add this under the <code>doctrine.driver</code> key:</li>
+</ul>
+<pre class="highlight"><code class="language-php">'BookEntities'  =&gt; [
+    'class' =&gt; AttributeDriver::class,
+    'cache' =&gt; 'array',
+    'paths' =&gt; __DIR__ . '/../../src/Book/src/Entity',
+],</code></pre>
+<ul>
+<li><code>Api\\Book\Entity'    =&gt; 'BookEntities',</code> add this under the <code>doctrine.driver.drivers</code> key</li>
 </ul>
 <p>Example:</p>
-<pre class="codehilite"><code>&lt;?php
+<pre class="highlight"><code class="language-php">&lt;?php
 ...
 return [
     'doctrine'            =&gt; [
@@ -828,9 +852,7 @@ return [
                 'paths' =&gt; __DIR__ . '/../../src/Book/src/Entity',
             ],
         ],
-        ...
-</code></pre>
-
+        ...</code></pre>
 <p>Next we need to configure access to the newly created endpoints, add <code>books.list</code> and <code>book.create</code> to the authorization rbac array, under the <code>UserRole::ROLE_GUEST</code> key.</p>
 <blockquote>
 <p>Make sure you read and understand the rbac documentation.</p>
@@ -838,24 +860,17 @@ return [
 <h2 id="migrations">Migrations</h2>
 <p>We created the <code>Book</code> entity, but we didn't create the associated table for it.</p>
 <p>Doctrine can handle the table creation, run the following command:</p>
-<pre class="codehilite"><code>vendor/bin/doctrine-migrations diff --filter-expression='/^(?!oauth_)/'
-</code></pre>
-
+<pre class="highlight"><code class="language-shell">vendor/bin/doctrine-migrations diff --filter-expression='/^(?!oauth_)/'</code></pre>
 <p>This will check for differences between your entities and database structure and create migration files if necessary, in <code>data/doctrine/migrations</code>.</p>
 <p>To execute the migrations run:</p>
-<pre class="codehilite"><code>vendor/bin/doctrine-migrations migrate
-</code></pre>
-
+<pre class="highlight"><code class="language-shell">vendor/bin/doctrine-migrations migrate</code></pre>
 <h2 id="checking-endpoints">Checking endpoints</h2>
 <p>If we did everything as planned we can call the <code>http://0.0.0.0:8080/book</code> endpoint and create a new book:</p>
-<pre class="codehilite"><code>curl -X POST http://0.0.0.0:8080/book
-  -H &quot;Content-Type: application/json&quot;
-  -d '{&quot;name&quot;: &quot;test&quot;, &quot;author&quot;: &quot;author name&quot;, &quot;releaseDate&quot;: &quot;2023-03-03&quot;}'
-</code></pre>
-
+<pre class="highlight"><code class="language-shell">curl -X POST http://0.0.0.0:8080/book
+  -H "Content-Type: application/json"
+  -d '{"name": "test", "author": "author name", "releaseDate": "2023-03-03"}'</code></pre>
 <p>To list the books use :</p>
-<pre class="codehilite"><code>curl http://0.0.0.0:8080/books
-</code></pre>
+<pre class="highlight"><code class="language-shell">curl http://0.0.0.0:8080/books</code></pre>
 
 
 

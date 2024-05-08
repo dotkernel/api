@@ -20,7 +20,7 @@
         
         <link rel="canonical" href="https://docs.dotkernel.org/api/v4/introduction/installation/">
         
-        <link rel="shortcut icon" href="https://docs.dotkernel.org/img/dk_logomark.svg">
+        <link rel="shortcut icon" href="https://docs.dotkernel.org/img/dk_docs_favicon_white.svg">
 
         <title>Installation - api - DotKernel Documentation</title>
 
@@ -304,22 +304,14 @@
 
     <h1 id="installation">Installation</h1>
 <h2 id="install-dependencies">Install dependencies</h2>
-<pre class="codehilite"><code>composer install
-</code></pre>
-
+<pre class="highlight"><code class="language-shell">composer install</code></pre>
 <h2 id="development-mode">Development mode</h2>
 <p>If you're installing the project for development, make sure you have development mode enabled, by running:</p>
-<pre class="codehilite"><code>composer development-enable
-</code></pre>
-
+<pre class="highlight"><code class="language-shell">composer development-enable</code></pre>
 <p>You can disable development mode by running:</p>
-<pre class="codehilite"><code>composer development-disable
-</code></pre>
-
+<pre class="highlight"><code class="language-shell">composer development-disable</code></pre>
 <p>You can check if you have development mode enabled by running:</p>
-<pre class="codehilite"><code>composer development-status
-</code></pre>
-
+<pre class="highlight"><code class="language-shell">composer development-status</code></pre>
 <h2 id="prepare-config-files">Prepare config files</h2>
 <ul>
 <li>duplicate <code>config/autoload/cors.local.php.dist</code> as <code>config/autoload/cors.local.php</code> &lt;- if your API will be consumed by another application, make sure configure the <code>allowed_origins</code></li>
@@ -332,54 +324,37 @@
 <h2 id="running-migrations">Running migrations</h2>
 <ul>
 <li>create a new MySQL database - set collation to <code>utf8mb4_general_ci</code></li>
-<li>
-<p>run the database migrations by using the following command:</p>
-<p>php vendor/bin/doctrine-migrations migrate</p>
-</li>
+<li>run the database migrations by using the following command:</li>
 </ul>
+<pre class="highlight"><code class="language-shell">php vendor/bin/doctrine-migrations migrate</code></pre>
 <p>This command will prompt you to confirm that you want to run it.</p>
-<pre class="codehilite"><code>WARNING! You are about to execute a migration in database &quot;...&quot; that could result in schema changes and data loss. Are you sure you wish to continue? (yes/no) [yes]:
-</code></pre>
-
+<blockquote>
+<p>WARNING! You are about to execute a migration in database "..." that could result in schema changes and data loss. Are you sure you wish to continue? (yes/no) [yes]:</p>
+</blockquote>
 <p>Hit <code>Enter</code> to confirm the operation.</p>
 <h2 id="executing-fixtures">Executing fixtures</h2>
 <p><strong>Fixtures are used to seed the database with initial values and should be executed after migrating the database.</strong></p>
 <p>To list all the fixtures, run:</p>
-<pre class="codehilite"><code>php bin/doctrine fixtures:list
-</code></pre>
-
+<pre class="highlight"><code class="language-shell">php bin/doctrine fixtures:list</code></pre>
 <p>This will output all the fixtures in the order of execution.</p>
 <p>To execute all fixtures, run:</p>
-<pre class="codehilite"><code>php bin/doctrine fixtures:execute
-</code></pre>
-
+<pre class="highlight"><code class="language-shell">php bin/doctrine fixtures:execute</code></pre>
 <p>To execute a specific fixture, run:</p>
-<pre class="codehilite"><code>php bin/doctrine fixtures:execute --class=FixtureClassName
-</code></pre>
-
+<pre class="highlight"><code class="language-shell">php bin/doctrine fixtures:execute --class=FixtureClassName</code></pre>
 <p>More details on how fixtures work can be found here: https://github.com/dotkernel/dot-data-fixtures#creating-fixtures</p>
 <h2 id="test-the-installation">Test the installation</h2>
-<pre class="codehilite"><code>php -S 0.0.0.0:8080 -t public
-</code></pre>
-
+<pre class="highlight"><code class="language-shell">php -S 0.0.0.0:8080 -t public</code></pre>
 <p>Sending a GET request to the <a href="http://0.0.0.0:8080/">home page</a> should output the following message:</p>
-<pre class="codehilite"><code>{
-  &quot;message&quot;: &quot;Welcome to DotKernel API!&quot;
-}
-</code></pre>
-
+<blockquote>
+<p>{"message": "Welcome to DotKernel API!"}</p>
+</blockquote>
 <h2 id="running-tests">Running tests</h2>
 <p>The project has 2 types of tests : functional and unit tests, you can run both types at the same type by executing this command:</p>
-<pre class="codehilite"><code>php vendor/bin/phpunit
-</code></pre>
-
+<pre class="highlight"><code class="language-shell">php vendor/bin/phpunit</code></pre>
 <h2 id="running-unit-tests">Running unit tests</h2>
-<pre class="codehilite"><code>vendor/bin/phpunit --testsuite=UnitTests --testdox --colors=always
-</code></pre>
-
+<pre class="highlight"><code class="language-shell">vendor/bin/phpunit --testsuite=UnitTests --testdox --colors=always</code></pre>
 <h2 id="running-functional-tests">Running functional tests</h2>
-<pre class="codehilite"><code>vendor/bin/phpunit --testsuite=FunctionalTests --testdox --colors=always
-</code></pre>
+<pre class="highlight"><code class="language-shell">vendor/bin/phpunit --testsuite=FunctionalTests --testdox --colors=always</code></pre>
 
 
 

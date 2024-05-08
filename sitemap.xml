@@ -2,42 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://docs.dotkernel.org/api/</loc>
-         <lastmod>2024-05-07</lastmod>
+         <lastmod>2024-05-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.dotkernel.org/api/v4/introduction/file-structure/</loc>
-         <lastmod>2024-05-07</lastmod>
+         <lastmod>2024-05-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.dotkernel.org/api/v4/introduction/getting-started/</loc>
-         <lastmod>2024-05-07</lastmod>
+         <lastmod>2024-05-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.dotkernel.org/api/v4/introduction/installation/</loc>
-         <lastmod>2024-05-07</lastmod>
+         <lastmod>2024-05-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.dotkernel.org/api/v4/introduction/introduction/</loc>
-         <lastmod>2024-05-07</lastmod>
+         <lastmod>2024-05-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.dotkernel.org/api/v4/introduction/packages/</loc>
-         <lastmod>2024-05-07</lastmod>
+         <lastmod>2024-05-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.dotkernel.org/api/v4/introduction/server-requirements/</loc>
-         <lastmod>2024-05-07</lastmod>
+         <lastmod>2024-05-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://docs.dotkernel.org/api/v4/tutorials/create-book-module/</loc>
-         <lastmod>2024-05-07</lastmod>
+         <lastmod>2024-05-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

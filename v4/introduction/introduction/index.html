@@ -20,7 +20,7 @@
         
         <link rel="canonical" href="https://docs.dotkernel.org/api/v4/introduction/introduction/">
         
-        <link rel="shortcut icon" href="https://docs.dotkernel.org/img/dk_logomark.svg">
+        <link rel="shortcut icon" href="https://docs.dotkernel.org/img/dk_docs_favicon_white.svg">
 
         <title>Introduction - api - DotKernel Documentation</title>
 
@@ -348,10 +348,10 @@
 <p>The benefit of Doctrine for the programmer is the ability to focus on the object-oriented business logic and worry about persistence only as a secondary priority.</p>
 <h2 id="documentation">Documentation</h2>
 <p>Our documentation is Postman based. We use the following files in which we store information about every available endpoint ready to be tested:</p>
-<pre class="codehilite"><code>documentation/DotKernel_API.postman_collection.json
-documentation/DotKernel_API.postman_environment.json
-</code></pre>
-
+<ul>
+<li>documentation/DotKernel_API.postman_collection.json</li>
+<li>documentation/DotKernel_API.postman_environment.json</li>
+</ul>
 <h2 id="hypertext-application-language">Hypertext Application Language</h2>
 <p>For our API payloads ( a value object for describing the API resource, its relational links and any embedded/child resources related to it ) we chose mezzio-hal.</p>
 <h2 id="cors">CORS</h2>
@@ -384,16 +384,11 @@ documentation/DotKernel_API.postman_environment.json
 <h2 id="tests">Tests</h2>
 <p>One of the best ways to ensure the quality of your product is to create and run functional and unit tests. You can find factory-made tests in the tests/AppTest/ folder, and you can also register your own.</p>
 <p>We have 2 types of tests: functional and unit tests, you can run both types at the same type by executing this command:</p>
-<pre class="codehilite"><code>php vendor/bin/phpunit
-</code></pre>
-
+<pre class="highlight"><code class="language-shell">php vendor/bin/phpunit</code></pre>
 <h2 id="running-unit-tests">Running unit tests</h2>
-<pre class="codehilite"><code>vendor/bin/phpunit --testsuite=UnitTests --testdox --colors=always
-</code></pre>
-
+<pre class="highlight"><code class="language-shell">vendor/bin/phpunit --testsuite=UnitTests --testdox --colors=always</code></pre>
 <h2 id="running-functional-tests">Running functional tests</h2>
-<pre class="codehilite"><code>vendor/bin/phpunit --testsuite=FunctionalTests --testdox --colors=always
-</code></pre>
+<pre class="highlight"><code class="language-shell">vendor/bin/phpunit --testsuite=FunctionalTests --testdox --colors=always</code></pre>
 
 
 
