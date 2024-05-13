@@ -9,9 +9,9 @@ For **development** we highly recommend to use either Almalinux 9 or [WSL](https
 
 * Apache >= 2.4 with mod_rewrite and .htaccess support `(AllowOverride All)`
 
- **OR**
+### OR
 
- * NGINX
+* NGINX
 
 ## PHP >= 8.2
 
