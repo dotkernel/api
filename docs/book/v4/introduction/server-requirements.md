@@ -3,7 +3,7 @@
 For **production**, we highly recommend a *nix based system.
 Either a bare metal server or a LXC container, running [Almalinux 9](https://almalinux.org/get-almalinux/)
 
-For **development** we highly recommend to use either Almalinux 9 or [WSL](https://github.com/dotkernel/development/blob/main/wsl/os/almalinux9/README.md) 
+For **development** we highly recommend to use either Almalinux 9 or [WSL](https://github.com/dotkernel/development/blob/main/wsl/os/almalinux9/README.md)
 
 ## Webservers
 
