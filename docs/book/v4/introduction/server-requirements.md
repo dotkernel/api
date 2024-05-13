@@ -1,18 +1,23 @@
 # Server Requirements
 
-For production, we highly recommend a *nix based system.
+For **production**, we highly recommend a *nix based system.
+Either a bare metal server or a LXC container, running [Almalinux 9](https://almalinux.org/get-almalinux/)
 
-## Webserver
+For **development** we highly recommend to use either Almalinux 9 or [WSL](https://github.com/dotkernel/development/blob/main/wsl/os/almalinux9/README.md) 
 
-* Apache >= 2.2 **or** Nginx
-* mod_rewrite
-* .htaccess support `(AllowOverride All)`
+## Webservers
+
+* Apache >= 2.4 with mod_rewrite and .htaccess support `(AllowOverride All)`
+
+ **OR**
+
+ * NGINX
 
 ## PHP >= 8.2
 
-Both mod_php and FCGI (FPM) are supported.
+It is recommended to run PHP as FPM application served by Apache or Nginx
 
-## Required Settings and Modules & Extensions
+## Required PHP Settings and Modules & Extensions
 
 * memory_limit >= 128M
 * upload_max_filesize and post_max_size >= 100M (depending on your data)
@@ -22,7 +27,7 @@ Both mod_php and FCGI (FPM) are supported.
 
 ## RDBMS
 
-* MySQL / MariaDB >= 5.5.3
+* MariaDB >= 10.11 LTS
 
 ## Recommended extensions
 
