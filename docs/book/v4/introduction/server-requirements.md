@@ -1,9 +1,9 @@
 # Server Requirements
 
 For **production**, we highly recommend a *nix based system.
-Either a bare metal server or a LXC container, running [Almalinux 9](https://almalinux.org/get-almalinux/)
+Either a bare metal server or a LXC container, running [Almalinux 9](https://almalinux.org/get-almalinux/).
 
-For **development** we highly recommend to use either Almalinux 9 or [WSL](https://github.com/dotkernel/development/blob/main/wsl/os/almalinux9/README.md)
+For **development** we highly recommend to use either Almalinux 9 or [WSL](https://github.com/dotkernel/development/blob/main/wsl/os/almalinux9/README.md).
 
 ## Webservers
 
@@ -11,13 +11,13 @@ For **development** we highly recommend to use either Almalinux 9 or [WSL](https
 
 ### OR
 
-* NGINX
+* Nginx
 
 ## PHP >= 8.2
 
-It is recommended to run PHP as FPM application served by Apache or Nginx
+It is recommended to run PHP as FPM application served by Apache or Nginx.
 
-## Required PHP Settings and Modules & Extensions
+## Required PHP Settings, Modules and Extensions
 
 * memory_limit >= 128M
 * upload_max_filesize and post_max_size >= 100M (depending on your data)
