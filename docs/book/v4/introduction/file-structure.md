@@ -8,8 +8,8 @@ When using DotKernel API the following structure is installed by default:
 
 ![Dotkernel API File Structure!](https://docs.dotkernel.org/img/api/file-structure-dk-api.png)
 
-
 ## Main directories
+
 * `bin` - executable files from CLI
 * `config` - various configuration files
 * `data` - should contain project-related data (AVOID storing sensitive data on VCS)
@@ -20,10 +20,10 @@ When using DotKernel API the following structure is installed by default:
 * `test` - should contain the test files
 
 ## Special purpose folders
+
 * `.github`  - containes workflow files
 * `.laminas-ci` - contains laminas-ci workflow files
 * `docs` -  Dotkernel API documentation
-
   
 ## The `src` directory
 
