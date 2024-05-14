@@ -7,27 +7,27 @@ The below file structure is just an example, you can have multiple components su
 ```markdown
 .
 └── src/
-└── Book/
-└── src/
-├── Collection/
-│   └── BookCollection.php
-├── Entity/
-│   └── Book.php
-├── Handler/
-│   └── BookHandler.php
-├── InputFilter/
-│   ├── Input/
-│   │   ├── AuthorInput.php
-│   │   ├── NameInput.php
-│   │   └── ReleaseDateInput.php
-│   └── BookInputFilter.php
-├── Repository/
-│   └── BookRepository.php
-├── Service/
-│   ├── BookService.php
-│   └── BookServiceInterface.php
-├── ConfigProvider.php
-└── RoutesDelegator.php
+    └── Book/
+        └── src/
+            ├── Collection/
+            │   └── BookCollection.php
+            ├── Entity/
+            │   └── Book.php
+            ├── Handler/
+            │   └── BookHandler.php
+            ├── InputFilter/
+            │   ├── Input/
+            │   │   ├── AuthorInput.php
+            │   │   ├── NameInput.php
+            │   │   └── ReleaseDateInput.php
+            │   └── BookInputFilter.php
+            ├── Repository/
+            │   └── BookRepository.php
+            ├── Service/
+            │   ├── BookService.php
+            │   └── BookServiceInterface.php
+            ├── ConfigProvider.php
+            └── RoutesDelegator.php
 ```
 
 * `src/Book/src/Collection/BookCollection.php` - a collection refers to a container for a group of related objects, typically used to manage sets of related entities fetched from a database
@@ -532,9 +532,14 @@ class BookHandler implements RequestHandlerInterface
 
 Once you set up all the files as in the example above, you will need to do a few additional configurations:
 
-* Register the namespace by adding this line `"Api\\Book\\": "src/Book/src/",` in `composer.json` under the `autoload.psr-4` key.
-* Register the module by adding `Api\Book\ConfigProvider::class,` under `Api\User\ConfigProvider::class,`.
-* Register the module's routes by adding `\Api\Book\RoutesDelegator::class,` under `\Api\User\RoutesDelegator::class,` in `src/App/src/ConfigProvider.php`.
+* register the namespace by adding this line `"Api\\Book\\": "src/Book/src/",` in `composer.json` under the `autoload.psr-4` key
+* register the module by adding `Api\Book\ConfigProvider::class,` under `Api\User\ConfigProvider::class,`
+* register the module's routes by adding `\Api\Book\RoutesDelegator::class,` under `\Api\User\RoutesDelegator::class,` in `src/App/src/ConfigProvider.php`
+* update Composer autoloader by running the command:
+
+```shell
+composer dump-autoload
+```
 
 It should look like this:
 
@@ -641,7 +646,7 @@ curl -X POST http://0.0.0.0:8080/book
   -d '{"name": "test", "author": "author name", "releaseDate": "2023-03-03"}'
 ```
 
-To list the books use :
+To list the books use:
 
 ```shell
 curl http://0.0.0.0:8080/books

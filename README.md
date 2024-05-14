@@ -11,7 +11,6 @@ Based on Enrico Zimuel's [Zend Expressive API - Skeleton example](https://github
 [![GitHub license](https://img.shields.io/github/license/dotkernel/api)](https://github.com/dotkernel/api/blob/4.0/LICENSE.md)
 
 [![Build Static](https://github.com/dotkernel/api/actions/workflows/continuous-integration.yml/badge.svg?branch=4.0)](https://github.com/dotkernel/api/actions/workflows/continuous-integration.yml)
-[![Build Static](https://github.com/dotkernel/api/actions/workflows/run-tests.yml/badge.svg?branch=4.0)](https://github.com/dotkernel/api/actions/workflows/run-tests.yml)
 [![codecov](https://codecov.io/gh/dotkernel/api/graph/badge.svg?token=53FN78G5CK)](https://codecov.io/gh/dotkernel/api)
 [![Qodana](https://github.com/dotkernel/api/actions/workflows/qodana_code_quality.yml/badge.svg)](https://github.com/dotkernel/api/actions/workflows/qodana_code_quality.yml)
 
