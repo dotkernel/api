@@ -2,11 +2,11 @@
 
 Dotkernel API follows the [PSR-4](https://www.php-fig.org/psr/psr-4/) standards.
 
-It is a good practice to standardize the file structure of projects. 
+It is a good practice to standardize the file structure of projects.
 
 When using DotKernel API the following structure is installed by default:
 
-![Dotkernel API File Structure!](https://github.com/dotkernel/dotkernel.github.io/blob/main/img/file-structure-dk-api.png)
+![Dotkernel API File Structure!](https://docs.dotkernel.org/img/api/file-structure-dk-api.png)
 
 
 ## Main directories
