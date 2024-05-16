@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ApiTest\Functional;
+namespace ApiTest\Unit;
 
 use Dot\Cli\Application;
 use Dot\Cli\FileLockerInterface;
