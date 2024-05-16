@@ -30,6 +30,7 @@ class CliTest extends TestCase
 
         $output = $applicationTester->getDisplay();
 
+        $this->assertSame(Command::SUCCESS, $applicationTester->getStatusCode());
         $this->assertStringContainsString('Available commands:', $output);
         $this->assertStringContainsString('List commands', $output);
     }
