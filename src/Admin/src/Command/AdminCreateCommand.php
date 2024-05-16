@@ -10,6 +10,7 @@ use Api\Admin\Service\AdminRoleService;
 use Api\Admin\Service\AdminService;
 use Api\App\Message;
 use Exception;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -20,6 +21,10 @@ use function sprintf;
 
 use const PHP_EOL;
 
+#[AsCommand(
+    name: 'admin:create',
+    description: 'Create admin account.',
+)]
 class AdminCreateCommand extends Command
 {
     /** @var string $defaultName */
