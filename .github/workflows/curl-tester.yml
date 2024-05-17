@@ -1,0 +1,21 @@
+name: Run curl tester
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 4.0
+
+jobs:
+  run-bash:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Make curl tester executable
+        run: chmod +x ./test/tester.sh
+
+      - name: Run curl tester
+        run: ./test/tester.sh
