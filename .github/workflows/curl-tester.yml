@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Make curl tester executable
-        run: chmod +x ./test/tester.sh
+        run: chmod +x test/curl-tester.sh
 
       - name: Run curl tester
-        run: ./test/tester.sh
+        run: test/curl-tester.sh
