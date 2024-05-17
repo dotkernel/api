@@ -40,7 +40,7 @@ endpoint_home="https://api.dotkernel.net"
 
 get $endpoint_home
 
-if echo "$body" | grep -q '{"message":"Welcome to DotKernel API!" }'; then
+if echo "$body" | grep -q '{"message":"Welcome to DotKernel API!"}'; then
   echo "$OK $endpoint_home: SUCCESS ($status_code)"
 else
   echo "$KO $endpoint_home: FAILED ($status_code)"
