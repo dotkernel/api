@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Api\App\Handler\NotFoundHandler;
 use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
+use Api\App\Middleware\ContentNegociationMiddleware;
 use Dot\ErrorHandler\ErrorHandlerInterface;
 use Dot\ResponseHeader\Middleware\ResponseHeaderMiddleware;
 use Mezzio\Application;
@@ -48,9 +49,6 @@ return function (Application $app): void {
     // Register the routing middleware in the middleware pipeline.
     // This middleware registers the Mezzio\Router\RouteResult request attribute.
     $app->pipe(RouteMiddleware::class);
-    $app->pipe(ResponseHeaderMiddleware::class);
-    $app->pipe(AuthenticationMiddleware::class);
-    $app->pipe(AuthorizationMiddleware::class);
 
     // The following handle routing failures for common conditions:
     // - HEAD request but no routes answer that method
@@ -62,8 +60,15 @@ return function (Application $app): void {
     $app->pipe(ImplicitOptionsMiddleware::class);
     $app->pipe(MethodNotAllowedMiddleware::class);
 
+    $app->pipe(ContentNegociationMiddleware::class);
+
+    $app->pipe(ResponseHeaderMiddleware::class);
+
     // Seed the UrlHelper with the routing results:
     $app->pipe(UrlHelperMiddleware::class);
+
+    $app->pipe(AuthenticationMiddleware::class);
+    $app->pipe(AuthorizationMiddleware::class);
 
     // Add more middleware here that needs to introspect the routing results; this
     // might include:
@@ -74,9 +79,9 @@ return function (Application $app): void {
 
     // Register the dispatch middleware in the middleware pipeline
     $app->pipe(DispatchMiddleware::class);
-
     // At this point, if no Response is returned by any middleware, the
     // NotFoundHandler kicks in; alternately, you can provide other fallback
     // middleware to execute.
     $app->pipe(NotFoundHandler::class);
+
 };
