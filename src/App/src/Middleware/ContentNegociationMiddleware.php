@@ -40,7 +40,7 @@ class ContentNegociationMiddleware implements MiddlewareInterface
             return $this->notAcceptedResponse('Not Acceptable');
         }
 
-        $contentType = $request->getHeader('Content-Type')[0] ?? [];
+        $contentType = $request->getHeader('Content-Type')[0] ?? "";
         if (!$this->checkContentType($routeName, $contentType)) {
             return $this->unsupportedMediaTypeResponse(
                 'Unsupported Media Type'
