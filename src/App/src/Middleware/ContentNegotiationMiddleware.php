@@ -11,7 +11,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
 
-class ContentNegociationMiddleware implements MiddlewareInterface
+class ContentNegotiationMiddleware implements MiddlewareInterface
 {
 
     /**
@@ -25,29 +25,30 @@ class ContentNegociationMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
-        $response = $handler->handle($request);
 
         /** @var RouteResult $routeResult */
         $routeResult = $request->getAttribute(RouteResult::class);
         if (!$routeResult instanceof RouteResult || $routeResult->isFailure()) {
-            return $response;
+            return $handler->handle($request);
         }
 
         $routeName = $routeResult->getMatchedRoute()->getName();
 
-        $accept = $this->formatAcceptRequest($request->getHeader('Accept'));
+        $accept = $this->formatAcceptRequest($request->getHeaderLine('Accept'));
         if (!$this->checkAccept($routeName, $accept)){
             return $this->notAcceptedResponse('Not Acceptable');
         }
 
-        $contentType = $request->getHeader('Content-Type')[0] ?? "";
+        $contentType = $request->getHeaderLine('Content-Type');
         if (!$this->checkContentType($routeName, $contentType)) {
             return $this->unsupportedMediaTypeResponse(
                 'Unsupported Media Type'
             );
         }
 
-        $responseContentType = $response->getHeader('Content-Type')[0] ?? "";
+        $response = $handler->handle($request);
+
+        $responseContentType = $response->getHeaderLine('Content-Type');
         if (!$this->validateResponseContentType(
             $responseContentType,
             $accept
@@ -65,13 +66,9 @@ class ContentNegociationMiddleware implements MiddlewareInterface
     {
         $accept = array_map(function ($item) {
             return trim(strtok($item, ';'));
-        }, explode(',', $accept[0]));
+        }, explode(',', $accept));
 
-        if ($accept[0] === ''){
-            unset($accept[0]);
-        }
-
-        return $accept;
+        return array_filter($accept);
     }
 
     private function checkAccept(string $routeName, array $accept): bool

@@ -13,7 +13,7 @@ use Api\App\Factory\RouteListCommandFactory;
 use Api\App\Factory\TokenGenerateCommandFactory;
 use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
-use Api\App\Middleware\ContentNegociationMiddleware;
+use Api\App\Middleware\ContentNegotiationMiddleware;
 use Api\App\Middleware\ErrorResponseMiddleware;
 use Api\App\Service\ErrorReportService;
 use Api\App\Service\ErrorReportServiceInterface;
@@ -64,7 +64,7 @@ class ConfigProvider
                 'dot-mail.service.default'            => MailServiceAbstractFactory::class,
                 AuthenticationMiddleware::class       => AuthenticationMiddlewareFactory::class,
                 AuthorizationMiddleware::class        => AnnotatedServiceFactory::class,
-                ContentNegociationMiddleware::class   => AnnotatedServiceFactory::class,
+                ContentNegotiationMiddleware::class   => AnnotatedServiceFactory::class,
                 Environment::class                    => TwigEnvironmentFactory::class,
                 TwigExtension::class                  => TwigExtensionFactory::class,
                 TwigRenderer::class                   => TwigRendererFactory::class,

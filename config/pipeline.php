@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Api\App\Handler\NotFoundHandler;
 use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
-use Api\App\Middleware\ContentNegociationMiddleware;
+use Api\App\Middleware\ContentNegotiationMiddleware;
 use Dot\ErrorHandler\ErrorHandlerInterface;
 use Dot\ResponseHeader\Middleware\ResponseHeaderMiddleware;
 use Mezzio\Application;
@@ -60,7 +60,7 @@ return function (Application $app): void {
     $app->pipe(ImplicitOptionsMiddleware::class);
     $app->pipe(MethodNotAllowedMiddleware::class);
 
-    $app->pipe(ContentNegociationMiddleware::class);
+    $app->pipe(ContentNegotiationMiddleware::class);
 
     $app->pipe(ResponseHeaderMiddleware::class);
 
