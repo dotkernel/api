@@ -16,7 +16,6 @@ use League\OAuth2\Server\Entities\UserEntityInterface;
 
 #[ORM\Entity(repositoryClass: AdminRepository::class)]
 #[ORM\Table("admin")]
-#[ORM\HasLifecycleCallbacks]
 class Admin extends AbstractEntity implements UserEntityInterface
 {
     use PasswordTrait;
