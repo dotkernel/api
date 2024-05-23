@@ -13,7 +13,6 @@ use Throwable;
 
 #[ORM\Entity]
 #[ORM\Table(name: "user_reset_password")]
-#[ORM\HasLifecycleCallbacks]
 class UserResetPasswordEntity extends AbstractEntity
 {
     public const STATUS_COMPLETED = 'completed';
