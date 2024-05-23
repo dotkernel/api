@@ -83,5 +83,4 @@ return function (Application $app): void {
     // NotFoundHandler kicks in; alternately, you can provide other fallback
     // middleware to execute.
     $app->pipe(NotFoundHandler::class);
-
 };
