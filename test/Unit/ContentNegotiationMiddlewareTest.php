@@ -125,7 +125,7 @@ class ContentNegotiationMiddlewareTest extends TestCase
         );
     }
 
-    public function testCheckContentType()
+    public function testCheckContentType(): void
     {
         $this->assertTrue(
             $this->subject->checkContentType(self::ROUTE_NAME, '')
