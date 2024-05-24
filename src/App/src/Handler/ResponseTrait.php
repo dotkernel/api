@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Api\App\Handler;
 
 use Exception;
+use Fig\Http\Message\RequestMethodInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Laminas\Http\Response;
@@ -26,6 +27,13 @@ trait ResponseTrait
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $method = strtolower($request->getMethod());
+        if ($request->getMethod() === RequestMethodInterface::METHOD_GET) {
+            $uuid = $request->getAttribute('uuid');
+            if (empty($uuid)) {
+                $method = 'getCollection';
+            }
+        }
+
         if (method_exists($this, $method)) {
             return $this->$method($request);
         }

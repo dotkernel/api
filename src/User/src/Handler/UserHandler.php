@@ -59,11 +59,20 @@ class UserHandler implements RequestHandlerInterface
     {
         try {
             $uuid = $request->getAttribute('uuid');
-            if (! empty($uuid)) {
-                return $this->view($request, $uuid);
+            $user = $this->userService->findOneBy(['uuid' => $uuid]);
+            if (! $user instanceof User) {
+                return $this->notFoundResponse(sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid));
             }
+            return $this->createResponse($request, $user);
+        } catch (Throwable $exception) {
+            return $this->errorResponse($exception->getMessage());
+        }
+    }
 
-            return $this->list($request);
+    public function getCollection(ServerRequestInterface $request): ResponseInterface
+    {
+        try {
+            return $this->createResponse($request, $this->userService->getUsers($request->getQueryParams()));
         } catch (Throwable $exception) {
             return $this->errorResponse($exception->getMessage());
         }
@@ -110,19 +119,5 @@ class UserHandler implements RequestHandlerInterface
         } catch (Throwable $exception) {
             return $this->errorResponse($exception->getMessage());
         }
-    }
-
-    private function list(ServerRequestInterface $request): ResponseInterface
-    {
-        return $this->createResponse($request, $this->userService->getUsers($request->getQueryParams()));
-    }
-
-    private function view(ServerRequestInterface $request, string $uuid): ResponseInterface
-    {
-        $user = $this->userService->findOneBy(['uuid' => $uuid]);
-        if (! $user instanceof User) {
-            return $this->notFoundResponse(sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid));
-        }
-        return $this->createResponse($request, $user);
     }
 }
