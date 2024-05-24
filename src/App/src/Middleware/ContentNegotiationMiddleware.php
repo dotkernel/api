@@ -36,13 +36,12 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
-        /** @var RouteResult $routeResult */
         $routeResult = $request->getAttribute(RouteResult::class);
         if (! $routeResult instanceof RouteResult || $routeResult->isFailure()) {
             return $handler->handle($request);
         }
 
-        $routeName = $routeResult->getMatchedRouteName();
+        $routeName = (string) $routeResult->getMatchedRouteName();
 
         $accept = $this->formatAcceptRequest($request->getHeaderLine('Accept'));
         if (! $this->checkAccept($routeName, $accept)) {
@@ -50,7 +49,6 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         }
 
         $contentType = $request->getHeaderLine('Content-Type');
-
         if (! $this->checkContentType($routeName, $contentType)) {
             return $this->unsupportedMediaTypeResponse(
                 'Unsupported Media Type'
@@ -101,10 +99,8 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         }
     }
 
-    public function checkContentType(
-        string $routeName,
-        string $contentType
-    ): bool {
+    public function checkContentType(string $routeName, string $contentType): bool
+    {
         if (empty($contentType)) {
             return true;
         }

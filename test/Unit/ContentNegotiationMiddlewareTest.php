@@ -11,7 +11,6 @@ use Mezzio\Router\Route;
 use Mezzio\Router\RouteResult;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -21,7 +20,6 @@ class ContentNegotiationMiddlewareTest extends TestCase
     private Subject $subject;
     private ServerRequestInterface $request;
     private RequestHandlerInterface $handler;
-    private ResponseInterface $response;
     private RouteResult $routeResult;
 
     private const ROUTE_NAME = 'test.route';
@@ -45,8 +43,7 @@ class ContentNegotiationMiddlewareTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->handler  = $this->createMock(RequestHandlerInterface::class);
-        $this->response = $this->createMock(ResponseInterface::class);
+        $this->handler = $this->createMock(RequestHandlerInterface::class);
 
         $this->routeResult = RouteResult::fromRoute(
             new Route(
@@ -61,7 +58,7 @@ class ContentNegotiationMiddlewareTest extends TestCase
         $this->subject = new Subject(self::CONFIG);
     }
 
-    public function testWrongAccept()
+    public function testWrongAccept(): void
     {
         $request = $this->request->withAttribute(
             RouteResult::class,
@@ -74,7 +71,7 @@ class ContentNegotiationMiddlewareTest extends TestCase
         );
     }
 
-    public function testWrongContentType()
+    public function testWrongContentType(): void
     {
         $request = $this->request->withAttribute(
             RouteResult::class,
@@ -88,7 +85,7 @@ class ContentNegotiationMiddlewareTest extends TestCase
         );
     }
 
-    public function testCannotResolveRepresentation()
+    public function testCannotResolveRepresentation(): void
     {
         $request = $this->request->withAttribute(
             RouteResult::class,
@@ -102,14 +99,14 @@ class ContentNegotiationMiddlewareTest extends TestCase
         );
     }
 
-    public function testFormatAcceptRequest()
+    public function testFormatAcceptRequest(): void
     {
         $this->assertIsArray(
             $this->subject->formatAcceptRequest('application/json')
         );
     }
 
-    public function testCheckAccept()
+    public function testCheckAccept(): void
     {
         $this->assertTrue(
             $this->subject->checkAccept(
