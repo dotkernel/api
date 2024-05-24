@@ -22,6 +22,7 @@ use Api\User\Handler\UserRoleHandler;
 use Api\User\Repository\UserAvatarRepository;
 use Api\User\Repository\UserDetailRepository;
 use Api\User\Repository\UserRepository;
+use Api\User\Repository\UserResetPasswordRepository;
 use Api\User\Repository\UserRoleRepository;
 use Api\User\Service\UserAvatarService;
 use Api\User\Service\UserAvatarServiceInterface;
@@ -62,6 +63,7 @@ class ConfigProvider
                 UserAvatarService::class           => AnnotatedServiceFactory::class,
                 UserRepository::class              => AnnotatedRepositoryFactory::class,
                 UserDetailRepository::class        => AnnotatedRepositoryFactory::class,
+                UserResetPasswordRepository::class => AnnotatedRepositoryFactory::class,
                 UserRoleRepository::class          => AnnotatedRepositoryFactory::class,
                 UserAvatarRepository::class        => AnnotatedRepositoryFactory::class,
             ],

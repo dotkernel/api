@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Api\App\Handler;
 
+use Api\App\Exception\FormValidationException;
+use Api\App\Exception\InvalidResetPasswordException;
+use Api\App\Exception\NotFoundException;
+use Dot\Mail\Exception\MailException;
 use Exception;
 use Fig\Http\Message\RequestMethodInterface;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -12,6 +16,7 @@ use Laminas\Http\Response;
 use Mezzio\Hal\ResourceGenerator\Exception\OutOfBoundsException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use RuntimeException;
 
 use function is_array;
 use function method_exists;
@@ -29,19 +34,34 @@ trait ResponseTrait
         $method = strtolower($request->getMethod());
         if ($request->getMethod() === RequestMethodInterface::METHOD_GET) {
             $uuid = $request->getAttribute('uuid');
-            if (empty($uuid)) {
+            $hash = $request->getAttribute('hash');
+            if (empty($uuid) && empty($hash)) {
                 $method = 'getCollection';
             }
         }
 
-        if (method_exists($this, $method)) {
-            return $this->$method($request);
+        if (! method_exists($this, $method)) {
+            return $this->errorResponse(
+                sprintf('Method %s is not implemented for the requested resource.', strtoupper($method)),
+                Response::STATUS_CODE_405
+            );
         }
 
-        return $this->errorResponse(
-            sprintf('Method %s is not implemented for the requested resource.', strtoupper($method)),
-            Response::STATUS_CODE_405
-        );
+        try {
+            return $this->$method($request);
+        } catch (InvalidResetPasswordException $exception) {
+            return $this->errorResponse($exception->getMessage());
+        } catch (MailException $exception) {
+            return $this->errorResponse($exception->getMessage());
+        } catch (NotFoundException $exception) {
+            return $this->notFoundResponse($exception->getMessage());
+        } catch (RuntimeException $exception) {
+            return $this->errorResponse($exception->getMessage());
+        } catch (FormValidationException $exception) {
+            return $this->errorResponse($exception->getMessages());
+        } catch (Exception $exception) {
+            return $this->errorResponse($exception->getMessage());
+        }
     }
 
     public function createResponse(ServerRequestInterface $request, mixed $instance): ResponseInterface

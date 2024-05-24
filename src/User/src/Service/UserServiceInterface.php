@@ -6,30 +6,31 @@ namespace Api\User\Service;
 
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
+use Api\User\Entity\UserResetPasswordEntity;
 use Dot\Mail\Exception\MailException;
-use Exception;
+use RuntimeException;
 
 interface UserServiceInterface
 {
     /**
-     * @throws Exception
+     * @throws RuntimeException
      */
     public function activateUser(User $user): User;
 
     /**
-     * @throws Exception
+     * @throws RuntimeException
      */
     public function createUser(array $data = []): User;
 
     public function revokeTokens(User $user): void;
 
     /**
-     * @throws Exception
+     * @throws RuntimeException
      */
     public function deleteUser(User $user): User;
 
     /**
-     * @throws Exception
+     * @throws RuntimeException
      */
     public function anonymizeUser(User $user): User;
 
@@ -41,7 +42,7 @@ interface UserServiceInterface
 
     public function emailExistsOther(string $email = '', string $uuid = ''): bool;
 
-    public function findByResetPasswordHash(?string $hash): ?User;
+    public function findResetPasswordByHash(?string $hash): ?UserResetPasswordEntity;
 
     public function findByEmail(string $email): ?User;
 
@@ -72,7 +73,7 @@ interface UserServiceInterface
     public function sendWelcomeMail(User $user): bool;
 
     /**
-     * @throws Exception
+     * @throws RuntimeException
      */
     public function updateUser(User $user, array $data = []): User;
 

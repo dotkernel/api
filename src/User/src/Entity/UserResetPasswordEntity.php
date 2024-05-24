@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Api\User\Entity;
 
 use Api\App\Entity\AbstractEntity;
+use Api\User\Repository\UserResetPasswordRepository;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Throwable;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: UserResetPasswordRepository::class)]
 #[ORM\Table(name: "user_reset_password")]
 class UserResetPasswordEntity extends AbstractEntity
 {

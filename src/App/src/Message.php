@@ -44,6 +44,7 @@ class Message
     public const USER_ACTIVATED                   = 'This account has been activated.';
     public const USER_ALREADY_ACTIVATED           = 'This account is already active.';
     public const USER_NOT_ACTIVATED               = 'User account must be activated first.';
+    public const USER_NOT_FOUND                   = 'User not found.';
     public const USER_NOT_FOUND_BY_EMAIL          = 'Could not find account identified by email \'%s\'';
     public const USER_NOT_FOUND_BY_IDENTITY       = 'Could not find account by identity \'%s\'';
     public const VALIDATOR_MIN_LENGTH             = '%s must be at least %d characters long.';

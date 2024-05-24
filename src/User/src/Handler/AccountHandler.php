@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
+use Api\App\Exception\FormValidationException;
 use Api\App\Handler\ResponseTrait;
 use Api\User\Entity\User;
 use Api\User\InputFilter\CreateUserInputFilter;
 use Api\User\InputFilter\UpdateUserInputFilter;
 use Api\User\Service\UserServiceInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
+use Dot\Mail\Exception\MailException;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use RuntimeException;
 use Throwable;
 
 class AccountHandler implements RequestHandlerInterface
@@ -35,15 +38,14 @@ class AccountHandler implements RequestHandlerInterface
     ) {
     }
 
+    /**
+     * @throws RuntimeException
+     */
     public function delete(ServerRequestInterface $request): ResponseInterface
     {
-        try {
-            $user = $this->userService->deleteUser($request->getAttribute(User::class));
+        $user = $this->userService->deleteUser($request->getAttribute(User::class));
 
-            return $this->createResponse($request, $user);
-        } catch (Throwable $exception) {
-            return $this->errorResponse($exception->getMessage());
-        }
+        return $this->createResponse($request, $user);
     }
 
     public function get(ServerRequestInterface $request): ResponseInterface
@@ -51,41 +53,41 @@ class AccountHandler implements RequestHandlerInterface
         return $this->createResponse($request, $request->getAttribute(User::class));
     }
 
+    /**
+     * @throws FormValidationException
+     * @throws RuntimeException
+     */
     public function patch(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new UpdateUserInputFilter())
             ->setValidationGroup(['password', 'passwordConfirm', 'detail'])
             ->setData($request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            return $this->errorResponse($inputFilter->getMessages());
+            throw (new FormValidationException())->setMessages($inputFilter->getMessages());
         }
 
-        try {
-            $user = $this->userService->updateUser($request->getAttribute(User::class), $inputFilter->getValues());
+        $user = $this->userService->updateUser($request->getAttribute(User::class), $inputFilter->getValues());
 
-            return $this->createResponse($request, $user);
-        } catch (Throwable $exception) {
-            return $this->errorResponse($exception->getMessage());
-        }
+        return $this->createResponse($request, $user);
     }
 
+    /**
+     * @throws FormValidationException
+     * @throws MailException
+     */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new CreateUserInputFilter())
             ->setValidationGroup(['identity', 'password', 'passwordConfirm', 'detail'])
             ->setData($request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            return $this->errorResponse($inputFilter->getMessages());
+            throw (new FormValidationException())->setMessages($inputFilter->getMessages());
         }
 
-        try {
-            $user = $this->userService->createUser($inputFilter->getValues());
+        $user = $this->userService->createUser($inputFilter->getValues());
 
-            $this->userService->sendActivationMail($user);
+        $this->userService->sendActivationMail($user);
 
-            return $this->createResponse($request, $user);
-        } catch (Throwable $exception) {
-            return $this->errorResponse($exception->getMessage());
-        }
+        return $this->createResponse($request, $user);
     }
 }

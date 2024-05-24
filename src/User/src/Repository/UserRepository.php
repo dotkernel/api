@@ -12,12 +12,11 @@ use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Dot\AnnotatedServices\Annotation\Entity;
-use Exception;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use Mezzio\Authentication\OAuth2\Entity\UserEntity;
-use Throwable;
+use RuntimeException;
 
 use function password_verify;
 
@@ -31,25 +30,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     {
         $this->getEntityManager()->remove($user);
         $this->getEntityManager()->flush();
-    }
-
-    public function findByResetPasswordHash(string $hash): ?User
-    {
-        try {
-            return $this
-                ->getEntityManager()
-                ->createQueryBuilder()
-                ->select(['user', 'resetPasswords'])
-                ->from(User::class, 'user')
-                ->leftJoin('user.resetPasswords', 'resetPasswords')
-                ->andWhere('resetPasswords.hash = :hash')
-                ->setParameter('hash', $hash)
-                ->getQuery()
-                ->useQueryCache(true)
-                ->getSingleResult();
-        } catch (Throwable) {
-            return null;
-        }
     }
 
     public function getUsers(array $filters = []): UserCollection
@@ -104,12 +84,12 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
-     * @throws Exception
+     * @throws RuntimeException
      */
     public function saveUser(User $user): User
     {
         if (! $user->hasRoles()) {
-            throw new Exception(Message::RESTRICTION_ROLES);
+            throw new RuntimeException(Message::RESTRICTION_ROLES);
         }
 
         $this->getEntityManager()->persist($user);
