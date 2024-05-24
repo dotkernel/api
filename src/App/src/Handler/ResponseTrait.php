@@ -25,7 +25,6 @@ use function is_array;
 use function method_exists;
 use function sprintf;
 use function strtolower;
-use function strtoupper;
 
 trait ResponseTrait
 {
@@ -48,7 +47,7 @@ trait ResponseTrait
                 return $this->$method($request);
             }
             throw new NotAllowedException(
-                sprintf('Method %s is not implemented for the requested resource.', strtoupper($method))
+                sprintf('Method %s is not implemented for the requested resource.', $method)
             );
         } catch (ConflictException $exception) {
             return $this->errorResponse($exception->getMessage(), Response::STATUS_CODE_409);
