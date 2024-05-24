@@ -11,7 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdminRoleRepository::class)]
 #[ORM\Table("admin_role")]
-#[ORM\HasLifecycleCallbacks]
 class AdminRole extends AbstractEntity implements RoleInterface
 {
     public const ROLE_ADMIN     = 'admin';
