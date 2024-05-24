@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
+use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\ResponseTrait;
 use Api\App\Message;
@@ -38,8 +39,9 @@ class UserActivateHandler implements RequestHandlerInterface
     }
 
     /**
-     * @throws NotFoundException
+     * @throws ConflictException
      * @throws MailException
+     * @throws NotFoundException
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
@@ -50,7 +52,7 @@ class UserActivateHandler implements RequestHandlerInterface
         }
 
         if ($user->isActive()) {
-            return $this->errorResponse(Message::USER_ALREADY_ACTIVATED);
+            throw new ConflictException(Message::USER_ALREADY_ACTIVATED);
         }
 
         $user = $this->userService->activateUser($user);

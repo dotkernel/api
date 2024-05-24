@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\ExpiredException;
 use Api\App\Exception\FormValidationException;
 use Api\App\Exception\InvalidResetPasswordException;
 use Api\App\Exception\NotFoundException;
@@ -21,7 +23,6 @@ use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Throwable;
 
 use function sprintf;
 
@@ -44,6 +45,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
     }
 
     /**
+     * @throws ExpiredException
      * @throws InvalidResetPasswordException
      * @throws NotFoundException
      */
@@ -57,7 +59,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
         }
 
         if (! $userResetPassword->isValid()) {
-            throw new InvalidResetPasswordException(sprintf(Message::RESET_PASSWORD_EXPIRED, $hash));
+            throw new ExpiredException(sprintf(Message::RESET_PASSWORD_EXPIRED, $hash));
         }
         if ($userResetPassword->isCompleted()) {
             throw new InvalidResetPasswordException(sprintf(Message::RESET_PASSWORD_USED, $hash));
@@ -67,7 +69,10 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
     }
 
     /**
+     * @throws ConflictException
+     * @throws ExpiredException
      * @throws FormValidationException
+     * @throws MailException
      * @throws NotFoundException
      */
     public function patch(ServerRequestInterface $request): ResponseInterface
@@ -80,10 +85,10 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
         }
 
         if (! $userResetPassword->isValid()) {
-            return $this->errorResponse(sprintf(Message::RESET_PASSWORD_EXPIRED, $hash));
+            throw new ExpiredException(sprintf(Message::RESET_PASSWORD_EXPIRED, $hash));
         }
         if ($userResetPassword->isCompleted()) {
-            return $this->errorResponse(sprintf(Message::RESET_PASSWORD_USED, $hash));
+            throw new ConflictException(sprintf(Message::RESET_PASSWORD_USED, $hash));
         }
 
         $inputFilter = (new UpdatePasswordInputFilter())->setData($request->getParsedBody());
@@ -91,18 +96,14 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
             throw (new FormValidationException())->setMessages($inputFilter->getMessages());
         }
 
-        try {
-            $this->userService->updateUser(
-                $userResetPassword->markAsCompleted()->getUser(),
-                $inputFilter->getValues()
-            );
+        $this->userService->updateUser(
+            $userResetPassword->markAsCompleted()->getUser(),
+            $inputFilter->getValues()
+        );
 
-            $this->userService->sendResetPasswordCompletedMail($userResetPassword->getUser());
+        $this->userService->sendResetPasswordCompletedMail($userResetPassword->getUser());
 
-            return $this->infoResponse(Message::RESET_PASSWORD_OK);
-        } catch (Throwable $exception) {
-            return $this->errorResponse($exception->getMessage());
-        }
+        return $this->infoResponse(Message::RESET_PASSWORD_OK);
     }
 
     /**

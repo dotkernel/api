@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Api\App\Handler;
 
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\ExpiredException;
 use Api\App\Exception\FormValidationException;
 use Api\App\Exception\InvalidResetPasswordException;
+use Api\App\Exception\NotAllowedException;
 use Api\App\Exception\NotFoundException;
 use Dot\Mail\Exception\MailException;
 use Exception;
@@ -40,21 +43,27 @@ trait ResponseTrait
             }
         }
 
-        if (! method_exists($this, $method)) {
-            return $this->errorResponse(
-                sprintf('Method %s is not implemented for the requested resource.', strtoupper($method)),
-                Response::STATUS_CODE_405
-            );
-        }
-
         try {
-            return $this->$method($request);
+            if (method_exists($this, $method)) {
+                return $this->$method($request);
+            }
+            throw new NotAllowedException(
+                sprintf('Method %s is not implemented for the requested resource.', strtoupper($method))
+            );
+        } catch (ConflictException $exception) {
+            return $this->errorResponse($exception->getMessage(), Response::STATUS_CODE_409);
+        } catch (ExpiredException $exception) {
+            return $this->errorResponse($exception->getMessage(), Response::STATUS_CODE_410);
         } catch (InvalidResetPasswordException $exception) {
             return $this->errorResponse($exception->getMessage());
         } catch (MailException $exception) {
             return $this->errorResponse($exception->getMessage());
         } catch (NotFoundException $exception) {
             return $this->notFoundResponse($exception->getMessage());
+        } catch (NotAllowedException $exception) {
+            return $this->errorResponse($exception->getMessage(), Response::STATUS_CODE_405);
+        } catch (OutOfBoundsException $exception) {
+            return $this->errorResponse($exception->getMessage());
         } catch (RuntimeException $exception) {
             return $this->errorResponse($exception->getMessage());
         } catch (FormValidationException $exception) {
@@ -66,14 +75,10 @@ trait ResponseTrait
 
     public function createResponse(ServerRequestInterface $request, mixed $instance): ResponseInterface
     {
-        try {
-            return $this->responseFactory->createResponse(
-                $request,
-                $this->resourceGenerator->fromObject($instance, $request)
-            );
-        } catch (OutOfBoundsException $exception) {
-            return $this->errorResponse($exception->getMessage());
-        }
+        return $this->responseFactory->createResponse(
+            $request,
+            $this->resourceGenerator->fromObject($instance, $request)
+        );
     }
 
     public function errorResponse(

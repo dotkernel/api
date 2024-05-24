@@ -101,8 +101,8 @@ class UserHandler implements RequestHandlerInterface
     }
 
     /**
-     * @throws MailException
      * @throws FormValidationException
+     * @throws MailException
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
