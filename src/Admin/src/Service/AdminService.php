@@ -8,9 +8,10 @@ use Api\Admin\Collection\AdminCollection;
 use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
 use Api\Admin\Repository\AdminRepository;
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\NotFoundException;
 use Api\App\Message;
 use Dot\AnnotatedServices\Annotation\Inject;
-use Exception;
 
 use function sprintf;
 
@@ -29,12 +30,13 @@ class AdminService implements AdminServiceInterface
     }
 
     /**
-     * @throws Exception
+     * @throws ConflictException
+     * @throws NotFoundException
      */
     public function createAdmin(array $data = []): Admin
     {
         if ($this->exists($data['identity'])) {
-            throw new Exception(Message::DUPLICATE_IDENTITY);
+            throw new ConflictException(Message::DUPLICATE_IDENTITY);
         }
 
         $admin = (new Admin())
@@ -48,7 +50,7 @@ class AdminService implements AdminServiceInterface
             foreach ($data['roles'] as $roleData) {
                 $role = $this->adminRoleService->findOneBy(['uuid' => $roleData['uuid']]);
                 if (! $role instanceof AdminRole) {
-                    throw new Exception(
+                    throw new NotFoundException(
                         sprintf(Message::NOT_FOUND_BY_UUID, 'role', $roleData['uuid'])
                     );
                 }
@@ -57,7 +59,7 @@ class AdminService implements AdminServiceInterface
         } else {
             $role = $this->adminRoleService->findOneBy(['name' => AdminRole::ROLE_ADMIN]);
             if (! $role instanceof AdminRole) {
-                throw new Exception(
+                throw new NotFoundException(
                     sprintf(Message::NOT_FOUND_BY_NAME, 'role', AdminRole::ROLE_ADMIN)
                 );
             }
@@ -67,9 +69,6 @@ class AdminService implements AdminServiceInterface
         return $this->adminRepository->saveAdmin($admin);
     }
 
-    /**
-     * @throws Exception
-     */
     public function deleteAdmin(Admin $admin): void
     {
         $this->adminRepository->deleteAdmin(
@@ -84,7 +83,12 @@ class AdminService implements AdminServiceInterface
 
     public function findOneBy(array $params = []): ?Admin
     {
-        return $this->adminRepository->findOneBy($params);
+        $admin = $this->adminRepository->findOneBy($params);
+        if ($admin instanceof Admin) {
+            return $admin;
+        }
+
+        return null;
     }
 
     public function getAdmins(array $params = []): AdminCollection
@@ -93,7 +97,8 @@ class AdminService implements AdminServiceInterface
     }
 
     /**
-     * @throws Exception
+     * @throws ConflictException
+     * @throws NotFoundException
      */
     public function updateAdmin(Admin $admin, array $data = []): Admin
     {
@@ -118,9 +123,7 @@ class AdminService implements AdminServiceInterface
             foreach ($data['roles'] as $roleData) {
                 $role = $this->adminRoleService->findOneBy(['uuid' => $roleData['uuid']]);
                 if (! $role instanceof AdminRole) {
-                    throw new Exception(
-                        sprintf(Message::NOT_FOUND_BY_UUID, 'role', $roleData['uuid'])
-                    );
+                    throw new NotFoundException(sprintf(Message::NOT_FOUND_BY_UUID, 'role', $roleData['uuid']));
                 }
                 $admin->addRole($role);
             }

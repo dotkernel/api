@@ -7,6 +7,9 @@ namespace Api\Admin\Handler;
 use Api\Admin\Entity\Admin;
 use Api\Admin\InputFilter\UpdateAdminInputFilter;
 use Api\Admin\Service\AdminServiceInterface;
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\FormValidationException;
+use Api\App\Exception\NotFoundException;
 use Api\App\Handler\ResponseTrait;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Mezzio\Hal\HalResponseFactory;
@@ -14,7 +17,6 @@ use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Throwable;
 
 class AdminAccountHandler implements RequestHandlerInterface
 {
@@ -36,27 +38,26 @@ class AdminAccountHandler implements RequestHandlerInterface
 
     public function get(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->createResponse(
-            $request,
-            $request->getAttribute(Admin::class)
-        );
+        return $this->createResponse($request, $request->getAttribute(Admin::class));
     }
 
+    /**
+     * @throws ConflictException
+     * @throws FormValidationException
+     * @throws NotFoundException
+     */
     public function patch(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new UpdateAdminInputFilter())->setData($request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            return $this->errorResponse($inputFilter->getMessages());
+            throw (new FormValidationException())->setMessages($inputFilter->getMessages());
         }
 
-        try {
-            $admin = $this->adminService->updateAdmin(
-                $request->getAttribute(Admin::class),
-                $inputFilter->getValues()
-            );
-            return $this->createResponse($request, $admin);
-        } catch (Throwable $exception) {
-            return $this->errorResponse($exception->getMessage());
-        }
+        $admin = $this->adminService->updateAdmin(
+            $request->getAttribute(Admin::class),
+            $inputFilter->getValues()
+        );
+
+        return $this->createResponse($request, $admin);
     }
 }

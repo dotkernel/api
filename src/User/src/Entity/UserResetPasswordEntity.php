@@ -118,7 +118,7 @@ class UserResetPasswordEntity extends AbstractEntity
     public function getArrayCopy(): array
     {
         return [
-            'uuid'    => $this->getUuid()->toString(),
+            'uuid'    => $this->getUuid()?->toString(),
             'expires' => $this->getExpires(),
             'hash'    => $this->getHash(),
             'status'  => $this->getStatus(),

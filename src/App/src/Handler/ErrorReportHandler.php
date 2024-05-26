@@ -9,13 +9,12 @@ use Api\App\Message;
 use Api\App\Service\ErrorReportServiceInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\AnnotatedServices\Annotation\Service;
-use Laminas\Http\Response;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Throwable;
+use RuntimeException;
 
 /**
  * @Service
@@ -39,21 +38,17 @@ class ErrorReportHandler implements RequestHandlerInterface
     }
 
     /**
-     * @throws Throwable
+     * @throws ForbiddenException
+     * @throws RuntimeException
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        try {
-            $this->errorReportService
-                ->checkRequest($request)
-                ->appendMessage(
-                    $request->getParsedBody()['message'] ?? ''
-                );
-            return $this->infoResponse(Message::ERROR_REPORT_OK);
-        } catch (ForbiddenException $exception) {
-            return $this->errorResponse($exception->getMessage(), Response::STATUS_CODE_403);
-        } catch (Throwable $exception) {
-            return $this->errorResponse($exception->getMessage(), Response::STATUS_CODE_500);
-        }
+        $this->errorReportService
+            ->checkRequest($request)
+            ->appendMessage(
+                $request->getParsedBody()['message'] ?? ''
+            );
+
+        return $this->infoResponse(Message::ERROR_REPORT_OK);
     }
 }

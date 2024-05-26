@@ -6,18 +6,17 @@ namespace Api\Admin\Service;
 
 use Api\Admin\Collection\AdminCollection;
 use Api\Admin\Entity\Admin;
-use Exception;
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\NotFoundException;
 
 interface AdminServiceInterface
 {
     /**
-     * @throws Exception
+     * @throws ConflictException
+     * @throws NotFoundException
      */
     public function createAdmin(array $data = []): Admin;
 
-    /**
-     * @throws Exception
-     */
     public function deleteAdmin(Admin $admin): void;
 
     public function exists(string $identity = ''): bool;
@@ -27,7 +26,8 @@ interface AdminServiceInterface
     public function getAdmins(array $params = []): AdminCollection;
 
     /**
-     * @throws Exception
+     * @throws ConflictException
+     * @throws NotFoundException
      */
     public function updateAdmin(Admin $admin, array $data = []): Admin;
 }

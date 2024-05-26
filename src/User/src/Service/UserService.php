@@ -149,7 +149,7 @@ class UserService implements UserServiceInterface
             return false;
         }
 
-        return $user->getUuid()->toString() !== $uuid;
+        return $user->getUuid()?->toString() !== $uuid;
     }
 
     public function emailExists(string $email = ''): bool
@@ -164,7 +164,7 @@ class UserService implements UserServiceInterface
             return false;
         }
 
-        return $user->getUuid()->toString() !== $uuid;
+        return $user->getUuid()?->toString() !== $uuid;
     }
 
     public function findResetPasswordByHash(?string $hash): ?UserResetPasswordEntity
@@ -284,13 +284,13 @@ class UserService implements UserServiceInterface
     public function updateUser(User $user, array $data = []): User
     {
         if (isset($data['identity'])) {
-            if ($this->existsOther($data['identity'], $user->getUuid()->toString())) {
+            if ($this->existsOther($data['identity'], (string) $user->getUuid()?->toString())) {
                 throw new RuntimeException(Message::DUPLICATE_IDENTITY);
             }
         }
 
         if (isset($data['detail']['email'])) {
-            if ($this->emailExistsOther($data['detail']['email'], $user->getUuid()->toString())) {
+            if ($this->emailExistsOther($data['detail']['email'], (string) $user->getUuid()?->toString())) {
                 throw new RuntimeException(Message::DUPLICATE_EMAIL);
             }
         }

@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace Api\App\Service;
 
-use Exception;
+use Api\App\Exception\ForbiddenException;
 use Psr\Http\Message\ServerRequestInterface;
+use RuntimeException;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 interface ErrorReportServiceInterface
 {
     /**
-     * @throws Exception
+     * @throws IOException
      */
     public function appendMessage(string $message): void;
 
     /**
-     * @throws Exception
+     * @throws ForbiddenException
+     * @throws RuntimeException
      */
     public function checkRequest(ServerRequestInterface $request): self;
 

@@ -61,7 +61,7 @@ class Admin extends AbstractEntity implements UserEntityInterface
     public function getArrayCopy(): array
     {
         return [
-            'uuid'      => $this->getUuid()->toString(),
+            'uuid'      => $this->getUuid()?->toString(),
             'identity'  => $this->getIdentity(),
             'firstName' => $this->getFirstName(),
             'lastName'  => $this->getLastName(),

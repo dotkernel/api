@@ -319,7 +319,7 @@ class User extends AbstractEntity implements UserEntityInterface
     public function getArrayCopy(): array
     {
         return [
-            'uuid'           => $this->getUuid()->toString(),
+            'uuid'           => $this->getUuid()?->toString(),
             'hash'           => $this->getHash(),
             'identity'       => $this->getIdentity(),
             'status'         => $this->getStatus(),

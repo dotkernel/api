@@ -38,7 +38,7 @@ class UserRole extends AbstractEntity implements RoleInterface
     public function getArrayCopy(): array
     {
         return [
-            'uuid' => $this->getUuid()->toString(),
+            'uuid' => $this->getUuid()?->toString(),
             'name' => $this->getName(),
         ];
     }

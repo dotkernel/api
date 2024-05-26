@@ -8,8 +8,9 @@ use Api\Admin\Entity\AdminRole;
 use Api\Admin\InputFilter\CreateAdminInputFilter;
 use Api\Admin\Service\AdminRoleService;
 use Api\Admin\Service\AdminService;
+use Api\App\Exception\FormValidationException;
+use Api\App\Exception\NotFoundException;
 use Api\App\Message;
-use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -52,7 +53,7 @@ class AdminCreateCommand extends Command
     }
 
     /**
-     * @throws Exception
+     * @throws FormValidationException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -65,7 +66,7 @@ class AdminCreateCommand extends Command
                 }
             }
 
-            throw new Exception(implode(PHP_EOL, $messages));
+            throw new FormValidationException(implode(PHP_EOL, $messages));
         }
 
         $this->adminService->createAdmin($inputFilter->getValues());
@@ -76,13 +77,13 @@ class AdminCreateCommand extends Command
     }
 
     /**
-     * @throws Exception
+     * @throws NotFoundException
      */
     private function getData(InputInterface $input): array
     {
         $role = $this->adminRoleService->findOneBy(['name' => AdminRole::ROLE_ADMIN]);
         if (! $role instanceof AdminRole) {
-            throw new Exception(
+            throw new NotFoundException(
                 sprintf(Message::ADMIN_ROLE_MISSING, AdminRole::ROLE_ADMIN)
             );
         }
@@ -94,7 +95,7 @@ class AdminCreateCommand extends Command
             'firstName'       => $input->getOption('firstName'),
             'lastName'        => $input->getOption('lastName'),
             'roles'           => [
-                ['uuid' => $role->getUuid()->toString()],
+                ['uuid' => $role->getUuid()?->toString()],
             ],
         ];
     }

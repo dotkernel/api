@@ -7,8 +7,9 @@ namespace Api\App\Service;
 use Api\App\Exception\ForbiddenException;
 use Api\App\Message;
 use Dot\AnnotatedServices\Annotation\Inject;
-use Exception;
 use Psr\Http\Message\ServerRequestInterface;
+use RuntimeException;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
 use function array_intersect;
@@ -42,18 +43,19 @@ class ErrorReportService implements ErrorReportServiceInterface
     }
 
     /**
-     * @throws Exception
+     * @throws IOException
      */
     public function appendMessage(string $message): void
     {
         $this->fileSystem->appendToFile(
             $this->config['path'],
-            sprintf('[%s] [%s] %s' . PHP_EOL, date('Y-m-d H:i:s'), $this->token, $message)
+            sprintf('[%s] [%s] %s' . PHP_EOL, date('Y-m-d H:i:s'), (string) $this->token, $message)
         );
     }
 
     /**
-     * @throws Exception
+     * @throws ForbiddenException
+     * @throws RuntimeException
      */
     public function checkRequest(ServerRequestInterface $request): self
     {
@@ -75,9 +77,6 @@ class ErrorReportService implements ErrorReportServiceInterface
         return sha1(uniqid());
     }
 
-    /**
-     * @throws Exception
-     */
     private function hasValidToken(ServerRequestInterface $request): bool
     {
         $tokens = $request->getHeader(self::HEADER_NAME);
@@ -93,9 +92,6 @@ class ErrorReportService implements ErrorReportServiceInterface
         return true;
     }
 
-    /**
-     * @throws Exception
-     */
     private function isMatchingDomain(ServerRequestInterface $request): bool
     {
         $domain = parse_url($request->getServerParams()['HTTP_ORIGIN'] ?? '', PHP_URL_HOST);
@@ -105,9 +101,6 @@ class ErrorReportService implements ErrorReportServiceInterface
         return ! empty($intersection);
     }
 
-    /**
-     * @throws Exception
-     */
     private function isMatchingIpAddress(ServerRequestInterface $request): bool
     {
         $ipAddress = $request->getServerParams()['REMOTE_ADDR'] ?? null;
@@ -118,46 +111,46 @@ class ErrorReportService implements ErrorReportServiceInterface
     }
 
     /**
-     * @throws Exception
+     * @throws RuntimeException
      */
     private function validateConfigs(): void
     {
         if (! array_key_exists('enabled', $this->config)) {
-            throw new Exception(
+            throw new RuntimeException(
                 sprintf(Message::MISSING_CONFIG, 'config.ErrorReportServiceInterface::class.enabled')
             );
         }
 
         if ($this->config['enabled'] !== true) {
-            throw new Exception(Message::ERROR_REPORT_NOT_ENABLED);
+            throw new RuntimeException(Message::ERROR_REPORT_NOT_ENABLED);
         }
 
         if (! array_key_exists('path', $this->config)) {
-            throw new Exception(
+            throw new RuntimeException(
                 sprintf(Message::MISSING_CONFIG, 'config.ErrorReportServiceInterface::class.path')
             );
         }
 
         if (empty($this->config['path'])) {
-            throw new Exception(
+            throw new RuntimeException(
                 sprintf(Message::INVALID_CONFIG, 'config.ErrorReportServiceInterface::class.path')
             );
         }
 
         if (! array_key_exists('tokens', $this->config)) {
-            throw new Exception(
+            throw new RuntimeException(
                 sprintf(Message::MISSING_CONFIG, 'config.ErrorReportServiceInterface::class.tokens')
             );
         }
 
         if (empty($this->config['tokens'])) {
-            throw new Exception(
+            throw new RuntimeException(
                 sprintf(Message::INVALID_CONFIG, 'config.ErrorReportServiceInterface::class.tokens')
             );
         }
 
         if (! array_key_exists('domain_whitelist', $this->config)) {
-            throw new Exception(
+            throw new RuntimeException(
                 sprintf(
                     Message::MISSING_CONFIG,
                     sprintf('config.%s.domain_whitelist', ErrorReportServiceInterface::class)
@@ -166,7 +159,7 @@ class ErrorReportService implements ErrorReportServiceInterface
         }
 
         if (! array_key_exists('ip_whitelist', $this->config)) {
-            throw new Exception(
+            throw new RuntimeException(
                 sprintf(
                     Message::MISSING_CONFIG,
                     sprintf('config.%s.ip_whitelist', ErrorReportServiceInterface::class)
