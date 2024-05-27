@@ -75,7 +75,7 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
     public function formatAcceptRequest(string $accept): array
     {
         $accept = array_map(function ($item) {
-            return trim(strtok($item, ';'));
+            return trim((string) strtok($item, ';'));
         }, explode(',', $accept));
 
         return array_filter($accept);
