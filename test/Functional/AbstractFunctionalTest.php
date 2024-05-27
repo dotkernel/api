@@ -159,7 +159,7 @@ class AbstractFunctionalTest extends TestCase
         string $uri,
         array $queryParams = [],
         array $uploadedFiles = [],
-        array $headers = [],
+        array $headers = ['Accept' => 'application/json'],
         array $cookies = []
     ): ResponseInterface {
         $request = $this->createRequest(
@@ -180,7 +180,7 @@ class AbstractFunctionalTest extends TestCase
         array $parsedBody = [],
         array $queryParams = [],
         array $uploadedFiles = [],
-        array $headers = [],
+        array $headers = ['Accept' => 'application/json'],
         array $cookies = []
     ): ResponseInterface {
         $request = $this->createRequest(
@@ -201,7 +201,7 @@ class AbstractFunctionalTest extends TestCase
         array $parsedBody = [],
         array $queryParams = [],
         array $uploadedFiles = [],
-        array $headers = [],
+        array $headers = ['Accept' => 'application/json'],
         array $cookies = []
     ): ResponseInterface {
         $request = $this->createRequest(
@@ -222,7 +222,7 @@ class AbstractFunctionalTest extends TestCase
         array $parsedBody = [],
         array $queryParams = [],
         array $uploadedFiles = [],
-        array $headers = [],
+        array $headers = ['Accept' => 'application/json'],
         array $cookies = []
     ): ResponseInterface {
         $request = $this->createRequest(
@@ -241,7 +241,7 @@ class AbstractFunctionalTest extends TestCase
     protected function delete(
         string $uri,
         array $queryParams = [],
-        array $headers = [],
+        array $headers = ['Accept' => 'application/json'],
         array $cookies = []
     ): ResponseInterface {
         $request = $this->createRequest(
