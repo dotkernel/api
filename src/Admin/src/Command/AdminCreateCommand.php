@@ -8,6 +8,7 @@ use Api\Admin\Entity\AdminRole;
 use Api\Admin\InputFilter\CreateAdminInputFilter;
 use Api\Admin\Service\AdminRoleService;
 use Api\Admin\Service\AdminService;
+use Api\App\Exception\ConflictException;
 use Api\App\Exception\FormValidationException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Message;
@@ -53,7 +54,9 @@ class AdminCreateCommand extends Command
     }
 
     /**
+     * @throws ConflictException
      * @throws FormValidationException
+     * @throws NotFoundException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

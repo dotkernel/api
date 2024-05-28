@@ -7,7 +7,6 @@ namespace Api\User\Handler;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\ExpiredException;
 use Api\App\Exception\FormValidationException;
-use Api\App\Exception\InvalidResetPasswordException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\ResponseTrait;
 use Api\App\Message;
@@ -34,19 +33,20 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
      * @Inject({
      *     HalResponseFactory::class,
      *     ResourceGenerator::class,
-     *     UserServiceInterface::class
+     *     UserServiceInterface::class,
+     *     "config"
      * })
      */
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
-        protected UserServiceInterface $userService
+        protected UserServiceInterface $userService,
+        protected array $config,
     ) {
     }
 
     /**
      * @throws ExpiredException
-     * @throws InvalidResetPasswordException
      * @throws NotFoundException
      */
     public function get(ServerRequestInterface $request): ResponseInterface
@@ -62,7 +62,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
             throw new ExpiredException(sprintf(Message::RESET_PASSWORD_EXPIRED, $hash));
         }
         if ($userResetPassword->isCompleted()) {
-            throw new InvalidResetPasswordException(sprintf(Message::RESET_PASSWORD_USED, $hash));
+            throw new ExpiredException(sprintf(Message::RESET_PASSWORD_USED, $hash));
         }
 
         return $this->infoResponse(sprintf(Message::RESET_PASSWORD_VALID, $hash));

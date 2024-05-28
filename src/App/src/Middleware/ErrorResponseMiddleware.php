@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Api\App\Middleware;
 
 use Dot\AnnotatedServices\Annotation\Inject;
+use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Stream;
-use Laminas\Http\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -30,7 +30,7 @@ class ErrorResponseMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);
-        if ($response->getStatusCode() === Response::STATUS_CODE_400) {
+        if ($response->getStatusCode() === StatusCodeInterface::STATUS_BAD_REQUEST) {
             $body = json_decode((string) $response->getBody());
             if ($body->error === 'invalid_grant' && empty($body->hint)) {
                 $body->error             = $this->config['invalid_credentials']['error'];

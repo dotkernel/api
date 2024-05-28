@@ -29,13 +29,15 @@ class AccountRecoveryHandler implements RequestHandlerInterface
      * @Inject({
      *     HalResponseFactory::class,
      *     ResourceGenerator::class,
-     *     UserServiceInterface::class
+     *     UserServiceInterface::class,
+     *     "config"
      * })
      */
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
-        protected UserServiceInterface $userService
+        protected UserServiceInterface $userService,
+        protected array $config,
     ) {
     }
 
@@ -52,8 +54,7 @@ class AccountRecoveryHandler implements RequestHandlerInterface
         }
 
         $email = $inputFilter->getValue('email');
-
-        $user = $this->userService->findByEmail($email);
+        $user  = $this->userService->findByEmail($email);
         if (! $user instanceof User) {
             throw new NotFoundException(sprintf(Message::USER_NOT_FOUND_BY_EMAIL, $email));
         }

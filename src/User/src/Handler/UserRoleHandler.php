@@ -26,13 +26,15 @@ class UserRoleHandler implements RequestHandlerInterface
      * @Inject({
      *     HalResponseFactory::class,
      *     ResourceGenerator::class,
-     *     UserRoleServiceInterface::class
+     *     UserRoleServiceInterface::class,
+     *     "config"
      * })
      */
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
-        protected UserRoleServiceInterface $roleService
+        protected UserRoleServiceInterface $roleService,
+        protected array $config,
     ) {
     }
 

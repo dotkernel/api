@@ -14,6 +14,7 @@ use Api\User\InputFilter\ActivateAccountInputFilter;
 use Api\User\Service\UserServiceInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\Mail\Exception\MailException;
+use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Mezzio\Helper\UrlHelper;
@@ -32,14 +33,16 @@ class AccountActivateHandler implements RequestHandlerInterface
      *     HalResponseFactory::class,
      *     ResourceGenerator::class,
      *     UserServiceInterface::class,
-     *     UrlHelper::class
+     *     UrlHelper::class,
+     *     "config"
      * })
      */
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected UserServiceInterface $userService,
-        protected UrlHelper $urlHelper
+        protected UrlHelper $urlHelper,
+        protected array $config,
     ) {
     }
 
@@ -50,6 +53,7 @@ class AccountActivateHandler implements RequestHandlerInterface
     public function patch(ServerRequestInterface $request): ResponseInterface
     {
         $hash = $request->getAttribute('hash');
+
         $user = $this->userService->findOneBy(['hash' => $hash]);
         if (! $user instanceof User) {
             throw new NotFoundException(Message::INVALID_ACTIVATION_CODE);
@@ -90,6 +94,9 @@ class AccountActivateHandler implements RequestHandlerInterface
         $user = $this->userService->activateUser($user);
         $this->userService->sendActivationMail($user);
 
-        return $this->infoResponse(sprintf(Message::MAIL_SENT_USER_ACTIVATION, $user->getDetail()->getEmail()));
+        return $this->infoResponse(
+            sprintf(Message::MAIL_SENT_USER_ACTIVATION, $user->getDetail()->getEmail()),
+            StatusCodeInterface::STATUS_CREATED
+        );
     }
 }

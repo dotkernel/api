@@ -18,10 +18,12 @@ use Api\User\Repository\UserResetPasswordRepository;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\Mail\Exception\MailException;
 use Dot\Mail\Service\MailService;
+use Laminas\Log\Logger;
 use Mezzio\Template\TemplateRendererInterface;
 use RuntimeException;
 
 use function date;
+use function sprintf;
 
 class UserService implements UserServiceInterface
 {
@@ -35,6 +37,7 @@ class UserService implements UserServiceInterface
      *     UserRepository::class,
      *     UserDetailRepository::class,
      *     UserResetPasswordRepository::class,
+     *     "dot-log.default_logger",
      *     "config"
      * })
      */
@@ -47,6 +50,7 @@ class UserService implements UserServiceInterface
         protected UserRepository $userRepository,
         protected UserDetailRepository $userDetailRepository,
         protected UserResetPasswordRepository $userResetPasswordRepository,
+        protected Logger $logger,
         protected array $config = []
     ) {
     }
@@ -220,7 +224,12 @@ class UserService implements UserServiceInterface
             ])
         );
 
-        return $this->mailService->send()->isValid();
+        try {
+            return $this->mailService->send()->isValid();
+        } catch (MailException $exception) {
+            $this->logger->err($exception->getMessage());
+            throw new MailException(sprintf(Message::MAIL_NOT_SENT_TO, $user->getDetail()->getEmail()));
+        }
     }
 
     /**
@@ -239,7 +248,12 @@ class UserService implements UserServiceInterface
             ])
         );
 
-        return $this->mailService->send()->isValid();
+        try {
+            return $this->mailService->send()->isValid();
+        } catch (MailException $exception) {
+            $this->logger->err($exception->getMessage());
+            throw new MailException(sprintf(Message::MAIL_NOT_SENT_TO, $user->getDetail()->getEmail()));
+        }
     }
 
     /**
@@ -258,7 +272,12 @@ class UserService implements UserServiceInterface
             ])
         );
 
-        return $this->mailService->send()->isValid();
+        try {
+            return $this->mailService->send()->isValid();
+        } catch (MailException $exception) {
+            $this->logger->err($exception->getMessage());
+            throw new MailException(sprintf(Message::MAIL_NOT_SENT_TO, $user->getDetail()->getEmail()));
+        }
     }
 
     /**
@@ -275,7 +294,12 @@ class UserService implements UserServiceInterface
             ])
         );
 
-        return $this->mailService->send()->isValid();
+        try {
+            return $this->mailService->send()->isValid();
+        } catch (MailException $exception) {
+            $this->logger->err($exception->getMessage());
+            throw new MailException(sprintf(Message::MAIL_NOT_SENT_TO, $user->getDetail()->getEmail()));
+        }
     }
 
     /**
@@ -354,7 +378,12 @@ class UserService implements UserServiceInterface
             ])
         );
 
-        return $this->mailService->send()->isValid();
+        try {
+            return $this->mailService->send()->isValid();
+        } catch (MailException $exception) {
+            $this->logger->err($exception->getMessage());
+            throw new MailException(sprintf(Message::MAIL_NOT_SENT_TO, $user->getDetail()->getEmail()));
+        }
     }
 
     private function getAnonymousPlaceholder(): string

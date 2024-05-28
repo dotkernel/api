@@ -79,12 +79,11 @@ class ErrorReportService implements ErrorReportServiceInterface
 
     private function hasValidToken(ServerRequestInterface $request): bool
     {
-        $tokens = $request->getHeader(self::HEADER_NAME);
-        if (empty($tokens)) {
+        $this->token = $request->getHeaderLine(self::HEADER_NAME);
+        if (empty($this->token)) {
             return false;
         }
 
-        $this->token = $tokens[0];
         if (! in_array($this->token, $this->config['tokens'])) {
             return false;
         }

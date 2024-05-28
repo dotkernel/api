@@ -26,13 +26,15 @@ class AdminRoleHandler implements RequestHandlerInterface
      * @Inject({
      *     HalResponseFactory::class,
      *     ResourceGenerator::class,
-     *     AdminRoleServiceInterface::class
+     *     AdminRoleServiceInterface::class,
+     *     "config"
      * })
      */
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
-        protected AdminRoleServiceInterface $roleService
+        protected AdminRoleServiceInterface $roleService,
+        protected array $config,
     ) {
     }
 
@@ -42,7 +44,6 @@ class AdminRoleHandler implements RequestHandlerInterface
     public function get(ServerRequestInterface $request): ResponseInterface
     {
         $uuid = $request->getAttribute('uuid');
-
         $role = $this->roleService->findOneBy(['uuid' => $uuid]);
         if (! $role instanceof AdminRole) {
             throw new NotFoundException(sprintf(Message::NOT_FOUND_BY_UUID, 'role', $uuid));

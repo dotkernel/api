@@ -29,14 +29,16 @@ class Message
     public const MAIL_SENT_RESET_PASSWORD         = 'If the provided email identifies an account in our system, '
     . 'you will receive an email with further instructions on resetting your account\'s password.';
     public const MAIL_SENT_USER_ACTIVATION        = 'User activation mail has been successfully sent to \'%s\'';
-    public const MISSING_CONFIG                   = 'Missing configuration value: \'%s\'';
+    public const MAIL_NOT_SENT                    = 'Could not send mail.';
+    public const MAIL_NOT_SENT_TO                 = 'Could not send mail to \'%s\'.';
+    public const MISSING_CONFIG                   = 'Missing configuration value: \'%s\'.';
     public const MISSING_PARAMETER                = 'Missing parameter: \'%s\'';
     public const NOT_FOUND_BY_NAME                = 'Unable to find %s identified by name: %s';
     public const NOT_FOUND_BY_UUID                = 'Unable to find %s identified by UUID: %s';
     public const RESET_PASSWORD_EXPIRED           = 'Password reset request for hash: \'%s\' is invalid (expired).';
     public const RESET_PASSWORD_NOT_FOUND         = 'Could not find password reset request identified by hash: \'%s\'';
     public const RESET_PASSWORD_OK                = 'Password successfully modified.';
-    public const RESET_PASSWORD_USED              = 'Password reset request for hash: \'%s\' is invalid (completed).';
+    public const RESET_PASSWORD_USED              = 'Password reset request for hash: \'%s\' is invalid (used).';
     public const RESET_PASSWORD_VALID             = 'Password reset request for hash: \'%s\' is valid.';
     public const RESOURCE_NOT_ALLOWED             = 'You are not allowed to access this resource.';
     public const RESTRICTION_IMAGE                = 'File must be an image (jpg, png).';

@@ -9,6 +9,7 @@ use Api\App\Message;
 use Api\App\Service\ErrorReportServiceInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\AnnotatedServices\Annotation\Service;
+use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
@@ -27,13 +28,15 @@ class ErrorReportHandler implements RequestHandlerInterface
      * @Inject({
      *     HalResponseFactory::class,
      *     ResourceGenerator::class,
-     *     ErrorReportServiceInterface::class
+     *     ErrorReportServiceInterface::class,
+     *     "config"
      * })
      */
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
-        protected ErrorReportServiceInterface $errorReportService
+        protected ErrorReportServiceInterface $errorReportService,
+        protected array $config,
     ) {
     }
 
@@ -49,6 +52,6 @@ class ErrorReportHandler implements RequestHandlerInterface
                 $request->getParsedBody()['message'] ?? ''
             );
 
-        return $this->infoResponse(Message::ERROR_REPORT_OK);
+        return $this->infoResponse(Message::ERROR_REPORT_OK, StatusCodeInterface::STATUS_CREATED);
     }
 }

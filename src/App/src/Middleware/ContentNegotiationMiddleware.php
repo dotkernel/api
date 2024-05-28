@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Api\App\Middleware;
 
 use Dot\AnnotatedServices\Annotation\Inject;
+use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\JsonResponse;
-use Laminas\Http\Response;
 use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -124,7 +124,7 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
                     $message,
                 ],
             ],
-        ], Response::STATUS_CODE_406);
+        ], StatusCodeInterface::STATUS_NOT_ACCEPTABLE);
     }
 
     public function unsupportedMediaTypeResponse(string $message): JsonResponse
@@ -135,7 +135,7 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
                     $message,
                 ],
             ],
-        ], Response::STATUS_CODE_415);
+        ], StatusCodeInterface::STATUS_UNSUPPORTED_MEDIA_TYPE);
     }
 
     public function validateResponseContentType(?string $contentType, array $accept): bool

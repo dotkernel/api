@@ -31,13 +31,15 @@ class UserHandler implements RequestHandlerInterface
      * @Inject({
      *     HalResponseFactory::class,
      *     ResourceGenerator::class,
-     *     UserServiceInterface::class
+     *     UserServiceInterface::class,
+     *     "config"
      * })
      */
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
-        protected UserServiceInterface $userService
+        protected UserServiceInterface $userService,
+        protected array $config,
     ) {
     }
 
@@ -118,6 +120,6 @@ class UserHandler implements RequestHandlerInterface
             $this->userService->sendWelcomeMail($user);
         }
 
-        return $this->createResponse($request, $user);
+        return $this->createdResponse($request, $user);
     }
 }

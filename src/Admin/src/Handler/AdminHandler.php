@@ -30,13 +30,15 @@ class AdminHandler implements RequestHandlerInterface
      * @Inject({
      *     HalResponseFactory::class,
      *     ResourceGenerator::class,
-     *     AdminServiceInterface::class
+     *     AdminServiceInterface::class,
+     *     "config",
      * })
      */
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
-        protected AdminServiceInterface $adminService
+        protected AdminServiceInterface $adminService,
+        protected array $config,
     ) {
     }
 
@@ -45,7 +47,8 @@ class AdminHandler implements RequestHandlerInterface
      */
     public function delete(ServerRequestInterface $request): ResponseInterface
     {
-        $uuid  = $request->getAttribute('uuid');
+        $uuid = $request->getAttribute('uuid');
+
         $admin = $this->adminService->findOneBy(['uuid' => $uuid]);
         if (! $admin instanceof Admin) {
             throw new NotFoundException(sprintf(Message::NOT_FOUND_BY_UUID, 'admin', $uuid));
@@ -88,8 +91,7 @@ class AdminHandler implements RequestHandlerInterface
             throw (new FormValidationException())->setMessages($inputFilter->getMessages());
         }
 
-        $uuid = $request->getAttribute('uuid');
-
+        $uuid  = $request->getAttribute('uuid');
         $admin = $this->adminService->findOneBy(['uuid' => $uuid]);
         if (! $admin instanceof Admin) {
             throw new NotFoundException(sprintf(Message::NOT_FOUND_BY_UUID, 'admin', $uuid));
@@ -114,6 +116,6 @@ class AdminHandler implements RequestHandlerInterface
 
         $admin = $this->adminService->createAdmin($inputFilter->getValues());
 
-        return $this->createResponse($request, $admin);
+        return $this->createdResponse($request, $admin);
     }
 }

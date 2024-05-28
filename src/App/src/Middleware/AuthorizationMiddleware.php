@@ -13,8 +13,8 @@ use Api\App\UserIdentity;
 use Api\User\Entity\User;
 use Api\User\Repository\UserRepository;
 use Dot\AnnotatedServices\Annotation\Inject;
+use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\JsonResponse;
-use Laminas\Http\Response;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authorization\AuthorizationInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -108,6 +108,6 @@ class AuthorizationMiddleware implements MiddlewareInterface
                     $message,
                 ],
             ],
-        ], Response::STATUS_CODE_403);
+        ], StatusCodeInterface::STATUS_FORBIDDEN);
     }
 }

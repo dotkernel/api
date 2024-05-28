@@ -11,7 +11,6 @@ use Api\App\Helper\PaginationHelper;
 use Api\App\Message;
 use Doctrine\ORM\EntityRepository;
 use Dot\AnnotatedServices\Annotation\Entity;
-use Exception;
 
 /**
  * @Entity(name="Api\Admin\Entity\Admin")

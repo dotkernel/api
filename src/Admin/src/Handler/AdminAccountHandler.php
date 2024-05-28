@@ -26,13 +26,15 @@ class AdminAccountHandler implements RequestHandlerInterface
      * @Inject({
      *     HalResponseFactory::class,
      *     ResourceGenerator::class,
-     *     AdminServiceInterface::class
+     *     AdminServiceInterface::class,
+     *     "config"
      * })
      */
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
-        protected AdminServiceInterface $adminService
+        protected AdminServiceInterface $adminService,
+        protected array $config,
     ) {
     }
 
@@ -53,10 +55,7 @@ class AdminAccountHandler implements RequestHandlerInterface
             throw (new FormValidationException())->setMessages($inputFilter->getMessages());
         }
 
-        $admin = $this->adminService->updateAdmin(
-            $request->getAttribute(Admin::class),
-            $inputFilter->getValues()
-        );
+        $admin = $this->adminService->updateAdmin($request->getAttribute(Admin::class), $inputFilter->getValues());
 
         return $this->createResponse($request, $admin);
     }

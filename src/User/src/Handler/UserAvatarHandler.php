@@ -30,14 +30,16 @@ class UserAvatarHandler implements RequestHandlerInterface
      *     HalResponseFactory::class,
      *     ResourceGenerator::class,
      *     UserServiceInterface::class,
-     *     UserAvatarServiceInterface::class
+     *     UserAvatarServiceInterface::class,
+     *     "config"
      * })
      */
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected UserServiceInterface $userService,
-        protected UserAvatarServiceInterface $userAvatarService
+        protected UserAvatarServiceInterface $userAvatarService,
+        protected array $config,
     ) {
     }
 
@@ -96,6 +98,6 @@ class UserAvatarHandler implements RequestHandlerInterface
 
         $userAvatar = $this->userAvatarService->createAvatar($user, $inputFilter->getValue('avatar'));
 
-        return $this->createResponse($request, $userAvatar);
+        return $this->createdResponse($request, $userAvatar);
     }
 }

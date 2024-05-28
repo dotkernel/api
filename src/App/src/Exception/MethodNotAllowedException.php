@@ -6,6 +6,6 @@ namespace Api\App\Exception;
 
 use Exception;
 
-class NotAllowedException extends Exception
+class MethodNotAllowedException extends Exception
 {
 }
