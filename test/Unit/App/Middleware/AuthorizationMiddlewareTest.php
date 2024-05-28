@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ApiTest\Unit;
+namespace ApiTest\Unit\App\Middleware;
 
 use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
@@ -22,7 +22,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-
 use function json_decode;
 use function sprintf;
 

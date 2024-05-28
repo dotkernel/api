@@ -46,7 +46,7 @@ class UserTest extends AbstractFunctionalTest
         $this->replaceService(UserAvatarService::class, $userAvatarService);
 
         $response = $this->post('/user', $this->getValidUserData());
-        $this->assertResponseBadRequest($response);
+        $this->assertResponseConflict($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
 
@@ -72,7 +72,7 @@ class UserTest extends AbstractFunctionalTest
         $this->replaceService(UserAvatarService::class, $userAvatarService);
 
         $response = $this->post('/user', $this->getValidUserData());
-        $this->assertResponseBadRequest($response);
+        $this->assertResponseConflict($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
 
@@ -98,7 +98,7 @@ class UserTest extends AbstractFunctionalTest
         ]);
 
         $response = $this->post('/user', $user);
-        $this->assertResponseOk($response);
+        $this->assertResponseCreated($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
 
@@ -140,7 +140,7 @@ class UserTest extends AbstractFunctionalTest
         $uploadedFile = $this->createUploadedFile();
 
         $response = $this->post('/user/my-avatar', [], [], ['avatar' => $uploadedFile]);
-        $this->assertResponseOk($response);
+        $this->assertResponseCreated($response);
 
         $path = __DIR__ . DIRECTORY_SEPARATOR . $uploadedFile->getClientFilename();
         unlink($path);
@@ -217,7 +217,7 @@ class UserTest extends AbstractFunctionalTest
     public function testActivateMyAccountInvalidCode(): void
     {
         $response = $this->patch('/account/activate/invalid_hash');
-        $this->assertResponseBadRequest($response);
+        $this->assertResponseNotFound($response);
     }
 
     /**
@@ -229,7 +229,7 @@ class UserTest extends AbstractFunctionalTest
         $user = $this->createUser();
 
         $response = $this->patch('/account/activate/' . $user->getHash());
-        $this->assertResponseBadRequest($response);
+        $this->assertResponseConflict($response);
     }
 
     /**
@@ -268,7 +268,7 @@ class UserTest extends AbstractFunctionalTest
         $response = $this->post('/account/activate', [
             'email' => $user->getDetail()->getEmail(),
         ]);
-        $this->assertResponseOk($response);
+        $this->assertResponseCreated($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertArrayHasKey('info', $data);
@@ -329,7 +329,7 @@ class UserTest extends AbstractFunctionalTest
             'password'        => '654321',
             'passwordConfirm' => '654321',
         ]);
-        $this->assertResponseBadRequest($response);
+        $this->assertResponseGone($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertArrayHasKey('error', $data);
@@ -368,7 +368,7 @@ class UserTest extends AbstractFunctionalTest
             'password'        => '654321',
             'passwordConfirm' => '654321',
         ]);
-        $this->assertResponseBadRequest($response);
+        $this->assertResponseConflict($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertArrayHasKey('error', $data);

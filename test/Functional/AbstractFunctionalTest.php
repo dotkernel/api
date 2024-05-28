@@ -300,6 +300,11 @@ class AbstractFunctionalTest extends TestCase
         $this->assertSame(StatusCodeInterface::STATUS_OK, $response->getStatusCode());
     }
 
+    protected function assertResponseCreated(ResponseInterface $response): void
+    {
+        $this->assertSame(StatusCodeInterface::STATUS_CREATED, $response->getStatusCode());
+    }
+
     protected function assertResponseSuccessful(ResponseInterface $response): void
     {
         $this->assertBetween(
@@ -307,6 +312,11 @@ class AbstractFunctionalTest extends TestCase
             StatusCodeInterface::STATUS_OK,
             StatusCodeInterface::STATUS_MULTIPLE_CHOICES
         );
+    }
+
+    protected function assertResponseBadRequest(ResponseInterface $response): void
+    {
+        $this->assertSame(StatusCodeInterface::STATUS_BAD_REQUEST, $response->getStatusCode());
     }
 
     protected function assertResponseUnauthorized(ResponseInterface $response): void
@@ -319,14 +329,19 @@ class AbstractFunctionalTest extends TestCase
         $this->assertSame(StatusCodeInterface::STATUS_FORBIDDEN, $response->getStatusCode());
     }
 
-    protected function assertResponseBadRequest(ResponseInterface $response): void
-    {
-        $this->assertSame(StatusCodeInterface::STATUS_BAD_REQUEST, $response->getStatusCode());
-    }
-
     protected function assertResponseNotFound(ResponseInterface $response): void
     {
         $this->assertSame(StatusCodeInterface::STATUS_NOT_FOUND, $response->getStatusCode());
+    }
+
+    protected function assertResponseConflict(ResponseInterface $response): void
+    {
+        $this->assertSame(StatusCodeInterface::STATUS_CONFLICT, $response->getStatusCode());
+    }
+
+    protected function assertResponseGone(ResponseInterface $response): void
+    {
+        $this->assertSame(StatusCodeInterface::STATUS_GONE, $response->getStatusCode());
     }
 
     protected function assertBetween(int $value, int $from, int $to): void

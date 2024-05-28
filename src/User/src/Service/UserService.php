@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
+use Api\App\Exception\ConflictException;
 use Api\App\Message;
 use Api\App\Repository\OAuthAccessTokenRepository;
 use Api\App\Repository\OAuthRefreshTokenRepository;
@@ -18,7 +19,7 @@ use Api\User\Repository\UserResetPasswordRepository;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\Mail\Exception\MailException;
 use Dot\Mail\Service\MailService;
-use Laminas\Log\Logger;
+use Laminas\Log\LoggerInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use RuntimeException;
 
@@ -50,7 +51,7 @@ class UserService implements UserServiceInterface
         protected UserRepository $userRepository,
         protected UserDetailRepository $userDetailRepository,
         protected UserResetPasswordRepository $userResetPasswordRepository,
-        protected Logger $logger,
+        protected LoggerInterface $logger,
         protected array $config = []
     ) {
     }
@@ -64,16 +65,17 @@ class UserService implements UserServiceInterface
     }
 
     /**
+     * @throws ConflictException
      * @throws RuntimeException
      */
     public function createUser(array $data = []): User
     {
         if ($this->exists($data['identity'])) {
-            throw new RuntimeException(Message::DUPLICATE_IDENTITY);
+            throw new ConflictException(Message::DUPLICATE_IDENTITY);
         }
 
         if ($this->emailExists($data['detail']['email'])) {
-            throw new RuntimeException(Message::DUPLICATE_EMAIL);
+            throw new ConflictException(Message::DUPLICATE_EMAIL);
         }
 
         $detail = (new UserDetail())
@@ -303,19 +305,20 @@ class UserService implements UserServiceInterface
     }
 
     /**
+     * @throws ConflictException
      * @throws RuntimeException
      */
     public function updateUser(User $user, array $data = []): User
     {
         if (isset($data['identity'])) {
             if ($this->existsOther($data['identity'], (string) $user->getUuid()?->toString())) {
-                throw new RuntimeException(Message::DUPLICATE_IDENTITY);
+                throw new ConflictException(Message::DUPLICATE_IDENTITY);
             }
         }
 
         if (isset($data['detail']['email'])) {
             if ($this->emailExistsOther($data['detail']['email'], (string) $user->getUuid()?->toString())) {
-                throw new RuntimeException(Message::DUPLICATE_EMAIL);
+                throw new ConflictException(Message::DUPLICATE_EMAIL);
             }
         }
 

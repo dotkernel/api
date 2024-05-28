@@ -27,4 +27,10 @@
             <code>matching</code>
         </UndefinedInterfaceMethod>
     </file>
+    <file src="src/App/src/Handler/ResponseTrait.php">
+        <UndefinedThisPropertyFetch>
+            <code>$this->responseFactory</code>
+            <code>$this->resourceGenerator</code>
+        </UndefinedThisPropertyFetch>
+    </file>
 </files>

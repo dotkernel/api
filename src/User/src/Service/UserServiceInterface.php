@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
+use Api\App\Exception\ConflictException;
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
 use Api\User\Entity\UserResetPasswordEntity;
@@ -18,6 +19,7 @@ interface UserServiceInterface
     public function activateUser(User $user): User;
 
     /**
+     * @throws ConflictException
      * @throws RuntimeException
      */
     public function createUser(array $data = []): User;
