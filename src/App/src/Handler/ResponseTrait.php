@@ -39,26 +39,17 @@ trait ResponseTrait
     {
         try {
             $method = strtolower($request->getMethod());
-            if ($request->getMethod() === RequestMethodInterface::METHOD_GET) {
-                /** @var RouteResult $routeResult */
-                $routeResult = $request->getAttribute(RouteResult::class);
-                $halConfig   = $this->getHalConfig($routeResult->getMatchedRouteName());
-                if (empty($halConfig)) {
-                    throw new NotFoundException(
-                        sprintf('Unable to identify HAL config for route: %s', $routeResult->getMatchedRouteName())
-                    );
-                }
-                if ($this->isCollection($halConfig)) {
-                    $method = 'getCollection';
-                }
+            if ($this->isGetCollectionRequest($request, $this->config)) {
+                $method = 'getCollection';
             }
 
-            if (method_exists($this, $method)) {
-                return $this->$method($request);
+            if (! method_exists($this, $method)) {
+                throw new MethodNotAllowedException(
+                    sprintf('Method %s is not implemented for the requested resource.', $method)
+                );
             }
-            throw new MethodNotAllowedException(
-                sprintf('Method %s is not implemented for the requested resource.', $method)
-            );
+
+            return $this->$method($request);
         } catch (ConflictException $exception) {
             return $this->errorResponse($exception->getMessage(), StatusCodeInterface::STATUS_CONFLICT);
         } catch (ExpiredException $exception) {
@@ -128,19 +119,36 @@ trait ResponseTrait
         return new JsonResponse($messages, $status);
     }
 
-    private function getHalConfig(string $routeName): ?array
+    /**
+     * @throws RuntimeException
+     */
+    private function isGetCollectionRequest(ServerRequestInterface $request, array $config): bool
     {
-        foreach ($this->config[MetadataMap::class] ?? [] as $config) {
-            if ($config['route'] === $routeName) {
-                return $config;
-            }
+        if ($request->getMethod() !== RequestMethodInterface::METHOD_GET) {
+            return false;
         }
 
-        return null;
-    }
+        if (! array_key_exists(MetadataMap::class, $config)) {
+            throw new RuntimeException(
+                sprintf('Unable to load %s from container.', MetadataMap::class)
+            );
+        }
 
-    private function isCollection(array $halConfig): bool
-    {
+        /** @var RouteResult $routeResult */
+        $routeResult = $request->getAttribute(RouteResult::class);
+        $routeName   = $routeResult->getMatchedRouteName();
+
+        $halConfig = null;
+        foreach ($config[MetadataMap::class] as $cfg) {
+            if ($cfg['route'] === $routeName) {
+                $halConfig = $cfg;
+                break;
+            }
+        }
+        if ($halConfig === null) {
+            return false;
+        }
+
         return array_key_exists('__class__', $halConfig)
             && $halConfig['__class__'] === RouteBasedCollectionMetadata::class;
     }
