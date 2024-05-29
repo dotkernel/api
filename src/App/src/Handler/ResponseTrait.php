@@ -89,7 +89,7 @@ trait ResponseTrait
         array|string $messages = [],
         int $status = StatusCodeInterface::STATUS_BAD_REQUEST
     ): ResponseInterface {
-        return $this->restResponse([
+        return $this->jsonResponse([
             'error' => [
                 'messages' => is_array($messages) ? $messages : [$messages],
             ],
@@ -100,7 +100,7 @@ trait ResponseTrait
         array|string $messages = [],
         int $status = StatusCodeInterface::STATUS_OK
     ): ResponseInterface {
-        return $this->restResponse([
+        return $this->jsonResponse([
             'info' => [
                 'messages' => is_array($messages) ? $messages : [$messages],
             ],
@@ -112,7 +112,7 @@ trait ResponseTrait
         return new RedirectResponse($location);
     }
 
-    public function restResponse(
+    public function jsonResponse(
         array|string $messages = [],
         int $status = StatusCodeInterface::STATUS_OK
     ): ResponseInterface {
