@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdminRoleRepository::class)]
 #[ORM\Table("admin_role")]
+#[ORM\HasLifecycleCallbacks]
 class AdminRole extends AbstractEntity implements RoleInterface
 {
     public const ROLE_ADMIN     = 'admin';
@@ -38,7 +39,7 @@ class AdminRole extends AbstractEntity implements RoleInterface
     public function getArrayCopy(): array
     {
         return [
-            'uuid' => $this->getUuid()?->toString(),
+            'uuid' => $this->getUuid()->toString(),
             'name' => $this->getName(),
         ];
     }

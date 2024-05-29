@@ -98,7 +98,7 @@ class AdminCreateCommand extends Command
             'firstName'       => $input->getOption('firstName'),
             'lastName'        => $input->getOption('lastName'),
             'roles'           => [
-                ['uuid' => $role->getUuid()?->toString()],
+                ['uuid' => $role->getUuid()->toString()],
             ],
         ];
     }

@@ -10,10 +10,11 @@ use DateInterval;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Throwable;
+use Exception;
 
 #[ORM\Entity(repositoryClass: UserResetPasswordRepository::class)]
 #[ORM\Table(name: "user_reset_password")]
+#[ORM\HasLifecycleCallbacks]
 class UserResetPasswordEntity extends AbstractEntity
 {
     public const STATUS_COMPLETED = 'completed';
@@ -102,10 +103,9 @@ class UserResetPasswordEntity extends AbstractEntity
     {
         try {
             return $this->getExpires() > new DateTimeImmutable();
-        } catch (Throwable) {
+        } catch (Exception) {
+            return false;
         }
-
-        return false;
     }
 
     public function markAsCompleted(): self
@@ -118,7 +118,7 @@ class UserResetPasswordEntity extends AbstractEntity
     public function getArrayCopy(): array
     {
         return [
-            'uuid'    => $this->getUuid()?->toString(),
+            'uuid'    => $this->getUuid()->toString(),
             'expires' => $this->getExpires(),
             'hash'    => $this->getHash(),
             'status'  => $this->getStatus(),

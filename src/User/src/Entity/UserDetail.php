@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserDetailRepository::class)]
 #[ORM\Table(name: "user_detail")]
+#[ORM\HasLifecycleCallbacks]
 class UserDetail extends AbstractEntity
 {
     #[ORM\OneToOne(inversedBy: "detail", targetEntity: User::class)]

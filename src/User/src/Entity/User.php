@@ -7,19 +7,19 @@ namespace Api\User\Entity;
 use Api\App\Entity\AbstractEntity;
 use Api\App\Entity\PasswordTrait;
 use Api\App\Entity\RoleInterface;
-use Api\App\Entity\UuidOrderedTimeGenerator;
 use Api\User\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\UserEntityInterface;
-use Throwable;
 
 use function bin2hex;
-use function random_bytes;
+use function md5;
+use function uniqid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: "user")]
+#[ORM\HasLifecycleCallbacks]
 class User extends AbstractEntity implements UserEntityInterface
 {
     use PasswordTrait;
@@ -261,13 +261,7 @@ class User extends AbstractEntity implements UserEntityInterface
 
     public static function generateHash(): string
     {
-        try {
-            $bytes = random_bytes(32);
-        } catch (Throwable) {
-            $bytes = UuidOrderedTimeGenerator::generateUuid()->getBytes();
-        }
-
-        return bin2hex($bytes);
+        return bin2hex(md5(uniqid()));
     }
 
     public function getName(): string
@@ -319,7 +313,7 @@ class User extends AbstractEntity implements UserEntityInterface
     public function getArrayCopy(): array
     {
         return [
-            'uuid'           => $this->getUuid()?->toString(),
+            'uuid'           => $this->getUuid()->toString(),
             'hash'           => $this->getHash(),
             'identity'       => $this->getIdentity(),
             'status'         => $this->getStatus(),

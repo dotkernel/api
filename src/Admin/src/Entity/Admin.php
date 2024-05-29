@@ -15,6 +15,7 @@ use League\OAuth2\Server\Entities\UserEntityInterface;
 
 #[ORM\Entity(repositoryClass: AdminRepository::class)]
 #[ORM\Table("admin")]
+#[ORM\HasLifecycleCallbacks]
 class Admin extends AbstractEntity implements UserEntityInterface
 {
     use PasswordTrait;
@@ -57,7 +58,7 @@ class Admin extends AbstractEntity implements UserEntityInterface
     public function getArrayCopy(): array
     {
         return [
-            'uuid'      => $this->getUuid()?->toString(),
+            'uuid'      => $this->getUuid()->toString(),
             'identity'  => $this->getIdentity(),
             'firstName' => $this->getFirstName(),
             'lastName'  => $this->getLastName(),
