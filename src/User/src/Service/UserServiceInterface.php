@@ -75,6 +75,7 @@ interface UserServiceInterface
     public function sendWelcomeMail(User $user): bool;
 
     /**
+     * @throws ConflictException
      * @throws RuntimeException
      */
     public function updateUser(User $user, array $data = []): User;
