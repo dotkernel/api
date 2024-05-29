@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
+use Api\App\Exception\ConflictException;
 use Api\App\Exception\FormValidationException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\ResponseTrait;
@@ -80,6 +81,7 @@ class UserHandler implements RequestHandlerInterface
     }
 
     /**
+     * @throws ConflictException
      * @throws FormValidationException
      * @throws NotFoundException
      * @throws RuntimeException
@@ -103,6 +105,7 @@ class UserHandler implements RequestHandlerInterface
     }
 
     /**
+     * @throws ConflictException
      * @throws FormValidationException
      * @throws MailException
      */

@@ -107,6 +107,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
     }
 
     /**
+     * @throws ConflictException
      * @throws FormValidationException
      * @throws MailException
      * @throws NotFoundException
