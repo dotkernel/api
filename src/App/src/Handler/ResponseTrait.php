@@ -16,8 +16,10 @@ use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
+use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\Metadata\MetadataMap;
 use Mezzio\Hal\Metadata\RouteBasedCollectionMetadata;
+use Mezzio\Hal\ResourceGenerator;
 use Mezzio\Hal\ResourceGenerator\Exception\OutOfBoundsException;
 use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
@@ -32,6 +34,9 @@ use function strtolower;
 
 trait ResponseTrait
 {
+    protected HalResponseFactory $responseFactory;
+    protected ResourceGenerator $resourceGenerator;
+
     /**
      * @throws Exception
      */
