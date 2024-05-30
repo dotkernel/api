@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Api\App\Middleware;
 
+use Api\App\Handler\ResponseTrait;
 use Dot\AnnotatedServices\Annotation\Inject;
-use Fig\Http\Message\StatusCodeInterface;
-use Laminas\Diactoros\Response\JsonResponse;
 use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,6 +24,8 @@ use function trim;
 
 class ContentNegotiationMiddleware implements MiddlewareInterface
 {
+    use ResponseTrait;
+
     /**
      * @Inject({"config.content-negotiation"})
      */
@@ -50,23 +51,14 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
 
         $contentType = $request->getHeaderLine('Content-Type');
         if (! $this->checkContentType($routeName, $contentType)) {
-            return $this->unsupportedMediaTypeResponse(
-                'Unsupported Media Type'
-            );
+            return $this->unsupportedMediaTypeResponse('Unsupported Media Type');
         }
 
         $response = $handler->handle($request);
 
         $responseContentType = $response->getHeaderLine('Content-Type');
-        if (
-            ! $this->validateResponseContentType(
-                $responseContentType,
-                $accept
-            )
-        ) {
-            return $this->notAcceptedResponse(
-                'Unable to resolve Accept header to a representation'
-            );
+        if (! $this->validateResponseContentType($responseContentType, $accept)) {
+            return $this->notAcceptedResponse('Unable to resolve Accept header to a representation');
         }
 
         return $response;
@@ -104,6 +96,7 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         if (empty($contentType)) {
             return true;
         }
+
         $acceptList = $this->config['default']['Content-Type'] ?? [];
         if (isset($this->config[$routeName])) {
             $acceptList = $this->config[$routeName]['Content-Type'] ?? [];
@@ -114,28 +107,6 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         } else {
             return $contentType === $acceptList;
         }
-    }
-
-    public function notAcceptedResponse(string $message): JsonResponse
-    {
-        return new JsonResponse([
-            'error' => [
-                'messages' => [
-                    $message,
-                ],
-            ],
-        ], StatusCodeInterface::STATUS_NOT_ACCEPTABLE);
-    }
-
-    public function unsupportedMediaTypeResponse(string $message): JsonResponse
-    {
-        return new JsonResponse([
-            'error' => [
-                'messages' => [
-                    $message,
-                ],
-            ],
-        ], StatusCodeInterface::STATUS_UNSUPPORTED_MEDIA_TYPE);
     }
 
     public function validateResponseContentType(?string $contentType, array $accept): bool

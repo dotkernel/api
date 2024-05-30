@@ -7,7 +7,7 @@ namespace Api\Admin\Handler;
 use Api\Admin\Entity\AdminRole;
 use Api\Admin\Service\AdminRoleServiceInterface;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\ResponseTrait;
+use Api\App\Handler\HandlerTrait;
 use Api\App\Message;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Mezzio\Hal\HalResponseFactory;
@@ -20,7 +20,7 @@ use function sprintf;
 
 class AdminRoleHandler implements RequestHandlerInterface
 {
-    use ResponseTrait;
+    use HandlerTrait;
 
     /**
      * @Inject({

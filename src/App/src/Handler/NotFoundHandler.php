@@ -10,7 +10,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class NotFoundHandler implements RequestHandlerInterface
 {
-    use ResponseTrait;
+    use HandlerTrait;
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {

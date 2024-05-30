@@ -22,7 +22,7 @@ class AdminRole extends AbstractEntity implements RoleInterface
     ];
 
     #[ORM\Column(name: "name", type: "string", length: 30, unique: true)]
-    protected string $name;
+    protected string $name = '';
 
     public function getName(): string
     {

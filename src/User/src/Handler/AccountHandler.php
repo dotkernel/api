@@ -6,7 +6,7 @@ namespace Api\User\Handler;
 
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
-use Api\App\Handler\ResponseTrait;
+use Api\App\Handler\HandlerTrait;
 use Api\User\Entity\User;
 use Api\User\InputFilter\CreateUserInputFilter;
 use Api\User\InputFilter\UpdateUserInputFilter;
@@ -22,7 +22,7 @@ use RuntimeException;
 
 class AccountHandler implements RequestHandlerInterface
 {
-    use ResponseTrait;
+    use HandlerTrait;
 
     /**
      * @Inject({
@@ -64,7 +64,7 @@ class AccountHandler implements RequestHandlerInterface
     {
         $inputFilter = (new UpdateUserInputFilter())
             ->setValidationGroup(['password', 'passwordConfirm', 'detail'])
-            ->setData($request->getParsedBody());
+            ->setData((array) $request->getParsedBody());
         if (! $inputFilter->isValid()) {
             throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
@@ -83,7 +83,7 @@ class AccountHandler implements RequestHandlerInterface
     {
         $inputFilter = (new CreateUserInputFilter())
             ->setValidationGroup(['identity', 'password', 'passwordConfirm', 'detail'])
-            ->setData($request->getParsedBody());
+            ->setData((array) $request->getParsedBody());
         if (! $inputFilter->isValid()) {
             throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }

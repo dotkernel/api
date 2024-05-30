@@ -10,7 +10,7 @@ use Api\Admin\Service\AdminServiceInterface;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\ResponseTrait;
+use Api\App\Handler\HandlerTrait;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
@@ -20,7 +20,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class AdminAccountHandler implements RequestHandlerInterface
 {
-    use ResponseTrait;
+    use HandlerTrait;
 
     /**
      * @Inject({
@@ -50,7 +50,7 @@ class AdminAccountHandler implements RequestHandlerInterface
      */
     public function patch(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new UpdateAdminInputFilter())->setData($request->getParsedBody());
+        $inputFilter = (new UpdateAdminInputFilter())->setData((array) $request->getParsedBody());
         if (! $inputFilter->isValid()) {
             throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }

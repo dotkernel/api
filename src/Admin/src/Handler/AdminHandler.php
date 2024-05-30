@@ -11,7 +11,7 @@ use Api\Admin\Service\AdminServiceInterface;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\ResponseTrait;
+use Api\App\Handler\HandlerTrait;
 use Api\App\Message;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Mezzio\Hal\HalResponseFactory;
@@ -24,7 +24,7 @@ use function sprintf;
 
 class AdminHandler implements RequestHandlerInterface
 {
-    use ResponseTrait;
+    use HandlerTrait;
 
     /**
      * @Inject({
@@ -86,7 +86,7 @@ class AdminHandler implements RequestHandlerInterface
      */
     public function patch(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new UpdateAdminInputFilter())->setData($request->getParsedBody());
+        $inputFilter = (new UpdateAdminInputFilter())->setData((array) $request->getParsedBody());
         if (! $inputFilter->isValid()) {
             throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
@@ -109,7 +109,7 @@ class AdminHandler implements RequestHandlerInterface
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new CreateAdminInputFilter())->setData($request->getParsedBody());
+        $inputFilter = (new CreateAdminInputFilter())->setData((array) $request->getParsedBody());
         if (! $inputFilter->isValid()) {
             throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }

@@ -6,7 +6,7 @@ namespace Api\User\Handler;
 
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\ResponseTrait;
+use Api\App\Handler\HandlerTrait;
 use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\InputFilter\RecoverIdentityInputFilter;
@@ -23,7 +23,7 @@ use function sprintf;
 
 class AccountRecoveryHandler implements RequestHandlerInterface
 {
-    use ResponseTrait;
+    use HandlerTrait;
 
     /**
      * @Inject({
@@ -48,7 +48,7 @@ class AccountRecoveryHandler implements RequestHandlerInterface
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new RecoverIdentityInputFilter())->setData($request->getParsedBody());
+        $inputFilter = (new RecoverIdentityInputFilter())->setData((array) $request->getParsedBody());
         if (! $inputFilter->isValid()) {
             throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }

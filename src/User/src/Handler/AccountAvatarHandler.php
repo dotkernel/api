@@ -6,7 +6,7 @@ namespace Api\User\Handler;
 
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\ResponseTrait;
+use Api\App\Handler\HandlerTrait;
 use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\InputFilter\UpdateAvatarInputFilter;
@@ -20,7 +20,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class AccountAvatarHandler implements RequestHandlerInterface
 {
-    use ResponseTrait;
+    use HandlerTrait;
 
     /**
      * @Inject({

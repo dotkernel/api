@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Api\User\Handler;
 
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\ResponseTrait;
+use Api\App\Handler\HandlerTrait;
 use Api\App\Message;
 use Api\User\Entity\UserRole;
 use Api\User\Service\UserRoleServiceInterface;
@@ -20,7 +20,7 @@ use function sprintf;
 
 class UserRoleHandler implements RequestHandlerInterface
 {
-    use ResponseTrait;
+    use HandlerTrait;
 
     /**
      * @Inject({

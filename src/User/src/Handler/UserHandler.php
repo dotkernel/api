@@ -7,7 +7,7 @@ namespace Api\User\Handler;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\ResponseTrait;
+use Api\App\Handler\HandlerTrait;
 use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\InputFilter\CreateUserInputFilter;
@@ -26,7 +26,7 @@ use function sprintf;
 
 class UserHandler implements RequestHandlerInterface
 {
-    use ResponseTrait;
+    use HandlerTrait;
 
     /**
      * @Inject({
@@ -88,7 +88,7 @@ class UserHandler implements RequestHandlerInterface
      */
     public function patch(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new UpdateUserInputFilter())->setData($request->getParsedBody());
+        $inputFilter = (new UpdateUserInputFilter())->setData((array) $request->getParsedBody());
         if (! $inputFilter->isValid()) {
             throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
@@ -111,7 +111,7 @@ class UserHandler implements RequestHandlerInterface
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new CreateUserInputFilter())->setData($request->getParsedBody());
+        $inputFilter = (new CreateUserInputFilter())->setData((array) $request->getParsedBody());
         if (! $inputFilter->isValid()) {
             throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }

@@ -8,7 +8,7 @@ use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\ExpiredException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\ResponseTrait;
+use Api\App\Handler\HandlerTrait;
 use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\Entity\UserResetPasswordEntity;
@@ -27,7 +27,7 @@ use function sprintf;
 
 class AccountResetPasswordHandler implements RequestHandlerInterface
 {
-    use ResponseTrait;
+    use HandlerTrait;
 
     /**
      * @Inject({
@@ -91,7 +91,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
             throw new ConflictException(sprintf(Message::RESET_PASSWORD_USED, $hash));
         }
 
-        $inputFilter = (new UpdatePasswordInputFilter())->setData($request->getParsedBody());
+        $inputFilter = (new UpdatePasswordInputFilter())->setData((array) $request->getParsedBody());
         if (! $inputFilter->isValid()) {
             throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
@@ -114,7 +114,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new ResetPasswordInputFilter())->setData($request->getParsedBody());
+        $inputFilter = (new ResetPasswordInputFilter())->setData((array) $request->getParsedBody());
         if (! $inputFilter->isValid()) {
             throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }

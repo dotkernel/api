@@ -22,7 +22,7 @@ use RuntimeException;
  */
 class ErrorReportHandler implements RequestHandlerInterface
 {
-    use ResponseTrait;
+    use HandlerTrait;
 
     /**
      * @Inject({

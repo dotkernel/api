@@ -28,16 +28,16 @@ class Admin extends AbstractEntity implements UserEntityInterface
     ];
 
     #[ORM\Column(name: "identity", type: "string", length: 100, unique: true)]
-    protected string $identity;
+    protected string $identity = '';
 
     #[ORM\Column(name: "firstName", type: "string", length: 255)]
-    protected string $firstName;
+    protected string $firstName = '';
 
     #[ORM\Column(name: "lastName", type: "string", length: 255)]
-    protected string $lastName;
+    protected string $lastName = '';
 
     #[ORM\Column(name: "password", type: "string", length: 100)]
-    protected string $password;
+    protected string $password = '';
 
     #[ORM\Column(name: "status", type: "string", length: 20)]
     protected string $status = self::STATUS_ACTIVE;

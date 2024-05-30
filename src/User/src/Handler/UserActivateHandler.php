@@ -6,7 +6,7 @@ namespace Api\User\Handler;
 
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\ResponseTrait;
+use Api\App\Handler\HandlerTrait;
 use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\Service\UserServiceInterface;
@@ -22,7 +22,7 @@ use function sprintf;
 
 class UserActivateHandler implements RequestHandlerInterface
 {
-    use ResponseTrait;
+    use HandlerTrait;
 
     /**
      * @Inject({

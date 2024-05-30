@@ -8,12 +8,11 @@ use Dot\AnnotatedServices\Annotation\Inject;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 class HomeHandler implements RequestHandlerInterface
 {
-    use ResponseTrait;
+    use HandlerTrait;
 
     /**
      * @Inject({
@@ -29,7 +28,7 @@ class HomeHandler implements RequestHandlerInterface
     ) {
     }
 
-    public function get(ServerRequestInterface $request): ResponseInterface
+    public function get(): ResponseInterface
     {
         return $this->jsonResponse(['message' => 'Welcome to DotKernel API!']);
     }

@@ -7,7 +7,7 @@ namespace Api\User\Handler;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\ResponseTrait;
+use Api\App\Handler\HandlerTrait;
 use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\InputFilter\ActivateAccountInputFilter;
@@ -17,7 +17,6 @@ use Dot\Mail\Exception\MailException;
 use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
-use Mezzio\Helper\UrlHelper;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -26,14 +25,13 @@ use function sprintf;
 
 class AccountActivateHandler implements RequestHandlerInterface
 {
-    use ResponseTrait;
+    use HandlerTrait;
 
     /**
      * @Inject({
      *     HalResponseFactory::class,
      *     ResourceGenerator::class,
      *     UserServiceInterface::class,
-     *     UrlHelper::class,
      *     "config"
      * })
      */
@@ -41,7 +39,6 @@ class AccountActivateHandler implements RequestHandlerInterface
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected UserServiceInterface $userService,
-        protected UrlHelper $urlHelper,
         protected array $config,
     ) {
     }
@@ -76,7 +73,7 @@ class AccountActivateHandler implements RequestHandlerInterface
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new ActivateAccountInputFilter())->setData($request->getParsedBody());
+        $inputFilter = (new ActivateAccountInputFilter())->setData((array) $request->getParsedBody());
         if (! $inputFilter->isValid()) {
             throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
