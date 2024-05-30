@@ -7,8 +7,8 @@ namespace Api\Admin\Handler;
 use Api\Admin\Entity\Admin;
 use Api\Admin\InputFilter\UpdateAdminInputFilter;
 use Api\Admin\Service\AdminServiceInterface;
+use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
-use Api\App\Exception\FormValidationException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\ResponseTrait;
 use Dot\AnnotatedServices\Annotation\Inject;
@@ -44,15 +44,15 @@ class AdminAccountHandler implements RequestHandlerInterface
     }
 
     /**
+     * @throws BadRequestException
      * @throws ConflictException
-     * @throws FormValidationException
      * @throws NotFoundException
      */
     public function patch(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new UpdateAdminInputFilter())->setData($request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            throw (new FormValidationException())->setMessages($inputFilter->getMessages());
+            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
 
         $admin = $this->adminService->updateAdmin($request->getAttribute(Admin::class), $inputFilter->getValues());

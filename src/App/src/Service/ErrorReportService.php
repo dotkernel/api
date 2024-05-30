@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Api\App\Service;
 
 use Api\App\Exception\ForbiddenException;
+use Api\App\Exception\UnauthorizedException;
 use Api\App\Message;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Psr\Http\Message\ServerRequestInterface;
@@ -56,14 +57,12 @@ class ErrorReportService implements ErrorReportServiceInterface
     /**
      * @throws ForbiddenException
      * @throws RuntimeException
+     * @throws UnauthorizedException
      */
     public function checkRequest(ServerRequestInterface $request): self
     {
         $this->validateConfigs();
-
-        if (! $this->hasValidToken($request)) {
-            throw new ForbiddenException(Message::ERROR_REPORT_NOT_ALLOWED);
-        }
+        $this->validateToken($request);
 
         if (! $this->isMatchingDomain($request) && ! $this->isMatchingIpAddress($request)) {
             throw new ForbiddenException(Message::ERROR_REPORT_NOT_ALLOWED);
@@ -77,18 +76,20 @@ class ErrorReportService implements ErrorReportServiceInterface
         return sha1(uniqid());
     }
 
-    private function hasValidToken(ServerRequestInterface $request): bool
+    /**
+     * @throws UnauthorizedException
+     * @throws ForbiddenException
+     */
+    private function validateToken(ServerRequestInterface $request): void
     {
         $this->token = $request->getHeaderLine(self::HEADER_NAME);
         if (empty($this->token)) {
-            return false;
+            throw new UnauthorizedException(Message::ERROR_REPORT_NOT_ALLOWED);
         }
 
         if (! in_array($this->token, $this->config['tokens'])) {
-            return false;
+            throw new ForbiddenException(Message::ERROR_REPORT_NOT_ALLOWED);
         }
-
-        return true;
     }
 
     private function isMatchingDomain(ServerRequestInterface $request): bool

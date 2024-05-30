@@ -8,8 +8,8 @@ use Api\Admin\Entity\Admin;
 use Api\Admin\InputFilter\CreateAdminInputFilter;
 use Api\Admin\InputFilter\UpdateAdminInputFilter;
 use Api\Admin\Service\AdminServiceInterface;
+use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
-use Api\App\Exception\FormValidationException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\ResponseTrait;
 use Api\App\Message;
@@ -80,15 +80,15 @@ class AdminHandler implements RequestHandlerInterface
     }
 
     /**
+     * @throws BadRequestException
      * @throws ConflictException
-     * @throws FormValidationException
      * @throws NotFoundException
      */
     public function patch(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new UpdateAdminInputFilter())->setData($request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            throw (new FormValidationException())->setMessages($inputFilter->getMessages());
+            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
 
         $uuid  = $request->getAttribute('uuid');
@@ -103,15 +103,15 @@ class AdminHandler implements RequestHandlerInterface
     }
 
     /**
+     * @throws BadRequestException
      * @throws ConflictException
-     * @throws FormValidationException
      * @throws NotFoundException
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new CreateAdminInputFilter())->setData($request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            throw (new FormValidationException())->setMessages($inputFilter->getMessages());
+            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
 
         $admin = $this->adminService->createAdmin($inputFilter->getValues());

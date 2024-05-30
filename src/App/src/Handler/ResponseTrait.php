@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Api\App\Handler;
 
+use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\ExpiredException;
-use Api\App\Exception\FormValidationException;
+use Api\App\Exception\ForbiddenException;
 use Api\App\Exception\MethodNotAllowedException;
 use Api\App\Exception\NotFoundException;
+use Api\App\Exception\UnauthorizedException;
 use Dot\Mail\Exception\MailException;
 use Exception;
 use Fig\Http\Message\RequestMethodInterface;
@@ -57,14 +59,18 @@ trait ResponseTrait
             return $this->$method($request);
         } catch (ConflictException $exception) {
             return $this->errorResponse($exception->getMessage(), StatusCodeInterface::STATUS_CONFLICT);
+        } catch (ForbiddenException $exception) {
+            return $this->errorResponse($exception->getMessage(), StatusCodeInterface::STATUS_FORBIDDEN);
         } catch (ExpiredException $exception) {
             return $this->errorResponse($exception->getMessage(), StatusCodeInterface::STATUS_GONE);
         } catch (OutOfBoundsException | NotFoundException $exception) {
             return $this->errorResponse($exception->getMessage(), StatusCodeInterface::STATUS_NOT_FOUND);
+        } catch (UnauthorizedException $exception) {
+            return $this->errorResponse($exception->getMessage(), StatusCodeInterface::STATUS_UNAUTHORIZED);
         } catch (MethodNotAllowedException $exception) {
             return $this->errorResponse($exception->getMessage(), StatusCodeInterface::STATUS_METHOD_NOT_ALLOWED);
-        } catch (FormValidationException $exception) {
-            return $this->errorResponse($exception->getMessages());
+        } catch (BadRequestException $exception) {
+            return $this->errorResponse($exception->getMessages(), StatusCodeInterface::STATUS_BAD_REQUEST);
         } catch (MailException | RuntimeException | Exception $exception) {
             return $this->errorResponse($exception->getMessage(), StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
         }
@@ -135,7 +141,7 @@ trait ResponseTrait
 
         if (! array_key_exists(MetadataMap::class, $config)) {
             throw new RuntimeException(
-                sprintf('Unable to load %s from container.', MetadataMap::class)
+                sprintf('Unable to load %s from config.', MetadataMap::class)
             );
         }
 
@@ -150,11 +156,9 @@ trait ResponseTrait
                 break;
             }
         }
-        if ($halConfig === null) {
-            return false;
-        }
 
-        return array_key_exists('__class__', $halConfig)
+        return is_array($halConfig)
+            && array_key_exists('__class__', $halConfig)
             && $halConfig['__class__'] === RouteBasedCollectionMetadata::class;
     }
 }

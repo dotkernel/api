@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
+use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\ExpiredException;
-use Api\App\Exception\FormValidationException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\ResponseTrait;
 use Api\App\Message;
@@ -69,9 +69,9 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
     }
 
     /**
+     * @throws BadRequestException
      * @throws ConflictException
      * @throws ExpiredException
-     * @throws FormValidationException
      * @throws MailException
      * @throws NotFoundException
      */
@@ -93,7 +93,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
 
         $inputFilter = (new UpdatePasswordInputFilter())->setData($request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            throw (new FormValidationException())->setMessages($inputFilter->getMessages());
+            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
 
         $this->userService->updateUser(
@@ -107,8 +107,8 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
     }
 
     /**
+     * @throws BadRequestException
      * @throws ConflictException
-     * @throws FormValidationException
      * @throws MailException
      * @throws NotFoundException
      */
@@ -116,7 +116,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
     {
         $inputFilter = (new ResetPasswordInputFilter())->setData($request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            throw (new FormValidationException())->setMessages($inputFilter->getMessages());
+            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
 
         if (! empty($inputFilter->getValue('email'))) {

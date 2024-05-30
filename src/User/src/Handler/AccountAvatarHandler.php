@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
-use Api\App\Exception\FormValidationException;
+use Api\App\Exception\BadRequestException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\ResponseTrait;
 use Api\App\Message;
@@ -67,13 +67,13 @@ class AccountAvatarHandler implements RequestHandlerInterface
     }
 
     /**
-     * @throws FormValidationException
+     * @throws BadRequestException
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new UpdateAvatarInputFilter())->setData($request->getUploadedFiles());
         if (! $inputFilter->isValid()) {
-            throw (new FormValidationException())->setMessages($inputFilter->getMessages());
+            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
 
         $userAvatar = $this->userAvatarService->createAvatar(

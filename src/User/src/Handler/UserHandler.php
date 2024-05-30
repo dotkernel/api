@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
+use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
-use Api\App\Exception\FormValidationException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\ResponseTrait;
 use Api\App\Message;
@@ -81,8 +81,8 @@ class UserHandler implements RequestHandlerInterface
     }
 
     /**
+     * @throws BadRequestException
      * @throws ConflictException
-     * @throws FormValidationException
      * @throws NotFoundException
      * @throws RuntimeException
      */
@@ -90,7 +90,7 @@ class UserHandler implements RequestHandlerInterface
     {
         $inputFilter = (new UpdateUserInputFilter())->setData($request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            throw (new FormValidationException())->setMessages($inputFilter->getMessages());
+            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
 
         $uuid = $request->getAttribute('uuid');
@@ -105,15 +105,15 @@ class UserHandler implements RequestHandlerInterface
     }
 
     /**
+     * @throws BadRequestException
      * @throws ConflictException
-     * @throws FormValidationException
      * @throws MailException
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new CreateUserInputFilter())->setData($request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            throw (new FormValidationException())->setMessages($inputFilter->getMessages());
+            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
 
         $user = $this->userService->createUser($inputFilter->getValues());

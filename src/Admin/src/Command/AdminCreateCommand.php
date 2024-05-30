@@ -8,8 +8,8 @@ use Api\Admin\Entity\AdminRole;
 use Api\Admin\InputFilter\CreateAdminInputFilter;
 use Api\Admin\Service\AdminRoleService;
 use Api\Admin\Service\AdminService;
+use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
-use Api\App\Exception\FormValidationException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Message;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -54,8 +54,8 @@ class AdminCreateCommand extends Command
     }
 
     /**
+     * @throws BadRequestException
      * @throws ConflictException
-     * @throws FormValidationException
      * @throws NotFoundException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -69,7 +69,7 @@ class AdminCreateCommand extends Command
                 }
             }
 
-            throw new FormValidationException(implode(PHP_EOL, $messages));
+            throw new BadRequestException(implode(PHP_EOL, $messages));
         }
 
         $this->adminService->createAdmin($inputFilter->getValues());

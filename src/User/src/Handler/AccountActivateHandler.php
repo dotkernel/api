@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
+use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
-use Api\App\Exception\FormValidationException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\ResponseTrait;
 use Api\App\Message;
@@ -69,8 +69,8 @@ class AccountActivateHandler implements RequestHandlerInterface
     }
 
     /**
+     * @throws BadRequestException
      * @throws ConflictException
-     * @throws FormValidationException
      * @throws MailException
      * @throws NotFoundException
      */
@@ -78,7 +78,7 @@ class AccountActivateHandler implements RequestHandlerInterface
     {
         $inputFilter = (new ActivateAccountInputFilter())->setData($request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            throw (new FormValidationException())->setMessages($inputFilter->getMessages());
+            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
 
         $email = $inputFilter->getValue('email');

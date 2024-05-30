@@ -6,6 +6,6 @@ namespace Api\App\Exception;
 
 use Exception;
 
-class InvalidResetPasswordException extends Exception
+class UnauthorizedException extends Exception
 {
 }

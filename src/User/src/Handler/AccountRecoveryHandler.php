@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
-use Api\App\Exception\FormValidationException;
+use Api\App\Exception\BadRequestException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\ResponseTrait;
 use Api\App\Message;
@@ -42,7 +42,7 @@ class AccountRecoveryHandler implements RequestHandlerInterface
     }
 
     /**
-     * @throws FormValidationException
+     * @throws BadRequestException
      * @throws MailException
      * @throws NotFoundException
      */
@@ -50,7 +50,7 @@ class AccountRecoveryHandler implements RequestHandlerInterface
     {
         $inputFilter = (new RecoverIdentityInputFilter())->setData($request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            throw (new FormValidationException())->setMessages($inputFilter->getMessages());
+            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
 
         $email = $inputFilter->getValue('email');

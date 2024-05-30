@@ -6,7 +6,7 @@ namespace Api\App\Exception;
 
 use Exception;
 
-class FormValidationException extends Exception
+class BadRequestException extends Exception
 {
     private array $messages = [];
 
