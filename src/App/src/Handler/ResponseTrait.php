@@ -7,6 +7,8 @@ namespace Api\App\Handler;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\JsonResponse;
+use Mezzio\Hal\HalResponseFactory;
+use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -14,6 +16,9 @@ use function is_array;
 
 trait ResponseTrait
 {
+    protected HalResponseFactory $responseFactory;
+    protected ResourceGenerator $resourceGenerator;
+
     public function createResponse(ServerRequestInterface $request, mixed $instance): ResponseInterface
     {
         return $this->responseFactory->createResponse(
