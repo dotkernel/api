@@ -3,7 +3,7 @@
     "type": "project",
     "description": "DotKernel API",
     "license": "MIT",
-    "homepage": "https://github.com/dotkernel/api",
+    "homepage": "https://www.dotkernel.org",
     "keywords": [
         "api",
         "REST",
