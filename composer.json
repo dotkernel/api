@@ -4,6 +4,12 @@
     "description": "DotKernel API",
     "license": "MIT",
     "homepage": "https://www.dotkernel.org",
+    "support": {
+        "docs": "https://docs.dotkernel.org/api-documentation/",
+        "issues": "https://github.com/dotkernel/api/issues",
+        "source": "https://github.com/dotkernel/api",
+        "rss": "https://github.com/dotkernel/api/releases.atom"
+    },
     "keywords": [
         "api",
         "REST",
