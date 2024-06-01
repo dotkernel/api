@@ -241,7 +241,7 @@ class AbstractFunctionalTest extends TestCase
     protected function delete(
         string $uri,
         array $queryParams = [],
-        array $headers = ['Accept' => 'application/json'],
+        array $headers = ['Accept' => 'application/json, text/plain'],
         array $cookies = []
     ): ResponseInterface {
         $request = $this->createRequest(
@@ -342,6 +342,11 @@ class AbstractFunctionalTest extends TestCase
     protected function assertResponseGone(ResponseInterface $response): void
     {
         $this->assertSame(StatusCodeInterface::STATUS_GONE, $response->getStatusCode());
+    }
+
+    protected function assertResponseNoContent(ResponseInterface $response): void
+    {
+        $this->assertSame(StatusCodeInterface::STATUS_NO_CONTENT, $response->getStatusCode());
     }
 
     protected function assertBetween(int $value, int $from, int $to): void

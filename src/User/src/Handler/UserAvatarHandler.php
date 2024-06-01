@@ -59,7 +59,7 @@ class UserAvatarHandler implements RequestHandlerInterface
 
         $this->userAvatarService->removeAvatar($user);
 
-        return $this->infoResponse(Message::AVATAR_DELETED);
+        return $this->noContentResponse();
     }
 
     /**

@@ -211,7 +211,7 @@ class UserTest extends AbstractFunctionalTest
         $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
         $response = $this->delete('/user/my-avatar');
-        $this->assertResponseOk($response);
+        $this->assertResponseNoContent($response);
     }
 
     public function testActivateMyAccountInvalidCode(): void
@@ -289,7 +289,7 @@ class UserTest extends AbstractFunctionalTest
         $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
         $response = $this->delete('/user/my-account');
-        $this->assertResponseOk($response);
+        $this->assertResponseNoContent($response);
 
         $userRepository = $this->getEntityManager()->getRepository(User::class);
         $deletedUser    = $userRepository->find($user->getUuid()->toString());

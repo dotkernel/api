@@ -234,7 +234,7 @@ class AdminTest extends AbstractFunctionalTest
 
         $response = $this->delete('/admin/' . $admin->getUuid()->toString());
 
-        $this->assertResponseOk($response);
+        $this->assertResponseNoContent($response);
 
         $adminRepository = $this->getEntityManager()->getRepository(Admin::class);
         $admin           = $adminRepository->find($admin->getUuid()->toString());
@@ -444,7 +444,7 @@ class AdminTest extends AbstractFunctionalTest
 
         $response = $this->delete('/user/' . $user->getUuid()->toString());
 
-        $this->assertResponseOk($response);
+        $this->assertResponseNoContent($response);
 
         $userRepository = $this->getEntityManager()->getRepository(User::class);
         $user           = $userRepository->find($user->getUuid()->toString());

@@ -19,6 +19,18 @@ trait ResponseTrait
     protected HalResponseFactory $responseFactory;
     protected ResourceGenerator $resourceGenerator;
 
+    public function emptyResponse(int $status = StatusCodeInterface::STATUS_NO_CONTENT): ResponseInterface
+    {
+        return new EmptyResponse($status, ['Content-Type' => 'text/plain']);
+    }
+
+    public function jsonResponse(
+        array|string $messages = [],
+        int $status = StatusCodeInterface::STATUS_OK
+    ): ResponseInterface {
+        return new JsonResponse($messages, $status);
+    }
+
     public function createResponse(ServerRequestInterface $request, mixed $instance): ResponseInterface
     {
         return $this->responseFactory->createResponse(
@@ -34,9 +46,14 @@ trait ResponseTrait
         return $response->withStatus(StatusCodeInterface::STATUS_CREATED);
     }
 
+    public function noContentResponse(): ResponseInterface
+    {
+        return $this->emptyResponse();
+    }
+
     public function notFoundResponse(): ResponseInterface
     {
-        return new EmptyResponse(StatusCodeInterface::STATUS_NOT_FOUND, ['Content-Type' => 'text/plain']);
+        return $this->emptyResponse(StatusCodeInterface::STATUS_NOT_FOUND);
     }
 
     public function errorResponse(
@@ -61,14 +78,7 @@ trait ResponseTrait
         ], $status);
     }
 
-    public function jsonResponse(
-        array|string $messages = [],
-        int $status = StatusCodeInterface::STATUS_OK
-    ): ResponseInterface {
-        return new JsonResponse($messages, $status);
-    }
-
-    public function notAcceptedResponse(string $message): ResponseInterface
+    public function notAcceptableResponse(string $message): ResponseInterface
     {
         return $this->errorResponse($message, StatusCodeInterface::STATUS_NOT_ACCEPTABLE);
     }

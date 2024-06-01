@@ -56,7 +56,7 @@ class AdminHandler implements RequestHandlerInterface
 
         $this->adminService->deleteAdmin($admin);
 
-        return $this->infoResponse(Message::ADMIN_DELETED);
+        return $this->noContentResponse();
     }
 
     /**

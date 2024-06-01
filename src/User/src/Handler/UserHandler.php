@@ -56,9 +56,9 @@ class UserHandler implements RequestHandlerInterface
             throw new NotFoundException(sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid));
         }
 
-        $user = $this->userService->deleteUser($user);
+        $this->userService->deleteUser($user);
 
-        return $this->createResponse($request, $user);
+        return $this->noContentResponse();
     }
 
     /**

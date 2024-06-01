@@ -46,7 +46,7 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
 
         $accept = $this->formatAcceptRequest($request->getHeaderLine('Accept'));
         if (! $this->checkAccept($routeName, $accept)) {
-            return $this->notAcceptedResponse('Not Acceptable');
+            return $this->notAcceptableResponse('Not Acceptable');
         }
 
         $contentType = $request->getHeaderLine('Content-Type');
@@ -58,7 +58,7 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
 
         $responseContentType = $response->getHeaderLine('Content-Type');
         if (! $this->validateResponseContentType($responseContentType, $accept)) {
-            return $this->notAcceptedResponse('Unable to resolve Accept header to a representation');
+            return $this->notAcceptableResponse('Unable to resolve Accept header to a representation');
         }
 
         return $response;
@@ -80,7 +80,7 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         }
 
         $acceptList = $this->config['default']['Accept'] ?? [];
-        if (isset($this->config[$routeName])) {
+        if (! empty($this->config[$routeName]['Accept'])) {
             $acceptList = $this->config[$routeName]['Accept'] ?? [];
         }
 
@@ -98,7 +98,7 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         }
 
         $acceptList = $this->config['default']['Content-Type'] ?? [];
-        if (isset($this->config[$routeName])) {
+        if (! empty($this->config[$routeName]['Content-Type'])) {
             $acceptList = $this->config[$routeName]['Content-Type'] ?? [];
         }
 

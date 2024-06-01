@@ -45,9 +45,9 @@ class AccountHandler implements RequestHandlerInterface
      */
     public function delete(ServerRequestInterface $request): ResponseInterface
     {
-        $user = $this->userService->deleteUser($request->getAttribute(User::class));
+        $this->userService->deleteUser($request->getAttribute(User::class));
 
-        return $this->createResponse($request, $user);
+        return $this->noContentResponse();
     }
 
     public function get(ServerRequestInterface $request): ResponseInterface
