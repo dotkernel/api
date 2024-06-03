@@ -4,60 +4,63 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
-use Api\App\Handler\ResponseTrait;
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\NotFoundException;
+use Api\App\Handler\HandlerTrait;
 use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\Service\UserServiceInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
+use Dot\Mail\Exception\MailException;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Throwable;
 
 use function sprintf;
 
 class UserActivateHandler implements RequestHandlerInterface
 {
-    use ResponseTrait;
+    use HandlerTrait;
 
     /**
      * @Inject({
      *     HalResponseFactory::class,
      *     ResourceGenerator::class,
-     *     UserServiceInterface::class
+     *     UserServiceInterface::class,
+     *     "config"
      * })
      */
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
-        protected UserServiceInterface $userService
+        protected UserServiceInterface $userService,
+        protected array $config,
     ) {
     }
 
+    /**
+     * @throws ConflictException
+     * @throws MailException
+     * @throws NotFoundException
+     */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        try {
-            $uuid = $request->getAttribute('uuid');
-            $user = $this->userService->findOneBy(['uuid' => $uuid]);
-            if (! $user instanceof User) {
-                return $this->notFoundResponse(
-                    sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid)
-                );
-            }
-
-            if ($user->isActive()) {
-                return $this->errorResponse(Message::USER_ALREADY_ACTIVATED);
-            }
-
-            $user = $this->userService->activateUser($user);
-
-            $this->userService->sendActivationMail($user);
-
-            return $this->infoResponse(Message::USER_ACTIVATED);
-        } catch (Throwable $exception) {
-            return $this->errorResponse($exception->getMessage());
+        $uuid = $request->getAttribute('uuid');
+        $user = $this->userService->findOneBy(['uuid' => $uuid]);
+        if (! $user instanceof User) {
+            throw new NotFoundException(sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid));
         }
+
+        if ($user->isActive()) {
+            throw new ConflictException(Message::USER_ALREADY_ACTIVATED);
+        }
+
+        $user = $this->userService->activateUser($user);
+
+        $this->userService->sendActivationMail($user);
+
+        return $this->infoResponse(Message::USER_ACTIVATED);
     }
 }

@@ -4,22 +4,27 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
+use Api\App\Exception\ConflictException;
 use Api\App\Message;
 use Api\App\Repository\OAuthAccessTokenRepository;
 use Api\App\Repository\OAuthRefreshTokenRepository;
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
 use Api\User\Entity\UserDetail;
+use Api\User\Entity\UserResetPasswordEntity;
 use Api\User\Entity\UserRole;
 use Api\User\Repository\UserDetailRepository;
 use Api\User\Repository\UserRepository;
+use Api\User\Repository\UserResetPasswordRepository;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\Mail\Exception\MailException;
 use Dot\Mail\Service\MailService;
-use Exception;
+use Laminas\Log\LoggerInterface;
 use Mezzio\Template\TemplateRendererInterface;
+use RuntimeException;
 
 use function date;
+use function sprintf;
 
 class UserService implements UserServiceInterface
 {
@@ -32,6 +37,8 @@ class UserService implements UserServiceInterface
      *     OAuthRefreshTokenRepository::class,
      *     UserRepository::class,
      *     UserDetailRepository::class,
+     *     UserResetPasswordRepository::class,
+     *     "dot-log.default_logger",
      *     "config"
      * })
      */
@@ -43,12 +50,14 @@ class UserService implements UserServiceInterface
         protected OAuthRefreshTokenRepository $oAuthRefreshTokenRepository,
         protected UserRepository $userRepository,
         protected UserDetailRepository $userDetailRepository,
+        protected UserResetPasswordRepository $userResetPasswordRepository,
+        protected LoggerInterface $logger,
         protected array $config = []
     ) {
     }
 
     /**
-     * @throws Exception
+     * @throws RuntimeException
      */
     public function activateUser(User $user): User
     {
@@ -56,16 +65,17 @@ class UserService implements UserServiceInterface
     }
 
     /**
-     * @throws Exception
+     * @throws ConflictException
+     * @throws RuntimeException
      */
     public function createUser(array $data = []): User
     {
         if ($this->exists($data['identity'])) {
-            throw new Exception(Message::DUPLICATE_IDENTITY);
+            throw new ConflictException(Message::DUPLICATE_IDENTITY);
         }
 
         if ($this->emailExists($data['detail']['email'])) {
-            throw new Exception(Message::DUPLICATE_EMAIL);
+            throw new ConflictException(Message::DUPLICATE_EMAIL);
         }
 
         $detail = (new UserDetail())
@@ -107,7 +117,7 @@ class UserService implements UserServiceInterface
     }
 
     /**
-     * @throws Exception
+     * @throws RuntimeException
      */
     public function deleteUser(User $user): User
     {
@@ -117,7 +127,7 @@ class UserService implements UserServiceInterface
     }
 
     /**
-     * @throws Exception
+     * @throws RuntimeException
      */
     public function anonymizeUser(User $user): User
     {
@@ -163,9 +173,14 @@ class UserService implements UserServiceInterface
         return $user->getUuid()->toString() !== $uuid;
     }
 
-    public function findByResetPasswordHash(?string $hash): ?User
+    public function findResetPasswordByHash(?string $hash): ?UserResetPasswordEntity
     {
-        return $this->userRepository->findByResetPasswordHash($hash);
+        $userResetPassword = $this->userResetPasswordRepository->findOneBy(['hash' => $hash]);
+        if ($userResetPassword instanceof UserResetPasswordEntity) {
+            return $userResetPassword;
+        }
+
+        return null;
     }
 
     public function findByEmail(string $email): ?User
@@ -180,7 +195,12 @@ class UserService implements UserServiceInterface
 
     public function findOneBy(array $params = []): ?User
     {
-        return $this->userRepository->findOneBy($params);
+        $user = $this->userRepository->findOneBy($params);
+        if ($user instanceof User) {
+            return $user;
+        }
+
+        return null;
     }
 
     public function getUsers(array $params = []): UserCollection
@@ -206,7 +226,12 @@ class UserService implements UserServiceInterface
             ])
         );
 
-        return $this->mailService->send()->isValid();
+        try {
+            return $this->mailService->send()->isValid();
+        } catch (MailException $exception) {
+            $this->logger->err($exception->getMessage());
+            throw new MailException(sprintf(Message::MAIL_NOT_SENT_TO, $user->getDetail()->getEmail()));
+        }
     }
 
     /**
@@ -225,7 +250,12 @@ class UserService implements UserServiceInterface
             ])
         );
 
-        return $this->mailService->send()->isValid();
+        try {
+            return $this->mailService->send()->isValid();
+        } catch (MailException $exception) {
+            $this->logger->err($exception->getMessage());
+            throw new MailException(sprintf(Message::MAIL_NOT_SENT_TO, $user->getDetail()->getEmail()));
+        }
     }
 
     /**
@@ -244,7 +274,12 @@ class UserService implements UserServiceInterface
             ])
         );
 
-        return $this->mailService->send()->isValid();
+        try {
+            return $this->mailService->send()->isValid();
+        } catch (MailException $exception) {
+            $this->logger->err($exception->getMessage());
+            throw new MailException(sprintf(Message::MAIL_NOT_SENT_TO, $user->getDetail()->getEmail()));
+        }
     }
 
     /**
@@ -261,23 +296,29 @@ class UserService implements UserServiceInterface
             ])
         );
 
-        return $this->mailService->send()->isValid();
+        try {
+            return $this->mailService->send()->isValid();
+        } catch (MailException $exception) {
+            $this->logger->err($exception->getMessage());
+            throw new MailException(sprintf(Message::MAIL_NOT_SENT_TO, $user->getDetail()->getEmail()));
+        }
     }
 
     /**
-     * @throws Exception
+     * @throws ConflictException
+     * @throws RuntimeException
      */
     public function updateUser(User $user, array $data = []): User
     {
         if (isset($data['identity'])) {
             if ($this->existsOther($data['identity'], $user->getUuid()->toString())) {
-                throw new Exception(Message::DUPLICATE_IDENTITY);
+                throw new ConflictException(Message::DUPLICATE_IDENTITY);
             }
         }
 
         if (isset($data['detail']['email'])) {
             if ($this->emailExistsOther($data['detail']['email'], $user->getUuid()->toString())) {
-                throw new Exception(Message::DUPLICATE_EMAIL);
+                throw new ConflictException(Message::DUPLICATE_EMAIL);
             }
         }
 
@@ -340,7 +381,12 @@ class UserService implements UserServiceInterface
             ])
         );
 
-        return $this->mailService->send()->isValid();
+        try {
+            return $this->mailService->send()->isValid();
+        } catch (MailException $exception) {
+            $this->logger->err($exception->getMessage());
+            throw new MailException(sprintf(Message::MAIL_NOT_SENT_TO, $user->getDetail()->getEmail()));
+        }
     }
 
     private function getAnonymousPlaceholder(): string

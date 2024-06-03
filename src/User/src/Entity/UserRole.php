@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRoleRepository::class)]
 #[ORM\Table(name: "user_role")]
+#[ORM\HasLifecycleCallbacks]
 class UserRole extends AbstractEntity implements RoleInterface
 {
     public const ROLE_GUEST = 'guest';
@@ -21,9 +22,9 @@ class UserRole extends AbstractEntity implements RoleInterface
     ];
 
     #[ORM\Column(name: "name", type: "string", length: 20, unique: true)]
-    protected string $name;
+    protected ?string $name = null;
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }

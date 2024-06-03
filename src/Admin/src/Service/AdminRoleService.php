@@ -23,7 +23,12 @@ class AdminRoleService implements AdminRoleServiceInterface
 
     public function findOneBy(array $params = []): ?AdminRole
     {
-        return $this->adminRoleRepository->findOneBy($params);
+        $role = $this->adminRoleRepository->findOneBy($params);
+        if ($role instanceof AdminRole) {
+            return $role;
+        }
+
+        return null;
     }
 
     public function getAdminRoles(array $params = []): AdminRoleCollection

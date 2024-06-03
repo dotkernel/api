@@ -4,55 +4,63 @@ declare(strict_types=1);
 
 namespace Api\App\Handler;
 
-use Exception;
+use Fig\Http\Message\StatusCodeInterface;
+use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Diactoros\Response\JsonResponse;
-use Laminas\Diactoros\Response\RedirectResponse;
-use Laminas\Http\Response;
-use Mezzio\Hal\ResourceGenerator\Exception\OutOfBoundsException;
+use Mezzio\Hal\HalResponseFactory;
+use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 use function is_array;
-use function method_exists;
-use function sprintf;
-use function strtolower;
-use function strtoupper;
 
 trait ResponseTrait
 {
-    /**
-     * @throws Exception
-     */
-    public function handle(ServerRequestInterface $request): ResponseInterface
-    {
-        $method = strtolower($request->getMethod());
-        if (method_exists($this, $method)) {
-            return $this->$method($request);
-        }
+    protected HalResponseFactory $responseFactory;
+    protected ResourceGenerator $resourceGenerator;
 
-        return $this->errorResponse(
-            sprintf('Method %s is not implemented for the requested resource.', strtoupper($method)),
-            Response::STATUS_CODE_405
-        );
+    public function emptyResponse(int $status = StatusCodeInterface::STATUS_NO_CONTENT): ResponseInterface
+    {
+        return new EmptyResponse($status, ['Content-Type' => 'text/plain']);
+    }
+
+    public function jsonResponse(
+        array|string $messages = [],
+        int $status = StatusCodeInterface::STATUS_OK
+    ): ResponseInterface {
+        return new JsonResponse($messages, $status);
     }
 
     public function createResponse(ServerRequestInterface $request, mixed $instance): ResponseInterface
     {
-        try {
-            return $this->responseFactory->createResponse(
-                $request,
-                $this->resourceGenerator->fromObject($instance, $request)
-            );
-        } catch (OutOfBoundsException $exception) {
-            return $this->errorResponse($exception->getMessage());
-        }
+        return $this->responseFactory->createResponse(
+            $request,
+            $this->resourceGenerator->fromObject($instance, $request)
+        );
+    }
+
+    public function createdResponse(ServerRequestInterface $request, mixed $instance): ResponseInterface
+    {
+        $response = $this->createResponse($request, $instance);
+
+        return $response->withStatus(StatusCodeInterface::STATUS_CREATED);
+    }
+
+    public function noContentResponse(): ResponseInterface
+    {
+        return $this->emptyResponse();
+    }
+
+    public function notFoundResponse(): ResponseInterface
+    {
+        return $this->emptyResponse(StatusCodeInterface::STATUS_NOT_FOUND);
     }
 
     public function errorResponse(
         array|string $messages = [],
-        int $status = Response::STATUS_CODE_400
+        int $status = StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
     ): ResponseInterface {
-        return $this->restResponse([
+        return $this->jsonResponse([
             'error' => [
                 'messages' => is_array($messages) ? $messages : [$messages],
             ],
@@ -61,29 +69,22 @@ trait ResponseTrait
 
     public function infoResponse(
         array|string $messages = [],
-        int $status = Response::STATUS_CODE_200
+        int $status = StatusCodeInterface::STATUS_OK
     ): ResponseInterface {
-        return $this->restResponse([
+        return $this->jsonResponse([
             'info' => [
                 'messages' => is_array($messages) ? $messages : [$messages],
             ],
         ], $status);
     }
 
-    public function notFoundResponse(array|string $messages = []): ResponseInterface
+    public function notAcceptableResponse(string $message): ResponseInterface
     {
-        return $this->errorResponse($messages, Response::STATUS_CODE_404);
+        return $this->errorResponse($message, StatusCodeInterface::STATUS_NOT_ACCEPTABLE);
     }
 
-    public function redirectResponse(string $location): ResponseInterface
+    public function unsupportedMediaTypeResponse(string $message): ResponseInterface
     {
-        return new RedirectResponse($location);
-    }
-
-    public function restResponse(
-        array|string $messages = [],
-        int $status = Response::STATUS_CODE_200
-    ): ResponseInterface {
-        return new JsonResponse($messages, $status);
+        return $this->errorResponse($message, StatusCodeInterface::STATUS_UNSUPPORTED_MEDIA_TYPE);
     }
 }

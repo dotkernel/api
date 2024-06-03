@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Api\App\Middleware;
 
+use Api\App\Handler\ResponseTrait;
 use Dot\AnnotatedServices\Annotation\Inject;
-use Laminas\Diactoros\Response\JsonResponse;
-use Laminas\Http\Response;
 use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,6 +24,8 @@ use function trim;
 
 class ContentNegotiationMiddleware implements MiddlewareInterface
 {
+    use ResponseTrait;
+
     /**
      * @Inject({"config.content-negotiation"})
      */
@@ -45,28 +46,19 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
 
         $accept = $this->formatAcceptRequest($request->getHeaderLine('Accept'));
         if (! $this->checkAccept($routeName, $accept)) {
-            return $this->notAcceptedResponse('Not Acceptable');
+            return $this->notAcceptableResponse('Not Acceptable');
         }
 
         $contentType = $request->getHeaderLine('Content-Type');
         if (! $this->checkContentType($routeName, $contentType)) {
-            return $this->unsupportedMediaTypeResponse(
-                'Unsupported Media Type'
-            );
+            return $this->unsupportedMediaTypeResponse('Unsupported Media Type');
         }
 
         $response = $handler->handle($request);
 
         $responseContentType = $response->getHeaderLine('Content-Type');
-        if (
-            ! $this->validateResponseContentType(
-                $responseContentType,
-                $accept
-            )
-        ) {
-            return $this->notAcceptedResponse(
-                'Unable to resolve Accept header to a representation'
-            );
+        if (! $this->validateResponseContentType($responseContentType, $accept)) {
+            return $this->notAcceptableResponse('Unable to resolve Accept header to a representation');
         }
 
         return $response;
@@ -88,7 +80,7 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         }
 
         $acceptList = $this->config['default']['Accept'] ?? [];
-        if (isset($this->config[$routeName])) {
+        if (! empty($this->config[$routeName]['Accept'])) {
             $acceptList = $this->config[$routeName]['Accept'] ?? [];
         }
 
@@ -104,8 +96,9 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         if (empty($contentType)) {
             return true;
         }
+
         $acceptList = $this->config['default']['Content-Type'] ?? [];
-        if (isset($this->config[$routeName])) {
+        if (! empty($this->config[$routeName]['Content-Type'])) {
             $acceptList = $this->config[$routeName]['Content-Type'] ?? [];
         }
 
@@ -114,28 +107,6 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         } else {
             return $contentType === $acceptList;
         }
-    }
-
-    public function notAcceptedResponse(string $message): JsonResponse
-    {
-        return new JsonResponse([
-            'error' => [
-                'messages' => [
-                    $message,
-                ],
-            ],
-        ], Response::STATUS_CODE_406);
-    }
-
-    public function unsupportedMediaTypeResponse(string $message): JsonResponse
-    {
-        return new JsonResponse([
-            'error' => [
-                'messages' => [
-                    $message,
-                ],
-            ],
-        ], Response::STATUS_CODE_415);
     }
 
     public function validateResponseContentType(?string $contentType, array $accept): bool

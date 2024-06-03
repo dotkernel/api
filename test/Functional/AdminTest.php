@@ -154,7 +154,7 @@ class AdminTest extends AbstractFunctionalTest
         $response = $this->post('/admin', $requestBody);
         $data     = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertResponseBadRequest($response);
+        $this->assertResponseConflict($response);
         $this->assertArrayHasKey('error', $data);
         $this->assertArrayHasKey('messages', $data['error']);
         $this->assertSame(Message::DUPLICATE_IDENTITY, $data['error']['messages'][0]);
@@ -189,7 +189,7 @@ class AdminTest extends AbstractFunctionalTest
 
         $response = $this->post('/admin', $requestBody);
 
-        $this->assertResponseOk($response);
+        $this->assertResponseCreated($response);
 
         $newAdmin = $adminRepository->findOneBy(['identity' => $requestBody['identity']]);
         $this->assertSame($requestBody['identity'], $newAdmin->getIdentity());
@@ -234,7 +234,7 @@ class AdminTest extends AbstractFunctionalTest
 
         $response = $this->delete('/admin/' . $admin->getUuid()->toString());
 
-        $this->assertResponseOk($response);
+        $this->assertResponseNoContent($response);
 
         $adminRepository = $this->getEntityManager()->getRepository(Admin::class);
         $admin           = $adminRepository->find($admin->getUuid()->toString());
@@ -343,7 +343,7 @@ class AdminTest extends AbstractFunctionalTest
         ];
 
         $response = $this->post('/user', $userData);
-        $this->assertResponseBadRequest($response);
+        $this->assertResponseConflict($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertArrayHasKey('error', $data);
@@ -382,7 +382,7 @@ class AdminTest extends AbstractFunctionalTest
         $response = $this->post('/user', $userData);
         $data     = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertResponseOk($response);
+        $this->assertResponseCreated($response);
         $this->assertArrayHasKey('uuid', $data);
         $this->assertArrayHasKey('hash', $data);
         $this->assertArrayHasKey('identity', $data);
@@ -444,7 +444,7 @@ class AdminTest extends AbstractFunctionalTest
 
         $response = $this->delete('/user/' . $user->getUuid()->toString());
 
-        $this->assertResponseOk($response);
+        $this->assertResponseNoContent($response);
 
         $userRepository = $this->getEntityManager()->getRepository(User::class);
         $user           = $userRepository->find($user->getUuid()->toString());
@@ -484,7 +484,7 @@ class AdminTest extends AbstractFunctionalTest
             ],
         ]);
 
-        $this->assertResponseBadRequest($response);
+        $this->assertResponseConflict($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertArrayHasKey('error', $data);

@@ -9,51 +9,49 @@ use Api\App\Message;
 use Api\App\Service\ErrorReportServiceInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\AnnotatedServices\Annotation\Service;
-use Laminas\Http\Response;
+use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Throwable;
+use RuntimeException;
 
 /**
  * @Service
  */
 class ErrorReportHandler implements RequestHandlerInterface
 {
-    use ResponseTrait;
+    use HandlerTrait;
 
     /**
      * @Inject({
      *     HalResponseFactory::class,
      *     ResourceGenerator::class,
-     *     ErrorReportServiceInterface::class
+     *     ErrorReportServiceInterface::class,
+     *     "config"
      * })
      */
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
-        protected ErrorReportServiceInterface $errorReportService
+        protected ErrorReportServiceInterface $errorReportService,
+        protected array $config,
     ) {
     }
 
     /**
-     * @throws Throwable
+     * @throws ForbiddenException
+     * @throws RuntimeException
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        try {
-            $this->errorReportService
-                ->checkRequest($request)
-                ->appendMessage(
-                    $request->getParsedBody()['message'] ?? ''
-                );
-            return $this->infoResponse(Message::ERROR_REPORT_OK);
-        } catch (ForbiddenException $exception) {
-            return $this->errorResponse($exception->getMessage(), Response::STATUS_CODE_403);
-        } catch (Throwable $exception) {
-            return $this->errorResponse($exception->getMessage(), Response::STATUS_CODE_500);
-        }
+        $this->errorReportService
+            ->checkRequest($request)
+            ->appendMessage(
+                $request->getParsedBody()['message'] ?? ''
+            );
+
+        return $this->infoResponse(Message::ERROR_REPORT_OK, StatusCodeInterface::STATUS_CREATED);
     }
 }

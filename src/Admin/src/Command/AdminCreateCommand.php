@@ -8,8 +8,10 @@ use Api\Admin\Entity\AdminRole;
 use Api\Admin\InputFilter\CreateAdminInputFilter;
 use Api\Admin\Service\AdminRoleService;
 use Api\Admin\Service\AdminService;
+use Api\App\Exception\BadRequestException;
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\NotFoundException;
 use Api\App\Message;
-use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -52,7 +54,9 @@ class AdminCreateCommand extends Command
     }
 
     /**
-     * @throws Exception
+     * @throws BadRequestException
+     * @throws ConflictException
+     * @throws NotFoundException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -65,7 +69,7 @@ class AdminCreateCommand extends Command
                 }
             }
 
-            throw new Exception(implode(PHP_EOL, $messages));
+            throw new BadRequestException(implode(PHP_EOL, $messages));
         }
 
         $this->adminService->createAdmin($inputFilter->getValues());
@@ -76,13 +80,13 @@ class AdminCreateCommand extends Command
     }
 
     /**
-     * @throws Exception
+     * @throws NotFoundException
      */
     private function getData(InputInterface $input): array
     {
         $role = $this->adminRoleService->findOneBy(['name' => AdminRole::ROLE_ADMIN]);
         if (! $role instanceof AdminRole) {
-            throw new Exception(
+            throw new NotFoundException(
                 sprintf(Message::ADMIN_ROLE_MISSING, AdminRole::ROLE_ADMIN)
             );
         }

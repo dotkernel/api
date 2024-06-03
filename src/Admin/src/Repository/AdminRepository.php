@@ -6,11 +6,11 @@ namespace Api\Admin\Repository;
 
 use Api\Admin\Collection\AdminCollection;
 use Api\Admin\Entity\Admin;
+use Api\App\Exception\ConflictException;
 use Api\App\Helper\PaginationHelper;
 use Api\App\Message;
 use Doctrine\ORM\EntityRepository;
 use Dot\AnnotatedServices\Annotation\Entity;
-use Exception;
 
 /**
  * @Entity(name="Api\Admin\Entity\Admin")
@@ -18,9 +18,6 @@ use Exception;
  */
 class AdminRepository extends EntityRepository
 {
-    /**
-     * @throws Exception
-     */
     public function deleteAdmin(Admin $admin): void
     {
         $this->getEntityManager()->remove($admin);
@@ -28,12 +25,12 @@ class AdminRepository extends EntityRepository
     }
 
     /**
-     * @throws Exception
+     * @throws ConflictException
      */
     public function saveAdmin(Admin $admin): Admin
     {
         if (! $admin->hasRoles()) {
-            throw new Exception(Message::RESTRICTION_ROLES);
+            throw new ConflictException(Message::RESTRICTION_ROLES);
         }
 
         $this->getEntityManager()->persist($admin);

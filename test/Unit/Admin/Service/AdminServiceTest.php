@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ApiTest\Unit;
+namespace ApiTest\Unit\Admin\Service;
 
 use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
@@ -11,6 +11,7 @@ use Api\Admin\Service\AdminRoleService;
 use Api\Admin\Service\AdminService as Subject;
 use Api\App\Message;
 use Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 use function array_merge;
@@ -18,7 +19,7 @@ use function count;
 
 class AdminServiceTest extends TestCase
 {
-    private Subject $subject;
+    private Subject|MockObject $subject;
     private AdminRoleService $adminRoleService;
     private AdminRepository $adminRepository;
 
@@ -98,10 +99,10 @@ class AdminServiceTest extends TestCase
     private function getAdminEntity(array $data = []): Admin
     {
         $admin = (new Admin())
-            ->setIdentity($data['identity'] ?? null)
+            ->setIdentity($data['identity'] ?? '')
             ->usePassword($data['password'] ?? '')
-            ->setFirstName($data['firstName'] ?? null)
-            ->setLastName($data['lastName'] ?? null)
+            ->setFirstName($data['firstName'] ?? '')
+            ->setLastName($data['lastName'] ?? '')
             ->setStatus($data['status'] ?? Admin::STATUS_ACTIVE);
 
         foreach ($data['roles'] ?? [] as $role) {

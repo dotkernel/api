@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ApiTest\Unit;
+namespace ApiTest\Unit\User\Service;
 
 use Api\App\Repository\OAuthAccessTokenRepository;
 use Api\App\Repository\OAuthRefreshTokenRepository;
@@ -11,10 +11,12 @@ use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserRole;
 use Api\User\Repository\UserDetailRepository;
 use Api\User\Repository\UserRepository;
+use Api\User\Repository\UserResetPasswordRepository;
 use Api\User\Service\UserRoleService;
 use Api\User\Service\UserService as Subject;
 use Dot\Mail\Service\MailService;
 use Exception;
+use Laminas\Log\LoggerInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -27,16 +29,18 @@ class UserServiceTest extends TestCase
     private UserRoleService $userRoleService;
     private UserRepository $userRepository;
     private UserDetailRepository $userDetailRepository;
+    private UserResetPasswordRepository $userResetPasswordRepository;
 
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function setUp(): void
     {
-        $this->userRoleService      = $this->createMock(UserRoleService::class);
-        $this->userRepository       = $this->createMock(UserRepository::class);
-        $this->userDetailRepository = $this->createMock(UserDetailRepository::class);
-        $this->subject              = new Subject(
+        $this->userRoleService             = $this->createMock(UserRoleService::class);
+        $this->userRepository              = $this->createMock(UserRepository::class);
+        $this->userDetailRepository        = $this->createMock(UserDetailRepository::class);
+        $this->userResetPasswordRepository = $this->createMock(UserResetPasswordRepository::class);
+        $this->subject                     = new Subject(
             $this->userRoleService,
             $this->createMock(MailService::class),
             $this->createMock(TemplateRendererInterface::class),
@@ -44,6 +48,8 @@ class UserServiceTest extends TestCase
             $this->createMock(OAuthRefreshTokenRepository::class),
             $this->userRepository,
             $this->userDetailRepository,
+            $this->userResetPasswordRepository,
+            $this->createMock(LoggerInterface::class),
             []
         );
     }

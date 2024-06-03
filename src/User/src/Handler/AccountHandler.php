@@ -4,46 +4,50 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
-use Api\App\Handler\ResponseTrait;
+use Api\App\Exception\BadRequestException;
+use Api\App\Exception\ConflictException;
+use Api\App\Handler\HandlerTrait;
 use Api\User\Entity\User;
 use Api\User\InputFilter\CreateUserInputFilter;
 use Api\User\InputFilter\UpdateUserInputFilter;
 use Api\User\Service\UserServiceInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
+use Dot\Mail\Exception\MailException;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Throwable;
+use RuntimeException;
 
 class AccountHandler implements RequestHandlerInterface
 {
-    use ResponseTrait;
+    use HandlerTrait;
 
     /**
      * @Inject({
      *     HalResponseFactory::class,
      *     ResourceGenerator::class,
-     *     UserServiceInterface::class
+     *     UserServiceInterface::class,
+     *     "config"
      * })
      */
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
-        protected UserServiceInterface $userService
+        protected UserServiceInterface $userService,
+        protected array $config,
     ) {
     }
 
+    /**
+     * @throws RuntimeException
+     */
     public function delete(ServerRequestInterface $request): ResponseInterface
     {
-        try {
-            $user = $this->userService->deleteUser($request->getAttribute(User::class));
+        $this->userService->deleteUser($request->getAttribute(User::class));
 
-            return $this->createResponse($request, $user);
-        } catch (Throwable $exception) {
-            return $this->errorResponse($exception->getMessage());
-        }
+        return $this->noContentResponse();
     }
 
     public function get(ServerRequestInterface $request): ResponseInterface
@@ -51,41 +55,43 @@ class AccountHandler implements RequestHandlerInterface
         return $this->createResponse($request, $request->getAttribute(User::class));
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws ConflictException
+     * @throws RuntimeException
+     */
     public function patch(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new UpdateUserInputFilter())
             ->setValidationGroup(['password', 'passwordConfirm', 'detail'])
-            ->setData($request->getParsedBody());
+            ->setData((array) $request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            return $this->errorResponse($inputFilter->getMessages());
+            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
 
-        try {
-            $user = $this->userService->updateUser($request->getAttribute(User::class), $inputFilter->getValues());
+        $user = $this->userService->updateUser($request->getAttribute(User::class), $inputFilter->getValues());
 
-            return $this->createResponse($request, $user);
-        } catch (Throwable $exception) {
-            return $this->errorResponse($exception->getMessage());
-        }
+        return $this->createResponse($request, $user);
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws ConflictException
+     * @throws MailException
+     */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
         $inputFilter = (new CreateUserInputFilter())
             ->setValidationGroup(['identity', 'password', 'passwordConfirm', 'detail'])
-            ->setData($request->getParsedBody());
+            ->setData((array) $request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            return $this->errorResponse($inputFilter->getMessages());
+            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
 
-        try {
-            $user = $this->userService->createUser($inputFilter->getValues());
+        $user = $this->userService->createUser($inputFilter->getValues());
 
-            $this->userService->sendActivationMail($user);
+        $this->userService->sendActivationMail($user);
 
-            return $this->createResponse($request, $user);
-        } catch (Throwable $exception) {
-            return $this->errorResponse($exception->getMessage());
-        }
+        return $this->createdResponse($request, $user);
     }
 }

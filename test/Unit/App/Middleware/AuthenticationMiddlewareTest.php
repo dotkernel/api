@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ApiTest\Unit;
+namespace ApiTest\Unit\App\Middleware;
 
 use Api\App\Middleware\AuthenticationMiddleware as Subject;
 use Api\User\Entity\UserRole;

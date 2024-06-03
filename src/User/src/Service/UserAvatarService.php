@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
-use Api\App\Entity\UuidOrderedTimeGenerator;
 use Api\User\Entity\User;
 use Api\User\Entity\UserAvatar;
 use Api\User\Repository\UserAvatarRepository;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Laminas\Diactoros\UploadedFile;
 use Psr\Http\Message\UploadedFileInterface;
+use Ramsey\Uuid\Uuid;
 
 use function file_exists;
 use function is_readable;
@@ -97,7 +97,7 @@ class UserAvatarService implements UserAvatarServiceInterface
     {
         return sprintf(
             'avatar-%s.%s',
-            UuidOrderedTimeGenerator::generateUuid()->toString(),
+            Uuid::uuid4()->toString(),
             self::EXTENSIONS[$fileType]
         );
     }

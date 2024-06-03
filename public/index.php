@@ -7,7 +7,11 @@ use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
 
 // Delegate static file requests back to the PHP built-in webserver
-if (PHP_SAPI === 'cli-server' && $_SERVER['SCRIPT_FILENAME'] !== __FILE__) {
+if (
+    PHP_SAPI === 'cli-server'
+    && array_key_exists('SCRIPT_FILENAME', $_SERVER)
+    && $_SERVER['SCRIPT_FILENAME'] !== __FILE__
+) {
     return false;
 }
 

@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdminRoleRepository::class)]
 #[ORM\Table("admin_role")]
+#[ORM\HasLifecycleCallbacks]
 class AdminRole extends AbstractEntity implements RoleInterface
 {
     public const ROLE_ADMIN     = 'admin';
@@ -21,7 +22,7 @@ class AdminRole extends AbstractEntity implements RoleInterface
     ];
 
     #[ORM\Column(name: "name", type: "string", length: 30, unique: true)]
-    protected string $name;
+    protected string $name = '';
 
     public function getName(): string
     {

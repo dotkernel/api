@@ -2,20 +2,19 @@
 
 declare(strict_types=1);
 
-namespace ApiTest\Unit;
+namespace ApiTest\Unit\User\Service;
 
 use Api\User\Entity\User;
 use Api\User\Entity\UserAvatar;
 use Api\User\Repository\UserAvatarRepository;
 use Api\User\Service\UserAvatarService;
-use Api\User\Service\UserAvatarService as Subject;
 use Laminas\Diactoros\UploadedFile;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
-class UserAvatarTest extends TestCase
+class UserAvatarServiceTest extends TestCase
 {
-    private Subject $subject;
+    private UserAvatarService $subject;
     private UploadedFile $uploadedFile;
 
     /**
