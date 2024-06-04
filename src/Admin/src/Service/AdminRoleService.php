@@ -7,6 +7,8 @@ namespace Api\Admin\Service;
 use Api\Admin\Collection\AdminRoleCollection;
 use Api\Admin\Entity\AdminRole;
 use Api\Admin\Repository\AdminRoleRepository;
+use Api\App\Exception\NotFoundException;
+use Api\App\Message;
 use Dot\AnnotatedServices\Annotation\Inject;
 
 class AdminRoleService implements AdminRoleServiceInterface
@@ -21,14 +23,17 @@ class AdminRoleService implements AdminRoleServiceInterface
     ) {
     }
 
-    public function findOneBy(array $params = []): ?AdminRole
+    /**
+     * @throws NotFoundException
+     */
+    public function findOneBy(array $params = []): AdminRole
     {
         $role = $this->adminRoleRepository->findOneBy($params);
-        if ($role instanceof AdminRole) {
-            return $role;
+        if (! $role instanceof AdminRole) {
+            throw new NotFoundException(Message::ROLE_NOT_FOUND);
         }
 
-        return null;
+        return $role;
     }
 
     public function getAdminRoles(array $params = []): AdminRoleCollection

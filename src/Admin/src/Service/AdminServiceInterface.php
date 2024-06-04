@@ -21,7 +21,10 @@ interface AdminServiceInterface
 
     public function exists(string $identity = ''): bool;
 
-    public function findOneBy(array $params = []): ?Admin;
+    /**
+     * @throws NotFoundException
+     */
+    public function findOneBy(array $params = []): Admin;
 
     public function getAdmins(array $params = []): AdminCollection;
 

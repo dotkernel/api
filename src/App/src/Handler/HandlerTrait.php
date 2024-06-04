@@ -24,6 +24,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 
 use function array_key_exists;
+use function assert;
 use function is_array;
 use function method_exists;
 use function sprintf;
@@ -85,9 +86,10 @@ trait HandlerTrait
             );
         }
 
-        /** @var RouteResult $routeResult */
         $routeResult = $request->getAttribute(RouteResult::class);
-        $routeName   = $routeResult->getMatchedRouteName();
+        assert($routeResult instanceof RouteResult);
+
+        $routeName = $routeResult->getMatchedRouteName();
 
         $halConfig = null;
         foreach ($config[MetadataMap::class] as $cfg) {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Api\User\Service;
 
 use Api\App\Exception\ConflictException;
+use Api\App\Exception\NotFoundException;
 use Api\App\Message;
 use Api\App\Repository\OAuthAccessTokenRepository;
 use Api\App\Repository\OAuthRefreshTokenRepository;
@@ -66,6 +67,7 @@ class UserService implements UserServiceInterface
 
     /**
      * @throws ConflictException
+     * @throws NotFoundException
      * @throws RuntimeException
      */
     public function createUser(array $data = []): User
@@ -92,16 +94,14 @@ class UserService implements UserServiceInterface
 
         if (! empty($data['roles'])) {
             foreach ($data['roles'] as $roleData) {
-                $role = $this->userRoleService->findOneBy(['uuid' => $roleData['uuid']]);
-                if ($role instanceof UserRole) {
-                    $user->addRole($role);
-                }
+                $user->addRole(
+                    $this->userRoleService->findOneBy(['uuid' => $roleData['uuid']])
+                );
             }
         } else {
-            $role = $this->userRoleService->findOneBy(['name' => UserRole::ROLE_USER]);
-            if ($role instanceof UserRole) {
-                $user->addRole($role);
-            }
+            $user->addRole(
+                $this->userRoleService->findOneBy(['name' => UserRole::ROLE_USER])
+            );
         }
 
         return $this->userRepository->saveUser($user);
@@ -145,62 +145,93 @@ class UserService implements UserServiceInterface
 
     public function exists(string $identity = ''): bool
     {
-        return $this->findOneBy(['identity' => $identity]) instanceof User;
+        try {
+            $this->findOneBy(['identity' => $identity]);
+
+            return true;
+        } catch (NotFoundException) {
+            return false;
+        }
     }
 
     public function existsOther(string $identity = '', string $uuid = ''): bool
     {
-        $user = $this->findOneBy(['identity' => $identity]);
-        if (! $user instanceof User) {
+        try {
+            $user = $this->findOneBy(['identity' => $identity]);
+
+            return $user->getUuid()->toString() !== $uuid;
+        } catch (NotFoundException) {
             return false;
         }
-
-        return $user->getUuid()->toString() !== $uuid;
     }
 
     public function emailExists(string $email = ''): bool
     {
-        return $this->findByEmail($email) instanceof User;
+        try {
+            $this->findByEmail($email);
+
+            return true;
+        } catch (NotFoundException) {
+            return false;
+        }
     }
 
     public function emailExistsOther(string $email = '', string $uuid = ''): bool
     {
-        $user = $this->findByEmail($email);
-        if (! $user instanceof User) {
+        try {
+            $user = $this->findByEmail($email);
+
+            return $user->getUuid()->toString() !== $uuid;
+        } catch (NotFoundException) {
             return false;
         }
-
-        return $user->getUuid()->toString() !== $uuid;
     }
 
-    public function findResetPasswordByHash(?string $hash): ?UserResetPasswordEntity
+    /**
+     * @throws NotFoundException
+     */
+    public function findResetPasswordByHash(?string $hash): UserResetPasswordEntity
     {
         $userResetPassword = $this->userResetPasswordRepository->findOneBy(['hash' => $hash]);
-        if ($userResetPassword instanceof UserResetPasswordEntity) {
-            return $userResetPassword;
+        if (! $userResetPassword instanceof UserResetPasswordEntity) {
+            throw new NotFoundException(sprintf(Message::RESET_PASSWORD_NOT_FOUND, (string) $hash));
         }
 
-        return null;
+        return $userResetPassword;
     }
 
-    public function findByEmail(string $email): ?User
+    /**
+     * @throws NotFoundException
+     */
+    public function findByEmail(string $email): User
     {
-        return $this->userDetailRepository->findOneBy(['email' => $email])?->getUser();
+        $user = $this->userDetailRepository->findOneBy(['email' => $email])?->getUser();
+        if (! $user instanceof User) {
+            throw new NotFoundException(Message::USER_NOT_FOUND);
+        }
+
+        return $user;
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function findByIdentity(string $identity): ?User
     {
         return $this->findOneBy(['identity' => $identity]);
     }
 
-    public function findOneBy(array $params = []): ?User
+    /**
+     * @throws NotFoundException
+     */
+    public function findOneBy(array $params = []): User
     {
         $user = $this->userRepository->findOneBy($params);
-        if ($user instanceof User) {
-            return $user;
+        if (! $user instanceof User) {
+            throw new NotFoundException(Message::USER_NOT_FOUND);
         }
 
-        return null;
+        return $user;
     }
 
     public function getUsers(array $params = []): UserCollection
@@ -306,6 +337,7 @@ class UserService implements UserServiceInterface
 
     /**
      * @throws ConflictException
+     * @throws NotFoundException
      * @throws RuntimeException
      */
     public function updateUser(User $user, array $data = []): User
@@ -355,10 +387,9 @@ class UserService implements UserServiceInterface
         if (! empty($data['roles'])) {
             $user->resetRoles();
             foreach ($data['roles'] as $roleData) {
-                $role = $this->userRoleService->findOneBy(['uuid' => $roleData['uuid']]);
-                if ($role instanceof UserRole) {
-                    $user->addRole($role);
-                }
+                $user->addRole(
+                    $this->userRoleService->findOneBy(['uuid' => $roleData['uuid']])
+                );
             }
         }
 

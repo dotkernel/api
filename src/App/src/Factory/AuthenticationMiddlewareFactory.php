@@ -11,6 +11,8 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+use function assert;
+
 class AuthenticationMiddlewareFactory
 {
     /**
@@ -23,8 +25,9 @@ class AuthenticationMiddlewareFactory
             throw new InvalidConfigException('AuthenticationInterface service is missing');
         }
 
-        return new AuthenticationMiddleware(
-            $container->get(AuthenticationInterface::class)
-        );
+        $authentication = $container->get(AuthenticationInterface::class);
+        assert($authentication instanceof AuthenticationInterface);
+
+        return new AuthenticationMiddleware($authentication);
     }
 }

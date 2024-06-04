@@ -11,6 +11,8 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+use function assert;
+
 class UserRepositoryFactory
 {
     /**
@@ -19,8 +21,8 @@ class UserRepositoryFactory
      */
     public function __invoke(ContainerInterface $container): ObjectRepository
     {
-        /** @var EntityManagerInterface $entityManager */
         $entityManager = $container->get(EntityManagerInterface::class);
+        assert($entityManager instanceof EntityManagerInterface);
 
         return $entityManager->getRepository(User::class);
     }
