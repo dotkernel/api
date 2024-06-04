@@ -10,6 +10,8 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+use function assert;
+
 class TokenGenerateCommandFactory
 {
     /**
@@ -18,8 +20,9 @@ class TokenGenerateCommandFactory
      */
     public function __invoke(ContainerInterface $container): TokenGenerateCommand
     {
-        return new TokenGenerateCommand(
-            $container->get(ErrorReportServiceInterface::class)
-        );
+        $errorReportService = $container->get(ErrorReportServiceInterface::class);
+        assert($errorReportService instanceof ErrorReportServiceInterface);
+
+        return new TokenGenerateCommand($errorReportService);
     }
 }

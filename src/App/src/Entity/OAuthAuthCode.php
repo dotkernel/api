@@ -15,6 +15,8 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\Traits\AuthCodeTrait;
 
+use function assert;
+
 #[ORM\Entity(repositoryClass: OAuthAuthCodeRepository::class)]
 #[ORM\Table(name: "oauth_auth_codes")]
 class OAuthAuthCode implements AuthCodeEntityInterface
@@ -97,8 +99,8 @@ class OAuthAuthCode implements AuthCodeEntityInterface
 
     public function getUserIdentifier(): ?string
     {
-        /** @var OAuthClient $client */
         $client = $this->getClient();
+        assert($client instanceof OAuthClient);
 
         if (null === $user = $client->getUser()) {
             return null;

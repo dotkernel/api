@@ -11,7 +11,6 @@ use Api\App\Exception\NotFoundException;
 use Api\App\Handler\HandlerTrait;
 use Api\App\Message;
 use Api\User\Entity\User;
-use Api\User\Entity\UserResetPasswordEntity;
 use Api\User\InputFilter\ResetPasswordInputFilter;
 use Api\User\InputFilter\UpdatePasswordInputFilter;
 use Api\User\Service\UserServiceInterface;
@@ -54,10 +53,6 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
         $hash = $request->getAttribute('hash');
 
         $userResetPassword = $this->userService->findResetPasswordByHash($hash);
-        if (! $userResetPassword instanceof UserResetPasswordEntity) {
-            throw new NotFoundException(sprintf(Message::RESET_PASSWORD_NOT_FOUND, $hash));
-        }
-
         if (! $userResetPassword->isValid()) {
             throw new ExpiredException(sprintf(Message::RESET_PASSWORD_EXPIRED, $hash));
         }
@@ -80,10 +75,6 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
         $hash = $request->getAttribute('hash');
 
         $userResetPassword = $this->userService->findResetPasswordByHash($hash);
-        if (! $userResetPassword instanceof UserResetPasswordEntity) {
-            throw new NotFoundException(sprintf(Message::RESET_PASSWORD_NOT_FOUND, $hash));
-        }
-
         if (! $userResetPassword->isValid()) {
             throw new ExpiredException(sprintf(Message::RESET_PASSWORD_EXPIRED, $hash));
         }
@@ -131,8 +122,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
             throw new NotFoundException(Message::USER_NOT_FOUND);
         }
 
-        $user = $this->userService->updateUser($user->createResetPassword());
-
+        $this->userService->updateUser($user->createResetPassword());
         $this->userService->sendResetPasswordRequestedMail($user);
 
         return $this->infoResponse(Message::MAIL_SENT_RESET_PASSWORD);

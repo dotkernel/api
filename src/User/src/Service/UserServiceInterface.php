@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Api\User\Service;
 
 use Api\App\Exception\ConflictException;
+use Api\App\Exception\NotFoundException;
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
 use Api\User\Entity\UserResetPasswordEntity;
@@ -20,6 +21,7 @@ interface UserServiceInterface
 
     /**
      * @throws ConflictException
+     * @throws NotFoundException
      * @throws RuntimeException
      */
     public function createUser(array $data = []): User;
@@ -44,13 +46,22 @@ interface UserServiceInterface
 
     public function emailExistsOther(string $email = '', string $uuid = ''): bool;
 
-    public function findResetPasswordByHash(?string $hash): ?UserResetPasswordEntity;
+    /**
+     * @throws NotFoundException
+     */
+    public function findResetPasswordByHash(?string $hash): UserResetPasswordEntity;
 
-    public function findByEmail(string $email): ?User;
+    /**
+     * @throws NotFoundException
+     */
+    public function findByEmail(string $email): User;
 
     public function findByIdentity(string $identity): ?User;
 
-    public function findOneBy(array $params = []): ?User;
+    /**
+     * @throws NotFoundException
+     */
+    public function findOneBy(array $params = []): User;
 
     public function getUsers(array $params = []): UserCollection;
 

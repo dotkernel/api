@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Api\Admin\Handler;
 
-use Api\Admin\Entity\Admin;
 use Api\Admin\InputFilter\CreateAdminInputFilter;
 use Api\Admin\InputFilter\UpdateAdminInputFilter;
 use Api\Admin\Service\AdminServiceInterface;
@@ -12,15 +11,12 @@ use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\HandlerTrait;
-use Api\App\Message;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-
-use function sprintf;
 
 class AdminHandler implements RequestHandlerInterface
 {
@@ -47,12 +43,7 @@ class AdminHandler implements RequestHandlerInterface
      */
     public function delete(ServerRequestInterface $request): ResponseInterface
     {
-        $uuid = $request->getAttribute('uuid');
-
-        $admin = $this->adminService->findOneBy(['uuid' => $uuid]);
-        if (! $admin instanceof Admin) {
-            throw new NotFoundException(sprintf(Message::NOT_FOUND_BY_UUID, 'admin', $uuid));
-        }
+        $admin = $this->adminService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
 
         $this->adminService->deleteAdmin($admin);
 
@@ -64,12 +55,7 @@ class AdminHandler implements RequestHandlerInterface
      */
     public function get(ServerRequestInterface $request): ResponseInterface
     {
-        $uuid = $request->getAttribute('uuid');
-
-        $admin = $this->adminService->findOneBy(['uuid' => $uuid]);
-        if (! $admin instanceof Admin) {
-            throw new NotFoundException(sprintf(Message::NOT_FOUND_BY_UUID, 'admin', $uuid));
-        }
+        $admin = $this->adminService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
 
         return $this->createResponse($request, $admin);
     }
@@ -91,15 +77,10 @@ class AdminHandler implements RequestHandlerInterface
             throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
 
-        $uuid  = $request->getAttribute('uuid');
-        $admin = $this->adminService->findOneBy(['uuid' => $uuid]);
-        if (! $admin instanceof Admin) {
-            throw new NotFoundException(sprintf(Message::NOT_FOUND_BY_UUID, 'admin', $uuid));
-        }
+        $admin = $this->adminService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
+        $this->adminService->updateAdmin($admin, $inputFilter->getValues());
 
-        $user = $this->adminService->updateAdmin($admin, $inputFilter->getValues());
-
-        return $this->createResponse($request, $user);
+        return $this->createResponse($request, $admin);
     }
 
     /**
