@@ -10,6 +10,8 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+use function assert;
+
 class RouteListCommandFactory
 {
     /**
@@ -18,8 +20,9 @@ class RouteListCommandFactory
      */
     public function __invoke(ContainerInterface $container): RouteListCommand
     {
-        return new RouteListCommand(
-            $container->get(Application::class)
-        );
+        $application = $container->get(Application::class);
+        assert($application instanceof Application);
+
+        return new RouteListCommand($application);
     }
 }

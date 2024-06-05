@@ -11,6 +11,8 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+use function assert;
+
 class AdminCreateCommandFactory
 {
     /**
@@ -19,9 +21,12 @@ class AdminCreateCommandFactory
      */
     public function __invoke(ContainerInterface $container): AdminCreateCommand
     {
-        return new AdminCreateCommand(
-            $container->get(AdminService::class),
-            $container->get(AdminRoleService::class)
-        );
+        $adminService = $container->get(AdminService::class);
+        assert($adminService instanceof AdminService);
+
+        $adminRoleService = $container->get(AdminRoleService::class);
+        assert($adminRoleService instanceof AdminRoleService);
+
+        return new AdminCreateCommand($adminService, $adminRoleService);
     }
 }

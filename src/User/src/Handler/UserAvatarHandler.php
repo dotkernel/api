@@ -8,7 +8,6 @@ use Api\App\Exception\BadRequestException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\HandlerTrait;
 use Api\App\Message;
-use Api\User\Entity\User;
 use Api\User\InputFilter\UpdateAvatarInputFilter;
 use Api\User\Service\UserAvatarServiceInterface;
 use Api\User\Service\UserServiceInterface;
@@ -18,8 +17,6 @@ use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-
-use function sprintf;
 
 class UserAvatarHandler implements RequestHandlerInterface
 {
@@ -48,11 +45,7 @@ class UserAvatarHandler implements RequestHandlerInterface
      */
     public function delete(ServerRequestInterface $request): ResponseInterface
     {
-        $uuid = $request->getAttribute('uuid');
-        $user = $this->userService->findOneBy(['uuid' => $uuid]);
-        if (! $user instanceof User) {
-            throw new NotFoundException(sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid));
-        }
+        $user = $this->userService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
         if (! $user->hasAvatar()) {
             throw new NotFoundException(Message::AVATAR_MISSING);
         }
@@ -67,11 +60,7 @@ class UserAvatarHandler implements RequestHandlerInterface
      */
     public function get(ServerRequestInterface $request): ResponseInterface
     {
-        $uuid = $request->getAttribute('uuid');
-        $user = $this->userService->findOneBy(['uuid' => $uuid]);
-        if (! $user instanceof User) {
-            throw new NotFoundException(sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid));
-        }
+        $user = $this->userService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
         if (! $user->hasAvatar()) {
             throw new NotFoundException(Message::AVATAR_MISSING);
         }
@@ -90,11 +79,7 @@ class UserAvatarHandler implements RequestHandlerInterface
             throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
 
-        $uuid = $request->getAttribute('uuid');
-        $user = $this->userService->findOneBy(['uuid' => $uuid]);
-        if (! $user instanceof User) {
-            throw new NotFoundException(sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid));
-        }
+        $user = $this->userService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
 
         $userAvatar = $this->userAvatarService->createAvatar($user, $inputFilter->getValue('avatar'));
 

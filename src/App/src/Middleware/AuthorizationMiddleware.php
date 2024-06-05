@@ -22,6 +22,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+use function assert;
 use function sprintf;
 
 class AuthorizationMiddleware implements MiddlewareInterface
@@ -42,8 +43,9 @@ class AuthorizationMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        /** @var UserIdentity $defaultUser */
         $defaultUser = $request->getAttribute(UserInterface::class);
+        assert($defaultUser instanceof UserIdentity);
+
         switch ($defaultUser->getDetail('oauth_client_id')) {
             case 'admin':
                 $user = $this->adminRepository->findOneBy(['identity' => $defaultUser->getIdentity()]);

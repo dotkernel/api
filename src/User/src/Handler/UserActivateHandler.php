@@ -8,7 +8,6 @@ use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\HandlerTrait;
 use Api\App\Message;
-use Api\User\Entity\User;
 use Api\User\Service\UserServiceInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
 use Dot\Mail\Exception\MailException;
@@ -17,8 +16,6 @@ use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-
-use function sprintf;
 
 class UserActivateHandler implements RequestHandlerInterface
 {
@@ -47,18 +44,12 @@ class UserActivateHandler implements RequestHandlerInterface
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        $uuid = $request->getAttribute('uuid');
-        $user = $this->userService->findOneBy(['uuid' => $uuid]);
-        if (! $user instanceof User) {
-            throw new NotFoundException(sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid));
-        }
-
+        $user = $this->userService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
         if ($user->isActive()) {
             throw new ConflictException(Message::USER_ALREADY_ACTIVATED);
         }
 
-        $user = $this->userService->activateUser($user);
-
+        $this->userService->activateUser($user);
         $this->userService->sendActivationMail($user);
 
         return $this->infoResponse(Message::USER_ACTIVATED);

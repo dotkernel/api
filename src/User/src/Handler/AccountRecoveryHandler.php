@@ -8,7 +8,6 @@ use Api\App\Exception\BadRequestException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\HandlerTrait;
 use Api\App\Message;
-use Api\User\Entity\User;
 use Api\User\InputFilter\RecoverIdentityInputFilter;
 use Api\User\Service\UserServiceInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
@@ -18,8 +17,6 @@ use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-
-use function sprintf;
 
 class AccountRecoveryHandler implements RequestHandlerInterface
 {
@@ -53,12 +50,7 @@ class AccountRecoveryHandler implements RequestHandlerInterface
             throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
 
-        $email = $inputFilter->getValue('email');
-        $user  = $this->userService->findByEmail($email);
-        if (! $user instanceof User) {
-            throw new NotFoundException(sprintf(Message::USER_NOT_FOUND_BY_EMAIL, $email));
-        }
-
+        $user = $this->userService->findByEmail($inputFilter->getValue('email'));
         $this->userService->sendRecoverIdentityMail($user);
 
         return $this->infoResponse(Message::MAIL_SENT_RECOVER_IDENTITY);

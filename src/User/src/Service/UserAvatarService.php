@@ -12,6 +12,7 @@ use Laminas\Diactoros\UploadedFile;
 use Psr\Http\Message\UploadedFileInterface;
 use Ramsey\Uuid\Uuid;
 
+use function assert;
 use function file_exists;
 use function is_readable;
 use function mkdir;
@@ -47,12 +48,13 @@ class UserAvatarService implements UserAvatarServiceInterface
 
         if ($user->hasAvatar()) {
             $avatar = $user->getAvatar();
+            assert($avatar instanceof UserAvatar);
             $this->deleteAvatarFile($path . $avatar->getName());
         } else {
             $avatar = (new UserAvatar())->setUser($user);
         }
 
-        $fileName = $this->createFileName($uploadedFile->getClientMediaType());
+        $fileName = $this->createFileName((string) $uploadedFile->getClientMediaType());
         $this->saveAvatarImage($uploadedFile, $path . $fileName);
         $this->userAvatarRepository->saveAvatar($avatar->setName($fileName));
 
@@ -65,9 +67,12 @@ class UserAvatarService implements UserAvatarServiceInterface
             return;
         }
 
+        $avatar = $user->getAvatar();
+        assert($avatar instanceof UserAvatar);
+
         $path = $this->getUserAvatarDirectoryPath($user);
-        $this->userAvatarRepository->deleteAvatar($user->getAvatar());
-        $this->deleteAvatarFile($path . $user->getAvatar()->getName());
+        $this->userAvatarRepository->deleteAvatar($avatar);
+        $this->deleteAvatarFile($path . $avatar->getName());
     }
 
     protected function getUserAvatarDirectoryPath(User $user): string

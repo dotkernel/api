@@ -8,8 +8,6 @@ use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\HandlerTrait;
-use Api\App\Message;
-use Api\User\Entity\User;
 use Api\User\InputFilter\CreateUserInputFilter;
 use Api\User\InputFilter\UpdateUserInputFilter;
 use Api\User\Service\UserServiceInterface;
@@ -21,8 +19,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use RuntimeException;
-
-use function sprintf;
 
 class UserHandler implements RequestHandlerInterface
 {
@@ -50,11 +46,7 @@ class UserHandler implements RequestHandlerInterface
      */
     public function delete(ServerRequestInterface $request): ResponseInterface
     {
-        $uuid = $request->getAttribute('uuid');
-        $user = $this->userService->findOneBy(['uuid' => $uuid]);
-        if (! $user instanceof User) {
-            throw new NotFoundException(sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid));
-        }
+        $user = $this->userService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
 
         $this->userService->deleteUser($user);
 
@@ -66,11 +58,7 @@ class UserHandler implements RequestHandlerInterface
      */
     public function get(ServerRequestInterface $request): ResponseInterface
     {
-        $uuid = $request->getAttribute('uuid');
-        $user = $this->userService->findOneBy(['uuid' => $uuid]);
-        if (! $user instanceof User) {
-            throw new NotFoundException(sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid));
-        }
+        $user = $this->userService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
 
         return $this->createResponse($request, $user);
     }
@@ -93,13 +81,8 @@ class UserHandler implements RequestHandlerInterface
             throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
 
-        $uuid = $request->getAttribute('uuid');
-        $user = $this->userService->findOneBy(['uuid' => $uuid]);
-        if (! $user instanceof User) {
-            throw new NotFoundException(sprintf(Message::NOT_FOUND_BY_UUID, 'user', $uuid));
-        }
-
-        $user = $this->userService->updateUser($user, $inputFilter->getValues());
+        $user = $this->userService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
+        $this->userService->updateUser($user, $inputFilter->getValues());
 
         return $this->createResponse($request, $user);
     }

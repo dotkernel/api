@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
+use Api\App\Exception\NotFoundException;
+use Api\App\Message;
 use Api\User\Collection\UserRoleCollection;
 use Api\User\Entity\UserRole;
 use Api\User\Repository\UserRoleRepository;
@@ -21,9 +23,17 @@ class UserRoleService implements UserRoleServiceInterface
     ) {
     }
 
-    public function findOneBy(array $params = []): ?UserRole
+    /**
+     * @throws NotFoundException
+     */
+    public function findOneBy(array $params = []): UserRole
     {
-        return $this->roleRepository->findOneBy($params);
+        $role = $this->roleRepository->findOneBy($params);
+        if (! $role instanceof UserRole) {
+            throw new NotFoundException(Message::ROLE_NOT_FOUND);
+        }
+
+        return $role;
     }
 
     public function getRoles(array $params = []): UserRoleCollection
