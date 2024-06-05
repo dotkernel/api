@@ -11,14 +11,16 @@ use Mezzio\Application;
 use Mezzio\Authentication\OAuth2\TokenEndpointHandler;
 use Psr\Container\ContainerInterface;
 
+use function assert;
+
 class RoutesDelegator
 {
     public const REGEXP_UUID = '{uuid:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}';
 
     public function __invoke(ContainerInterface $container, string $serviceName, callable $callback): Application
     {
-        /** @var Application $app */
         $app = $callback();
+        assert($app instanceof Application);
 
         /**
          * Home page

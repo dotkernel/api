@@ -13,8 +13,6 @@ use Api\App\Exception\NotFoundException;
 use Api\App\Message;
 use Dot\AnnotatedServices\Annotation\Inject;
 
-use function sprintf;
-
 class AdminService implements AdminServiceInterface
 {
     /**
@@ -48,22 +46,14 @@ class AdminService implements AdminServiceInterface
 
         if (! empty($data['roles'])) {
             foreach ($data['roles'] as $roleData) {
-                $role = $this->adminRoleService->findOneBy(['uuid' => $roleData['uuid']]);
-                if (! $role instanceof AdminRole) {
-                    throw new NotFoundException(
-                        sprintf(Message::NOT_FOUND_BY_UUID, 'role', $roleData['uuid'])
-                    );
-                }
-                $admin->addRole($role);
-            }
-        } else {
-            $role = $this->adminRoleService->findOneBy(['name' => AdminRole::ROLE_ADMIN]);
-            if (! $role instanceof AdminRole) {
-                throw new NotFoundException(
-                    sprintf(Message::NOT_FOUND_BY_NAME, 'role', AdminRole::ROLE_ADMIN)
+                $admin->addRole(
+                    $this->adminRoleService->findOneBy(['uuid' => $roleData['uuid']])
                 );
             }
-            $admin->addRole($role);
+        } else {
+            $admin->addRole(
+                $this->adminRoleService->findOneBy(['name' => AdminRole::ROLE_ADMIN])
+            );
         }
 
         return $this->adminRepository->saveAdmin($admin);
@@ -78,17 +68,24 @@ class AdminService implements AdminServiceInterface
 
     public function exists(string $identity = ''): bool
     {
-        return $this->findOneBy(['identity' => $identity]) instanceof Admin;
+        try {
+            return $this->findOneBy(['identity' => $identity]) instanceof Admin;
+        } catch (NotFoundException) {
+            return false;
+        }
     }
 
-    public function findOneBy(array $params = []): ?Admin
+    /**
+     * @throws NotFoundException
+     */
+    public function findOneBy(array $params = []): Admin
     {
         $admin = $this->adminRepository->findOneBy($params);
-        if ($admin instanceof Admin) {
-            return $admin;
+        if (! $admin instanceof Admin) {
+            throw new NotFoundException(Message::ADMIN_NOT_FOUND);
         }
 
-        return null;
+        return $admin;
     }
 
     public function getAdmins(array $params = []): AdminCollection
@@ -121,11 +118,9 @@ class AdminService implements AdminServiceInterface
         if (! empty($data['roles'])) {
             $admin->resetRoles();
             foreach ($data['roles'] as $roleData) {
-                $role = $this->adminRoleService->findOneBy(['uuid' => $roleData['uuid']]);
-                if (! $role instanceof AdminRole) {
-                    throw new NotFoundException(sprintf(Message::NOT_FOUND_BY_UUID, 'role', $roleData['uuid']));
-                }
-                $admin->addRole($role);
+                $admin->addRole(
+                    $this->adminRoleService->findOneBy(['uuid' => $roleData['uuid']])
+                );
             }
         }
 

@@ -9,7 +9,6 @@ use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\HandlerTrait;
 use Api\App\Message;
-use Api\User\Entity\User;
 use Api\User\InputFilter\ActivateAccountInputFilter;
 use Api\User\Service\UserServiceInterface;
 use Dot\AnnotatedServices\Annotation\Inject;
@@ -49,13 +48,7 @@ class AccountActivateHandler implements RequestHandlerInterface
      */
     public function patch(ServerRequestInterface $request): ResponseInterface
     {
-        $hash = $request->getAttribute('hash');
-
-        $user = $this->userService->findOneBy(['hash' => $hash]);
-        if (! $user instanceof User) {
-            throw new NotFoundException(Message::INVALID_ACTIVATION_CODE);
-        }
-
+        $user = $this->userService->findOneBy(['hash' => $request->getAttribute('hash')]);
         if ($user->isActive()) {
             throw new ConflictException(Message::USER_ALREADY_ACTIVATED);
         }
@@ -78,17 +71,12 @@ class AccountActivateHandler implements RequestHandlerInterface
             throw (new BadRequestException())->setMessages($inputFilter->getMessages());
         }
 
-        $email = $inputFilter->getValue('email');
-        $user  = $this->userService->findByEmail($email);
-        if (! $user instanceof User) {
-            throw new NotFoundException(sprintf(Message::USER_NOT_FOUND_BY_EMAIL, $email));
-        }
-
+        $user = $this->userService->findByEmail($inputFilter->getValue('email'));
         if ($user->isActive()) {
             throw new ConflictException(Message::USER_ALREADY_ACTIVATED);
         }
 
-        $user = $this->userService->activateUser($user);
+        $this->userService->activateUser($user);
         $this->userService->sendActivationMail($user);
 
         return $this->infoResponse(

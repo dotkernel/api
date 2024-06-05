@@ -6,6 +6,7 @@ namespace Api\User\Handler;
 
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
+use Api\App\Exception\NotFoundException;
 use Api\App\Handler\HandlerTrait;
 use Api\User\Entity\User;
 use Api\User\InputFilter\CreateUserInputFilter;
@@ -29,7 +30,7 @@ class AccountHandler implements RequestHandlerInterface
      *     HalResponseFactory::class,
      *     ResourceGenerator::class,
      *     UserServiceInterface::class,
-     *     "config"
+     *     "config",
      * })
      */
     public function __construct(
@@ -78,6 +79,7 @@ class AccountHandler implements RequestHandlerInterface
      * @throws BadRequestException
      * @throws ConflictException
      * @throws MailException
+     * @throws NotFoundException
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
@@ -89,7 +91,6 @@ class AccountHandler implements RequestHandlerInterface
         }
 
         $user = $this->userService->createUser($inputFilter->getValues());
-
         $this->userService->sendActivationMail($user);
 
         return $this->createdResponse($request, $user);

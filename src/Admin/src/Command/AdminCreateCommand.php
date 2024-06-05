@@ -85,11 +85,6 @@ class AdminCreateCommand extends Command
     private function getData(InputInterface $input): array
     {
         $role = $this->adminRoleService->findOneBy(['name' => AdminRole::ROLE_ADMIN]);
-        if (! $role instanceof AdminRole) {
-            throw new NotFoundException(
-                sprintf(Message::ADMIN_ROLE_MISSING, AdminRole::ROLE_ADMIN)
-            );
-        }
 
         return [
             'identity'        => $input->getOption('identity'),

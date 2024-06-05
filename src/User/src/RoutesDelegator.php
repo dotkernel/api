@@ -16,12 +16,14 @@ use Api\User\Handler\UserRoleHandler;
 use Mezzio\Application;
 use Psr\Container\ContainerInterface;
 
+use function assert;
+
 class RoutesDelegator
 {
     public function __invoke(ContainerInterface $container, string $serviceName, callable $callback): Application
     {
-        /** @var Application $app */
         $app = $callback();
+        assert($app instanceof Application);
 
         $uuid = \Api\App\RoutesDelegator::REGEXP_UUID;
 
