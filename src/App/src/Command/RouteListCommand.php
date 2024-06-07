@@ -64,7 +64,7 @@ class RouteListCommand extends Command
                     continue;
                 }
 
-                $routes[sprintf('%s:%s', $method, $route->getPath())] = [
+                $routes[sprintf('%s:%s', $route->getName(), $method)] = [
                     'name'   => $route->getName(),
                     'path'   => $route->getPath(),
                     'method' => $method,
