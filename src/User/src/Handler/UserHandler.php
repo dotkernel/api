@@ -89,6 +89,7 @@ class UserHandler implements RequestHandlerInterface
      * @throws BadRequestException
      * @throws ConflictException
      * @throws MailException
+     * @throws NotFoundException
      */
     public function post(ServerRequestInterface $request): ResponseInterface
     {
