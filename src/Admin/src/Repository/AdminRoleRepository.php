@@ -8,12 +8,12 @@ use Api\Admin\Collection\AdminRoleCollection;
 use Api\Admin\Entity\AdminRole;
 use Api\App\Helper\PaginationHelper;
 use Doctrine\ORM\EntityRepository;
-use Dot\AnnotatedServices\Annotation\Entity;
+use Dot\DependencyInjection\Attribute\Entity;
 
 /**
- * @Entity(name="Api\Admin\Entity\AdminRole")
  * @extends EntityRepository<object>
  */
+#[Entity(name: AdminRole::class)]
 class AdminRoleRepository extends EntityRepository
 {
     public function getAdminRoles(array $filters = []): AdminRoleCollection

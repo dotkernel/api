@@ -20,7 +20,7 @@ use Api\App\Service\ErrorReportService;
 use Api\App\Service\ErrorReportServiceInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
+use Dot\DependencyInjection\Factory\AttributedServiceFactory;
 use Dot\Mail\Factory\MailOptionsAbstractFactory;
 use Dot\Mail\Factory\MailServiceAbstractFactory;
 use Dot\Mail\Service\MailService;
@@ -64,16 +64,16 @@ class ConfigProvider
                 'dot-mail.options.default'            => MailOptionsAbstractFactory::class,
                 'dot-mail.service.default'            => MailServiceAbstractFactory::class,
                 AuthenticationMiddleware::class       => AuthenticationMiddlewareFactory::class,
-                AuthorizationMiddleware::class        => AnnotatedServiceFactory::class,
-                ContentNegotiationMiddleware::class   => AnnotatedServiceFactory::class,
+                AuthorizationMiddleware::class        => AttributedServiceFactory::class,
+                ContentNegotiationMiddleware::class   => AttributedServiceFactory::class,
                 Environment::class                    => TwigEnvironmentFactory::class,
                 TwigExtension::class                  => TwigExtensionFactory::class,
                 TwigRenderer::class                   => TwigRendererFactory::class,
-                HomeHandler::class                    => AnnotatedServiceFactory::class,
-                ErrorResponseMiddleware::class        => AnnotatedServiceFactory::class,
+                HomeHandler::class                    => AttributedServiceFactory::class,
+                ErrorResponseMiddleware::class        => AttributedServiceFactory::class,
                 RouteListCommand::class               => RouteListCommandFactory::class,
                 TokenGenerateCommand::class           => TokenGenerateCommandFactory::class,
-                ErrorReportService::class             => AnnotatedServiceFactory::class,
+                ErrorReportService::class             => AttributedServiceFactory::class,
                 EntityListenerResolver::class         => EntityListenerResolverFactory::class,
             ],
             'aliases'    => [

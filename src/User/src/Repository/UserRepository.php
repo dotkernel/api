@@ -11,7 +11,7 @@ use Api\App\Message;
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
 use Doctrine\ORM\EntityRepository;
-use Dot\AnnotatedServices\Annotation\Entity;
+use Dot\DependencyInjection\Attribute\Entity;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
@@ -21,9 +21,9 @@ use RuntimeException;
 use function password_verify;
 
 /**
- * @Entity(name="Api\User\Entity\User")
  * @extends EntityRepository<object>
  */
+#[Entity(name: User::class)]
 class UserRepository extends EntityRepository implements UserRepositoryInterface
 {
     public function deleteUser(User $user): void

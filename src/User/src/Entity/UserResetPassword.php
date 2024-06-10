@@ -15,7 +15,7 @@ use Exception;
 #[ORM\Entity(repositoryClass: UserResetPasswordRepository::class)]
 #[ORM\Table(name: "user_reset_password")]
 #[ORM\HasLifecycleCallbacks]
-class UserResetPasswordEntity extends AbstractEntity
+class UserResetPassword extends AbstractEntity
 {
     public const STATUS_COMPLETED = 'completed';
     public const STATUS_REQUESTED = 'requested';

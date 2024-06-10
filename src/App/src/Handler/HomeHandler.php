@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\App\Handler;
 
-use Dot\AnnotatedServices\Annotation\Inject;
+use Dot\DependencyInjection\Attribute\Inject;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
@@ -14,13 +14,11 @@ class HomeHandler implements RequestHandlerInterface
 {
     use HandlerTrait;
 
-    /**
-     * @Inject({
-     *     HalResponseFactory::class,
-     *     ResourceGenerator::class,
-     *     "config"
-     * })
-     */
+    #[Inject(
+        HalResponseFactory::class,
+        ResourceGenerator::class,
+        "config",
+    )]
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,

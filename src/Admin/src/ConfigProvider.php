@@ -20,8 +20,8 @@ use Api\Admin\Service\AdminRoleServiceInterface;
 use Api\Admin\Service\AdminService;
 use Api\Admin\Service\AdminServiceInterface;
 use Api\App\ConfigProvider as AppConfigProvider;
-use Dot\AnnotatedServices\Factory\AnnotatedRepositoryFactory;
-use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
+use Dot\DependencyInjection\Factory\AttributedRepositoryFactory;
+use Dot\DependencyInjection\Factory\AttributedServiceFactory;
 use Mezzio\Hal\Metadata\MetadataMap;
 
 class ConfigProvider
@@ -38,14 +38,14 @@ class ConfigProvider
     {
         return [
             'factories' => [
-                AdminHandler::class        => AnnotatedServiceFactory::class,
-                AdminAccountHandler::class => AnnotatedServiceFactory::class,
-                AdminRoleHandler::class    => AnnotatedServiceFactory::class,
-                AdminService::class        => AnnotatedServiceFactory::class,
-                AdminRoleService::class    => AnnotatedServiceFactory::class,
+                AdminHandler::class        => AttributedServiceFactory::class,
+                AdminAccountHandler::class => AttributedServiceFactory::class,
+                AdminRoleHandler::class    => AttributedServiceFactory::class,
+                AdminService::class        => AttributedServiceFactory::class,
+                AdminRoleService::class    => AttributedServiceFactory::class,
                 AdminCreateCommand::class  => AdminCreateCommandFactory::class,
-                AdminRepository::class     => AnnotatedRepositoryFactory::class,
-                AdminRoleRepository::class => AnnotatedRepositoryFactory::class,
+                AdminRepository::class     => AttributedRepositoryFactory::class,
+                AdminRoleRepository::class => AttributedRepositoryFactory::class,
             ],
             'aliases'   => [
                 AdminServiceInterface::class     => AdminService::class,

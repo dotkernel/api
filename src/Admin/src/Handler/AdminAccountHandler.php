@@ -11,7 +11,7 @@ use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\HandlerTrait;
-use Dot\AnnotatedServices\Annotation\Inject;
+use Dot\DependencyInjection\Attribute\Inject;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
@@ -22,14 +22,12 @@ class AdminAccountHandler implements RequestHandlerInterface
 {
     use HandlerTrait;
 
-    /**
-     * @Inject({
-     *     HalResponseFactory::class,
-     *     ResourceGenerator::class,
-     *     AdminServiceInterface::class,
-     *     "config"
-     * })
-     */
+    #[Inject(
+        HalResponseFactory::class,
+        ResourceGenerator::class,
+        AdminServiceInterface::class,
+        "config",
+    )]
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,

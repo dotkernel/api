@@ -44,7 +44,7 @@ $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
     Dot\Cli\ConfigProvider::class,
     Dot\Log\ConfigProvider::class,
     Dot\ErrorHandler\ConfigProvider::class,
-    Dot\AnnotatedServices\ConfigProvider::class,
+    Dot\DependencyInjection\ConfigProvider::class,
     Dot\ResponseHeader\ConfigProvider::class,
     Dot\Mail\ConfigProvider::class,
     Dot\DataFixtures\ConfigProvider::class,

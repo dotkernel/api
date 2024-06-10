@@ -37,7 +37,7 @@ class User extends AbstractEntity implements UserEntityInterface
     #[ORM\OneToOne(mappedBy: "user", targetEntity: UserDetail::class, cascade: ['persist', 'remove'])]
     protected UserDetail $detail;
 
-    #[ORM\OneToMany(mappedBy: "user", targetEntity: UserResetPasswordEntity::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: "user", targetEntity: UserResetPassword::class, cascade: ['persist', 'remove'])]
     protected Collection $resetPasswords;
 
     #[ORM\ManyToMany(targetEntity: UserRole::class)]
@@ -207,7 +207,7 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this;
     }
 
-    public function addResetPassword(UserResetPasswordEntity $resetPassword): void
+    public function addResetPassword(UserResetPassword $resetPassword): void
     {
         $this->resetPasswords->add($resetPassword);
     }
@@ -215,7 +215,7 @@ class User extends AbstractEntity implements UserEntityInterface
     public function createResetPassword(): self
     {
         $this->resetPasswords->add(
-            (new UserResetPasswordEntity())
+            (new UserResetPassword())
                 ->setHash(self::generateHash())
                 ->setUser($this)
         );
@@ -228,12 +228,12 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this->resetPasswords;
     }
 
-    public function hasResetPassword(UserResetPasswordEntity $resetPassword): bool
+    public function hasResetPassword(UserResetPassword $resetPassword): bool
     {
         return $this->resetPasswords->contains($resetPassword);
     }
 
-    public function removeResetPassword(UserResetPasswordEntity $resetPassword): self
+    public function removeResetPassword(UserResetPassword $resetPassword): self
     {
         $this->resetPasswords->removeElement($resetPassword);
 
@@ -323,7 +323,7 @@ class User extends AbstractEntity implements UserEntityInterface
             'roles'          => $this->getRoles()->map(function (UserRole $userRole) {
                 return $userRole->getArrayCopy();
             })->toArray(),
-            'resetPasswords' => $this->getResetPasswords()->map(function (UserResetPasswordEntity $resetPassword) {
+            'resetPasswords' => $this->getResetPasswords()->map(function (UserResetPassword $resetPassword) {
                 return $resetPassword->getArrayCopy();
             })->toArray(),
             'created'        => $this->getCreated(),

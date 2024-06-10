@@ -9,6 +9,7 @@ use Api\App\Entity\OAuthAccessToken;
 use Api\App\Entity\OAuthClient;
 use Api\User\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use Dot\DependencyInjection\Attribute\Entity;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
@@ -17,6 +18,7 @@ use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 /**
  * @extends EntityRepository<object>
  */
+#[Entity(name: OAuthAccessToken::class)]
 class OAuthAccessTokenRepository extends EntityRepository implements AccessTokenRepositoryInterface
 {
     /**

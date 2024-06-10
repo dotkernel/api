@@ -11,7 +11,7 @@ use Api\App\Handler\HandlerTrait;
 use Api\App\Message;
 use Api\User\InputFilter\ActivateAccountInputFilter;
 use Api\User\Service\UserServiceInterface;
-use Dot\AnnotatedServices\Annotation\Inject;
+use Dot\DependencyInjection\Attribute\Inject;
 use Dot\Mail\Exception\MailException;
 use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\Hal\HalResponseFactory;
@@ -26,14 +26,12 @@ class AccountActivateHandler implements RequestHandlerInterface
 {
     use HandlerTrait;
 
-    /**
-     * @Inject({
-     *     HalResponseFactory::class,
-     *     ResourceGenerator::class,
-     *     UserServiceInterface::class,
-     *     "config"
-     * })
-     */
+    #[Inject(
+        HalResponseFactory::class,
+        ResourceGenerator::class,
+        UserServiceInterface::class,
+        "config",
+    )]
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,

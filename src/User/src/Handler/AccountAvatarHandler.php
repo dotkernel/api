@@ -11,7 +11,7 @@ use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\InputFilter\UpdateAvatarInputFilter;
 use Api\User\Service\UserAvatarServiceInterface;
-use Dot\AnnotatedServices\Annotation\Inject;
+use Dot\DependencyInjection\Attribute\Inject;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
@@ -22,14 +22,12 @@ class AccountAvatarHandler implements RequestHandlerInterface
 {
     use HandlerTrait;
 
-    /**
-     * @Inject({
-     *     HalResponseFactory::class,
-     *     ResourceGenerator::class,
-     *     UserAvatarServiceInterface::class,
-     *     "config"
-     * })
-     */
+    #[Inject(
+        HalResponseFactory::class,
+        ResourceGenerator::class,
+        UserAvatarServiceInterface::class,
+        "config",
+    )]
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,

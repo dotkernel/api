@@ -9,17 +9,15 @@ use Api\App\Message;
 use Api\User\Collection\UserRoleCollection;
 use Api\User\Entity\UserRole;
 use Api\User\Repository\UserRoleRepository;
-use Dot\AnnotatedServices\Annotation\Inject;
+use Dot\DependencyInjection\Attribute\Inject;
 
 class UserRoleService implements UserRoleServiceInterface
 {
-    /**
-     * @Inject({
-     *     UserRoleRepository::class
-     * })
-     */
+    #[Inject(
+        UserRoleRepository::class,
+    )]
     public function __construct(
-        protected UserRoleRepository $roleRepository
+        protected UserRoleRepository $roleRepository,
     ) {
     }
 

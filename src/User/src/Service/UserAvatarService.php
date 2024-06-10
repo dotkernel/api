@@ -7,7 +7,7 @@ namespace Api\User\Service;
 use Api\User\Entity\User;
 use Api\User\Entity\UserAvatar;
 use Api\User\Repository\UserAvatarRepository;
-use Dot\AnnotatedServices\Annotation\Inject;
+use Dot\DependencyInjection\Attribute\Inject;
 use Laminas\Diactoros\UploadedFile;
 use Psr\Http\Message\UploadedFileInterface;
 use Ramsey\Uuid\Uuid;
@@ -28,15 +28,13 @@ class UserAvatarService implements UserAvatarServiceInterface
         'image/png'  => 'png',
     ];
 
-    /**
-     * @Inject({
-     *     UserAvatarRepository::class,
-     *     "config"
-     * })
-     */
+    #[Inject(
+        UserAvatarRepository::class,
+        "config",
+    )]
     public function __construct(
         protected UserAvatarRepository $userAvatarRepository,
-        protected array $config
+        protected array $config,
     ) {
     }
 

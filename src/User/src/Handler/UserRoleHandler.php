@@ -7,7 +7,7 @@ namespace Api\User\Handler;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\HandlerTrait;
 use Api\User\Service\UserRoleServiceInterface;
-use Dot\AnnotatedServices\Annotation\Inject;
+use Dot\DependencyInjection\Attribute\Inject;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
@@ -18,14 +18,12 @@ class UserRoleHandler implements RequestHandlerInterface
 {
     use HandlerTrait;
 
-    /**
-     * @Inject({
-     *     HalResponseFactory::class,
-     *     ResourceGenerator::class,
-     *     UserRoleServiceInterface::class,
-     *     "config"
-     * })
-     */
+    #[Inject(
+        HalResponseFactory::class,
+        ResourceGenerator::class,
+        UserRoleServiceInterface::class,
+        "config",
+    )]
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,

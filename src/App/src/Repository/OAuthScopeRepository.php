@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Api\App\Repository;
 
+use Api\App\Entity\OAuthScope;
 use Doctrine\ORM\EntityRepository;
+use Dot\DependencyInjection\Attribute\Entity;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
@@ -12,6 +14,7 @@ use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 /**
  * @extends EntityRepository<object>
  */
+#[Entity(name: OAuthScope::class)]
 class OAuthScopeRepository extends EntityRepository implements ScopeRepositoryInterface
 {
     /**
@@ -19,7 +22,12 @@ class OAuthScopeRepository extends EntityRepository implements ScopeRepositoryIn
      */
     public function getScopeEntityByIdentifier($identifier): ?ScopeEntityInterface
     {
-        return $this->findOneBy(['scope' => $identifier]);
+        $scope = $this->findOneBy(['scope' => $identifier]);
+        if ($scope instanceof OAuthScope) {
+            return $scope;
+        }
+
+        return null;
     }
 
     /**

@@ -6,12 +6,12 @@ namespace Api\User\Repository;
 
 use Api\User\Entity\UserAvatar;
 use Doctrine\ORM\EntityRepository;
-use Dot\AnnotatedServices\Annotation\Entity;
+use Dot\DependencyInjection\Attribute\Entity;
 
 /**
- * @Entity(name="Api\User\Entity\UserAvatar")
  * @extends EntityRepository<object>
  */
+#[Entity(name: UserAvatar::class)]
 class UserAvatarRepository extends EntityRepository
 {
     public function deleteAvatar(UserAvatar $avatar): void
