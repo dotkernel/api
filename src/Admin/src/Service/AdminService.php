@@ -11,19 +11,17 @@ use Api\Admin\Repository\AdminRepository;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Message;
-use Dot\AnnotatedServices\Annotation\Inject;
+use Dot\DependencyInjection\Attribute\Inject;
 
 class AdminService implements AdminServiceInterface
 {
-    /**
-     * @Inject({
-     *     AdminRoleService::class,
-     *     AdminRepository::class
-     * })
-     */
+    #[Inject(
+        AdminRoleService::class,
+        AdminRepository::class,
+    )]
     public function __construct(
         protected AdminRoleService $adminRoleService,
-        protected AdminRepository $adminRepository
+        protected AdminRepository $adminRepository,
     ) {
     }
 

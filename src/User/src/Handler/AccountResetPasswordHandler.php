@@ -14,7 +14,7 @@ use Api\User\Entity\User;
 use Api\User\InputFilter\ResetPasswordInputFilter;
 use Api\User\InputFilter\UpdatePasswordInputFilter;
 use Api\User\Service\UserServiceInterface;
-use Dot\AnnotatedServices\Annotation\Inject;
+use Dot\DependencyInjection\Attribute\Inject;
 use Dot\Mail\Exception\MailException;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
@@ -28,14 +28,12 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
 {
     use HandlerTrait;
 
-    /**
-     * @Inject({
-     *     HalResponseFactory::class,
-     *     ResourceGenerator::class,
-     *     UserServiceInterface::class,
-     *     "config"
-     * })
-     */
+    #[Inject(
+        HalResponseFactory::class,
+        ResourceGenerator::class,
+        UserServiceInterface::class,
+        "config",
+    )]
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,

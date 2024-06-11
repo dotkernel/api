@@ -6,12 +6,14 @@ namespace Api\App\Repository;
 
 use Api\App\Entity\OAuthRefreshToken;
 use Doctrine\ORM\EntityRepository;
+use Dot\DependencyInjection\Attribute\Entity;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 
 /**
  * @extends EntityRepository<object>
  */
+#[Entity(name: OAuthRefreshToken::class)]
 class OAuthRefreshTokenRepository extends EntityRepository implements RefreshTokenRepositoryInterface
 {
     public function getNewRefreshToken(): OAuthRefreshToken

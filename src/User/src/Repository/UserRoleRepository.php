@@ -8,12 +8,12 @@ use Api\App\Helper\PaginationHelper;
 use Api\User\Collection\UserRoleCollection;
 use Api\User\Entity\UserRole;
 use Doctrine\ORM\EntityRepository;
-use Dot\AnnotatedServices\Annotation\Entity;
+use Dot\DependencyInjection\Attribute\Entity;
 
 /**
- * @Entity(name="Api\User\Entity\UserRole")
  * @extends EntityRepository<object>
  */
+#[Entity(name: UserRole::class)]
 class UserRoleRepository extends EntityRepository
 {
     public function getRoles(array $params = []): UserRoleCollection

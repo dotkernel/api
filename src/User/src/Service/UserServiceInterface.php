@@ -8,7 +8,7 @@ use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
-use Api\User\Entity\UserResetPasswordEntity;
+use Api\User\Entity\UserResetPassword;
 use Dot\Mail\Exception\MailException;
 use RuntimeException;
 
@@ -49,7 +49,7 @@ interface UserServiceInterface
     /**
      * @throws NotFoundException
      */
-    public function findResetPasswordByHash(?string $hash): UserResetPasswordEntity;
+    public function findResetPasswordByHash(?string $hash): UserResetPassword;
 
     /**
      * @throws NotFoundException

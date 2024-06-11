@@ -12,12 +12,12 @@ use Api\App\Repository\OAuthRefreshTokenRepository;
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
 use Api\User\Entity\UserDetail;
-use Api\User\Entity\UserResetPasswordEntity;
+use Api\User\Entity\UserResetPassword;
 use Api\User\Entity\UserRole;
 use Api\User\Repository\UserDetailRepository;
 use Api\User\Repository\UserRepository;
 use Api\User\Repository\UserResetPasswordRepository;
-use Dot\AnnotatedServices\Annotation\Inject;
+use Dot\DependencyInjection\Attribute\Inject;
 use Dot\Mail\Exception\MailException;
 use Dot\Mail\Service\MailService;
 use Laminas\Log\LoggerInterface;
@@ -29,20 +29,18 @@ use function sprintf;
 
 class UserService implements UserServiceInterface
 {
-    /**
-     * @Inject({
-     *     UserRoleServiceInterface::class,
-     *     MailService::class,
-     *     TemplateRendererInterface::class,
-     *     OAuthAccessTokenRepository::class,
-     *     OAuthRefreshTokenRepository::class,
-     *     UserRepository::class,
-     *     UserDetailRepository::class,
-     *     UserResetPasswordRepository::class,
-     *     "dot-log.default_logger",
-     *     "config"
-     * })
-     */
+    #[Inject(
+        UserRoleServiceInterface::class,
+        MailService::class,
+        TemplateRendererInterface::class,
+        OAuthAccessTokenRepository::class,
+        OAuthRefreshTokenRepository::class,
+        UserRepository::class,
+        UserDetailRepository::class,
+        UserResetPasswordRepository::class,
+        "dot-log.default_logger",
+        "config",
+    )]
     public function __construct(
         protected UserRoleServiceInterface $userRoleService,
         protected MailService $mailService,
@@ -53,7 +51,7 @@ class UserService implements UserServiceInterface
         protected UserDetailRepository $userDetailRepository,
         protected UserResetPasswordRepository $userResetPasswordRepository,
         protected LoggerInterface $logger,
-        protected array $config = []
+        protected array $config = [],
     ) {
     }
 
@@ -190,10 +188,10 @@ class UserService implements UserServiceInterface
     /**
      * @throws NotFoundException
      */
-    public function findResetPasswordByHash(?string $hash): UserResetPasswordEntity
+    public function findResetPasswordByHash(?string $hash): UserResetPassword
     {
         $userResetPassword = $this->userResetPasswordRepository->findOneBy(['hash' => $hash]);
-        if (! $userResetPassword instanceof UserResetPasswordEntity) {
+        if (! $userResetPassword instanceof UserResetPassword) {
             throw new NotFoundException(sprintf(Message::RESET_PASSWORD_NOT_FOUND, (string) $hash));
         }
 

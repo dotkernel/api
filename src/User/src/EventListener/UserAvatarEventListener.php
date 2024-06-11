@@ -5,22 +5,16 @@ declare(strict_types=1);
 namespace Api\User\EventListener;
 
 use Api\User\Entity\UserAvatar;
-use Dot\AnnotatedServices\Annotation\Inject;
-use Dot\AnnotatedServices\Annotation\Service;
+use Dot\DependencyInjection\Attribute\Inject;
 
 use function rtrim;
 use function sprintf;
 
-/**
- * @Service
- */
 class UserAvatarEventListener
 {
-    /**
-     * @Inject({
-     *     "config"
-     * })
-     */
+    #[Inject(
+        "config",
+    )]
     public function __construct(
         protected array $config = []
     ) {

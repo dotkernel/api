@@ -7,7 +7,7 @@ namespace ApiTest\Functional;
 use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\Entity\UserAvatar;
-use Api\User\Entity\UserResetPasswordEntity;
+use Api\User\Entity\UserResetPassword;
 use Api\User\Service\UserAvatarService;
 use DateInterval;
 use DateTimeImmutable;
@@ -311,9 +311,9 @@ class UserTest extends AbstractFunctionalTest
     {
         $user = $this->createUser();
 
-        $resetPassword = (new UserResetPasswordEntity())
+        $resetPassword = (new UserResetPassword())
             ->setUser($user)
-            ->setStatus(UserResetPasswordEntity::STATUS_REQUESTED)
+            ->setStatus(UserResetPassword::STATUS_REQUESTED)
             ->setHash('test')
             ->setExpires((new DateTimeImmutable())->sub(new DateInterval('P1D')));
         $user->addResetPassword($resetPassword);
@@ -350,9 +350,9 @@ class UserTest extends AbstractFunctionalTest
     {
         $user = $this->createUser();
 
-        $resetPassword = (new UserResetPasswordEntity())
+        $resetPassword = (new UserResetPassword())
             ->setUser($user)
-            ->setStatus(UserResetPasswordEntity::STATUS_COMPLETED)
+            ->setStatus(UserResetPassword::STATUS_COMPLETED)
             ->setHash('test')
             ->setExpires((new DateTimeImmutable())->add(new DateInterval('P1D')));
         $user->addResetPassword($resetPassword);
@@ -389,9 +389,9 @@ class UserTest extends AbstractFunctionalTest
     {
         $user = $this->createUser();
 
-        $resetPassword = (new UserResetPasswordEntity())
+        $resetPassword = (new UserResetPassword())
             ->setUser($user)
-            ->setStatus(UserResetPasswordEntity::STATUS_REQUESTED)
+            ->setStatus(UserResetPassword::STATUS_REQUESTED)
             ->setHash('test')
             ->setExpires((new DateTimeImmutable())->add(new DateInterval('P1D')));
         $user->addResetPassword($resetPassword);

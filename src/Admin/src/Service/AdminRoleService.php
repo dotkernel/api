@@ -9,17 +9,15 @@ use Api\Admin\Entity\AdminRole;
 use Api\Admin\Repository\AdminRoleRepository;
 use Api\App\Exception\NotFoundException;
 use Api\App\Message;
-use Dot\AnnotatedServices\Annotation\Inject;
+use Dot\DependencyInjection\Attribute\Inject;
 
 class AdminRoleService implements AdminRoleServiceInterface
 {
-    /**
-     * @Inject({
-     *     AdminRoleRepository::class
-     * })
-     */
+    #[Inject(
+        AdminRoleRepository::class,
+    )]
     public function __construct(
-        protected AdminRoleRepository $adminRoleRepository
+        protected AdminRoleRepository $adminRoleRepository,
     ) {
     }
 

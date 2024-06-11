@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Api\App\Repository;
 
+use Api\App\Entity\OAuthClient;
 use Doctrine\ORM\EntityRepository;
+use Dot\DependencyInjection\Attribute\Entity;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 
@@ -14,6 +16,7 @@ use function password_verify;
 /**
  * @extends EntityRepository<object>
  */
+#[Entity(name: OAuthClient::class)]
 class OAuthClientRepository extends EntityRepository implements ClientRepositoryInterface
 {
     private const GRANT_TYPE_CLIENT_CREDENTIALS = 'client_credentials';
@@ -33,7 +36,12 @@ class OAuthClientRepository extends EntityRepository implements ClientRepository
      */
     public function getClientEntity($clientIdentifier): ?ClientEntityInterface
     {
-        return $this->findOneBy(['name' => $clientIdentifier]);
+        $client = $this->findOneBy(['name' => $clientIdentifier]);
+        if ($client instanceof OAuthClient) {
+            return $client;
+        }
+
+        return null;
     }
 
     /**

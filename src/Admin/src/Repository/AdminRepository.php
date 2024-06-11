@@ -10,12 +10,12 @@ use Api\App\Exception\ConflictException;
 use Api\App\Helper\PaginationHelper;
 use Api\App\Message;
 use Doctrine\ORM\EntityRepository;
-use Dot\AnnotatedServices\Annotation\Entity;
+use Dot\DependencyInjection\Attribute\Entity;
 
 /**
- * @Entity(name="Api\Admin\Entity\Admin")
  * @extends EntityRepository<object>
  */
+#[Entity(name: Admin::class)]
 class AdminRepository extends EntityRepository
 {
     public function deleteAdmin(Admin $admin): void

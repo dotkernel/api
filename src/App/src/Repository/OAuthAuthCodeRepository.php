@@ -6,12 +6,14 @@ namespace Api\App\Repository;
 
 use Api\App\Entity\OAuthAuthCode;
 use Doctrine\ORM\EntityRepository;
+use Dot\DependencyInjection\Attribute\Entity;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 
 /**
  * @extends EntityRepository<object>
  */
+#[Entity(name: OAuthAuthCode::class)]
 class OAuthAuthCodeRepository extends EntityRepository implements AuthCodeRepositoryInterface
 {
     public function getNewAuthCode(): OAuthAuthCode

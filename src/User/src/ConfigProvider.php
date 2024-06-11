@@ -10,6 +10,7 @@ use Api\User\Collection\UserRoleCollection;
 use Api\User\Entity\User;
 use Api\User\Entity\UserAvatar;
 use Api\User\Entity\UserRole;
+use Api\User\EventListener\UserAvatarEventListener;
 use Api\User\Handler\AccountActivateHandler;
 use Api\User\Handler\AccountAvatarHandler;
 use Api\User\Handler\AccountHandler;
@@ -30,8 +31,8 @@ use Api\User\Service\UserRoleService;
 use Api\User\Service\UserRoleServiceInterface;
 use Api\User\Service\UserService;
 use Api\User\Service\UserServiceInterface;
-use Dot\AnnotatedServices\Factory\AnnotatedRepositoryFactory;
-use Dot\AnnotatedServices\Factory\AnnotatedServiceFactory;
+use Dot\DependencyInjection\Factory\AttributedRepositoryFactory;
+use Dot\DependencyInjection\Factory\AttributedServiceFactory;
 use Mezzio\Hal\Metadata\MetadataMap;
 
 class ConfigProvider
@@ -49,23 +50,24 @@ class ConfigProvider
     {
         return [
             'factories' => [
-                AccountActivateHandler::class      => AnnotatedServiceFactory::class,
-                AccountAvatarHandler::class        => AnnotatedServiceFactory::class,
-                AccountHandler::class              => AnnotatedServiceFactory::class,
-                AccountResetPasswordHandler::class => AnnotatedServiceFactory::class,
-                AccountRecoveryHandler::class      => AnnotatedServiceFactory::class,
-                UserActivateHandler::class         => AnnotatedServiceFactory::class,
-                UserAvatarHandler::class           => AnnotatedServiceFactory::class,
-                UserHandler::class                 => AnnotatedServiceFactory::class,
-                UserRoleHandler::class             => AnnotatedServiceFactory::class,
-                UserService::class                 => AnnotatedServiceFactory::class,
-                UserRoleService::class             => AnnotatedServiceFactory::class,
-                UserAvatarService::class           => AnnotatedServiceFactory::class,
-                UserRepository::class              => AnnotatedRepositoryFactory::class,
-                UserDetailRepository::class        => AnnotatedRepositoryFactory::class,
-                UserResetPasswordRepository::class => AnnotatedRepositoryFactory::class,
-                UserRoleRepository::class          => AnnotatedRepositoryFactory::class,
-                UserAvatarRepository::class        => AnnotatedRepositoryFactory::class,
+                AccountActivateHandler::class      => AttributedServiceFactory::class,
+                AccountAvatarHandler::class        => AttributedServiceFactory::class,
+                AccountHandler::class              => AttributedServiceFactory::class,
+                AccountResetPasswordHandler::class => AttributedServiceFactory::class,
+                AccountRecoveryHandler::class      => AttributedServiceFactory::class,
+                UserActivateHandler::class         => AttributedServiceFactory::class,
+                UserAvatarHandler::class           => AttributedServiceFactory::class,
+                UserAvatarEventListener::class     => AttributedServiceFactory::class,
+                UserHandler::class                 => AttributedServiceFactory::class,
+                UserRoleHandler::class             => AttributedServiceFactory::class,
+                UserService::class                 => AttributedServiceFactory::class,
+                UserRoleService::class             => AttributedServiceFactory::class,
+                UserAvatarService::class           => AttributedServiceFactory::class,
+                UserRepository::class              => AttributedRepositoryFactory::class,
+                UserDetailRepository::class        => AttributedRepositoryFactory::class,
+                UserResetPasswordRepository::class => AttributedRepositoryFactory::class,
+                UserRoleRepository::class          => AttributedRepositoryFactory::class,
+                UserAvatarRepository::class        => AttributedRepositoryFactory::class,
             ],
             'aliases'   => [
                 UserAvatarServiceInterface::class => UserAvatarService::class,

@@ -12,7 +12,7 @@ use Api\App\Message;
 use Api\App\UserIdentity;
 use Api\User\Entity\User;
 use Api\User\Repository\UserRepository;
-use Dot\AnnotatedServices\Annotation\Inject;
+use Dot\DependencyInjection\Attribute\Inject;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 use Mezzio\Authentication\UserInterface;
@@ -27,17 +27,15 @@ use function sprintf;
 
 class AuthorizationMiddleware implements MiddlewareInterface
 {
-    /**
-     * @Inject({
-     *     AuthorizationInterface::class,
-     *     UserRepository::class,
-     *     AdminRepository::class
-     * })
-     */
+    #[Inject(
+        AuthorizationInterface::class,
+        UserRepository::class,
+        AdminRepository::class,
+    )]
     public function __construct(
         protected AuthorizationInterface $authorization,
         protected UserRepository $userRepository,
-        protected AdminRepository $adminRepository
+        protected AdminRepository $adminRepository,
     ) {
     }
 

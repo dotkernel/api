@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Api\App\Middleware;
 
 use Api\App\Handler\ResponseTrait;
-use Dot\AnnotatedServices\Annotation\Inject;
+use Dot\DependencyInjection\Attribute\Inject;
 use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -26,11 +26,12 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
 {
     use ResponseTrait;
 
-    /**
-     * @Inject({"config.content-negotiation"})
-     */
-    public function __construct(private array $config)
-    {
+    #[Inject(
+        "config.content-negotiation",
+    )]
+    public function __construct(
+        private array $config,
+    ) {
     }
 
     public function process(
