@@ -2,14 +2,12 @@
 
 ## Supported Versions
 
-
 | Version | Supported          |
-| ------- | ------------------ |
+|---------|--------------------|
 | 5.x     | :white_check_mark: |
 | 4.x     | :white_check_mark: |
 | 3.x     | :x:                |
 | <= 2.0  | :x:                |
-
 
 ## Reporting Potential Security Issues
 
@@ -28,7 +26,6 @@ project contributors a chance to resolve the vulnerability and issue a new
 release prior to any public exposure; this helps protect the project's
 users, and provides them with a chance to upgrade and/or update in order to
 protect their applications.
-
 
 ## Policy
 
