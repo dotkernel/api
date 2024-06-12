@@ -30,10 +30,10 @@ class Admin extends AbstractEntity implements UserEntityInterface
     #[ORM\Column(name: "identity", type: "string", length: 100, unique: true)]
     protected string $identity = '';
 
-    #[ORM\Column(name: "firstName", type: "string", length: 255)]
+    #[ORM\Column(name: "firstName", type: "string", length: 191)]
     protected string $firstName = '';
 
-    #[ORM\Column(name: "lastName", type: "string", length: 255)]
+    #[ORM\Column(name: "lastName", type: "string", length: 191)]
     protected string $lastName = '';
 
     #[ORM\Column(name: "password", type: "string", length: 100)]

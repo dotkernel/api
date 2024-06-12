@@ -76,8 +76,8 @@
         "mezzio/mezzio-hal": "^2.9",
         "mezzio/mezzio-problem-details": "^1.13.1",
         "mezzio/mezzio-twigrenderer": "^2.15.0",
-        "ramsey/uuid-doctrine": "^2.0.0",
-        "roave/psr-container-doctrine": "^4.1.0",
+        "ramsey/uuid-doctrine": "^2.1.0",
+        "roave/psr-container-doctrine": "^5.1.0",
         "symfony/filesystem": "^7.0.3"
     },
     "require-dev": {
