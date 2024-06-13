@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use Api\App\Entity\EntityListenerResolver;
-
 $baseUrl = 'http://localhost:8080';
 
 $databases = [
