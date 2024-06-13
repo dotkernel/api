@@ -11,6 +11,7 @@ use Api\App\Factory\AuthenticationMiddlewareFactory;
 use Api\App\Factory\EntityListenerResolverFactory;
 use Api\App\Factory\RouteListCommandFactory;
 use Api\App\Factory\TokenGenerateCommandFactory;
+use Api\App\Handler\ErrorReportHandler;
 use Api\App\Handler\HomeHandler;
 use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
@@ -70,6 +71,7 @@ class ConfigProvider
                 TwigExtension::class                  => TwigExtensionFactory::class,
                 TwigRenderer::class                   => TwigRendererFactory::class,
                 HomeHandler::class                    => AttributedServiceFactory::class,
+                ErrorReportHandler::class             => AttributedServiceFactory::class,
                 ErrorResponseMiddleware::class        => AttributedServiceFactory::class,
                 RouteListCommand::class               => RouteListCommandFactory::class,
                 TokenGenerateCommand::class           => TokenGenerateCommandFactory::class,
