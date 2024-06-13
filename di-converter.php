@@ -230,17 +230,17 @@ foreach ($iterator as $file) {
      * Replace @Inject(dependencies) with #[Inject(dependencies)] in all classes
      */
     if (str_contains($after, '@Inject({')) {
-        preg_match('#/\*\*\n\s*\*\s*@Inject[\s\S\n]*?\*/#', $after, $injectTag);
+        preg_match('#/\**\n*\s*\**\s*@Inject[\s\S\n]*?\*/#', $after, $injectTag);
 
         if (isset($injectTag[0])) {
             $injectTag = $injectTag[0];
 
-            preg_match_all('/^\s*\*\s*(\b\w*\b::class,*|"[a-zA-Z0-9-._]*",*)$/m', $injectTag, $oldDependencies);
+            preg_match_all('/[^,\s{]+::class|".+?"/m', $injectTag, $oldDependencies);
 
             $newDependencies = [];
-            if (isset($oldDependencies[1])) {
+            if (! empty($oldDependencies[0])) {
                 $newDependencies[] = '#[Inject(';
-                foreach ($oldDependencies[1] as $dependency) {
+                foreach ($oldDependencies[0] as $dependency) {
                     if (! str_ends_with($dependency, ',')) {
                         $dependency .= ',';
                     }
