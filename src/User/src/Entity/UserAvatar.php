@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Api\User\Entity;
 
 use Api\App\Entity\AbstractEntity;
+use Api\App\Entity\TimestampsTrait;
 use Api\User\EventListener\UserAvatarEventListener;
 use Api\User\Repository\UserAvatarRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,6 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\EntityListeners([UserAvatarEventListener::class])]
 class UserAvatar extends AbstractEntity
 {
+    use TimestampsTrait;
+
     #[ORM\OneToOne(inversedBy: "avatar", targetEntity: User::class)]
     #[ORM\JoinColumn(name: "userUuid", referencedColumnName: "uuid")]
     protected User $user;

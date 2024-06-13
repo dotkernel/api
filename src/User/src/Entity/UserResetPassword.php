@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Api\User\Entity;
 
 use Api\App\Entity\AbstractEntity;
+use Api\App\Entity\TimestampsTrait;
 use Api\User\Repository\UserResetPasswordRepository;
 use DateInterval;
 use DateTime;
@@ -17,6 +18,8 @@ use Exception;
 #[ORM\HasLifecycleCallbacks]
 class UserResetPassword extends AbstractEntity
 {
+    use TimestampsTrait;
+
     public const STATUS_COMPLETED = 'completed';
     public const STATUS_REQUESTED = 'requested';
     public const STATUSES         = [
