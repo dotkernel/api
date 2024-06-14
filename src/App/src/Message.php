@@ -44,4 +44,5 @@ class Message
     public const VALIDATOR_REQUIRED_FIELD         = 'This field is required and cannot be empty.';
     public const VALIDATOR_REQUIRED_FIELD_BY_NAME = '%s is required and cannot be empty.';
     public const VALIDATOR_REQUIRED_UPLOAD        = 'A file must be uploaded first.';
+    public const RESTRICTION_DEPRECATION          = 'Cannot use both `%s` and `%s` attributes on the same object.';
 }

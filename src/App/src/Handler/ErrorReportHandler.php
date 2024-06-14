@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\App\Handler;
 
+use Api\App\Attribute\MethodDeprecation;
 use Api\App\Exception\ForbiddenException;
 use Api\App\Message;
 use Api\App\Service\ErrorReportServiceInterface;
@@ -38,6 +39,11 @@ class ErrorReportHandler implements RequestHandlerInterface
      * @throws ForbiddenException
      * @throws RuntimeException
      */
+    #[MethodDeprecation(
+        sunset: '2038-01-01',
+        link: 'https://docs.dotkernel.org/api-documentation/v5/core-features/versioning',
+        deprecationReason: 'Method deprecation example.',
+    )]
     public function post(ServerRequestInterface $request): ResponseInterface
     {
         $this->errorReportService
