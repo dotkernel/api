@@ -44,7 +44,6 @@ trait TimestampsTrait
     public function created(): void
     {
         $this->created = new DateTimeImmutable();
-        $this->updated = new DateTimeImmutable();
     }
 
     #[ORM\PreUpdate]
