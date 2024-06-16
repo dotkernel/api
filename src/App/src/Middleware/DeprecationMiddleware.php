@@ -20,6 +20,7 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 
+use function array_key_exists;
 use function array_keys;
 use function sprintf;
 
@@ -52,7 +53,7 @@ class DeprecationMiddleware implements MiddlewareInterface
         $routeMiddleware = $matchedRoute->getMiddleware();
         if ($routeMiddleware instanceof LazyLoadingMiddleware) {
             /** @var class-string $routeMiddlewareName */
-            $routeMiddlewareName          = $routeMiddleware->middlewareName;
+            $routeMiddlewareName       = $routeMiddleware->middlewareName;
             $reflectionMiddlewareClass = new ReflectionClass($routeMiddlewareName);
             if ($reflectionMiddlewareClass->implementsInterface(RequestHandlerInterface::class)) {
                 $reflectionHandler = $reflectionMiddlewareClass;

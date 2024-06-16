@@ -6,19 +6,19 @@ namespace Api\App;
 
 class Message
 {
-    public const ADMIN_CREATED                    = 'Admin account has been created.';
-    public const ADMIN_NOT_ACTIVATED              = 'This account is deactivated.';
-    public const ADMIN_NOT_FOUND                  = 'Admin not found.';
-    public const AVATAR_MISSING                   = 'This user account has no avatar associated with it.';
-    public const DUPLICATE_EMAIL                  = 'An account with this email address already exists.';
-    public const DUPLICATE_IDENTITY               = 'An account with this identity already exists.';
-    public const ERROR_REPORT_OK                  = 'Error report successfully saved.';
-    public const ERROR_REPORT_NOT_ALLOWED         = 'You are not allowed to report errors.';
-    public const ERROR_REPORT_NOT_ENABLED         = 'Remote error reporting is not enabled.';
-    public const INVALID_CLIENT_ID                = 'Invalid client_id.';
-    public const INVALID_CONFIG                   = 'Invalid configuration value: \'%s\'';
-    public const INVALID_VALUE                    = 'The value specified for \'%s\' is invalid.';
-    public const MAIL_NOT_SENT_TO                 = 'Could not send mail to \'%s\'.';
+    public const ADMIN_CREATED            = 'Admin account has been created.';
+    public const ADMIN_NOT_ACTIVATED      = 'This account is deactivated.';
+    public const ADMIN_NOT_FOUND          = 'Admin not found.';
+    public const AVATAR_MISSING           = 'This user account has no avatar associated with it.';
+    public const DUPLICATE_EMAIL          = 'An account with this email address already exists.';
+    public const DUPLICATE_IDENTITY       = 'An account with this identity already exists.';
+    public const ERROR_REPORT_OK          = 'Error report successfully saved.';
+    public const ERROR_REPORT_NOT_ALLOWED = 'You are not allowed to report errors.';
+    public const ERROR_REPORT_NOT_ENABLED = 'Remote error reporting is not enabled.';
+    public const INVALID_CLIENT_ID        = 'Invalid client_id.';
+    public const INVALID_CONFIG           = 'Invalid configuration value: \'%s\'';
+    public const INVALID_VALUE            = 'The value specified for \'%s\' is invalid.';
+    public const MAIL_NOT_SENT_TO         = 'Could not send mail to \'%s\'.';
 
     public const MAIL_SENT_RECOVER_IDENTITY       = 'If the provided email identifies an account in our system, '
     . 'you will receive an email with your account\'s identity.';
