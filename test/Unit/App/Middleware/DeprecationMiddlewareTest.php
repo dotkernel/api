@@ -48,7 +48,7 @@ class DeprecationMiddlewareTest extends TestCase
      * @throws ReflectionException
      * @throws Exception
      */
-    public function testThrowsDeprecationConflictException()
+    public function testThrowsDeprecationConflictException(): void
     {
         $handler = new #[ResourceDeprecation(
             sunset: '2038-01-01',

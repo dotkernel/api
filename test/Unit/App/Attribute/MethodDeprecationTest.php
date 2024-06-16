@@ -19,7 +19,7 @@ class MethodDeprecationTest extends TestCase
                 link: 'test-link',
                 deprecationReason: 'test-deprecation-reason',
             )]
-            public function test()
+            public function test(): void
             {
             }
         };
@@ -40,7 +40,7 @@ class MethodDeprecationTest extends TestCase
                 link: 'test-link',
                 deprecationReason: 'test-deprecation-reason',
             )]
-            public function test()
+            public function test(): void
             {
             }
         };

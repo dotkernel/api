@@ -9,6 +9,7 @@ use Api\App\Attribute\ResourceDeprecation;
 use Api\App\Exception\DeprecationConflictException;
 use Api\App\Handler\ResponseTrait;
 use Api\App\Message;
+use Laminas\Stratigility\MiddlewarePipe;
 use Mezzio\Middleware\LazyLoadingMiddleware;
 use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
@@ -43,13 +44,20 @@ class DeprecationMiddleware implements MiddlewareInterface
         }
 
         $reflectionHandler = null;
-        $routeMiddleware   = $routeResult->getMatchedRoute()->getMiddleware();
+        $matchedRoute      = $routeResult->getMatchedRoute();
+        if (! $matchedRoute) {
+            return $response;
+        }
+
+        $routeMiddleware = $matchedRoute->getMiddleware();
         if ($routeMiddleware instanceof LazyLoadingMiddleware) {
-            $reflectionMiddlewareClass = new ReflectionClass($routeMiddleware->middlewareName);
+            /** @var class-string $routeMiddlewareName */
+            $routeMiddlewareName          = $routeMiddleware->middlewareName;
+            $reflectionMiddlewareClass = new ReflectionClass($routeMiddlewareName);
             if ($reflectionMiddlewareClass->implementsInterface(RequestHandlerInterface::class)) {
                 $reflectionHandler = $reflectionMiddlewareClass;
             }
-        } else {
+        } elseif ($routeMiddleware instanceof MiddlewarePipe) {
             $reflectionClass    = new ReflectionClass($routeMiddleware);
             $middlewarePipeline = $reflectionClass->getProperty('pipeline')->getValue($routeMiddleware);
             for ($middlewarePipeline->rewind(); $middlewarePipeline->valid(); $middlewarePipeline->next()) {
@@ -80,29 +88,32 @@ class DeprecationMiddleware implements MiddlewareInterface
             );
         }
 
-        $sunset = '';
-        $link   = '';
-        if ($attributes[self::RESOURCE_DEPRECATION_ATTRIBUTE] ?? '') {
+        $sunset = null;
+        $link   = null;
+        if (array_key_exists(self::RESOURCE_DEPRECATION_ATTRIBUTE, $attributes)) {
             $sunset = $attributes[self::RESOURCE_DEPRECATION_ATTRIBUTE]['sunset'];
             $link   = $attributes[self::RESOURCE_DEPRECATION_ATTRIBUTE]['link'];
         }
 
-        if ($attributes[self::METHOD_DEPRECATION_ATTRIBUTE] ?? '') {
+        if (array_key_exists(self::METHOD_DEPRECATION_ATTRIBUTE, $attributes)) {
             $sunset = $attributes[self::METHOD_DEPRECATION_ATTRIBUTE]['sunset'];
             $link   = $attributes[self::METHOD_DEPRECATION_ATTRIBUTE]['link'];
         }
 
-        if ($sunset) {
+        if ($sunset !== null) {
             $response = $response->withHeader('sunset', $sunset);
         }
 
-        if ($link) {
+        if ($link !== null) {
             $response = $response->withHeader('link', $link);
         }
 
         return $response;
     }
 
+    /**
+     * @param class-string $type
+     */
     public function getAttributes(ReflectionClass|ReflectionMethod $reflection, string $type): array
     {
         $attributes = [];
