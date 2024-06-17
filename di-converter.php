@@ -349,7 +349,7 @@ foreach ($iterator as $file) {
                         $keyValue = [];
                         if (array_key_exists('class', $mapping['attributes'])) {
                             $keyValue[] = sprintf(
-                                'class: %s::class',
+                                'class: \%s::class',
                                 str_replace("'", '', (string) $mapping['attributes']['class'])
                             );
                         }
@@ -386,8 +386,12 @@ foreach ($iterator as $file) {
                             $keyValue[] = sprintf('inversedBy: %s', trim($mapping['attributes']['inversedBy']));
                         }
                         if (isset($mapping['attributes']['targetEntity'])) {
+                            $pattern = 'targetEntity: %s::class';
+                            if (str_contains($mapping['attributes']['targetEntity'], '\\')) {
+                                $pattern = 'targetEntity: \%s::class';
+                            }
                             $keyValue[] = sprintf(
-                                'targetEntity: %s::class',
+                                $pattern,
                                 str_replace("'", '', trim($mapping['attributes']['targetEntity']))
                             );
                         }
