@@ -57,9 +57,18 @@ if (! str_contains($contents, 'Dot\DependencyInjection\ConfigProvider::class')) 
 }
 echo sprintf('✅ %s: Dot\DependencyInjection\ConfigProvider::class was found' . PHP_EOL, $path, $dotAnnotatedServices);
 
-$definitionReplacements = [
-    'old' => ['=', ':',     '{', '}', ':', '= ', ' :', '"'],
-    'new' => ['= ', ' => ', '[', ']', '=', ': ', ':',  "'"],
+$doctrineKeywords = [
+    'Id',
+    'GeneratedValue',
+    'CustomIdGenerator',
+    'OneToOne',
+    'OneToMany',
+    'ManyToOne',
+    'ManyToMany',
+    'JoinColumn',
+    'JoinColumns',
+    'JoinTable',
+    'Column',
 ];
 
 $diReplacements = [
@@ -161,7 +170,7 @@ foreach ($iterator as $file) {
         if (isset($matches[1])) {
             $after = str_replace(
                 PHP_EOL . 'class',
-                PHP_EOL . '#[ORM\Table(name: "' . $matches[1] . '")]' . PHP_EOL . 'class',
+                PHP_EOL . '#[ORM\Table(name: \'' . $matches[1] . '\')]' . PHP_EOL . 'class',
                 $after
             );
             $after = str_replace(PHP_EOL . $matches[0], '', $after);
@@ -204,25 +213,248 @@ foreach ($iterator as $file) {
         /**
          * Convert entity properties
          */
-        preg_match_all(
-            '#/\**\n*.*(OneToOne|OneToMany|ManyToOne|ManyToMany|Column)\((.*)\)\n*\s*\*/#m',
-            $after,
-            $properties
-        );
-        foreach ($properties[2] ?? [] as $index => $property) {
-            $definition = str_replace($definitionReplacements['old'], $definitionReplacements['new'], $property);
-            $definition = preg_replace('/\s+/', ' ', $definition);
-
-            $after = str_replace(
-                $properties[0][$index],
-                sprintf('#[ORM\%s(%s)]', $properties[1][$index], $definition),
-                $after
+        preg_match_all('#/\*[\s\S]*?\*/#m', $after, $properties);
+        foreach ($properties[0] as $property) {
+            /**
+             * Drop comments which do not contain at least one Doctrine keyword
+             */
+            preg_match(
+                '/@ORM\\\(.*)/m',
+                $property,
+                $matches
             );
-
-            preg_match('/.*targetEntity:\s\'(\b\w+\b).*/', $definition, $targetEntity);
-            if (isset($targetEntity[1])) {
-                $after = str_replace("'" . $targetEntity[1] . "'", $targetEntity[1] . '::class', $after);
+            if (empty($matches)) {
+                continue;
             }
+
+            $mappings = [];
+
+            /**
+             * Split Doctrine data into an array of Doctrine statements
+             * [
+             *      'ORM\ManyToMany(...)',
+             *      'ORM\JoinTable(...)',
+             * ]
+             */
+            $doctrineClassCalls = preg_split('/\s*\*\s*@ORM\\\/', $property);
+            foreach ($doctrineClassCalls as $doctrineCallString) {
+                $mapping = [
+                    'type'       => '',
+                    'attributes' => [],
+                ];
+
+                /**
+                 * Drop comment lines which do not contain at least one Doctrine keyword
+                 */
+                preg_match(
+                    '/(' . implode('|', $doctrineKeywords) . ')/m',
+                    $doctrineCallString,
+                    $matches
+                );
+                if (empty($matches)) {
+                    continue;
+                }
+
+                $doctrineCallString = preg_replace('/\s*\n*\s*\*\//', ' ', $doctrineCallString);
+                $doctrineCallString = preg_replace('/\s*\*\s*/', ' ', $doctrineCallString);
+                $doctrineCallString = trim($doctrineCallString);
+
+                $pattern = '/^(?P<className>' . implode('|', $doctrineKeywords) . ')\(\s*(?P<attributes>.*)\s*\)$/m';
+                preg_match($pattern, $doctrineCallString, $doctrineCallArray);
+
+                $mapping['type'] = $doctrineCallArray['className'];
+                $classAttributes = $doctrineCallArray['attributes'];
+
+                preg_match_all('/(\w+)=("[^"]*"|\d+|\w+|{[^}]*})/m', $classAttributes, $classAttributes);
+                if (! isset($classAttributes[2])) {
+                    continue;
+                }
+                foreach ($classAttributes[2] as $i => $classAttribute) {
+                    $classAttribute = preg_replace('/\s+/', '', $classAttribute);
+
+                    // cascade={"persist", "remove"}
+                    if (
+                        str_starts_with($classAttribute, '{"')
+                        && str_ends_with($classAttribute, '"}')
+                        && ! str_contains($classAttribute, ':')
+                    ) {
+                        preg_match_all('/"([^"]*)"/m', $classAttribute, $listValuesMatches);
+                        if (count($listValuesMatches[1]) > 0) {
+                            $mapping['attributes'][$classAttributes[1][$i]] = sprintf(
+                                "['%s']",
+                                implode("', '", $listValuesMatches[1])
+                            );
+                            continue;
+                        }
+                    }
+
+                    preg_match(
+                        '/(JoinColumn|JoinColumns|JoinTable)\(.*\)/m',
+                        $classAttribute,
+                        $doctrineKeywordMatches
+                    );
+                    if (! empty($doctrineKeywordMatches)) {
+                        preg_match_all('/(\w+)=("[^"]+")/m', $classAttribute, $doctrineAttrMatches);
+                        $attributes = [];
+                        foreach ($doctrineAttrMatches[2] as $j => $doctrineAttrMatch) {
+                            $attributes[$doctrineAttrMatches[1][$j]] = str_replace('"', "'", $doctrineAttrMatch);
+                        }
+
+                        $mapping['attributes'][$classAttributes[1][$i]] = [
+                            'type'       => $doctrineKeywordMatches[1],
+                            'attributes' => $attributes,
+                        ];
+                        continue;
+                    }
+
+                    // options={"unsigned":true,'default':0}
+                    if (
+                        str_starts_with($classAttribute, '{')
+                        && str_ends_with($classAttribute, '}')
+                        && str_contains($classAttribute, ':')
+                    ) {
+                        $classAttribute = str_replace("'", '"', $classAttribute);
+                        preg_match_all('/("*\w+"*)*:("[^"]*"|\d+|\w+)/m', $classAttribute, $jsonValueMatches);
+                        if (count($jsonValueMatches[2]) > 0) {
+                            $attributes = [];
+                            foreach ($jsonValueMatches[2] as $j => $jsonValueMatch) {
+                                $key              = str_replace('"', "'", $jsonValueMatches[1][$j]);
+                                $attributes[$key] = $jsonValueMatch;
+                            }
+
+                            $mapping['attributes'][$classAttributes[1][$i]] = $attributes;
+                            continue;
+                        }
+                    }
+
+                    $mapping['attributes'][$classAttributes[1][$i]] = str_replace('"', "'", $classAttribute);
+                }
+                $mappings[] = $mapping;
+            }
+
+            $replacements = [];
+            foreach ($mappings as $mapping) {
+                switch ($mapping['type']) {
+                    case 'Id':
+                        $replacements[] = sprintf('#[ORM\%s]', $mapping['type']);
+                        break;
+                    case 'GeneratedValue':
+                        $keyValue = [];
+                        foreach ($mapping['attributes'] as $key => $value) {
+                            $keyValue[] = sprintf('%s: %s', $key, $value);
+                        }
+                        $replacements[] = sprintf('    #[ORM\%s(%s)]', $mapping['type'], implode(', ', $keyValue));
+                        break;
+                    case 'CustomIdGenerator':
+                        $keyValue = [];
+                        if (array_key_exists('class', $mapping['attributes'])) {
+                            $keyValue[] = sprintf(
+                                'class: %s::class',
+                                str_replace("'", '', (string) $mapping['attributes']['class'])
+                            );
+                        }
+                        $replacements[] = sprintf('    #[ORM\%s(%s)]', $mapping['type'], implode(', ', $keyValue));
+                        break;
+                    case 'Column':
+                        $keyValue = [];
+                        foreach ($mapping['attributes'] as $key => $value) {
+                            if (is_array($value)) {
+                                $keyValue2 = [];
+                                foreach ($value as $key2 => $value2) {
+                                    $keyValue2[] = sprintf('%s => %s', $key2, $value2);
+                                }
+                                $keyValue[] = sprintf('%s: [%s]', $key, implode(', ', $keyValue2));
+                            } else {
+                                $keyValue[] = sprintf('%s: %s', $key, $value);
+                            }
+                        }
+                        if (in_array('#[ORM\Id]', $replacements)) {
+                            $replacements[] = sprintf('    #[ORM\%s(%s)]', $mapping['type'], implode(', ', $keyValue));
+                        } else {
+                            $replacements[] = sprintf('#[ORM\%s(%s)]', $mapping['type'], implode(', ', $keyValue));
+                        }
+                        break;
+                    case 'OneToOne':
+                    case 'OneToMany':
+                    case 'ManyToOne':
+                    case 'ManyToMany':
+                        $keyValue = [];
+                        if (isset($mapping['attributes']['mappedBy'])) {
+                            $keyValue[] = sprintf('mappedBy: %s', trim($mapping['attributes']['mappedBy']));
+                        }
+                        if (isset($mapping['attributes']['inversedBy'])) {
+                            $keyValue[] = sprintf('inversedBy: %s', trim($mapping['attributes']['inversedBy']));
+                        }
+                        if (isset($mapping['attributes']['targetEntity'])) {
+                            $keyValue[] = sprintf(
+                                'targetEntity: %s::class',
+                                str_replace("'", '', trim($mapping['attributes']['targetEntity']))
+                            );
+                        }
+                        if (isset($mapping['attributes']['cascade'])) {
+                            $keyValue[] = sprintf('cascade: %s', trim($mapping['attributes']['cascade']));
+                        }
+                        if (isset($mapping['attributes']['fetch'])) {
+                            $keyValue[] = sprintf(
+                                'fetch: %s',
+                                str_replace('"', '', trim($mapping['attributes']['fetch']))
+                            );
+                        }
+                        if (isset($mapping['attributes']['orphanRemoval'])) {
+                            $keyValue[] = sprintf('orphanRemoval: %s', trim($mapping['attributes']['orphanRemoval']));
+                        }
+                        if (isset($mapping['attributes']['indexBy'])) {
+                            $keyValue[] = sprintf('indexBy: %s', trim($mapping['attributes']['indexBy']));
+                        }
+                        $replacements[] = sprintf('#[ORM\%s(%s)]', $mapping['type'], implode(', ', $keyValue));
+                        break;
+                    case 'JoinColumn':
+                        $keyValue = [];
+                        if (isset($mapping['attributes']['name'])) {
+                            $keyValue[] = sprintf('name: %s', trim($mapping['attributes']['name']));
+                        }
+                        if (isset($mapping['attributes']['referencedColumnName'])) {
+                            $keyValue[] = sprintf(
+                                'referencedColumnName: %s',
+                                trim($mapping['attributes']['referencedColumnName'])
+                            );
+                        }
+                        $replacements[] = sprintf('    #[ORM\%s(%s)]', $mapping['type'], implode(', ', $keyValue));
+                        break;
+                    case 'JoinTable':
+                        $keyValue = [];
+                        if (isset($mapping['attributes']['name'])) {
+                            $keyValue[] = sprintf('name: %s', trim($mapping['attributes']['name']));
+                        }
+                        $replacements[] = sprintf('    #[ORM\%s(%s)]', $mapping['type'], implode(', ', $keyValue));
+
+                        if (isset($mapping['attributes']['joinColumns'])) {
+                            $keyValue = [];
+                            foreach ($mapping['attributes']['joinColumns']['attributes'] as $key => $value) {
+                                $keyValue[] = sprintf('%s: %s', $key, str_replace('"', "'", $value));
+                            }
+                            $replacements[] = sprintf(
+                                '    #[ORM\%s(%s)]',
+                                $mapping['attributes']['joinColumns']['type'],
+                                implode(', ', $keyValue)
+                            );
+                        }
+
+                        if (isset($mapping['attributes']['inverseJoinColumns'])) {
+                            $keyValue = [];
+                            foreach ($mapping['attributes']['inverseJoinColumns']['attributes'] as $key => $value) {
+                                $keyValue[] = sprintf('%s: %s', $key, str_replace('"', "'", $value));
+                            }
+                            $replacements[] = sprintf(
+                                '    #[ORM\InverseJoinColumn(%s)]',
+                                implode(', ', $keyValue)
+                            );
+                        }
+                        break;
+                }
+            }
+
+            $after = str_replace($property, implode(PHP_EOL, $replacements), $after);
         }
     }
 
@@ -238,7 +470,7 @@ foreach ($iterator as $file) {
             preg_match_all('/[^,\s{]+::class|".+?"/m', $injectTag, $oldDependencies);
 
             $newDependencies = [];
-            if (! empty($oldDependencies[0])) {
+            if (count($oldDependencies[0]) > 0) {
                 $newDependencies[] = '#[Inject(';
                 foreach ($oldDependencies[0] as $dependency) {
                     if (! str_ends_with($dependency, ',')) {
