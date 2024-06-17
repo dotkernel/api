@@ -6,6 +6,7 @@ use Api\App\Handler\NotFoundHandler;
 use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
 use Api\App\Middleware\ContentNegotiationMiddleware;
+use Api\App\Middleware\DeprecationMiddleware;
 use Dot\ErrorHandler\ErrorHandlerInterface;
 use Dot\ResponseHeader\Middleware\ResponseHeaderMiddleware;
 use Mezzio\Application;
@@ -61,6 +62,7 @@ return function (Application $app): void {
     $app->pipe(MethodNotAllowedMiddleware::class);
 
     $app->pipe(ContentNegotiationMiddleware::class);
+    $app->pipe(DeprecationMiddleware::class);
 
     $app->pipe(ResponseHeaderMiddleware::class);
 

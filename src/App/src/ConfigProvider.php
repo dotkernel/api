@@ -16,6 +16,7 @@ use Api\App\Handler\HomeHandler;
 use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
 use Api\App\Middleware\ContentNegotiationMiddleware;
+use Api\App\Middleware\DeprecationMiddleware;
 use Api\App\Middleware\ErrorResponseMiddleware;
 use Api\App\Service\ErrorReportService;
 use Api\App\Service\ErrorReportServiceInterface;
@@ -67,6 +68,7 @@ class ConfigProvider
                 AuthenticationMiddleware::class       => AuthenticationMiddlewareFactory::class,
                 AuthorizationMiddleware::class        => AttributedServiceFactory::class,
                 ContentNegotiationMiddleware::class   => AttributedServiceFactory::class,
+                DeprecationMiddleware::class          => AttributedServiceFactory::class,
                 Environment::class                    => TwigEnvironmentFactory::class,
                 TwigExtension::class                  => TwigExtensionFactory::class,
                 TwigRenderer::class                   => TwigRendererFactory::class,

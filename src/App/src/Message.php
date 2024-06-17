@@ -18,12 +18,12 @@ class Message
     public const INVALID_CLIENT_ID                = 'Invalid client_id.';
     public const INVALID_CONFIG                   = 'Invalid configuration value: \'%s\'';
     public const INVALID_VALUE                    = 'The value specified for \'%s\' is invalid.';
+    public const MAIL_NOT_SENT_TO                 = 'Could not send mail to \'%s\'.';
     public const MAIL_SENT_RECOVER_IDENTITY       = 'If the provided email identifies an account in our system, '
     . 'you will receive an email with your account\'s identity.';
     public const MAIL_SENT_RESET_PASSWORD         = 'If the provided email identifies an account in our system, '
     . 'you will receive an email with further instructions on resetting your account\'s password.';
     public const MAIL_SENT_USER_ACTIVATION        = 'User activation mail has been successfully sent to \'%s\'';
-    public const MAIL_NOT_SENT_TO                 = 'Could not send mail to \'%s\'.';
     public const MISSING_CONFIG                   = 'Missing configuration value: \'%s\'.';
     public const RESET_PASSWORD_EXPIRED           = 'Password reset request for hash: \'%s\' is invalid (expired).';
     public const RESET_PASSWORD_NOT_FOUND         = 'Could not find password reset request identified by hash: \'%s\'';
@@ -31,6 +31,7 @@ class Message
     public const RESET_PASSWORD_USED              = 'Password reset request for hash: \'%s\' is invalid (used).';
     public const RESET_PASSWORD_VALID             = 'Password reset request for hash: \'%s\' is valid.';
     public const RESOURCE_NOT_ALLOWED             = 'You are not allowed to access this resource.';
+    public const RESTRICTION_DEPRECATION          = 'Cannot use both `%s` and `%s` attributes on the same object.';
     public const RESTRICTION_IMAGE                = 'File must be an image (jpg, png).';
     public const RESTRICTION_ROLES                = 'User accounts must have at least one role.';
     public const ROLE_NOT_FOUND                   = 'Role not found.';
