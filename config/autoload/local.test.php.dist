@@ -19,7 +19,7 @@ return [
         'connection' => [
             'orm_default' => [
                 'params' => [
-                    'url' => 'sqlite:///:memory:',
+                    'url' => 'sqlite3:///:memory:',
                 ],
             ],
         ],

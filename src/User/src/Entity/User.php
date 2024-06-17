@@ -7,6 +7,7 @@ namespace Api\User\Entity;
 use Api\App\Entity\AbstractEntity;
 use Api\App\Entity\PasswordTrait;
 use Api\App\Entity\RoleInterface;
+use Api\App\Entity\TimestampsTrait;
 use Api\User\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -23,6 +24,7 @@ use function uniqid;
 class User extends AbstractEntity implements UserEntityInterface
 {
     use PasswordTrait;
+    use TimestampsTrait;
 
     public const STATUS_PENDING = 'pending';
     public const STATUS_ACTIVE  = 'active';

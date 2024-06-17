@@ -42,6 +42,9 @@ trait DatabaseTrait
         $loader->loadFromDirectory($path);
 
         $fixtures = $loader->getFixtures();
-        $executor->execute($fixtures, true);
+
+        foreach ($fixtures as $fixture) {
+            $executor->load($entityManager, $fixture);
+        }
     }
 }

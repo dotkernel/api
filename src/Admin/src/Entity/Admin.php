@@ -8,6 +8,7 @@ use Api\Admin\Repository\AdminRepository;
 use Api\App\Entity\AbstractEntity;
 use Api\App\Entity\PasswordTrait;
 use Api\App\Entity\RoleInterface;
+use Api\App\Entity\TimestampsTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,6 +20,7 @@ use League\OAuth2\Server\Entities\UserEntityInterface;
 class Admin extends AbstractEntity implements UserEntityInterface
 {
     use PasswordTrait;
+    use TimestampsTrait;
 
     public const STATUS_ACTIVE   = 'active';
     public const STATUS_INACTIVE = 'inactive';
@@ -30,10 +32,10 @@ class Admin extends AbstractEntity implements UserEntityInterface
     #[ORM\Column(name: "identity", type: "string", length: 100, unique: true)]
     protected string $identity = '';
 
-    #[ORM\Column(name: "firstName", type: "string", length: 255)]
+    #[ORM\Column(name: "firstName", type: "string", length: 191)]
     protected string $firstName = '';
 
-    #[ORM\Column(name: "lastName", type: "string", length: 255)]
+    #[ORM\Column(name: "lastName", type: "string", length: 191)]
     protected string $lastName = '';
 
     #[ORM\Column(name: "password", type: "string", length: 100)]

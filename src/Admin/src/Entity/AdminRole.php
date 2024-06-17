@@ -7,6 +7,7 @@ namespace Api\Admin\Entity;
 use Api\Admin\Repository\AdminRoleRepository;
 use Api\App\Entity\AbstractEntity;
 use Api\App\Entity\RoleInterface;
+use Api\App\Entity\TimestampsTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdminRoleRepository::class)]
@@ -14,6 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\HasLifecycleCallbacks]
 class AdminRole extends AbstractEntity implements RoleInterface
 {
+    use TimestampsTrait;
+
     public const ROLE_ADMIN     = 'admin';
     public const ROLE_SUPERUSER = 'superuser';
     public const ROLES          = [
