@@ -30,6 +30,6 @@ class HomeHandler implements RequestHandlerInterface
 
     public function get(): ResponseInterface
     {
-        return $this->jsonResponse(['message' => 'Welcome to DotKernel API!']);
+        return $this->jsonResponse(['message' => 'DotKernel API version 4']);
     }
 }
