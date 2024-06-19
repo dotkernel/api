@@ -19,7 +19,7 @@ readonly class BaseDeprecation
         public string $rel = 'sunset',
         public string $type = 'text/html',
     ) {
-        if (! empty($this->sunset) && ! (new Date())->isValid($sunset)) {
+        if (null !== $sunset && ! (new Date())->isValid($sunset)) {
             throw new DeprecationSunsetException(sprintf(Message::INVALID_VALUE, 'sunset'));
         }
     }

@@ -29,6 +29,7 @@ use function array_merge;
 use function array_values;
 use function count;
 use function implode;
+use function is_string;
 use function rtrim;
 use function sprintf;
 use function strtoupper;
@@ -46,7 +47,7 @@ class DeprecationMiddleware implements MiddlewareInterface
     ];
 
     #[Inject("config")]
-    public function __construct(protected array $config)
+    public function __construct(protected readonly array $config)
     {
     }
 
@@ -80,7 +81,7 @@ class DeprecationMiddleware implements MiddlewareInterface
 
         $this->validateAttributes($attributes);
         $attribute = $this->getAttribute($attributes, $request->getMethod());
-        if (empty($attribute)) {
+        if (null === $attribute) {
             return $response;
         }
 
@@ -89,7 +90,7 @@ class DeprecationMiddleware implements MiddlewareInterface
             $response = $response->withHeader('sunset', $attribute['sunset']);
         }
 
-        if ($baseUrl) {
+        if (is_string($baseUrl)) {
             $response = $response->withHeader('link', $this->formatLink($baseUrl, $attribute));
         }
 
@@ -102,7 +103,7 @@ class DeprecationMiddleware implements MiddlewareInterface
             return $attribute['deprecationType'] === self::RESOURCE_DEPRECATION_ATTRIBUTE;
         }))[0] ?? null;
 
-        if (empty($attribute)) {
+        if (null === $attribute) {
             $attribute = array_values(array_filter($attributes, function (array $attr) use ($requestMethod): bool {
                 return $attr['deprecationType'] === self::METHOD_DEPRECATION_ATTRIBUTE &&
                     strtoupper($attr['identifier']) === strtoupper($requestMethod);
