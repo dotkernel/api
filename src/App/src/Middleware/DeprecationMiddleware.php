@@ -9,6 +9,7 @@ use Api\App\Attribute\ResourceDeprecation;
 use Api\App\Exception\DeprecationConflictException;
 use Api\App\Handler\ResponseTrait;
 use Api\App\Message;
+use Dot\DependencyInjection\Attribute\Inject;
 use Laminas\Stratigility\MiddlewarePipe;
 use Mezzio\Middleware\LazyLoadingMiddleware;
 use Mezzio\Router\RouteResult;
@@ -19,10 +20,18 @@ use Psr\Http\Server\RequestHandlerInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use RuntimeException;
 
-use function array_key_exists;
-use function array_keys;
+use function array_column;
+use function array_filter;
+use function array_intersect;
+use function array_merge;
+use function array_values;
+use function count;
+use function implode;
+use function rtrim;
 use function sprintf;
+use function strtoupper;
 
 class DeprecationMiddleware implements MiddlewareInterface
 {
@@ -30,6 +39,16 @@ class DeprecationMiddleware implements MiddlewareInterface
 
     public const RESOURCE_DEPRECATION_ATTRIBUTE = ResourceDeprecation::class;
     public const METHOD_DEPRECATION_ATTRIBUTE   = MethodDeprecation::class;
+
+    public const DEPRECATION_ATTRIBUTES = [
+        self::RESOURCE_DEPRECATION_ATTRIBUTE,
+        self::METHOD_DEPRECATION_ATTRIBUTE,
+    ];
+
+    #[Inject("config")]
+    public function __construct(protected array $config)
+    {
+    }
 
     /**
      * @throws ReflectionException
@@ -44,13 +63,80 @@ class DeprecationMiddleware implements MiddlewareInterface
             return $response;
         }
 
-        $reflectionHandler = null;
-        $matchedRoute      = $routeResult->getMatchedRoute();
+        $matchedRoute = $routeResult->getMatchedRoute();
         if (! $matchedRoute) {
             return $response;
         }
 
-        $routeMiddleware = $matchedRoute->getMiddleware();
+        $reflectionHandler = $this->getHandler($matchedRoute->getMiddleware());
+        if (empty($reflectionHandler)) {
+            return $response;
+        }
+
+        $attributes = $this->getReflectionAttributes($reflectionHandler);
+        if (empty($attributes)) {
+            return $response;
+        }
+
+        $this->validateAttributes($attributes);
+        $attribute = $this->getAttribute($attributes, $request->getMethod());
+        if (empty($attribute)) {
+            return $response;
+        }
+
+        $baseUrl = $attribute['link'] ?? $this->config['application']['versioning']['documentation_url'] ?? null;
+        if (! empty($attribute['sunset'])) {
+            $response = $response->withHeader('sunset', $attribute['sunset']);
+        }
+
+        if ($baseUrl) {
+            $response = $response->withHeader('link', $this->formatLink($baseUrl, $attribute));
+        }
+
+        return $response;
+    }
+
+    private function getAttribute(array $attributes, string $requestMethod): ?array
+    {
+        $attribute = array_values(array_filter($attributes, function (array $attribute): bool {
+            return $attribute['deprecationType'] === self::RESOURCE_DEPRECATION_ATTRIBUTE;
+        }))[0] ?? null;
+
+        if (empty($attribute)) {
+            $attribute = array_values(array_filter($attributes, function (array $attr) use ($requestMethod): bool {
+                return $attr['deprecationType'] === self::METHOD_DEPRECATION_ATTRIBUTE &&
+                    strtoupper($attr['identifier']) === strtoupper($requestMethod);
+            }))[0] ?? null;
+        }
+
+        return $attribute;
+    }
+
+    private function getReflectionAttributes(ReflectionClass $reflectionObject): array
+    {
+        $attributes = [];
+        foreach ($reflectionObject->getAttributes(self::RESOURCE_DEPRECATION_ATTRIBUTE) as $attribute) {
+            $attributes[] = array_merge(
+                ($attribute->newInstance())->toArray(),
+                ['identifier' => $reflectionObject->name]
+            );
+        }
+
+        foreach ($reflectionObject->getMethods(ReflectionMethod::IS_PUBLIC) as $refMethod) {
+            foreach ($refMethod->getAttributes(self::METHOD_DEPRECATION_ATTRIBUTE) as $attribute) {
+                $attributes[] = array_merge(($attribute->newInstance())->toArray(), ['identifier' => $refMethod->name]);
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * @throws ReflectionException
+     */
+    private function getHandler(MiddlewareInterface $routeMiddleware): ?ReflectionClass
+    {
+        $reflectionHandler = null;
         if ($routeMiddleware instanceof LazyLoadingMiddleware) {
             /** @var class-string $routeMiddlewareName */
             $routeMiddlewareName       = $routeMiddleware->middlewareName;
@@ -67,19 +153,17 @@ class DeprecationMiddleware implements MiddlewareInterface
                     $reflectionHandler = $reflectionMiddlewareClass;
                 }
             }
+        } else {
+            throw new RuntimeException('Invalid route middleware provided.');
         }
 
-        if (! $reflectionHandler) {
-            return $response;
-        }
+        return $reflectionHandler;
+    }
 
-        $attributes = $this->getAttributes($reflectionHandler, self::RESOURCE_DEPRECATION_ATTRIBUTE);
-        foreach ($reflectionHandler->getMethods() as $method) {
-            $methodRef   = new ReflectionMethod($method->class, $method->name);
-            $attributes += $this->getAttributes($methodRef, self::METHOD_DEPRECATION_ATTRIBUTE);
-        }
-
-        if ([self::RESOURCE_DEPRECATION_ATTRIBUTE, self::METHOD_DEPRECATION_ATTRIBUTE] === array_keys($attributes)) {
+    private function validateAttributes(array $attributes): void
+    {
+        $intersect = array_intersect(self::DEPRECATION_ATTRIBUTES, array_column($attributes, 'deprecationType'));
+        if (count($intersect) === count(self::DEPRECATION_ATTRIBUTES)) {
             throw new DeprecationConflictException(
                 sprintf(
                     Message::RESTRICTION_DEPRECATION,
@@ -88,41 +172,20 @@ class DeprecationMiddleware implements MiddlewareInterface
                 )
             );
         }
-
-        $sunset = null;
-        $link   = null;
-        if (array_key_exists(self::RESOURCE_DEPRECATION_ATTRIBUTE, $attributes)) {
-            $sunset = $attributes[self::RESOURCE_DEPRECATION_ATTRIBUTE]['sunset'];
-            $link   = $attributes[self::RESOURCE_DEPRECATION_ATTRIBUTE]['link'];
-        }
-
-        if (array_key_exists(self::METHOD_DEPRECATION_ATTRIBUTE, $attributes)) {
-            $sunset = $attributes[self::METHOD_DEPRECATION_ATTRIBUTE]['sunset'];
-            $link   = $attributes[self::METHOD_DEPRECATION_ATTRIBUTE]['link'];
-        }
-
-        if ($sunset !== null) {
-            $response = $response->withHeader('sunset', $sunset);
-        }
-
-        if ($link !== null) {
-            $response = $response->withHeader('link', $link);
-        }
-
-        return $response;
     }
 
-    /**
-     * @param class-string $type
-     */
-    public function getAttributes(ReflectionClass|ReflectionMethod $reflection, string $type): array
+    private function formatLink(string $baseLink, array $attribute): string
     {
-        $attributes = [];
-        foreach ($reflection->getAttributes($type) as $attribute) {
-            $attribute->newInstance();
-            $attributes[$attribute->getName()] = $attribute->getArguments();
+        $parts = [
+            $baseLink,
+        ];
+        if (! empty($attribute['rel'])) {
+            $parts[] = sprintf('rel="%s"', $attribute['rel']);
+        }
+        if (! empty($attribute['type'])) {
+            $parts[] = sprintf('type="%s"', $attribute['type']);
         }
 
-        return $attributes;
+        return rtrim(implode(';', $parts), ';');
     }
 }
