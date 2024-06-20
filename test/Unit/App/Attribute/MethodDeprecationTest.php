@@ -74,7 +74,7 @@ class MethodDeprecationTest extends TestCase
         $reflectionClass = new ReflectionClass($class);
         $attributes      = $this->getAttributes($reflectionClass);
 
-        $this->assertIsArray($attributes);
+        $this->assertNotEmpty($attributes);
         $attribute = $attributes[0]->newInstance();
 
         $array = $attribute->toArray();

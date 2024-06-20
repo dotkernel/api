@@ -62,12 +62,11 @@ class ResourceDeprecationTest extends TestCase
         $reflectionClass = new ReflectionClass($class);
         $attributes      = $reflectionClass->getAttributes(ResourceDeprecation::class);
 
-        $this->assertIsArray($attributes);
+        $this->assertNotEmpty($attributes);
         $attribute = $attributes[0]->newInstance();
 
         $array = $attribute->toArray();
 
-        $this->assertIsArray($array);
         $this->assertNotEmpty($array);
         $this->assertArrayHasKey('sunset', $array);
         $this->assertArrayHasKey('link', $array);

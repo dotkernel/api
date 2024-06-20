@@ -9,7 +9,6 @@ use Api\App\Attribute\ResourceDeprecation;
 use Api\App\Exception\DeprecationConflictException;
 use Api\App\Handler\HandlerTrait;
 use Api\App\Message;
-use Api\App\Middleware\DeprecationMiddleware;
 use Api\App\Middleware\DeprecationMiddleware as Subject;
 use Fig\Http\Message\RequestMethodInterface;
 use Laminas\Diactoros\Response\EmptyResponse;
@@ -38,11 +37,7 @@ class DeprecationMiddlewareTest extends TestCase
     private ResponseInterface $response;
 
     private const VERSIONING_CONFIG = [
-        'application' => [
-            'versioning' => [
-                'documentation_url' => 'www.example.com',
-            ],
-        ],
+        'documentation_url' => 'www.example.com',
     ];
 
     /**
@@ -94,8 +89,8 @@ class DeprecationMiddlewareTest extends TestCase
         $this->expectException(DeprecationConflictException::class);
         $this->expectExceptionMessage(sprintf(
             Message::RESTRICTION_DEPRECATION,
-            DeprecationMiddleware::RESOURCE_DEPRECATION_ATTRIBUTE,
-            DeprecationMiddleware::METHOD_DEPRECATION_ATTRIBUTE
+            Subject::RESOURCE_DEPRECATION_ATTRIBUTE,
+            Subject::METHOD_DEPRECATION_ATTRIBUTE
         ));
 
         $this->subject->process($this->request, $this->handler);
@@ -228,7 +223,7 @@ class DeprecationMiddlewareTest extends TestCase
                 rel: 'get-rel',
                 type: 'get-type',
             )]
-            public function get(ServerRequestInterface $request): ResponseInterface
+            public function get(): ResponseInterface
             {
                 return new EmptyResponse();
             }
@@ -240,7 +235,7 @@ class DeprecationMiddlewareTest extends TestCase
                 rel: 'post-rel',
                 type: 'post-type',
             )]
-            public function post(ServerRequestInterface $request): ResponseInterface
+            public function post(): ResponseInterface
             {
                 return new EmptyResponse();
             }
@@ -305,7 +300,7 @@ class DeprecationMiddlewareTest extends TestCase
         $this->assertTrue($response->hasHeader('link'));
         $this->assertFalse($response->hasHeader('sunset'));
 
-        $this->assertSame($this->formatLink(self::VERSIONING_CONFIG['application']['versioning']['documentation_url'], [
+        $this->assertSame($this->formatLink(self::VERSIONING_CONFIG['documentation_url'], [
             'rel'  => 'sunset',
             'type' => 'text/html',
         ]), $response->getHeader('link')[0]);
@@ -353,7 +348,7 @@ class DeprecationMiddlewareTest extends TestCase
      * @throws ReflectionException
      * @throws Exception
      */
-    public function testSunset()
+    public function testSunset(): void
     {
         $handler = new #[ResourceDeprecation(sunset : '2038-01-01')] class implements RequestHandlerInterface {
             public function handle(ServerRequestInterface $request): ResponseInterface
@@ -376,7 +371,7 @@ class DeprecationMiddlewareTest extends TestCase
         $this->request->method('getMethod')->willReturn(RequestMethodInterface::METHOD_GET);
         $this->handler->method('handle')->with($this->request)->willReturn($this->response);
 
-        $response = (new DeprecationMiddleware([]))->process($this->request, $this->handler);
+        $response = (new Subject([]))->process($this->request, $this->handler);
 
         $this->assertFalse($response->hasHeader('link'));
         $this->assertTrue($response->hasHeader('sunset'));

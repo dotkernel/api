@@ -30,7 +30,6 @@ use function array_values;
 use function count;
 use function implode;
 use function is_string;
-use function rtrim;
 use function sprintf;
 use function strtoupper;
 
@@ -46,7 +45,7 @@ class DeprecationMiddleware implements MiddlewareInterface
         self::METHOD_DEPRECATION_ATTRIBUTE,
     ];
 
-    #[Inject("config")]
+    #[Inject("config.application.versioning")]
     public function __construct(protected readonly array $config)
     {
     }
@@ -85,11 +84,11 @@ class DeprecationMiddleware implements MiddlewareInterface
             return $response;
         }
 
-        $baseUrl = $attribute['link'] ?? $this->config['application']['versioning']['documentation_url'] ?? null;
         if (! empty($attribute['sunset'])) {
             $response = $response->withHeader('sunset', $attribute['sunset']);
         }
 
+        $baseUrl = $attribute['link'] ?? $this->config['documentation_url'] ?? null;
         if (is_string($baseUrl)) {
             $response = $response->withHeader('link', $this->formatLink($baseUrl, $attribute));
         }
@@ -187,6 +186,6 @@ class DeprecationMiddleware implements MiddlewareInterface
             $parts[] = sprintf('type="%s"', $attribute['type']);
         }
 
-        return rtrim(implode(';', $parts), ';');
+        return implode(';', $parts);
     }
 }

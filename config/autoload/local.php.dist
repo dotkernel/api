@@ -22,11 +22,11 @@ $databases = [
 
 return [
     'application'           => [
-        'name' => 'DotKernel API',
-        'url'  => $baseUrl,
+        'name'       => 'DotKernel API',
+        'url'        => $baseUrl,
         'versioning' => [
             'documentation_url' => 'https://docs.dotkernel.org/api-documentation/v5/core-features/versioning',
-        ]
+        ],
     ],
     'authentication'        => [
         'private_key'          => [
