@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * Local test configuration.
+ *
+ * Overwrites the database connection to use an in memory database
+ */
+
+declare(strict_types=1);
+
+use ApiTest\Functional\AbstractFunctionalTest;
+
+if (! AbstractFunctionalTest::isTestMode()) {
+    return [];
+}
+
+return [
+    'doctrine' => [
+        'connection' => [
+            'orm_default' => [
+                'params' => [
+                    'url' => 'pdo_sqlite:///:memory:',
+                ],
+            ],
+        ],
+    ],
+];
