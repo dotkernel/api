@@ -143,6 +143,15 @@ foreach ($iterator as $file) {
                 '',
                 $after
             );
+        } else {
+            preg_match('#Repository/(.*)Repository.php#', $path, $matches);
+            if (isset($matches[1])) {
+                $after = str_replace(
+                    PHP_EOL . 'class',
+                    PHP_EOL . '#[Entity(name: ' . $matches[1] . '::class)]' . PHP_EOL . 'class',
+                    $after
+                );
+            }
         }
     }
 
