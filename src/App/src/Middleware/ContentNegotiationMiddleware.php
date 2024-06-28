@@ -30,7 +30,7 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         "config.content-negotiation",
     )]
     public function __construct(
-        private array $config,
+        private readonly array $config,
     ) {
     }
 
