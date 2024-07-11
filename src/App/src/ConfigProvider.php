@@ -95,12 +95,12 @@ class ConfigProvider
     {
         return [
             'driver' => [
-                'orm_default'   => [
+                'orm_default' => [
                     'drivers' => [
-                        'Api\App\Entity' => 'AppEntities'
+                        'Api\App\Entity' => 'AppEntities',
                     ],
                 ],
-                'AppEntities'  => [
+                'AppEntities' => [
                     'class' => AttributeDriver::class,
                     'cache' => 'array',
                     'paths' => __DIR__ . '/Entity',

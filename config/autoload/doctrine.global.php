@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Api\App\Entity\EntityListenerResolver;
-use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Dot\Cache\Adapter\ArrayAdapter;
 use Dot\Cache\Adapter\FilesystemAdapter;
@@ -22,10 +21,10 @@ return [
             ],
         ],
         'driver'        => [
-            'orm_default'   => [
+            'orm_default' => [
                 'class'   => MappingDriverChain::class,
                 'drivers' => [],
-            ]
+            ],
         ],
         'types'         => [
             UuidType::NAME                  => UuidType::class,

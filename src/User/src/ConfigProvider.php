@@ -55,9 +55,9 @@ class ConfigProvider
             'delegators' => [
                 Application::class => [
                     RoutesDelegator::class,
-                ]
+                ],
             ],
-            'factories' => [
+            'factories'  => [
                 AccountActivateHandler::class      => AttributedServiceFactory::class,
                 AccountAvatarHandler::class        => AttributedServiceFactory::class,
                 AccountHandler::class              => AttributedServiceFactory::class,
@@ -77,7 +77,7 @@ class ConfigProvider
                 UserRoleRepository::class          => AttributedRepositoryFactory::class,
                 UserAvatarRepository::class        => AttributedRepositoryFactory::class,
             ],
-            'aliases'   => [
+            'aliases'    => [
                 UserAvatarServiceInterface::class => UserAvatarService::class,
                 UserRoleServiceInterface::class   => UserRoleService::class,
                 UserServiceInterface::class       => UserService::class,
@@ -89,12 +89,12 @@ class ConfigProvider
     {
         return [
             'driver' => [
-                'orm_default'   => [
+                'orm_default'  => [
                     'drivers' => [
-                        'Api\User\Entity' => 'UserEntities'
+                        'Api\User\Entity' => 'UserEntities',
                     ],
                 ],
-                'UserEntities'  => [
+                'UserEntities' => [
                     'class' => AttributeDriver::class,
                     'cache' => 'array',
                     'paths' => __DIR__ . '/Entity',

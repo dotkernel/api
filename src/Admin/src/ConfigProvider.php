@@ -42,10 +42,10 @@ class ConfigProvider
         return [
             'delegators' => [
                 Application::class => [
-                    RoutesDelegator::class
-                ]
+                    RoutesDelegator::class,
+                ],
             ],
-            'factories' => [
+            'factories'  => [
                 AdminHandler::class        => AttributedServiceFactory::class,
                 AdminAccountHandler::class => AttributedServiceFactory::class,
                 AdminRoleHandler::class    => AttributedServiceFactory::class,
@@ -55,7 +55,7 @@ class ConfigProvider
                 AdminRepository::class     => AttributedRepositoryFactory::class,
                 AdminRoleRepository::class => AttributedRepositoryFactory::class,
             ],
-            'aliases'   => [
+            'aliases'    => [
                 AdminServiceInterface::class     => AdminService::class,
                 AdminRoleServiceInterface::class => AdminRoleService::class,
             ],
@@ -68,10 +68,10 @@ class ConfigProvider
             'driver' => [
                 'orm_default'   => [
                     'drivers' => [
-                        'Api\Admin\Entity' => 'AdminEntities'
+                        'Api\Admin\Entity' => 'AdminEntities',
                     ],
                 ],
-                'AdminEntities'  => [
+                'AdminEntities' => [
                     'class' => AttributeDriver::class,
                     'cache' => 'array',
                     'paths' => __DIR__ . '/Entity',
