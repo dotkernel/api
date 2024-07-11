@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
+use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Message;
@@ -13,7 +14,6 @@ use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
 use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserResetPassword;
-use Api\User\Entity\UserRole;
 use Api\User\Repository\UserDetailRepository;
 use Api\User\Repository\UserRepository;
 use Api\User\Repository\UserResetPasswordRepository;
@@ -66,7 +66,6 @@ class UserService implements UserServiceInterface
     /**
      * @throws ConflictException
      * @throws NotFoundException
-     * @throws RuntimeException
      */
     public function createUser(array $data = []): User
     {
@@ -96,10 +95,6 @@ class UserService implements UserServiceInterface
                     $this->userRoleService->findOneBy(['uuid' => $roleData['uuid']])
                 );
             }
-        } else {
-            $user->addRole(
-                $this->userRoleService->findOneBy(['name' => UserRole::ROLE_USER])
-            );
         }
 
         return $this->userRepository->saveUser($user);
@@ -334,9 +329,9 @@ class UserService implements UserServiceInterface
     }
 
     /**
+     * @throws BadRequestException
      * @throws ConflictException
      * @throws NotFoundException
-     * @throws RuntimeException
      */
     public function updateUser(User $user, array $data = []): User
     {
@@ -389,6 +384,10 @@ class UserService implements UserServiceInterface
                     $this->userRoleService->findOneBy(['uuid' => $roleData['uuid']])
                 );
             }
+        }
+
+        if (! $user->hasRoles()) {
+            throw (new BadRequestException())->setMessages([Message::RESTRICTION_ROLES]);
         }
 
         return $this->userRepository->saveUser($user);

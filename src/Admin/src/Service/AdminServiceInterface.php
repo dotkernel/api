@@ -6,6 +6,7 @@ namespace Api\Admin\Service;
 
 use Api\Admin\Collection\AdminCollection;
 use Api\Admin\Entity\Admin;
+use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 
@@ -29,6 +30,7 @@ interface AdminServiceInterface
     public function getAdmins(array $params = []): AdminCollection;
 
     /**
+     * @throws BadRequestException
      * @throws ConflictException
      * @throws NotFoundException
      */

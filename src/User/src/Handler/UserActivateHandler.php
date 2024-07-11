@@ -40,7 +40,7 @@ class UserActivateHandler implements RequestHandlerInterface
      * @throws MailException
      * @throws NotFoundException
      */
-    public function post(ServerRequestInterface $request): ResponseInterface
+    public function patch(ServerRequestInterface $request): ResponseInterface
     {
         $user = $this->userService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
         if ($user->isActive()) {

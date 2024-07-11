@@ -6,8 +6,8 @@ namespace Api\Admin\Service;
 
 use Api\Admin\Collection\AdminCollection;
 use Api\Admin\Entity\Admin;
-use Api\Admin\Entity\AdminRole;
 use Api\Admin\Repository\AdminRepository;
+use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Message;
@@ -42,15 +42,9 @@ class AdminService implements AdminServiceInterface
             ->setLastName($data['lastName'])
             ->setStatus($data['status'] ?? Admin::STATUS_ACTIVE);
 
-        if (! empty($data['roles'])) {
-            foreach ($data['roles'] as $roleData) {
-                $admin->addRole(
-                    $this->adminRoleService->findOneBy(['uuid' => $roleData['uuid']])
-                );
-            }
-        } else {
+        foreach ($data['roles'] as $roleData) {
             $admin->addRole(
-                $this->adminRoleService->findOneBy(['name' => AdminRole::ROLE_ADMIN])
+                $this->adminRoleService->findOneBy(['uuid' => $roleData['uuid']])
             );
         }
 
@@ -68,6 +62,17 @@ class AdminService implements AdminServiceInterface
     {
         try {
             return $this->findOneBy(['identity' => $identity]) instanceof Admin;
+        } catch (NotFoundException) {
+            return false;
+        }
+    }
+
+    public function existsOther(string $identity = '', string $uuid = ''): bool
+    {
+        try {
+            $admin = $this->findOneBy(['identity' => $identity]);
+
+            return $admin->getUuid()->toString() !== $uuid;
         } catch (NotFoundException) {
             return false;
         }
@@ -92,11 +97,16 @@ class AdminService implements AdminServiceInterface
     }
 
     /**
+     * @throws BadRequestException
      * @throws ConflictException
      * @throws NotFoundException
      */
     public function updateAdmin(Admin $admin, array $data = []): Admin
     {
+        if (isset($data['identity']) && $this->existsOther($data['identity'], $admin->getUuid()->toString())) {
+            throw new ConflictException(Message::DUPLICATE_IDENTITY);
+        }
+
         if (! empty($data['password'])) {
             $admin->usePassword($data['password']);
         }
@@ -120,6 +130,10 @@ class AdminService implements AdminServiceInterface
                     $this->adminRoleService->findOneBy(['uuid' => $roleData['uuid']])
                 );
             }
+        }
+
+        if (! $admin->hasRoles()) {
+            throw (new BadRequestException())->setMessages([Message::RESTRICTION_ROLES]);
         }
 
         return $this->adminRepository->saveAdmin($admin);

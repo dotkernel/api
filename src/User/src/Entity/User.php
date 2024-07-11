@@ -33,13 +33,13 @@ class User extends AbstractEntity implements UserEntityInterface
         self::STATUS_ACTIVE,
     ];
 
-    #[ORM\OneToOne(mappedBy: "user", targetEntity: UserAvatar::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: UserAvatar::class, mappedBy: "user", cascade: ['persist', 'remove'])]
     protected ?UserAvatar $avatar = null;
 
-    #[ORM\OneToOne(mappedBy: "user", targetEntity: UserDetail::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: UserDetail::class, mappedBy: "user", cascade: ['persist', 'remove'])]
     protected UserDetail $detail;
 
-    #[ORM\OneToMany(mappedBy: "user", targetEntity: UserResetPassword::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: UserResetPassword::class, mappedBy: "user", cascade: ['persist', 'remove'])]
     protected Collection $resetPasswords;
 
     #[ORM\ManyToMany(targetEntity: UserRole::class)]
@@ -70,6 +70,7 @@ class User extends AbstractEntity implements UserEntityInterface
         $this->roles          = new ArrayCollection();
         $this->resetPasswords = new ArrayCollection();
 
+        $this->created();
         $this->renewHash();
     }
 

@@ -70,7 +70,6 @@ class UserHandler implements RequestHandlerInterface
      * @throws BadRequestException
      * @throws ConflictException
      * @throws NotFoundException
-     * @throws RuntimeException
      */
     public function patch(ServerRequestInterface $request): ResponseInterface
     {

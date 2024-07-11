@@ -57,7 +57,7 @@ class AccountHandler implements RequestHandlerInterface
     /**
      * @throws BadRequestException
      * @throws ConflictException
-     * @throws RuntimeException
+     * @throws NotFoundException
      */
     public function patch(ServerRequestInterface $request): ResponseInterface
     {

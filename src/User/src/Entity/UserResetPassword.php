@@ -44,6 +44,7 @@ class UserResetPassword extends AbstractEntity
     {
         parent::__construct();
 
+        $this->created();
         $this->expires = DateTimeImmutable::createFromMutable(
             (new DateTime())->add(new DateInterval('P1D'))
         );

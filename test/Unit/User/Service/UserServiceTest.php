@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ApiTest\Unit\User\Service;
 
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\NotFoundException;
 use Api\App\Repository\OAuthAccessTokenRepository;
 use Api\App\Repository\OAuthRefreshTokenRepository;
 use Api\User\Entity\User;
@@ -54,6 +56,10 @@ class UserServiceTest extends TestCase
         );
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws ConflictException
+     */
     public function testCreateUserThrowsExceptionDuplicateIdentity(): void
     {
         $this->userRepository->method('findOneBy')->willReturn(
@@ -193,6 +199,9 @@ class UserServiceTest extends TestCase
                 'firstName' => 'first',
                 'lastName'  => 'last',
                 'email'     => 'test@dotkernel2.com',
+            ],
+            'roles'    => [
+                ['uuid' => 'uuid', 'name' => UserRole::ROLE_USER],
             ],
         ];
 
