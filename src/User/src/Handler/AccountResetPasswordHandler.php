@@ -16,6 +16,7 @@ use Api\User\InputFilter\UpdatePasswordInputFilter;
 use Api\User\Service\UserServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Dot\Mail\Exception\MailException;
+use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
@@ -123,6 +124,6 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
         $this->userService->updateUser($user->createResetPassword());
         $this->userService->sendResetPasswordRequestedMail($user);
 
-        return $this->infoResponse(Message::MAIL_SENT_RESET_PASSWORD);
+        return $this->infoResponse(Message::MAIL_SENT_RESET_PASSWORD, StatusCodeInterface::STATUS_CREATED);
     }
 }

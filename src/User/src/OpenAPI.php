@@ -9,8 +9,11 @@ use Api\User\Entity\UserAvatar;
 use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserResetPassword;
 use Api\User\Entity\UserRole;
+use Api\User\Handler\AccountActivateHandler;
 use Api\User\Handler\AccountAvatarHandler;
 use Api\User\Handler\AccountHandler;
+use Api\User\Handler\AccountRecoveryHandler;
+use Api\User\Handler\AccountResetPasswordHandler;
 use Api\User\Handler\UserActivateHandler;
 use Api\User\Handler\UserAvatarHandler;
 use Api\User\Handler\UserHandler;
@@ -138,6 +141,11 @@ use OpenApi\Attributes as OA;
             content: new OA\JsonContent(ref: '#/components/schemas/UserCollection'),
         ),
         new OA\Response(
+            response: StatusCodeInterface::STATUS_BAD_REQUEST,
+            description: 'Bad Request',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+        new OA\Response(
             response: StatusCodeInterface::STATUS_NOT_FOUND,
             description: 'Not Found',
         ),
@@ -157,7 +165,7 @@ use OpenApi\Attributes as OA;
         required: true,
         content: new OA\JsonContent(
             properties: [
-                new OA\Property(property: 'identity', type: 'string', default: 'password'),
+                new OA\Property(property: 'identity', type: 'string'),
                 new OA\Property(property: 'password', type: 'string'),
                 new OA\Property(property: 'passwordConfirm', type: 'string'),
                 new OA\Property(property: 'status', type: 'string', default: User::STATUS_ACTIVE),
@@ -232,7 +240,7 @@ use OpenApi\Attributes as OA;
         content: new OA\JsonContent(
             required: ['identity', 'password', 'passwordConfirm', 'roles'],
             properties: [
-                new OA\Property(property: 'identity', type: 'string', default: 'password'),
+                new OA\Property(property: 'identity', type: 'string'),
                 new OA\Property(property: 'password', type: 'string'),
                 new OA\Property(property: 'passwordConfirm', type: 'string'),
                 new OA\Property(property: 'status', type: 'string', default: User::STATUS_ACTIVE),
@@ -340,7 +348,7 @@ use OpenApi\Attributes as OA;
     description: 'Authenticated (super)admin deletes a user avatar identified by user UUID',
     summary: 'Admin deletes user avatar',
     security: [['AuthToken' => []]],
-    tags: ['User Avatar'],
+    tags: ['UserAvatar'],
     parameters: [
         new OA\Parameter(
             name: 'uuid',
@@ -370,7 +378,7 @@ use OpenApi\Attributes as OA;
     description: 'Authenticated (super)admin fetches a user avatar identified by user UUID',
     summary: 'Admin views user avatar',
     security: [['AuthToken' => []]],
-    tags: ['User Avatar'],
+    tags: ['UserAvatar'],
     parameters: [
         new OA\Parameter(
             name: 'uuid',
@@ -415,7 +423,7 @@ use OpenApi\Attributes as OA;
             ),
         ),
     ),
-    tags: ['User Avatar'],
+    tags: ['UserAvatar'],
     parameters: [
         new OA\Parameter(
             name: 'uuid',
@@ -452,7 +460,7 @@ use OpenApi\Attributes as OA;
     description: 'Authenticated (super)admin fetches a user role identified by its UUID',
     summary: 'Admin views user role',
     security: [['AuthToken' => []]],
-    tags: ['User Role'],
+    tags: ['UserRole'],
     parameters: [
         new OA\Parameter(
             name: 'uuid',
@@ -483,7 +491,7 @@ use OpenApi\Attributes as OA;
     description: 'Authenticated (super)admin fetches a list of user roles',
     summary: 'Admin lists user roles',
     security: [['AuthToken' => []]],
-    tags: ['User Role'],
+    tags: ['UserRole'],
     parameters: [
         new OA\Parameter(
             name: 'page',
@@ -635,19 +643,17 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Post(
     path: '/account/register',
-    description: 'Unauthenticated user registers a new account',
-    summary: 'Admin creates user account',
-    security: [['AuthToken' => []]],
+    description: 'Register user account',
+    summary: 'Unauthenticated user registers new user account',
     requestBody: new OA\RequestBody(
         description: 'Create user account request',
         required: true,
         content: new OA\JsonContent(
-            required: ['identity', 'password', 'passwordConfirm', 'roles'],
+            required: ['identity', 'password', 'passwordConfirm', 'detail'],
             properties: [
-                new OA\Property(property: 'identity', type: 'string', default: 'password'),
+                new OA\Property(property: 'identity', type: 'string'),
                 new OA\Property(property: 'password', type: 'string'),
                 new OA\Property(property: 'passwordConfirm', type: 'string'),
-                new OA\Property(property: 'status', type: 'string', default: User::STATUS_ACTIVE),
                 new OA\Property(
                     property: 'detail',
                     required: ['email'],
@@ -657,16 +663,6 @@ use OpenApi\Attributes as OA;
                         new OA\Property(property: 'email', type: 'string'),
                     ],
                     type: 'object',
-                ),
-                new OA\Property(
-                    property: 'roles',
-                    type: 'array',
-                    items: new OA\Items(
-                        required: ['uuid'],
-                        properties: [
-                            new OA\Property(property: 'uuid', type: 'string'),
-                        ],
-                    ),
                 ),
             ],
             type: 'object',
@@ -710,7 +706,7 @@ use OpenApi\Attributes as OA;
     description: 'Authenticated user deletes their user avatar',
     summary: 'User deletes their own avatar',
     security: [['AuthToken' => []]],
-    tags: ['User Avatar'],
+    tags: ['UserAvatar'],
     responses: [
         new OA\Response(
             response: StatusCodeInterface::STATUS_NO_CONTENT,
@@ -731,7 +727,7 @@ use OpenApi\Attributes as OA;
     description: 'Authenticated user fetches their own avatar',
     summary: 'User fetches their own avatar',
     security: [['AuthToken' => []]],
-    tags: ['User Avatar'],
+    tags: ['UserAvatar'],
     responses: [
         new OA\Response(
             response: StatusCodeInterface::STATUS_OK,
@@ -767,7 +763,7 @@ use OpenApi\Attributes as OA;
             ),
         ),
     ),
-    tags: ['User Avatar'],
+    tags: ['UserAvatar'],
     responses: [
         new OA\Response(
             response: StatusCodeInterface::STATUS_CREATED,
@@ -777,6 +773,278 @@ use OpenApi\Attributes as OA;
         new OA\Response(
             response: StatusCodeInterface::STATUS_BAD_REQUEST,
             description: 'Bad Request',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+    ],
+)]
+
+/**
+ * @see AccountResetPasswordHandler::get()
+ */
+#[OA\Get(
+    path: '/account/reset-password/{hash}',
+    description: 'Unauthenticated user fetches a reset password by its hash',
+    summary: 'Unauthenticated user fetches reset password',
+    tags: ['ResetPassword'],
+    parameters: [
+        new OA\Parameter(
+            name: 'hash',
+            description: 'Reset password hash',
+            in: 'path',
+            required: true,
+            schema: new OA\Schema(type: 'string'),
+        ),
+    ],
+    responses: [
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_OK,
+            description: 'Reset password status',
+            content: new OA\JsonContent(ref: '#/components/schemas/InfoMessage'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_NOT_FOUND,
+            description: 'Not Found',
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_GONE,
+            description: 'Gone (expired)',
+        ),
+    ],
+)]
+
+/**
+ * @see AccountResetPasswordHandler::patch()
+ */
+#[OA\Patch(
+    path: '/account/reset-password/{hash}',
+    description: 'Unauthenticated user modifies their password using a reset password identified by its hash',
+    summary: 'Unauthenticated user modifies their password',
+    requestBody: new OA\RequestBody(
+        description: 'Modify password request',
+        required: true,
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'password', type: 'string'),
+                new OA\Property(property: 'passwordConfirm', type: 'string'),
+            ],
+            type: 'object',
+        ),
+    ),
+    tags: ['ResetPassword'],
+    parameters: [
+        new OA\Parameter(
+            name: 'hash',
+            description: 'Reset password hash',
+            in: 'path',
+            required: true,
+            schema: new OA\Schema(type: 'string'),
+        ),
+    ],
+    responses: [
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_OK,
+            description: 'Reset password status',
+            content: new OA\JsonContent(ref: '#/components/schemas/InfoMessage'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_BAD_REQUEST,
+            description: 'Bad Request',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_CONFLICT,
+            description: 'Conflict',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_NOT_FOUND,
+            description: 'Not Found',
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_GONE,
+            description: 'Gone (expired)',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+            description: 'Mail error',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+    ],
+)]
+
+/**
+ * @see AccountResetPasswordHandler::post()
+ */
+#[OA\Post(
+    path: '/account/reset-password',
+    description: 'Unauthenticated user requests to reset their password by providing their email/identity',
+    summary: 'Unauthenticated user requests to modify their password',
+    requestBody: new OA\RequestBody(
+        description: 'Reset password request',
+        required: true,
+        content: new OA\JsonContent(
+            type: 'object',
+            oneOf: [
+                new OA\Schema(
+                    properties: [
+                        new OA\Property(property: 'email', type: 'string'),
+                    ],
+                ),
+                new OA\Schema(
+                    properties: [
+                        new OA\Property(property: 'identity', type: 'string'),
+                    ],
+                ),
+            ],
+        ),
+    ),
+    tags: ['ResetPassword'],
+    responses: [
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_CREATED,
+            description: 'Reset password created',
+            content: new OA\JsonContent(ref: '#/components/schemas/InfoMessage'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_BAD_REQUEST,
+            description: 'Bad Request',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_CONFLICT,
+            description: 'Conflict',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_NOT_FOUND,
+            description: 'Not Found',
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+            description: 'Mail error',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+    ],
+)]
+
+/**
+ * @see AccountRecoveryHandler::post()
+ */
+#[OA\Post(
+    path: '/account/recover-identity',
+    description: 'Unauthenticated user recovers their identity by providing their email',
+    summary: 'Unauthenticated user recovers their identity',
+    requestBody: new OA\RequestBody(
+        description: 'Recover identity request',
+        required: true,
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'email', type: 'string'),
+            ],
+            type: 'object',
+        ),
+    ),
+    tags: ['RecoverIdentity'],
+    responses: [
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_CREATED,
+            description: 'Identity sent via email',
+            content: new OA\JsonContent(ref: '#/components/schemas/InfoMessage'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_BAD_REQUEST,
+            description: 'Bad Request',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_NOT_FOUND,
+            description: 'Not Found',
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+            description: 'Mail error',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+    ],
+)]
+
+/**
+ * @see AccountActivateHandler::patch()
+ */
+#[OA\Patch(
+    path: '/account/activate/{hash}',
+    description: 'Unauthenticated user activates their account using the hash from an activation link',
+    summary: 'Unauthenticated user activates their account',
+    tags: ['ActivateUser'],
+    parameters: [
+        new OA\Parameter(
+            name: 'hash',
+            description: 'User activation hash',
+            in: 'path',
+            required: true,
+            schema: new OA\Schema(type: 'string'),
+        ),
+    ],
+    responses: [
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_OK,
+            description: 'Account activated',
+            content: new OA\JsonContent(ref: '#/components/schemas/InfoMessage'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_CONFLICT,
+            description: 'Conflict',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_NOT_FOUND,
+            description: 'Not Found',
+        ),
+    ],
+)]
+
+/**
+ * @see AccountActivateHandler::post()
+ */
+#[OA\Post(
+    path: '/account/activate',
+    description: 'Unauthenticated user requests an account activation link by providing their email',
+    summary: 'Unauthenticated user requests to activate account',
+    requestBody: new OA\RequestBody(
+        description: 'Account activation request',
+        required: true,
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'email', type: 'string'),
+            ],
+            type: 'object',
+        ),
+    ),
+    tags: ['ActivateUser'],
+    responses: [
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_CREATED,
+            description: 'Account activation requested',
+            content: new OA\JsonContent(ref: '#/components/schemas/InfoMessage'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_BAD_REQUEST,
+            description: 'Bad Request',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_CONFLICT,
+            description: 'Conflict',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_NOT_FOUND,
+            description: 'Not Found',
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+            description: 'Mail error',
             content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
         ),
     ],

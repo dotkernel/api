@@ -60,7 +60,7 @@ use OpenApi\Attributes as OA;
             type: 'object',
         )
     ),
-    tags: ['Error Report'],
+    tags: ['ErrorReport'],
     responses: [
         new OA\Response(
             response: StatusCodeInterface::STATUS_CREATED,
@@ -107,7 +107,7 @@ use OpenApi\Attributes as OA;
             type: 'object',
         ),
     ),
-    tags: ['Access Token'],
+    tags: ['AccessToken'],
     responses: [
         new OA\Response(
             response: StatusCodeInterface::STATUS_OK,
@@ -143,7 +143,7 @@ use OpenApi\Attributes as OA;
             type: 'object',
         ),
     ),
-    tags: ['Access Token'],
+    tags: ['AccessToken'],
     responses: [
         new OA\Response(
             response: StatusCodeInterface::STATUS_OK,
@@ -228,6 +228,7 @@ use OpenApi\Attributes as OA;
 
 #[OA\Schema(
     schema: 'Collection',
+    description: 'Base collection providing common structure to be extended by entity-specific collections',
     properties: [
         new OA\Property(property: '_total_items', type: 'integer', example: 1),
         new OA\Property(property: '_page', type: 'integer', example: 1),

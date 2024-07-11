@@ -431,7 +431,7 @@ class UserTest extends AbstractFunctionalTest
         $response = $this->post('/account/reset-password', [
             'email' => $user->getDetail()->getEmail(),
         ]);
-        $this->assertResponseOk($response);
+        $this->assertResponseCreated($response);
         $this->assertCount(1, $user->getResetPasswords());
     }
 

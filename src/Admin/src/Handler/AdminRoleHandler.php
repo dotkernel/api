@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Api\Admin\Handler;
 
 use Api\Admin\Service\AdminRoleServiceInterface;
+use Api\App\Exception\BadRequestException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\HandlerTrait;
 use Dot\DependencyInjection\Attribute\Inject;
@@ -42,11 +43,11 @@ class AdminRoleHandler implements RequestHandlerInterface
         return $this->createResponse($request, $role);
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function getCollection(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->createResponse(
-            $request,
-            $this->roleService->getAdminRoles($request->getQueryParams())
-        );
+        return $this->createResponse($request, $this->roleService->getAdminRoles($request->getQueryParams()));
     }
 }

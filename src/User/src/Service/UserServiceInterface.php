@@ -15,9 +15,6 @@ use RuntimeException;
 
 interface UserServiceInterface
 {
-    /**
-     * @throws RuntimeException
-     */
     public function activateUser(User $user): User;
 
     /**
@@ -63,6 +60,9 @@ interface UserServiceInterface
      */
     public function findOneBy(array $params = []): User;
 
+    /**
+     * @throws BadRequestException
+     */
     public function getUsers(array $params = []): UserCollection;
 
     /**

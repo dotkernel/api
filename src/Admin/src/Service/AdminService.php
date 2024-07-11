@@ -91,8 +91,25 @@ class AdminService implements AdminServiceInterface
         return $admin;
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function getAdmins(array $params = []): AdminCollection
     {
+        $values = [
+            'admin.identity',
+            'admin.firstName',
+            'admin.lastName',
+            'admin.status',
+            'admin.created',
+            'admin.updated',
+        ];
+
+        $params['order'] = $params['order'] ?? 'admin.created';
+        if (! in_array($params['order'], $values)) {
+            throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'order')]);
+        }
+
         return $this->adminRepository->getAdmins($params);
     }
 

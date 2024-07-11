@@ -55,9 +55,6 @@ class UserService implements UserServiceInterface
     ) {
     }
 
-    /**
-     * @throws RuntimeException
-     */
     public function activateUser(User $user): User
     {
         return $this->userRepository->saveUser($user->activate());
@@ -227,8 +224,23 @@ class UserService implements UserServiceInterface
         return $user;
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function getUsers(array $params = []): UserCollection
     {
+        $values = [
+            'user.identity',
+            'user.status',
+            'user.created',
+            'user.updated',
+        ];
+
+        $params['order'] = $params['order'] ?? 'user.created';
+        if (! in_array($params['order'], $values)) {
+            throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'order')]);
+        }
+
         return $this->userRepository->getUsers($params);
     }
 
@@ -339,6 +351,7 @@ class UserService implements UserServiceInterface
             if ($this->existsOther($data['identity'], $user->getUuid()->toString())) {
                 throw new ConflictException(Message::DUPLICATE_IDENTITY);
             }
+            $user->setIdentity($data['identity']);
         }
 
         if (isset($data['detail']['email'])) {

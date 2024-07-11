@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Api\Admin;
 
+use Api\Admin\Collection\AdminCollection;
+use Api\Admin\Collection\AdminRoleCollection;
 use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
 use Api\Admin\Handler\AdminAccountHandler;
@@ -193,6 +195,11 @@ use OpenApi\Attributes as OA;
             content: new OA\JsonContent(ref: '#/components/schemas/AdminCollection'),
         ),
         new OA\Response(
+            response: StatusCodeInterface::STATUS_BAD_REQUEST,
+            description: 'Bad Request',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+        new OA\Response(
             response: StatusCodeInterface::STATUS_NOT_FOUND,
             description: 'Not Found',
         ),
@@ -279,7 +286,7 @@ use OpenApi\Attributes as OA;
         content: new OA\JsonContent(
             required: ['identity', 'password', 'passwordConfirm', 'firstName', 'lastName', 'roles'],
             properties: [
-                new OA\Property(property: 'identity', type: 'string', default: 'password'),
+                new OA\Property(property: 'identity', type: 'string'),
                 new OA\Property(property: 'password', type: 'string'),
                 new OA\Property(property: 'passwordConfirm', type: 'string'),
                 new OA\Property(property: 'firstName', type: 'string'),
@@ -332,7 +339,7 @@ use OpenApi\Attributes as OA;
     description: 'Authenticated (super)admin fetches an admin role identified by its UUID',
     summary: 'Admin fetches an admin role',
     security: [['AuthToken' => []]],
-    tags: ['Admin Role'],
+    tags: ['AdminRole'],
     parameters: [
         new OA\Parameter(
             name: 'uuid',
@@ -363,7 +370,7 @@ use OpenApi\Attributes as OA;
     description: 'Authenticated (super)admin fetches a list of admin roles',
     summary: 'Admin lists admin roles',
     security: [['AuthToken' => []]],
-    tags: ['Admin Role'],
+    tags: ['AdminRole'],
     parameters: [
         new OA\Parameter(
             name: 'page',
@@ -409,7 +416,12 @@ use OpenApi\Attributes as OA;
         new OA\Response(
             response: StatusCodeInterface::STATUS_OK,
             description: 'List of admin accounts',
-            content: new OA\JsonContent(ref: '#/components/schemas/AdminCollection'),
+            content: new OA\JsonContent(ref: '#/components/schemas/AdminRoleCollection'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_BAD_REQUEST,
+            description: 'Bad Request',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
         ),
         new OA\Response(
             response: StatusCodeInterface::STATUS_NOT_FOUND,
@@ -492,6 +504,9 @@ use OpenApi\Attributes as OA;
     type: 'object',
 )]
 
+/**
+ * @see AdminCollection
+ */
 #[OA\Schema(
     schema: 'AdminCollection',
     properties: [
@@ -503,6 +518,31 @@ use OpenApi\Attributes as OA;
                     type: 'array',
                     items: new OA\Items(
                         ref: '#/components/schemas/Admin',
+                    ),
+                ),
+            ],
+            type: 'object',
+        ),
+    ],
+    type: 'object',
+    allOf: [
+        new OA\Schema(ref: '#/components/schemas/Collection'),
+    ],
+)]
+/**
+ * @see AdminRoleCollection
+ */
+#[OA\Schema(
+    schema: 'AdminRoleCollection',
+    properties: [
+        new OA\Property(
+            property: '_embedded',
+            properties: [
+                new OA\Property(
+                    property: 'roles',
+                    type: 'array',
+                    items: new OA\Items(
+                        ref: '#/components/schemas/AdminRole',
                     ),
                 ),
             ],

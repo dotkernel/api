@@ -27,6 +27,9 @@ interface AdminServiceInterface
      */
     public function findOneBy(array $params = []): Admin;
 
+    /**
+     * @throws BadRequestException
+     */
     public function getAdmins(array $params = []): AdminCollection;
 
     /**
