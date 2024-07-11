@@ -12,6 +12,9 @@ use Api\App\Exception\NotFoundException;
 use Api\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
 
+use function in_array;
+use function sprintf;
+
 class AdminRoleService implements AdminRoleServiceInterface
 {
     #[Inject(

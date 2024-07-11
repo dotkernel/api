@@ -61,7 +61,7 @@ return function (Application $app): void {
     $app->pipe(ImplicitOptionsMiddleware::class);
     $app->pipe(MethodNotAllowedMiddleware::class);
 
-//    $app->pipe(ContentNegotiationMiddleware::class);
+    $app->pipe(ContentNegotiationMiddleware::class);
     $app->pipe(DeprecationMiddleware::class);
 
     $app->pipe(ResponseHeaderMiddleware::class);

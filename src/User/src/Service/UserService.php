@@ -25,6 +25,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use RuntimeException;
 
 use function date;
+use function in_array;
 use function sprintf;
 
 class UserService implements UserServiceInterface

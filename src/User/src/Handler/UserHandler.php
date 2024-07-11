@@ -61,6 +61,9 @@ class UserHandler implements RequestHandlerInterface
         return $this->createResponse($request, $user);
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function getCollection(ServerRequestInterface $request): ResponseInterface
     {
         return $this->createResponse($request, $this->userService->getUsers($request->getQueryParams()));

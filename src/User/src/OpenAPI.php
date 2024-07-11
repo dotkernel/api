@@ -540,6 +540,11 @@ use OpenApi\Attributes as OA;
             content: new OA\JsonContent(ref: '#/components/schemas/UserRoleCollection'),
         ),
         new OA\Response(
+            response: StatusCodeInterface::STATUS_BAD_REQUEST,
+            description: 'Bad Request',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+        new OA\Response(
             response: StatusCodeInterface::STATUS_NOT_FOUND,
             description: 'Not Found',
         ),

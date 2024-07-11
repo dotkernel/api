@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
+use Api\App\Exception\BadRequestException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\HandlerTrait;
 use Api\User\Service\UserRoleServiceInterface;
@@ -42,6 +43,9 @@ class UserRoleHandler implements RequestHandlerInterface
         return $this->createResponse($request, $role);
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function getCollection(ServerRequestInterface $request): ResponseInterface
     {
         return $this->createResponse($request, $this->roleService->getRoles($request->getQueryParams()));
