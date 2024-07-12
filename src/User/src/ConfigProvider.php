@@ -31,8 +31,10 @@ use Api\User\Service\UserRoleService;
 use Api\User\Service\UserRoleServiceInterface;
 use Api\User\Service\UserService;
 use Api\User\Service\UserServiceInterface;
+use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Dot\DependencyInjection\Factory\AttributedRepositoryFactory;
 use Dot\DependencyInjection\Factory\AttributedServiceFactory;
+use Mezzio\Application;
 use Mezzio\Hal\Metadata\MetadataMap;
 
 class ConfigProvider
@@ -41,6 +43,7 @@ class ConfigProvider
     {
         return [
             'dependencies'     => $this->getDependencies(),
+            'doctrine'         => $this->getDoctrineConfig(),
             MetadataMap::class => $this->getHalConfig(),
             'templates'        => $this->getTemplates(),
         ];
@@ -49,7 +52,12 @@ class ConfigProvider
     public function getDependencies(): array
     {
         return [
-            'factories' => [
+            'delegators' => [
+                Application::class => [
+                    RoutesDelegator::class,
+                ],
+            ],
+            'factories'  => [
                 AccountActivateHandler::class      => AttributedServiceFactory::class,
                 AccountAvatarHandler::class        => AttributedServiceFactory::class,
                 AccountHandler::class              => AttributedServiceFactory::class,
@@ -69,10 +77,28 @@ class ConfigProvider
                 UserRoleRepository::class          => AttributedRepositoryFactory::class,
                 UserAvatarRepository::class        => AttributedRepositoryFactory::class,
             ],
-            'aliases'   => [
+            'aliases'    => [
                 UserAvatarServiceInterface::class => UserAvatarService::class,
                 UserRoleServiceInterface::class   => UserRoleService::class,
                 UserServiceInterface::class       => UserService::class,
+            ],
+        ];
+    }
+
+    private function getDoctrineConfig(): array
+    {
+        return [
+            'driver' => [
+                'orm_default'  => [
+                    'drivers' => [
+                        'Api\User\Entity' => 'UserEntities',
+                    ],
+                ],
+                'UserEntities' => [
+                    'class' => AttributeDriver::class,
+                    'cache' => 'array',
+                    'paths' => __DIR__ . '/Entity',
+                ],
             ],
         ];
     }

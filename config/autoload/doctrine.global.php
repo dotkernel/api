@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Api\App\Entity\EntityListenerResolver;
-use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Dot\Cache\Adapter\ArrayAdapter;
 use Dot\Cache\Adapter\FilesystemAdapter;
@@ -22,28 +21,9 @@ return [
             ],
         ],
         'driver'        => [
-            'orm_default'   => [
+            'orm_default' => [
                 'class'   => MappingDriverChain::class,
-                'drivers' => [
-                    'Api\\User\\Entity'  => 'UserEntities',
-                    'Api\\Admin\\Entity' => 'AdminEntities',
-                    'Api\\App\Entity'    => 'AppEntities',
-                ],
-            ],
-            'AdminEntities' => [
-                'class' => AttributeDriver::class,
-                'cache' => 'array',
-                'paths' => __DIR__ . '/../../src/Admin/src/Entity',
-            ],
-            'UserEntities'  => [
-                'class' => AttributeDriver::class,
-                'cache' => 'array',
-                'paths' => __DIR__ . '/../../src/User/src/Entity',
-            ],
-            'AppEntities'   => [
-                'class' => AttributeDriver::class,
-                'cache' => 'array',
-                'paths' => __DIR__ . '/../../src/App/src/Entity',
+                'drivers' => [],
             ],
         ],
         'types'         => [
@@ -59,6 +39,7 @@ return [
                 'metadata_cache'           => 'filesystem',
                 'query_cache'              => 'filesystem',
                 'hydration_cache'          => 'array',
+                'typed_field_mapper'       => null,
                 'second_level_cache'       => [
                     'enabled'                    => true,
                     'default_lifetime'           => 3600,

@@ -22,6 +22,7 @@ use Api\App\Service\ErrorReportService;
 use Api\App\Service\ErrorReportServiceInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Dot\DependencyInjection\Factory\AttributedServiceFactory;
 use Dot\Mail\Factory\MailOptionsAbstractFactory;
 use Dot\Mail\Factory\MailServiceAbstractFactory;
@@ -47,6 +48,7 @@ class ConfigProvider
     {
         return [
             'dependencies'     => $this->getDependencies(),
+            'doctrine'         => $this->getDoctrineConfig(),
             MetadataMap::class => $this->getHalConfig(),
         ];
     }
@@ -57,8 +59,6 @@ class ConfigProvider
             'delegators' => [
                 Application::class => [
                     RoutesDelegator::class,
-                    \Api\Admin\RoutesDelegator::class,
-                    \Api\User\RoutesDelegator::class,
                 ],
             ],
             'factories'  => [
@@ -87,6 +87,24 @@ class ConfigProvider
                 EntityManagerInterface::class                 => 'doctrine.entity_manager.orm_default',
                 TemplateRendererInterface::class              => TwigRenderer::class,
                 ErrorReportServiceInterface::class            => ErrorReportService::class,
+            ],
+        ];
+    }
+
+    private function getDoctrineConfig(): array
+    {
+        return [
+            'driver' => [
+                'orm_default' => [
+                    'drivers' => [
+                        'Api\App\Entity' => 'AppEntities',
+                    ],
+                ],
+                'AppEntities' => [
+                    'class' => AttributeDriver::class,
+                    'cache' => 'array',
+                    'paths' => __DIR__ . '/Entity',
+                ],
             ],
         ];
     }
