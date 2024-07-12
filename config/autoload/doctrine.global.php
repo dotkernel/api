@@ -39,7 +39,7 @@ return [
                 'metadata_cache'           => 'filesystem',
                 'query_cache'              => 'filesystem',
                 'hydration_cache'          => 'array',
-                "typed_field_mapper"       => null,
+                'typed_field_mapper'       => null,
                 'second_level_cache'       => [
                     'enabled'                    => true,
                     'default_lifetime'           => 3600,
