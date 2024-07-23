@@ -54,6 +54,7 @@ class Admin extends AbstractEntity implements UserEntityInterface
     {
         parent::__construct();
 
+        $this->created();
         $this->roles = new ArrayCollection();
     }
 

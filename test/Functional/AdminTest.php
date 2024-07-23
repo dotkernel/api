@@ -340,6 +340,9 @@ class AdminTest extends AbstractFunctionalTest
                 'lastName'  => 'Test',
                 'email'     => 'user1@test.com',
             ],
+            'roles'           => [
+                ['uuid' => $this->findUserRole(UserRole::ROLE_USER)->getUuid()->toString()],
+            ],
         ];
 
         $response = $this->post('/user', $userData);
@@ -376,6 +379,9 @@ class AdminTest extends AbstractFunctionalTest
                 'firstName' => 'User',
                 'lastName'  => 'Test',
                 'email'     => 'test@user.com',
+            ],
+            'roles'           => [
+                ['uuid' => $this->findUserRole(UserRole::ROLE_USER)->getUuid()->toString()],
             ],
         ];
 
@@ -422,7 +428,7 @@ class AdminTest extends AbstractFunctionalTest
         $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $this->assertFalse($user->isActive());
-        $response = $this->post(sprintf('/user/%s/activate', $user->getUuid()->toString()));
+        $response = $this->patch(sprintf('/user/%s/activate', $user->getUuid()->toString()));
 
         $this->assertResponseOk($response);
 

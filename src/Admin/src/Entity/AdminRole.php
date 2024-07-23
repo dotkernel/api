@@ -24,6 +24,13 @@ class AdminRole extends AbstractEntity implements RoleInterface
         self::ROLE_SUPERUSER,
     ];
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->created();
+    }
+
     #[ORM\Column(name: "name", type: "string", length: 30, unique: true)]
     protected string $name = '';
 

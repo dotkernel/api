@@ -367,6 +367,10 @@ class AbstractFunctionalTest extends TestCase
         $this->getContainer()->setAllowOverride(false);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function getValidUserData(array $data = []): array
     {
         return [
@@ -379,6 +383,9 @@ class AbstractFunctionalTest extends TestCase
             'password'        => $data['password'] ?? self::DEFAULT_PASSWORD,
             'passwordConfirm' => $data['password'] ?? self::DEFAULT_PASSWORD,
             'status'          => $data['status'] ?? User::STATUS_ACTIVE,
+            'roles'           => [
+                ['uuid' => $this->findUserRole(UserRole::ROLE_USER)->getUuid()->toString()],
+            ],
         ];
     }
 
@@ -523,11 +530,7 @@ class AbstractFunctionalTest extends TestCase
      */
     protected function createUser(array $data = []): User
     {
-        $userRoleRepository = $this->getEntityManager()->getRepository(UserRole::class);
-
-        /** @var RoleInterface $userRole */
-        $userRole = $userRoleRepository->findOneBy(['name' => UserRole::ROLE_USER]);
-
+        $userRole = $this->findUserRole(UserRole::ROLE_USER);
         $userData = $this->getValidUserData();
 
         $user       = new User();
@@ -548,5 +551,16 @@ class AbstractFunctionalTest extends TestCase
         $this->getEntityManager()->flush();
 
         return $user;
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function findUserRole(string $name): ?UserRole
+    {
+        $userRoleRepository = $this->getEntityManager()->getRepository(UserRole::class);
+
+        return $userRoleRepository->findOneBy(['name' => $name]);
     }
 }

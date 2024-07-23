@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
+use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\User\Collection\UserCollection;
@@ -14,15 +15,11 @@ use RuntimeException;
 
 interface UserServiceInterface
 {
-    /**
-     * @throws RuntimeException
-     */
     public function activateUser(User $user): User;
 
     /**
      * @throws ConflictException
      * @throws NotFoundException
-     * @throws RuntimeException
      */
     public function createUser(array $data = []): User;
 
@@ -63,6 +60,9 @@ interface UserServiceInterface
      */
     public function findOneBy(array $params = []): User;
 
+    /**
+     * @throws BadRequestException
+     */
     public function getUsers(array $params = []): UserCollection;
 
     /**
@@ -86,8 +86,9 @@ interface UserServiceInterface
     public function sendWelcomeMail(User $user): bool;
 
     /**
+     * @throws BadRequestException
      * @throws ConflictException
-     * @throws RuntimeException
+     * @throws NotFoundException
      */
     public function updateUser(User $user, array $data = []): User;
 

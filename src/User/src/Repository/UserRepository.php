@@ -16,7 +16,6 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use Mezzio\Authentication\OAuth2\Entity\UserEntity;
-use RuntimeException;
 
 use function password_verify;
 
@@ -83,15 +82,8 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         return new UserCollection($qb, false);
     }
 
-    /**
-     * @throws RuntimeException
-     */
     public function saveUser(User $user): User
     {
-        if (! $user->hasRoles()) {
-            throw new RuntimeException(Message::RESTRICTION_ROLES);
-        }
-
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
 

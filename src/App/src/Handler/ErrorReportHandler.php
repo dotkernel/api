@@ -6,6 +6,7 @@ namespace Api\App\Handler;
 
 use Api\App\Attribute\MethodDeprecation;
 use Api\App\Exception\ForbiddenException;
+use Api\App\Exception\UnauthorizedException;
 use Api\App\Message;
 use Api\App\Service\ErrorReportServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
@@ -38,6 +39,7 @@ class ErrorReportHandler implements RequestHandlerInterface
     /**
      * @throws ForbiddenException
      * @throws RuntimeException
+     * @throws UnauthorizedException
      */
     #[MethodDeprecation(
         sunset: '2038-01-01',

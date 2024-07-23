@@ -57,7 +57,7 @@ class RoutesDelegator
             'user.view'
         );
 
-        $app->post(
+        $app->patch(
             '/user/' . $uuid . '/activate',
             UserActivateHandler::class,
             'user.activate'
@@ -127,7 +127,7 @@ class RoutesDelegator
         );
 
         /**
-         * Guests manage their accounts
+         * Unauthenticated users manage their accounts
          */
 
         $app->post(

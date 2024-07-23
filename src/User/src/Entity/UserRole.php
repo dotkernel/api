@@ -27,6 +27,13 @@ class UserRole extends AbstractEntity implements RoleInterface
     #[ORM\Column(name: "name", type: "string", length: 20, unique: true)]
     protected ?string $name = null;
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->created();
+    }
+
     public function getName(): ?string
     {
         return $this->name;

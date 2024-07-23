@@ -58,6 +58,9 @@ class AdminHandler implements RequestHandlerInterface
         return $this->createResponse($request, $admin);
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function getCollection(ServerRequestInterface $request): ResponseInterface
     {
         return $this->createResponse($request, $this->adminService->getAdmins($request->getQueryParams()));
