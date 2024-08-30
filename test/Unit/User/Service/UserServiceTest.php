@@ -16,9 +16,9 @@ use Api\User\Repository\UserRepository;
 use Api\User\Repository\UserResetPasswordRepository;
 use Api\User\Service\UserRoleService;
 use Api\User\Service\UserService as Subject;
+use Dot\Log\LoggerInterface;
 use Dot\Mail\Service\MailService;
 use Exception;
-use Laminas\Log\LoggerInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
 

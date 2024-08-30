@@ -18,9 +18,9 @@ use Api\User\Repository\UserDetailRepository;
 use Api\User\Repository\UserRepository;
 use Api\User\Repository\UserResetPasswordRepository;
 use Dot\DependencyInjection\Attribute\Inject;
+use Dot\Log\LoggerInterface;
 use Dot\Mail\Exception\MailException;
 use Dot\Mail\Service\MailService;
-use Laminas\Log\LoggerInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use RuntimeException;
 

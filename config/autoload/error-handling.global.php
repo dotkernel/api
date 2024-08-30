@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Api\App\Service\ErrorReportServiceInterface;
-use Laminas\Log\Formatter\Json;
-use Laminas\Log\Logger;
+use Dot\Log\Formatter\Json;
+use Dot\Log\Logger;
 
 return [
     'dot-errorhandler' => [
