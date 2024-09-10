@@ -18,7 +18,9 @@ use Api\User\Handler\AccountRecoveryHandler;
 use Api\User\Handler\AccountResetPasswordHandler;
 use Api\User\Handler\UserActivateHandler;
 use Api\User\Handler\UserAvatarHandler;
+use Api\User\Handler\UserCollectionHandler;
 use Api\User\Handler\UserHandler;
+use Api\User\Handler\UserRoleCollectionHandler;
 use Api\User\Handler\UserRoleHandler;
 use Api\User\Repository\UserAvatarRepository;
 use Api\User\Repository\UserDetailRepository;
@@ -67,7 +69,9 @@ class ConfigProvider
                 UserAvatarHandler::class           => AttributedServiceFactory::class,
                 UserAvatarEventListener::class     => AttributedServiceFactory::class,
                 UserHandler::class                 => AttributedServiceFactory::class,
+                UserCollectionHandler::class       => AttributedServiceFactory::class,
                 UserRoleHandler::class             => AttributedServiceFactory::class,
+                UserRoleCollectionHandler::class   => AttributedServiceFactory::class,
                 UserService::class                 => AttributedServiceFactory::class,
                 UserRoleService::class             => AttributedServiceFactory::class,
                 UserAvatarService::class           => AttributedServiceFactory::class,

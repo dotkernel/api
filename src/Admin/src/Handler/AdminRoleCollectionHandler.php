@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Api\Admin\Handler;
 
 use Api\Admin\Service\AdminRoleServiceInterface;
-use Api\App\Exception\NotFoundException;
+use Api\App\Exception\BadRequestException;
 use Api\App\Handler\HandlerTrait;
 use Dot\DependencyInjection\Attribute\Inject;
 use Mezzio\Hal\HalResponseFactory;
@@ -14,7 +14,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class AdminRoleHandler implements RequestHandlerInterface
+class AdminRoleCollectionHandler implements RequestHandlerInterface
 {
     use HandlerTrait;
 
@@ -31,12 +31,10 @@ class AdminRoleHandler implements RequestHandlerInterface
     }
 
     /**
-     * @throws NotFoundException
+     * @throws BadRequestException
      */
     public function get(ServerRequestInterface $request): ResponseInterface
     {
-        $role = $this->roleService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
-
-        return $this->createResponse($request, $role);
+        return $this->createResponse($request, $this->roleService->getAdminRoles($request->getQueryParams()));
     }
 }

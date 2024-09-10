@@ -26,13 +26,11 @@ class AdminHandler implements RequestHandlerInterface
         HalResponseFactory::class,
         ResourceGenerator::class,
         AdminServiceInterface::class,
-        "config",
     )]
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected AdminServiceInterface $adminService,
-        protected array $config,
     ) {
     }
 
@@ -56,14 +54,6 @@ class AdminHandler implements RequestHandlerInterface
         $admin = $this->adminService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
 
         return $this->createResponse($request, $admin);
-    }
-
-    /**
-     * @throws BadRequestException
-     */
-    public function getCollection(ServerRequestInterface $request): ResponseInterface
-    {
-        return $this->createResponse($request, $this->adminService->getAdmins($request->getQueryParams()));
     }
 
     /**

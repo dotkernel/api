@@ -11,7 +11,9 @@ use Api\User\Handler\AccountRecoveryHandler;
 use Api\User\Handler\AccountResetPasswordHandler;
 use Api\User\Handler\UserActivateHandler;
 use Api\User\Handler\UserAvatarHandler;
+use Api\User\Handler\UserCollectionHandler;
 use Api\User\Handler\UserHandler;
+use Api\User\Handler\UserRoleCollectionHandler;
 use Api\User\Handler\UserRoleHandler;
 use Mezzio\Application;
 use Psr\Container\ContainerInterface;
@@ -43,7 +45,7 @@ class RoutesDelegator
         );
         $app->get(
             '/user',
-            UserHandler::class,
+            UserCollectionHandler::class,
             'user.list'
         );
         $app->patch(
@@ -81,7 +83,7 @@ class RoutesDelegator
 
         $app->get(
             '/user/role',
-            UserRoleHandler::class,
+            UserRoleCollectionHandler::class,
             'user.role.list'
         );
         $app->get(

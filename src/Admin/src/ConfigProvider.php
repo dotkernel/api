@@ -11,7 +11,9 @@ use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
 use Api\Admin\Factory\AdminCreateCommandFactory;
 use Api\Admin\Handler\AdminAccountHandler;
+use Api\Admin\Handler\AdminCollectionHandler;
 use Api\Admin\Handler\AdminHandler;
+use Api\Admin\Handler\AdminRoleCollectionHandler;
 use Api\Admin\Handler\AdminRoleHandler;
 use Api\Admin\Repository\AdminRepository;
 use Api\Admin\Repository\AdminRoleRepository;
@@ -46,14 +48,16 @@ class ConfigProvider
                 ],
             ],
             'factories'  => [
-                AdminHandler::class        => AttributedServiceFactory::class,
-                AdminAccountHandler::class => AttributedServiceFactory::class,
-                AdminRoleHandler::class    => AttributedServiceFactory::class,
-                AdminService::class        => AttributedServiceFactory::class,
-                AdminRoleService::class    => AttributedServiceFactory::class,
-                AdminCreateCommand::class  => AdminCreateCommandFactory::class,
-                AdminRepository::class     => AttributedRepositoryFactory::class,
-                AdminRoleRepository::class => AttributedRepositoryFactory::class,
+                AdminHandler::class               => AttributedServiceFactory::class,
+                AdminCollectionHandler::class     => AttributedServiceFactory::class,
+                AdminAccountHandler::class        => AttributedServiceFactory::class,
+                AdminRoleHandler::class           => AttributedServiceFactory::class,
+                AdminRoleCollectionHandler::class => AttributedServiceFactory::class,
+                AdminService::class               => AttributedServiceFactory::class,
+                AdminRoleService::class           => AttributedServiceFactory::class,
+                AdminCreateCommand::class         => AdminCreateCommandFactory::class,
+                AdminRepository::class            => AttributedRepositoryFactory::class,
+                AdminRoleRepository::class        => AttributedRepositoryFactory::class,
             ],
             'aliases'    => [
                 AdminServiceInterface::class     => AdminService::class,

@@ -13,19 +13,12 @@ use Api\App\Exception\NotFoundException;
 use Api\App\Exception\UnauthorizedException;
 use Dot\Mail\Exception\MailException;
 use Exception;
-use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;
-use Mezzio\Hal\Metadata\MetadataMap;
-use Mezzio\Hal\Metadata\RouteBasedCollectionMetadata;
 use Mezzio\Hal\ResourceGenerator\Exception\OutOfBoundsException;
-use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 
-use function array_key_exists;
-use function assert;
-use function is_array;
 use function method_exists;
 use function sprintf;
 use function strtolower;
@@ -41,10 +34,6 @@ trait HandlerTrait
     {
         try {
             $method = strtolower($request->getMethod());
-            if ($this->isGetCollectionRequest($request, $this->config)) {
-                $method = 'getCollection';
-            }
-
             if (! method_exists($this, $method)) {
                 throw new MethodNotAllowedException(
                     sprintf('Method %s is not implemented for the requested resource.', $method)
@@ -69,38 +58,5 @@ trait HandlerTrait
         } catch (MailException | RuntimeException | Exception $exception) {
             return $this->errorResponse($exception->getMessage());
         }
-    }
-
-    /**
-     * @throws RuntimeException
-     */
-    private function isGetCollectionRequest(ServerRequestInterface $request, array $config): bool
-    {
-        if ($request->getMethod() !== RequestMethodInterface::METHOD_GET) {
-            return false;
-        }
-
-        if (! array_key_exists(MetadataMap::class, $config)) {
-            throw new RuntimeException(
-                sprintf('Unable to load %s from config.', MetadataMap::class)
-            );
-        }
-
-        $routeResult = $request->getAttribute(RouteResult::class);
-        assert($routeResult instanceof RouteResult);
-
-        $routeName = $routeResult->getMatchedRouteName();
-
-        $halConfig = null;
-        foreach ($config[MetadataMap::class] as $cfg) {
-            if ($cfg['route'] === $routeName) {
-                $halConfig = $cfg;
-                break;
-            }
-        }
-
-        return is_array($halConfig)
-            && array_key_exists('__class__', $halConfig)
-            && $halConfig['__class__'] === RouteBasedCollectionMetadata::class;
     }
 }

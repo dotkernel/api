@@ -33,13 +33,11 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
         HalResponseFactory::class,
         ResourceGenerator::class,
         UserServiceInterface::class,
-        "config",
     )]
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected UserServiceInterface $userService,
-        protected array $config,
     ) {
     }
 
