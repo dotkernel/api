@@ -26,13 +26,11 @@ class AccountAvatarHandler implements RequestHandlerInterface
         HalResponseFactory::class,
         ResourceGenerator::class,
         UserAvatarServiceInterface::class,
-        "config",
     )]
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected UserAvatarServiceInterface $userAvatarService,
-        protected array $config,
     ) {
     }
 

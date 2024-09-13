@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Api\Admin\Handler;
+namespace Api\User\Handler;
 
-use Api\Admin\Service\AdminRoleServiceInterface;
-use Api\App\Exception\NotFoundException;
+use Api\App\Exception\BadRequestException;
 use Api\App\Handler\HandlerTrait;
+use Api\User\Service\UserRoleServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
@@ -14,29 +14,27 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class AdminRoleHandler implements RequestHandlerInterface
+class UserRoleCollectionHandler implements RequestHandlerInterface
 {
     use HandlerTrait;
 
     #[Inject(
         HalResponseFactory::class,
         ResourceGenerator::class,
-        AdminRoleServiceInterface::class,
+        UserRoleServiceInterface::class,
     )]
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
-        protected AdminRoleServiceInterface $roleService,
+        protected UserRoleServiceInterface $roleService,
     ) {
     }
 
     /**
-     * @throws NotFoundException
+     * @throws BadRequestException
      */
     public function get(ServerRequestInterface $request): ResponseInterface
     {
-        $role = $this->roleService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
-
-        return $this->createResponse($request, $role);
+        return $this->createResponse($request, $this->roleService->getRoles($request->getQueryParams()));
     }
 }

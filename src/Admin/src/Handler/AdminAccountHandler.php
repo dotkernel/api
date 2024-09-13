@@ -26,13 +26,11 @@ class AdminAccountHandler implements RequestHandlerInterface
         HalResponseFactory::class,
         ResourceGenerator::class,
         AdminServiceInterface::class,
-        "config",
     )]
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected AdminServiceInterface $adminService,
-        protected array $config,
     ) {
     }
 

@@ -23,12 +23,10 @@ class HomeHandler implements RequestHandlerInterface
     #[Inject(
         HalResponseFactory::class,
         ResourceGenerator::class,
-        "config",
     )]
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
-        protected array $config,
     ) {
     }
 

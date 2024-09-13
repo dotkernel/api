@@ -28,13 +28,11 @@ class UserHandler implements RequestHandlerInterface
         HalResponseFactory::class,
         ResourceGenerator::class,
         UserServiceInterface::class,
-        "config",
     )]
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected UserServiceInterface $userService,
-        protected array $config,
     ) {
     }
 
@@ -59,14 +57,6 @@ class UserHandler implements RequestHandlerInterface
         $user = $this->userService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
 
         return $this->createResponse($request, $user);
-    }
-
-    /**
-     * @throws BadRequestException
-     */
-    public function getCollection(ServerRequestInterface $request): ResponseInterface
-    {
-        return $this->createResponse($request, $this->userService->getUsers($request->getQueryParams()));
     }
 
     /**

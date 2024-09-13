@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Api\User\Handler;
 
-use Api\App\Exception\BadRequestException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\HandlerTrait;
 use Api\User\Service\UserRoleServiceInterface;
@@ -23,13 +22,11 @@ class UserRoleHandler implements RequestHandlerInterface
         HalResponseFactory::class,
         ResourceGenerator::class,
         UserRoleServiceInterface::class,
-        "config",
     )]
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected UserRoleServiceInterface $roleService,
-        protected array $config,
     ) {
     }
 
@@ -41,13 +38,5 @@ class UserRoleHandler implements RequestHandlerInterface
         $role = $this->roleService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
 
         return $this->createResponse($request, $role);
-    }
-
-    /**
-     * @throws BadRequestException
-     */
-    public function getCollection(ServerRequestInterface $request): ResponseInterface
-    {
-        return $this->createResponse($request, $this->roleService->getRoles($request->getQueryParams()));
     }
 }

@@ -26,13 +26,11 @@ class ErrorReportHandler implements RequestHandlerInterface
         HalResponseFactory::class,
         ResourceGenerator::class,
         ErrorReportServiceInterface::class,
-        "config",
     )]
     public function __construct(
         protected HalResponseFactory $responseFactory,
         protected ResourceGenerator $resourceGenerator,
         protected ErrorReportServiceInterface $errorReportService,
-        protected array $config,
     ) {
     }
 
