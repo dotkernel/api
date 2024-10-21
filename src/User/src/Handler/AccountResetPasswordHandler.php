@@ -8,7 +8,7 @@ use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\ExpiredException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\HandlerTrait;
+use Api\App\Handler\AbstractHandler;
 use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\InputFilter\ResetPasswordInputFilter;
@@ -17,28 +17,14 @@ use Api\User\Service\UserServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Dot\Mail\Exception\MailException;
 use Fig\Http\Message\StatusCodeInterface;
-use Mezzio\Hal\HalResponseFactory;
-use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
-use function sprintf;
-
-class AccountResetPasswordHandler implements RequestHandlerInterface
+class AccountResetPasswordHandler extends AbstractHandler
 {
-    use HandlerTrait;
-
-    #[Inject(
-        HalResponseFactory::class,
-        ResourceGenerator::class,
-        UserServiceInterface::class,
-    )]
-    public function __construct(
-        protected HalResponseFactory $responseFactory,
-        protected ResourceGenerator $resourceGenerator,
-        protected UserServiceInterface $userService,
-    ) {
+    #[Inject(UserServiceInterface::class)]
+    public function __construct(protected UserServiceInterface $userService)
+    {
     }
 
     /**
@@ -51,13 +37,13 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
 
         $userResetPassword = $this->userService->findResetPasswordByHash($hash);
         if (! $userResetPassword->isValid()) {
-            throw new ExpiredException(sprintf(Message::RESET_PASSWORD_EXPIRED, $hash));
+            throw ExpiredException::create(Message::RESET_PASSWORD_EXPIRED);
         }
         if ($userResetPassword->isCompleted()) {
-            throw new ExpiredException(sprintf(Message::RESET_PASSWORD_USED, $hash));
+            throw ExpiredException::create(Message::RESET_PASSWORD_USED);
         }
 
-        return $this->infoResponse(sprintf(Message::RESET_PASSWORD_VALID, $hash));
+        return $this->infoResponse(Message::RESET_PASSWORD_VALID);
     }
 
     /**
@@ -73,15 +59,18 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
 
         $userResetPassword = $this->userService->findResetPasswordByHash($hash);
         if (! $userResetPassword->isValid()) {
-            throw new ExpiredException(sprintf(Message::RESET_PASSWORD_EXPIRED, $hash));
+            throw ExpiredException::create(Message::RESET_PASSWORD_EXPIRED);
         }
         if ($userResetPassword->isCompleted()) {
-            throw new ConflictException(sprintf(Message::RESET_PASSWORD_USED, $hash));
+            throw ConflictException::create(Message::RESET_PASSWORD_USED);
         }
 
         $inputFilter = (new UpdatePasswordInputFilter())->setData((array) $request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
+            throw BadRequestException::create(
+                detail: Message::VALIDATOR_FIX_ERRORS,
+                additional: ['errors' => $inputFilter->getMessages()],
+            );
         }
 
         $this->userService->updateUser(
@@ -104,7 +93,10 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
     {
         $inputFilter = (new ResetPasswordInputFilter())->setData((array) $request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
+            throw BadRequestException::create(
+                detail: Message::VALIDATOR_FIX_ERRORS,
+                additional: ['errors' => $inputFilter->getMessages()],
+            );
         }
 
         if (! empty($inputFilter->getValue('email'))) {
@@ -116,7 +108,7 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
         }
 
         if (! $user instanceof User) {
-            throw new NotFoundException(Message::USER_NOT_FOUND);
+            throw NotFoundException::create(Message::USER_NOT_FOUND);
         }
 
         $this->userService->updateUser($user->createResetPassword());

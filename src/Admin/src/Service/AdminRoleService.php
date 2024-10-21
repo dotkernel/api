@@ -17,12 +17,9 @@ use function sprintf;
 
 class AdminRoleService implements AdminRoleServiceInterface
 {
-    #[Inject(
-        AdminRoleRepository::class,
-    )]
-    public function __construct(
-        protected AdminRoleRepository $adminRoleRepository,
-    ) {
+    #[Inject(AdminRoleRepository::class)]
+    public function __construct(protected AdminRoleRepository $adminRoleRepository)
+    {
     }
 
     /**
@@ -32,7 +29,7 @@ class AdminRoleService implements AdminRoleServiceInterface
     {
         $role = $this->adminRoleRepository->findOneBy($params);
         if (! $role instanceof AdminRole) {
-            throw new NotFoundException(Message::ROLE_NOT_FOUND);
+            throw NotFoundException::create(Message::ADMIN_ROLE_NOT_FOUND);
         }
 
         return $role;
@@ -51,7 +48,7 @@ class AdminRoleService implements AdminRoleServiceInterface
 
         $params['order'] = $params['order'] ?? 'role.created';
         if (! in_array($params['order'], $values)) {
-            throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'order')]);
+            throw BadRequestException::create(sprintf(Message::INVALID_VALUE, 'order'));
         }
 
         return $this->adminRoleRepository->getAdminRoles($params);

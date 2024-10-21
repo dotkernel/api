@@ -9,7 +9,8 @@ use Api\Admin\Entity\AdminRole;
 use Api\Admin\Repository\AdminRepository;
 use Api\Admin\Service\AdminRoleService;
 use Api\Admin\Service\AdminService as Subject;
-use Api\App\Message;
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\NotFoundException;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -42,12 +43,12 @@ class AdminServiceTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws ConflictException
+     * @throws NotFoundException
      */
     public function testCreateAdminThrowsDuplicateIdentity(): void
     {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage(Message::DUPLICATE_IDENTITY);
+        $this->expectException(ConflictException::class);
 
         $this->subject->method('exists')->willReturn(true);
 

@@ -6,31 +6,22 @@ namespace Api\User\Handler;
 
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\HandlerTrait;
+use Api\App\Handler\AbstractHandler;
 use Api\App\Message;
 use Api\User\InputFilter\UpdateAvatarInputFilter;
 use Api\User\Service\UserAvatarServiceInterface;
 use Api\User\Service\UserServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
-use Mezzio\Hal\HalResponseFactory;
-use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
-class UserAvatarHandler implements RequestHandlerInterface
+class UserAvatarHandler extends AbstractHandler
 {
-    use HandlerTrait;
-
     #[Inject(
-        HalResponseFactory::class,
-        ResourceGenerator::class,
         UserServiceInterface::class,
         UserAvatarServiceInterface::class,
     )]
     public function __construct(
-        protected HalResponseFactory $responseFactory,
-        protected ResourceGenerator $resourceGenerator,
         protected UserServiceInterface $userService,
         protected UserAvatarServiceInterface $userAvatarService,
     ) {
@@ -43,7 +34,7 @@ class UserAvatarHandler implements RequestHandlerInterface
     {
         $user = $this->userService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
         if (! $user->hasAvatar()) {
-            throw new NotFoundException(Message::AVATAR_MISSING);
+            throw NotFoundException::create(Message::USER_AVATAR_NOT_FOUND);
         }
 
         $this->userAvatarService->removeAvatar($user);
@@ -58,7 +49,7 @@ class UserAvatarHandler implements RequestHandlerInterface
     {
         $user = $this->userService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
         if (! $user->hasAvatar()) {
-            throw new NotFoundException(Message::AVATAR_MISSING);
+            throw NotFoundException::create(Message::USER_AVATAR_NOT_FOUND);
         }
 
         return $this->createResponse($request, $user->getAvatar());
@@ -72,7 +63,10 @@ class UserAvatarHandler implements RequestHandlerInterface
     {
         $inputFilter = (new UpdateAvatarInputFilter())->setData($request->getUploadedFiles());
         if (! $inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
+            throw BadRequestException::create(
+                detail: Message::VALIDATOR_FIX_ERRORS,
+                additional: ['errors' => $inputFilter->getMessages()],
+            );
         }
 
         $user = $this->userService->findOneBy(['uuid' => $request->getAttribute('uuid')]);

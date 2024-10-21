@@ -12,6 +12,8 @@ use Laminas\Validator\File\IsImage;
 use Laminas\Validator\File\UploadFile;
 use Laminas\Validator\NotEmpty;
 
+use function sprintf;
+
 class AvatarInput extends FileInput
 {
     public function __construct(?string $name = null, bool $isRequired = true)
@@ -26,7 +28,7 @@ class AvatarInput extends FileInput
 
         $this->getValidatorChain()
             ->attachByName(NotEmpty::class, [
-                'message' => Message::VALIDATOR_REQUIRED_FIELD,
+                'message' => sprintf(Message::VALIDATOR_REQUIRED_FIELD_BY_NAME, 'Avatar'),
             ], true)
             ->attachByName(UploadFile::class, [
                 'message' => Message::VALIDATOR_REQUIRED_UPLOAD,

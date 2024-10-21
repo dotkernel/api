@@ -1,9 +1,9 @@
-# DotKernel API
+# Dotkernel API
 
-Based on Enrico Zimuel's [Zend Expressive API - Skeleton example](https://github.com/ezimuel/zend-expressive-api), DotKernel API runs on [Laminas](https://github.com/laminas) and [Mezzio](https://github.com/mezzio) components and implements standards like PSR-3, PSR-4, PSR-7, PSR-11 and PSR-15.
+Based on Enrico Zimuel's [Zend Expressive API - Skeleton example](https://github.com/ezimuel/zend-expressive-api), Dotkernel API runs on [Laminas](https://github.com/laminas) and [Mezzio](https://github.com/mezzio) components and implements standards like PSR-3, PSR-4, PSR-7, PSR-11 and PSR-15.
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/api)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/5.0.x-dev)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/5.0.0)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/api)](https://github.com/dotkernel/api/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/api)](https://github.com/dotkernel/api/network)
@@ -14,33 +14,41 @@ Based on Enrico Zimuel's [Zend Expressive API - Skeleton example](https://github
 [![codecov](https://codecov.io/gh/dotkernel/api/graph/badge.svg?token=53FN78G5CK)](https://codecov.io/gh/dotkernel/api)
 [![Qodana](https://github.com/dotkernel/api/actions/workflows/qodana_code_quality.yml/badge.svg?branch=5.0)](https://github.com/dotkernel/api/actions/workflows/qodana_code_quality.yml)
 
-[![SymfonyInsight](https://insight.symfony.com/projects/7f9143cc-5e3c-4cfc-992c-377a001fde3e/big.svg)](https://insight.symfony.com/projects/7f9143cc-5e3c-4cfc-992c-377a001fde3e)
-
 ## Getting Started
 
 ## Step 1: Clone the project
 
 Using your terminal, navigate inside the directory you want to download the project files into. Make sure that the directory is empty before proceeding to the download process. Once there, run the following command:
 
-    git clone https://github.com/dotkernel/api.git .
+```shell
+git clone https://github.com/dotkernel/api.git .
+```
 
 ## Step 2: Install project's dependencies
 
-    composer install
+```shell
+composer install
+```
 
 ## Step 3: Development mode
 
 If you're installing the project for development, make sure you have development mode enabled, by running:
 
-    composer development-enable
+```shell
+composer development-enable
+```
 
 You can disable development mode by running:
 
-    composer development-disable
+```shell
+composer development-disable
+```
 
 You can check if you have development mode enabled by running:
 
-    composer development-status
+```shell
+composer development-status
+```
 
 ## Step 4: Prepare config files
 
@@ -57,11 +65,13 @@ You can check if you have development mode enabled by running:
 * fill out the database connection params in `config/autoload/local.php` under `$databases['default']`
 * run the database migrations by using the following command:
 
-    php vendor/bin/doctrine-migrations migrate
+```shell
+php vendor/bin/doctrine-migrations migrate
+```
 
 This command will prompt you to confirm that you want to run it:
 
-    WARNING! You are about to execute a migration in database "..." that could result in schema changes and data loss. Are you sure you wish to continue? (yes/no) [yes]:
+> WARNING! You are about to execute a migration in database "..." that could result in schema changes and data loss. Are you sure you wish to continue? (yes/no) [yes]:
 
 Hit `Enter` to confirm the operation.
 
@@ -71,33 +81,43 @@ Hit `Enter` to confirm the operation.
 
 To list all the fixtures, run:
 
-    php bin/doctrine fixtures:list
+```shell
+php bin/doctrine fixtures:list
+```
 
 This will output all the fixtures in the order of execution.
 
 To execute all fixtures, run:
 
-    php bin/doctrine fixtures:execute
+```shell
+php bin/doctrine fixtures:execute
+```
 
 To execute a specific fixture, run:
 
-    php bin/doctrine fixtures:execute --class=FixtureClassName
+```shell
+php bin/doctrine fixtures:execute --class=FixtureClassName
+```
 
 More details on how fixtures work can be found here: https://github.com/dotkernel/dot-data-fixtures#creating-fixtures
 
 ## Step 6: Test the installation
 
-    php -S 0.0.0.0:8080 -t public
+```shell
+php -S 0.0.0.0:8080 -t public
+```
 
 Sending a GET request to the [home page](http://0.0.0.0:8080/) should output the following message:
 
-    {
-    "message": "DotKernel API version 5"
-    }
+```json
+{
+    "message": "Dotkernel API version 5"
+}
+```
 
 ## Documentation
 
-In order to access DotKernel API documentation, check the provided [readme file](documentation/README.md).
+In order to access Dotkernel API documentation, check the provided [readme file](documentation/README.md).
 
 Additionally, each CLI command available has it's own documentation:
 

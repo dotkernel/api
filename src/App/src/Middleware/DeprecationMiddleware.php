@@ -7,7 +7,7 @@ namespace Api\App\Middleware;
 use Api\App\Attribute\MethodDeprecation;
 use Api\App\Attribute\ResourceDeprecation;
 use Api\App\Exception\DeprecationConflictException;
-use Api\App\Handler\ResponseTrait;
+use Api\App\Exception\RuntimeException;
 use Api\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
 use Laminas\Stratigility\MiddlewarePipe;
@@ -20,7 +20,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
-use RuntimeException;
 
 use function array_column;
 use function array_filter;
@@ -35,8 +34,6 @@ use function strtoupper;
 
 class DeprecationMiddleware implements MiddlewareInterface
 {
-    use ResponseTrait;
-
     public const RESOURCE_DEPRECATION_ATTRIBUTE = ResourceDeprecation::class;
     public const METHOD_DEPRECATION_ATTRIBUTE   = MethodDeprecation::class;
 
@@ -51,7 +48,9 @@ class DeprecationMiddleware implements MiddlewareInterface
     }
 
     /**
+     * @throws DeprecationConflictException
      * @throws ReflectionException
+     * @throws RuntimeException
      */
     public function process(
         ServerRequestInterface $request,
@@ -133,6 +132,7 @@ class DeprecationMiddleware implements MiddlewareInterface
 
     /**
      * @throws ReflectionException
+     * @throws RuntimeException
      */
     private function getHandler(MiddlewareInterface $routeMiddleware): ?ReflectionClass
     {
@@ -154,12 +154,15 @@ class DeprecationMiddleware implements MiddlewareInterface
                 }
             }
         } else {
-            throw new RuntimeException('Invalid route middleware provided.');
+            throw RuntimeException::create('Invalid route middleware provided.');
         }
 
         return $reflectionHandler;
     }
 
+    /**
+     * @throws DeprecationConflictException
+     */
     private function validateAttributes(array $attributes): void
     {
         $intersect = array_intersect(self::DEPRECATION_ATTRIBUTES, array_column($attributes, 'deprecationType'));

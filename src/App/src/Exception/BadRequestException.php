@@ -4,21 +4,26 @@ declare(strict_types=1);
 
 namespace Api\App\Exception;
 
+use Api\App\Message;
 use Exception;
+use Fig\Http\Message\StatusCodeInterface;
+use Mezzio\ProblemDetails\Exception\CommonProblemDetailsExceptionTrait;
+use Mezzio\ProblemDetails\Exception\ProblemDetailsExceptionInterface;
 
-class BadRequestException extends Exception
+class BadRequestException extends Exception implements ProblemDetailsExceptionInterface
 {
-    private array $messages = [];
+    use CommonProblemDetailsExceptionTrait;
 
-    public function getMessages(): array
+    public static function create(string $detail, string $type = '', array $additional = []): self
     {
-        return $this->messages;
-    }
+        $exception = new self();
 
-    public function setMessages(array $messages): static
-    {
-        $this->messages = $messages;
+        $exception->type       = $type;
+        $exception->detail     = $detail;
+        $exception->status     = StatusCodeInterface::STATUS_BAD_REQUEST;
+        $exception->title      = Message::BAD_REQUEST;
+        $exception->additional = $additional;
 
-        return $this;
+        return $exception;
     }
 }

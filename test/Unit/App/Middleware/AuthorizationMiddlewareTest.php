@@ -7,14 +7,14 @@ namespace ApiTest\Unit\App\Middleware;
 use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
 use Api\Admin\Repository\AdminRepository;
-use Api\App\Message;
+use Api\App\Exception\ForbiddenException;
+use Api\App\Exception\UnauthorizedException;
 use Api\App\Middleware\AuthorizationMiddleware as Subject;
 use Api\App\UserIdentity;
 use Api\User\Entity\User;
 use Api\User\Entity\UserRole;
 use Api\User\Repository\UserRepository;
 use Laminas\Diactoros\ServerRequest;
-use Laminas\Http\Response;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authorization\AuthorizationInterface;
 use PHPUnit\Framework\MockObject\Exception;
@@ -22,9 +22,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-
-use function json_decode;
-use function sprintf;
 
 class AuthorizationMiddlewareTest extends TestCase
 {
@@ -59,13 +56,8 @@ class AuthorizationMiddlewareTest extends TestCase
         $identity      = new UserIdentity('test@dotkernel.com', ['user'], ['oauth_client_id' => 'invalid_client_id']);
         $this->request = $this->request->withAttribute(UserInterface::class, $identity);
 
-        $response = $this->subject->process($this->request, $this->handler);
-        $this->assertSame(Response::STATUS_CODE_403, $response->getStatusCode());
-
-        $data = json_decode($response->getBody()->getContents(), true);
-        $this->assertArrayHasKey('error', $data);
-        $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertContains(Message::INVALID_CLIENT_ID, $data['error']['messages']);
+        $this->expectException(UnauthorizedException::class);
+        $this->subject->process($this->request, $this->handler);
     }
 
     public function testAuthorizationInactiveAdmin(): void
@@ -79,13 +71,8 @@ class AuthorizationMiddlewareTest extends TestCase
         $identity      = new UserIdentity('admin@dotkernel.com', ['admin'], ['oauth_client_id' => 'admin']);
         $this->request = $this->request->withAttribute(UserInterface::class, $identity);
 
-        $response = $this->subject->process($this->request, $this->handler);
-        $this->assertSame(Response::STATUS_CODE_403, $response->getStatusCode());
-
-        $data = json_decode($response->getBody()->getContents(), true);
-        $this->assertArrayHasKey('error', $data);
-        $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertContains(Message::ADMIN_NOT_ACTIVATED, $data['error']['messages']);
+        $this->expectException(UnauthorizedException::class);
+        $this->subject->process($this->request, $this->handler);
     }
 
     public function testAuthorizationInactiveUser(): void
@@ -95,13 +82,8 @@ class AuthorizationMiddlewareTest extends TestCase
         $identity      = new UserIdentity('test@dotkernel.com', ['user'], ['oauth_client_id' => 'frontend']);
         $this->request = $this->request->withAttribute(UserInterface::class, $identity);
 
-        $response = $this->subject->process($this->request, $this->handler);
-        $this->assertSame(Response::STATUS_CODE_403, $response->getStatusCode());
-
-        $data = json_decode($response->getBody()->getContents(), true);
-        $this->assertArrayHasKey('error', $data);
-        $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertContains(Message::USER_NOT_ACTIVATED, $data['error']['messages']);
+        $this->expectException(UnauthorizedException::class);
+        $this->subject->process($this->request, $this->handler);
     }
 
     public function testAuthorizationUserNotFoundOrDeleted(): void
@@ -113,16 +95,8 @@ class AuthorizationMiddlewareTest extends TestCase
         $identity      = new UserIdentity('test@dotkernel.com', ['user'], ['oauth_client_id' => 'frontend']);
         $this->request = $this->request->withAttribute(UserInterface::class, $identity);
 
-        $response = $this->subject->process($this->request, $this->handler);
-        $this->assertSame(Response::STATUS_CODE_403, $response->getStatusCode());
-
-        $data = json_decode($response->getBody()->getContents(), true);
-        $this->assertArrayHasKey('error', $data);
-        $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertContains(
-            sprintf(Message::USER_NOT_FOUND_BY_IDENTITY, $identity->getIdentity()),
-            $data['error']['messages']
-        );
+        $this->expectException(UnauthorizedException::class);
+        $this->subject->process($this->request, $this->handler);
     }
 
     public function testAuthorizationNotGranted(): void
@@ -136,16 +110,8 @@ class AuthorizationMiddlewareTest extends TestCase
         $identity      = new UserIdentity('test@dotkernel.com', ['user'], ['oauth_client_id' => 'frontend']);
         $this->request = $this->request->withAttribute(UserInterface::class, $identity);
 
-        $response = $this->subject->process($this->request, $this->handler);
-        $this->assertSame(Response::STATUS_CODE_403, $response->getStatusCode());
-
-        $data = json_decode($response->getBody()->getContents(), true);
-        $this->assertArrayHasKey('error', $data);
-        $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertContains(
-            Message::RESOURCE_NOT_ALLOWED,
-            $data['error']['messages']
-        );
+        $this->expectException(ForbiddenException::class);
+        $this->subject->process($this->request, $this->handler);
     }
 
     public function testAuthorizationAccessGranted(): void

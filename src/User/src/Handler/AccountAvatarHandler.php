@@ -6,32 +6,20 @@ namespace Api\User\Handler;
 
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\HandlerTrait;
+use Api\App\Handler\AbstractHandler;
 use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\InputFilter\UpdateAvatarInputFilter;
 use Api\User\Service\UserAvatarServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
-use Mezzio\Hal\HalResponseFactory;
-use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
-class AccountAvatarHandler implements RequestHandlerInterface
+class AccountAvatarHandler extends AbstractHandler
 {
-    use HandlerTrait;
-
-    #[Inject(
-        HalResponseFactory::class,
-        ResourceGenerator::class,
-        UserAvatarServiceInterface::class,
-    )]
-    public function __construct(
-        protected HalResponseFactory $responseFactory,
-        protected ResourceGenerator $resourceGenerator,
-        protected UserAvatarServiceInterface $userAvatarService,
-    ) {
+    #[Inject(UserAvatarServiceInterface::class)]
+    public function __construct(protected UserAvatarServiceInterface $userAvatarService)
+    {
     }
 
     /**
@@ -41,7 +29,7 @@ class AccountAvatarHandler implements RequestHandlerInterface
     {
         $user = $request->getAttribute(User::class);
         if (! $user->hasAvatar()) {
-            throw new NotFoundException(Message::AVATAR_MISSING);
+            throw NotFoundException::create(Message::USER_AVATAR_NOT_FOUND);
         }
 
         $this->userAvatarService->removeAvatar($user);
@@ -56,7 +44,7 @@ class AccountAvatarHandler implements RequestHandlerInterface
     {
         $user = $request->getAttribute(User::class);
         if (! $user->hasAvatar()) {
-            throw new NotFoundException(Message::AVATAR_MISSING);
+            throw NotFoundException::create(Message::USER_AVATAR_NOT_FOUND);
         }
 
         return $this->createResponse($request, $user->getAvatar());
@@ -69,7 +57,10 @@ class AccountAvatarHandler implements RequestHandlerInterface
     {
         $inputFilter = (new UpdateAvatarInputFilter())->setData($request->getUploadedFiles());
         if (! $inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
+            throw BadRequestException::create(
+                detail: Message::VALIDATOR_FIX_ERRORS,
+                additional: ['errors' => $inputFilter->getMessages()],
+            );
         }
 
         $userAvatar = $this->userAvatarService->createAvatar(

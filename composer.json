@@ -27,9 +27,9 @@
         "sort-packages": true,
         "allow-plugins": {
             "dotkernel/*": true,
-            "laminas/laminas-component-installer": true,
             "composer/package-versions-deprecated": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "laminas/laminas-component-installer": true
         }
     },
     "extra": {
@@ -58,7 +58,7 @@
         "dotkernel/dot-errorhandler": "^4.0.0",
         "dotkernel/dot-mail": "^4.1.1",
         "dotkernel/dot-response-header": "^3.2.3",
-        "laminas/laminas-component-installer": "^3.4.0",
+        "laminas/laminas-component-installer": "^3.4",
         "laminas/laminas-config": "^3.9.0",
         "laminas/laminas-config-aggregator": "^1.14.0",
         "laminas/laminas-http": "^2.19.0",
@@ -74,7 +74,7 @@
         "mezzio/mezzio-cors": "^1.11.1",
         "mezzio/mezzio-fastroute": "^3.11.0",
         "mezzio/mezzio-hal": "^2.9",
-        "mezzio/mezzio-problem-details": "^1.13.1",
+        "mezzio/mezzio-problem-details": "^1.14",
         "mezzio/mezzio-twigrenderer": "^2.15.0",
         "ramsey/uuid-doctrine": "^2.1.0",
         "roave/psr-container-doctrine": "^5.2.1",

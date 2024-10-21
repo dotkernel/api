@@ -8,13 +8,13 @@ use Api\Admin\Entity\Admin;
 use Api\Admin\Repository\AdminRepository;
 use Api\App\Entity\Guest;
 use Api\App\Entity\RoleInterface;
+use Api\App\Exception\ForbiddenException;
+use Api\App\Exception\UnauthorizedException;
 use Api\App\Message;
 use Api\App\UserIdentity;
 use Api\User\Entity\User;
 use Api\User\Repository\UserRepository;
 use Dot\DependencyInjection\Attribute\Inject;
-use Fig\Http\Message\StatusCodeInterface;
-use Laminas\Diactoros\Response\JsonResponse;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authorization\AuthorizationInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -23,7 +23,6 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 use function assert;
-use function sprintf;
 
 class AuthorizationMiddleware implements MiddlewareInterface
 {
@@ -39,6 +38,10 @@ class AuthorizationMiddleware implements MiddlewareInterface
     ) {
     }
 
+    /**
+     * @throws ForbiddenException
+     * @throws UnauthorizedException
+     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $defaultUser = $request->getAttribute(UserInterface::class);
@@ -46,68 +49,45 @@ class AuthorizationMiddleware implements MiddlewareInterface
 
         switch ($defaultUser->getDetail('oauth_client_id')) {
             case 'admin':
-                $user = $this->adminRepository->findOneBy(['identity' => $defaultUser->getIdentity()]);
-                if (! $user instanceof Admin) {
-                    return $this->unauthorizedResponse(sprintf(
-                        Message::USER_NOT_FOUND_BY_IDENTITY,
-                        $defaultUser->getIdentity()
-                    ));
+                $account = $this->adminRepository->findOneBy(['identity' => $defaultUser->getIdentity()]);
+                if (! $account instanceof Admin) {
+                    throw UnauthorizedException::create(Message::ADMIN_NOT_FOUND);
                 }
-                if (! $user->isActive()) {
-                    return $this->unauthorizedResponse(Message::ADMIN_NOT_ACTIVATED);
+                if (! $account->isActive()) {
+                    throw UnauthorizedException::create(Message::ADMIN_INACTIVE);
                 }
-                $request = $request->withAttribute(Admin::class, $user);
+                $request = $request->withAttribute(Admin::class, $account);
                 break;
             case 'frontend':
-                $user = $this->userRepository->findOneBy(['identity' => $defaultUser->getIdentity()]);
-                if (! $user instanceof User || $user->isDeleted()) {
-                    return $this->unauthorizedResponse(sprintf(
-                        Message::USER_NOT_FOUND_BY_IDENTITY,
-                        $defaultUser->getIdentity()
-                    ));
+                $account = $this->userRepository->findOneBy(['identity' => $defaultUser->getIdentity()]);
+                if (! $account instanceof User || $account->isDeleted()) {
+                    throw UnauthorizedException::create(Message::USER_NOT_FOUND);
                 }
-                if ($user->getStatus() !== User::STATUS_ACTIVE) {
-                    return $this->unauthorizedResponse(Message::USER_NOT_ACTIVATED);
+                if ($account->getStatus() !== User::STATUS_ACTIVE) {
+                    throw UnauthorizedException::create(Message::USER_INACTIVE);
                 }
-                $request = $request->withAttribute(User::class, $user);
+                $request = $request->withAttribute(User::class, $account);
                 break;
             case 'guest':
-                $user    = new Guest();
-                $request = $request->withAttribute(Guest::class, $user);
+                $account = new Guest();
+                $request = $request->withAttribute(Guest::class, $account);
                 break;
             default:
-                return $this->unauthorizedResponse(Message::INVALID_CLIENT_ID);
+                throw UnauthorizedException::create(Message::INVALID_CLIENT_ID);
         }
 
-        $defaultUser->setRoles($user->getRoles()->map(function (RoleInterface $role) {
+        $defaultUser->setRoles($account->getRoles()->map(function (RoleInterface $role) {
             return $role->getName();
         })->toArray());
 
         $request = $request->withAttribute(UserInterface::class, $defaultUser);
 
-        $isGranted = false;
         foreach ($defaultUser->getRoles() as $role) {
             if ($this->authorization->isGranted($role, $request)) {
-                $isGranted = true;
-                break;
+                return $handler->handle($request);
             }
         }
 
-        if (! $isGranted) {
-            return $this->unauthorizedResponse(Message::RESOURCE_NOT_ALLOWED);
-        }
-
-        return $handler->handle($request);
-    }
-
-    protected function unauthorizedResponse(string $message): ResponseInterface
-    {
-        return new JsonResponse([
-            'error' => [
-                'messages' => [
-                    $message,
-                ],
-            ],
-        ], StatusCodeInterface::STATUS_FORBIDDEN);
+        throw ForbiddenException::create(Message::NOT_ENOUGH_PERMISSIONS);
     }
 }

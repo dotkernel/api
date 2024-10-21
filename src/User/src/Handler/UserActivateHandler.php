@@ -6,31 +6,19 @@ namespace Api\User\Handler;
 
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\HandlerTrait;
+use Api\App\Handler\AbstractHandler;
 use Api\App\Message;
 use Api\User\Service\UserServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Dot\Mail\Exception\MailException;
-use Mezzio\Hal\HalResponseFactory;
-use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
-class UserActivateHandler implements RequestHandlerInterface
+class UserActivateHandler extends AbstractHandler
 {
-    use HandlerTrait;
-
-    #[Inject(
-        HalResponseFactory::class,
-        ResourceGenerator::class,
-        UserServiceInterface::class,
-    )]
-    public function __construct(
-        protected HalResponseFactory $responseFactory,
-        protected ResourceGenerator $resourceGenerator,
-        protected UserServiceInterface $userService,
-    ) {
+    #[Inject(UserServiceInterface::class)]
+    public function __construct(protected UserServiceInterface $userService)
+    {
     }
 
     /**
@@ -42,7 +30,7 @@ class UserActivateHandler implements RequestHandlerInterface
     {
         $user = $this->userService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
         if ($user->isActive()) {
-            throw new ConflictException(Message::USER_ALREADY_ACTIVATED);
+            throw ConflictException::create(Message::USER_ALREADY_ACTIVE);
         }
 
         $this->userService->activateUser($user);

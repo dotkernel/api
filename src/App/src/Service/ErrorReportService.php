@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Api\App\Service;
 
 use Api\App\Exception\ForbiddenException;
+use Api\App\Exception\RuntimeException;
 use Api\App\Exception\UnauthorizedException;
 use Api\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
+use Dot\Log\LoggerInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use RuntimeException;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -18,9 +20,7 @@ use function array_key_exists;
 use function date;
 use function in_array;
 use function parse_url;
-use function sha1;
 use function sprintf;
-use function uniqid;
 
 use const PHP_EOL;
 use const PHP_URL_HOST;
@@ -28,17 +28,22 @@ use const PHP_URL_HOST;
 class ErrorReportService implements ErrorReportServiceInterface
 {
     private const HEADER_NAME = 'Error-Reporting-Token';
+
     private Filesystem $fileSystem;
-    private ?string $token = null;
+    private string $documentationUrl;
+    private string $token = '';
 
     #[Inject(
+        "dot-log.default_logger",
         "config",
     )]
     public function __construct(
-        protected array $config
+        protected LoggerInterface $logger,
+        protected array $config,
     ) {
-        $this->fileSystem = new Filesystem();
-        $this->config     = $config[ErrorReportServiceInterface::class] ?? [];
+        $this->fileSystem       = new Filesystem();
+        $this->config           = $config[ErrorReportServiceInterface::class] ?? [];
+        $this->documentationUrl = $this->config['documentation_url'] ?? '';
     }
 
     /**
@@ -46,10 +51,7 @@ class ErrorReportService implements ErrorReportServiceInterface
      */
     public function appendMessage(string $message): void
     {
-        $this->fileSystem->appendToFile(
-            $this->config['path'],
-            sprintf('[%s] [%s] %s' . PHP_EOL, date('Y-m-d H:i:s'), (string) $this->token, $message)
-        );
+        $this->fileSystem->appendToFile($this->config['path'], $this->prepareMessage($message));
     }
 
     /**
@@ -63,7 +65,7 @@ class ErrorReportService implements ErrorReportServiceInterface
         $this->validateToken($request);
 
         if (! $this->isMatchingDomain($request) && ! $this->isMatchingIpAddress($request)) {
-            throw new ForbiddenException(Message::ERROR_REPORT_NOT_ALLOWED);
+            throw ForbiddenException::create(Message::ERROR_REPORT_NOT_ALLOWED);
         }
 
         return $this;
@@ -71,23 +73,23 @@ class ErrorReportService implements ErrorReportServiceInterface
 
     public function generateToken(): string
     {
-        return sha1(uniqid());
+        return Uuid::uuid4()->toString();
     }
 
     /**
      * @throws UnauthorizedException
-     * @throws ForbiddenException
      */
     private function validateToken(ServerRequestInterface $request): void
     {
-        $this->token = $request->getHeaderLine(self::HEADER_NAME);
-        if (empty($this->token)) {
-            throw new UnauthorizedException(Message::ERROR_REPORT_NOT_ALLOWED);
+        $token = $request->getHeaderLine(self::HEADER_NAME);
+        if (empty($token) || ! in_array($token, $this->config['tokens'])) {
+            throw UnauthorizedException::create(
+                sprintf(Message::ERROR_REPORT_UNAUTHORIZED, self::HEADER_NAME),
+                $this->documentationUrl
+            );
         }
 
-        if (! in_array($this->token, $this->config['tokens'])) {
-            throw new ForbiddenException(Message::ERROR_REPORT_NOT_ALLOWED);
-        }
+        $this->token = $token;
     }
 
     private function isMatchingDomain(ServerRequestInterface $request): bool
@@ -109,60 +111,68 @@ class ErrorReportService implements ErrorReportServiceInterface
     }
 
     /**
+     * @throws ForbiddenException
      * @throws RuntimeException
      */
     private function validateConfigs(): void
     {
         if (! array_key_exists('enabled', $this->config)) {
-            throw new RuntimeException(
+            $this->logger->err(
                 sprintf(Message::MISSING_CONFIG, 'config.ErrorReportServiceInterface::class.enabled')
             );
+            throw RuntimeException::create(Message::ERROR_REPORT_NOT_CONFIGURED, $this->documentationUrl);
         }
 
         if ($this->config['enabled'] !== true) {
-            throw new RuntimeException(Message::ERROR_REPORT_NOT_ENABLED);
+            $this->logger->err(Message::ERROR_REPORT_NOT_ENABLED);
+            throw ForbiddenException::create(Message::ERROR_REPORT_NOT_ENABLED, $this->documentationUrl);
         }
 
         if (! array_key_exists('path', $this->config)) {
-            throw new RuntimeException(
+            $this->logger->err(
                 sprintf(Message::MISSING_CONFIG, 'config.ErrorReportServiceInterface::class.path')
             );
+            throw RuntimeException::create(Message::ERROR_REPORT_NOT_CONFIGURED, $this->documentationUrl);
         }
 
         if (empty($this->config['path'])) {
-            throw new RuntimeException(
+            $this->logger->err(
                 sprintf(Message::INVALID_CONFIG, 'config.ErrorReportServiceInterface::class.path')
             );
+            throw RuntimeException::create(Message::ERROR_REPORT_NOT_CONFIGURED, $this->documentationUrl);
         }
 
         if (! array_key_exists('tokens', $this->config)) {
-            throw new RuntimeException(
+            $this->logger->err(
                 sprintf(Message::MISSING_CONFIG, 'config.ErrorReportServiceInterface::class.tokens')
             );
+            throw RuntimeException::create(Message::ERROR_REPORT_NOT_CONFIGURED, $this->documentationUrl);
         }
 
         if (empty($this->config['tokens'])) {
-            throw new RuntimeException(
+            $this->logger->err(
                 sprintf(Message::INVALID_CONFIG, 'config.ErrorReportServiceInterface::class.tokens')
             );
+            throw RuntimeException::create(Message::ERROR_REPORT_NOT_CONFIGURED, $this->documentationUrl);
         }
 
         if (! array_key_exists('domain_whitelist', $this->config)) {
-            throw new RuntimeException(
-                sprintf(
-                    Message::MISSING_CONFIG,
-                    sprintf('config.%s.domain_whitelist', ErrorReportServiceInterface::class)
-                )
+            $this->logger->err(
+                sprintf(Message::MISSING_CONFIG, 'config.ErrorReportServiceInterface::class.domain_whitelist')
             );
+            throw RuntimeException::create(Message::ERROR_REPORT_NOT_CONFIGURED, $this->documentationUrl);
         }
 
         if (! array_key_exists('ip_whitelist', $this->config)) {
-            throw new RuntimeException(
-                sprintf(
-                    Message::MISSING_CONFIG,
-                    sprintf('config.%s.ip_whitelist', ErrorReportServiceInterface::class)
-                )
+            $this->logger->err(
+                sprintf(Message::MISSING_CONFIG, 'config.ErrorReportServiceInterface::class.ip_whitelist')
             );
+            throw RuntimeException::create(Message::ERROR_REPORT_NOT_CONFIGURED, $this->documentationUrl);
         }
+    }
+
+    private function prepareMessage(string $message): string
+    {
+        return sprintf('[%s] [%s] %s' . PHP_EOL, date('Y-m-d H:i:s'), $this->token, $message);
     }
 }

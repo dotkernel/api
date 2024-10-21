@@ -32,7 +32,7 @@ class UserRoleService implements UserRoleServiceInterface
     {
         $role = $this->roleRepository->findOneBy($params);
         if (! $role instanceof UserRole) {
-            throw new NotFoundException(Message::ROLE_NOT_FOUND);
+            throw NotFoundException::create(Message::USER_ROLE_NOT_FOUND);
         }
 
         return $role;
@@ -51,7 +51,7 @@ class UserRoleService implements UserRoleServiceInterface
 
         $params['order'] = $params['order'] ?? 'role.created';
         if (! in_array($params['order'], $values)) {
-            throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'order')]);
+            throw BadRequestException::create(sprintf(Message::INVALID_VALUE, 'order'));
         }
 
         return $this->roleRepository->getRoles($params);

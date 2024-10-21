@@ -10,7 +10,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\ProblemDetails\Exception\CommonProblemDetailsExceptionTrait;
 use Mezzio\ProblemDetails\Exception\ProblemDetailsExceptionInterface;
 
-class ForbiddenException extends Exception implements ProblemDetailsExceptionInterface
+class RuntimeException extends Exception implements ProblemDetailsExceptionInterface
 {
     use CommonProblemDetailsExceptionTrait;
 
@@ -20,8 +20,8 @@ class ForbiddenException extends Exception implements ProblemDetailsExceptionInt
 
         $exception->type       = $type;
         $exception->detail     = $detail;
-        $exception->status     = StatusCodeInterface::STATUS_FORBIDDEN;
-        $exception->title      = Message::FORBIDDEN;
+        $exception->status     = StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR;
+        $exception->title      = Message::INTERNAL_SERVER_ERROR;
         $exception->additional = $additional;
 
         return $exception;

@@ -8,7 +8,6 @@ use Api\Admin\Entity\AdminRole;
 use Api\Admin\InputFilter\CreateAdminInputFilter;
 use Api\Admin\Service\AdminRoleService;
 use Api\Admin\Service\AdminService;
-use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Message;
@@ -17,6 +16,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 use function implode;
 use function sprintf;
@@ -54,12 +54,12 @@ class AdminCreateCommand extends Command
     }
 
     /**
-     * @throws BadRequestException
-     * @throws ConflictException
      * @throws NotFoundException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
+
         $inputFilter = (new CreateAdminInputFilter())->setData($this->getData($input));
         if (! $inputFilter->isValid()) {
             $messages = [];
@@ -69,10 +69,16 @@ class AdminCreateCommand extends Command
                 }
             }
 
-            throw new BadRequestException(implode(PHP_EOL, $messages));
+            $io->error(implode(PHP_EOL, $messages));
+            return Command::FAILURE;
         }
 
-        $this->adminService->createAdmin($inputFilter->getValues());
+        try {
+            $this->adminService->createAdmin($inputFilter->getValues());
+        } catch (ConflictException | NotFoundException $e) {
+            $io->error($e->getDetail());
+            return Command::FAILURE;
+        }
 
         $output->writeln(Message::ADMIN_CREATED);
 

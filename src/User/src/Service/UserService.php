@@ -22,7 +22,6 @@ use Dot\Log\LoggerInterface;
 use Dot\Mail\Exception\MailException;
 use Dot\Mail\Service\MailService;
 use Mezzio\Template\TemplateRendererInterface;
-use RuntimeException;
 
 use function date;
 use function in_array;
@@ -68,11 +67,11 @@ class UserService implements UserServiceInterface
     public function createUser(array $data = []): User
     {
         if ($this->exists($data['identity'])) {
-            throw new ConflictException(Message::DUPLICATE_IDENTITY);
+            throw ConflictException::create(Message::DUPLICATE_IDENTITY);
         }
 
         if ($this->emailExists($data['detail']['email'])) {
-            throw new ConflictException(Message::DUPLICATE_EMAIL);
+            throw ConflictException::create(Message::DUPLICATE_EMAIL);
         }
 
         $detail = (new UserDetail())
@@ -107,9 +106,6 @@ class UserService implements UserServiceInterface
         }
     }
 
-    /**
-     * @throws RuntimeException
-     */
     public function deleteUser(User $user): User
     {
         $this->revokeTokens($user);
@@ -117,9 +113,6 @@ class UserService implements UserServiceInterface
         return $this->anonymizeUser($user->markAsDeleted());
     }
 
-    /**
-     * @throws RuntimeException
-     */
     public function anonymizeUser(User $user): User
     {
         $placeholder = $this->getAnonymousPlaceholder();
@@ -185,7 +178,7 @@ class UserService implements UserServiceInterface
     {
         $userResetPassword = $this->userResetPasswordRepository->findOneBy(['hash' => $hash]);
         if (! $userResetPassword instanceof UserResetPassword) {
-            throw new NotFoundException(sprintf(Message::RESET_PASSWORD_NOT_FOUND, (string) $hash));
+            throw NotFoundException::create(Message::RESET_PASSWORD_NOT_FOUND);
         }
 
         return $userResetPassword;
@@ -198,7 +191,7 @@ class UserService implements UserServiceInterface
     {
         $user = $this->userDetailRepository->findOneBy(['email' => $email])?->getUser();
         if (! $user instanceof User) {
-            throw new NotFoundException(Message::USER_NOT_FOUND);
+            throw NotFoundException::create(Message::USER_NOT_FOUND);
         }
 
         return $user;
@@ -219,7 +212,7 @@ class UserService implements UserServiceInterface
     {
         $user = $this->userRepository->findOneBy($params);
         if (! $user instanceof User) {
-            throw new NotFoundException(Message::USER_NOT_FOUND);
+            throw NotFoundException::create(Message::USER_NOT_FOUND);
         }
 
         return $user;
@@ -230,16 +223,24 @@ class UserService implements UserServiceInterface
      */
     public function getUsers(array $params = []): UserCollection
     {
-        $values = [
-            'user.identity',
-            'user.status',
-            'user.created',
-            'user.updated',
-        ];
+        $orders = ['user.uuid', 'user.identity', 'user.status', 'user.created', 'user.updated'];
 
         $params['order'] = $params['order'] ?? 'user.created';
-        if (! in_array($params['order'], $values)) {
-            throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'order')]);
+        if (! in_array($params['order'], $orders)) {
+            throw BadRequestException::create(
+                detail: sprintf(Message::INVALID_VALUE_USE_ONE_OF, 'order'),
+                additional: ['order' => $orders],
+            );
+        }
+
+        $dirs = ['asc', 'desc'];
+
+        $params['dir'] = $params['dir'] ?? 'desc';
+        if (! in_array($params['dir'], $dirs)) {
+            throw BadRequestException::create(
+                detail: sprintf(Message::INVALID_VALUE_USE_ONE_OF, 'dir'),
+                additional: ['dir' => $dirs],
+            );
         }
 
         return $this->userRepository->getUsers($params);
@@ -350,14 +351,14 @@ class UserService implements UserServiceInterface
     {
         if (isset($data['identity'])) {
             if ($this->existsOther($data['identity'], $user->getUuid()->toString())) {
-                throw new ConflictException(Message::DUPLICATE_IDENTITY);
+                throw ConflictException::create(Message::DUPLICATE_IDENTITY);
             }
             $user->setIdentity($data['identity']);
         }
 
         if (isset($data['detail']['email'])) {
             if ($this->emailExistsOther($data['detail']['email'], $user->getUuid()->toString())) {
-                throw new ConflictException(Message::DUPLICATE_EMAIL);
+                throw ConflictException::create(Message::DUPLICATE_EMAIL);
             }
         }
 
@@ -401,7 +402,7 @@ class UserService implements UserServiceInterface
         }
 
         if (! $user->hasRoles()) {
-            throw (new BadRequestException())->setMessages([Message::RESTRICTION_ROLES]);
+            throw BadRequestException::create(Message::RESTRICTION_ROLES);
         }
 
         return $this->userRepository->saveUser($user);

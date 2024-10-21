@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-$baseUrl = 'http://localhost:8080';
+$baseUrl = 'http://api.dotkernel.localhost';
 
 $databases = [
     'default' => [
@@ -19,14 +19,11 @@ $databases = [
 ];
 
 return [
-    'application'           => [
-        'name'       => 'DotKernel API',
-        'url'        => $baseUrl,
-        'versioning' => [
-            'documentation_url' => 'https://docs.dotkernel.org/api-documentation/v5/core-features/versioning',
-        ],
+    'application'    => [
+        'name' => 'DotKernel API',
+        'url'  => $baseUrl,
     ],
-    'authentication'        => [
+    'authentication' => [
         'private_key'          => [
             'key_or_path'           => getcwd() . '/data/oauth/private.key',
             'key_permissions_check' => false,
@@ -45,15 +42,15 @@ return [
             'message'           => 'Invalid credentials.',
         ],
     ],
-    'databases'             => $databases,
-    'doctrine'              => [
-        'connection'    => [
+    'databases'      => $databases,
+    'doctrine'       => [
+        'connection' => [
             'orm_default' => [
                 'params' => $databases['default'],
             ],
         ],
     ],
-    'uploads'               => [
+    'uploads'        => [
         'user' => [
             'url'  => $baseUrl . '/uploads/user',
             'path' => realpath(__DIR__ . '/../../public/uploads/user'),

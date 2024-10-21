@@ -6,12 +6,9 @@ namespace Api\App\Handler;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
-class NotFoundHandler implements RequestHandlerInterface
+class NotFoundHandler extends AbstractHandler
 {
-    use HandlerTrait;
-
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return $this->notFoundResponse();

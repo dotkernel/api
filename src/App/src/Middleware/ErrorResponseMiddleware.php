@@ -17,12 +17,9 @@ use function json_encode;
 
 class ErrorResponseMiddleware implements MiddlewareInterface
 {
-    #[Inject(
-        "config.authentication",
-    )]
-    public function __construct(
-        protected array $config,
-    ) {
+    #[Inject("config.authentication")]
+    public function __construct(protected array $config)
+    {
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

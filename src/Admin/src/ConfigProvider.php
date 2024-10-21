@@ -22,6 +22,7 @@ use Api\Admin\Service\AdminRoleServiceInterface;
 use Api\Admin\Service\AdminService;
 use Api\Admin\Service\AdminServiceInterface;
 use Api\App\ConfigProvider as AppConfigProvider;
+use Api\App\Factory\HandlerDelegatorFactory;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Dot\DependencyInjection\Factory\AttributedRepositoryFactory;
 use Dot\DependencyInjection\Factory\AttributedServiceFactory;
@@ -43,9 +44,12 @@ class ConfigProvider
     {
         return [
             'delegators' => [
-                Application::class => [
-                    RoutesDelegator::class,
-                ],
+                Application::class                => [RoutesDelegator::class],
+                AdminHandler::class               => [HandlerDelegatorFactory::class],
+                AdminCollectionHandler::class     => [HandlerDelegatorFactory::class],
+                AdminAccountHandler::class        => [HandlerDelegatorFactory::class],
+                AdminRoleHandler::class           => [HandlerDelegatorFactory::class],
+                AdminRoleCollectionHandler::class => [HandlerDelegatorFactory::class],
             ],
             'factories'  => [
                 AdminHandler::class               => AttributedServiceFactory::class,

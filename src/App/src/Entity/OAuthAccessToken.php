@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Api\App\Entity;
 
+use Api\App\Exception\RuntimeException;
+use Api\App\Message;
 use Api\App\Repository\OAuthAccessTokenRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,7 +20,6 @@ use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
-use RuntimeException;
 
 #[ORM\Entity(repositoryClass: OAuthAccessTokenRepository::class)]
 #[ORM\Table(name: "oauth_access_tokens")]
@@ -189,10 +190,13 @@ class OAuthAccessToken implements AccessTokenEntityInterface
         return $this;
     }
 
+    /**
+     * @throws RuntimeException
+     */
     public function initJwtConfiguration(): self
     {
         if (null === $this->privateKey) {
-            throw new RuntimeException('Unable to init JWT without private key');
+            throw RuntimeException::create(Message::OAUTH_MISSING_PRIVATE_KEY);
         }
 
         $this->jwtConfiguration = Configuration::forAsymmetricSigner(
@@ -207,12 +211,15 @@ class OAuthAccessToken implements AccessTokenEntityInterface
         return $this;
     }
 
+    /**
+     * @throws RuntimeException
+     */
     private function convertToJWT(): Token
     {
         $this->initJwtConfiguration();
 
         if ($this->jwtConfiguration === null) {
-            throw new RuntimeException('Unable to convert to JWT without config');
+            throw RuntimeException::create(Message::OAUTH_MISSING_CONFIG);
         }
 
         return $this->jwtConfiguration->builder()
@@ -226,6 +233,9 @@ class OAuthAccessToken implements AccessTokenEntityInterface
             ->getToken($this->jwtConfiguration->signer(), $this->jwtConfiguration->signingKey());
     }
 
+    /**
+     * @throws RuntimeException
+     */
     public function __toString(): string
     {
         return $this->convertToJWT()->toString();

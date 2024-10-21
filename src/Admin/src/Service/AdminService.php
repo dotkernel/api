@@ -35,7 +35,7 @@ class AdminService implements AdminServiceInterface
     public function createAdmin(array $data = []): Admin
     {
         if ($this->exists($data['identity'])) {
-            throw new ConflictException(Message::DUPLICATE_IDENTITY);
+            throw ConflictException::create(Message::DUPLICATE_IDENTITY);
         }
 
         $admin = (new Admin())
@@ -88,7 +88,7 @@ class AdminService implements AdminServiceInterface
     {
         $admin = $this->adminRepository->findOneBy($params);
         if (! $admin instanceof Admin) {
-            throw new NotFoundException(Message::ADMIN_NOT_FOUND);
+            throw NotFoundException::create(Message::ADMIN_NOT_FOUND);
         }
 
         return $admin;
@@ -99,7 +99,8 @@ class AdminService implements AdminServiceInterface
      */
     public function getAdmins(array $params = []): AdminCollection
     {
-        $values = [
+        $orders = [
+            'admin.uuid',
             'admin.identity',
             'admin.firstName',
             'admin.lastName',
@@ -109,8 +110,24 @@ class AdminService implements AdminServiceInterface
         ];
 
         $params['order'] = $params['order'] ?? 'admin.created';
-        if (! in_array($params['order'], $values)) {
-            throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'order')]);
+        if (! in_array($params['order'], $orders)) {
+            throw BadRequestException::create(
+                detail: sprintf(Message::INVALID_VALUE_USE_ONE_OF, 'order'),
+                additional: ['order' => $orders],
+            );
+        }
+
+        $dirs = [
+            'asc',
+            'desc',
+        ];
+
+        $params['dir'] = $params['dir'] ?? 'desc';
+        if (! in_array($params['dir'], $dirs)) {
+            throw BadRequestException::create(
+                detail: sprintf(Message::INVALID_VALUE_USE_ONE_OF, 'dir'),
+                additional: ['dir' => $dirs],
+            );
         }
 
         return $this->adminRepository->getAdmins($params);
@@ -124,7 +141,7 @@ class AdminService implements AdminServiceInterface
     public function updateAdmin(Admin $admin, array $data = []): Admin
     {
         if (isset($data['identity']) && $this->existsOther($data['identity'], $admin->getUuid()->toString())) {
-            throw new ConflictException(Message::DUPLICATE_IDENTITY);
+            throw ConflictException::create(Message::DUPLICATE_IDENTITY);
         }
 
         if (! empty($data['password'])) {
@@ -153,7 +170,7 @@ class AdminService implements AdminServiceInterface
         }
 
         if (! $admin->hasRoles()) {
-            throw (new BadRequestException())->setMessages([Message::RESTRICTION_ROLES]);
+            throw BadRequestException::create(Message::RESTRICTION_ROLES);
         }
 
         return $this->adminRepository->saveAdmin($admin);

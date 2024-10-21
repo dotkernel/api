@@ -17,11 +17,10 @@ class EntityListenerResolver extends DefaultEntityListenerResolver
     }
 
     /**
-     * @param string $className
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function resolve($className): object
+    public function resolve(string $className): object
     {
         return $this->container->get($className);
     }

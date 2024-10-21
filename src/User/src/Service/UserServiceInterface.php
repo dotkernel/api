@@ -11,7 +11,6 @@ use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
 use Api\User\Entity\UserResetPassword;
 use Dot\Mail\Exception\MailException;
-use RuntimeException;
 
 interface UserServiceInterface
 {
@@ -25,14 +24,8 @@ interface UserServiceInterface
 
     public function revokeTokens(User $user): void;
 
-    /**
-     * @throws RuntimeException
-     */
     public function deleteUser(User $user): User;
 
-    /**
-     * @throws RuntimeException
-     */
     public function anonymizeUser(User $user): User;
 
     public function exists(string $identity = ''): bool;

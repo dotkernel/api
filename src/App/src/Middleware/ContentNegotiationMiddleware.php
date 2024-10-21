@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Api\App\Middleware;
 
-use Api\App\Handler\ResponseTrait;
+use Api\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
+use Fig\Http\Message\StatusCodeInterface;
+use Laminas\Diactoros\Response\JsonResponse;
 use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -22,16 +24,11 @@ use function str_contains;
 use function strtok;
 use function trim;
 
-class ContentNegotiationMiddleware implements MiddlewareInterface
+readonly class ContentNegotiationMiddleware implements MiddlewareInterface
 {
-    use ResponseTrait;
-
-    #[Inject(
-        "config.content-negotiation",
-    )]
-    public function __construct(
-        private readonly array $config,
-    ) {
+    #[Inject("config.content-negotiation")]
+    public function __construct(private array $config)
+    {
     }
 
     public function process(
@@ -47,12 +44,12 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
 
         $accept = $this->formatAcceptRequest($request->getHeaderLine('Accept'));
         if (! $this->checkAccept($routeName, $accept)) {
-            return $this->notAcceptableResponse('Not Acceptable');
+            return $this->notAcceptableResponse(Message::ACCEPT_NOT_ACCEPTABLE);
         }
 
         $contentType = $request->getHeaderLine('Content-Type');
         if (! $this->checkContentType($routeName, $contentType)) {
-            return $this->unsupportedMediaTypeResponse('Unsupported Media Type');
+            return $this->unsupportedMediaTypeResponse(Message::UNSUPPORTED_MEDIA_TYPE);
         }
 
         $response = $handler->handle($request);
@@ -60,7 +57,7 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         $responseContentType = $response->getHeaderLine('Content-Type');
 
         if (! $this->validateResponseContentType($responseContentType, $accept)) {
-            return $this->notAcceptableResponse('Unable to resolve Accept header to a representation');
+            return $this->notAcceptableResponse(Message::ACCEPT_NOT_RESOLVABLE);
         }
 
         return $response;
@@ -132,5 +129,15 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         }
 
         return in_array($contentType, $accept, true);
+    }
+
+    public function notAcceptableResponse(string $message): ResponseInterface
+    {
+        return new JsonResponse(['messages' => [$message]], StatusCodeInterface::STATUS_NOT_ACCEPTABLE);
+    }
+
+    public function unsupportedMediaTypeResponse(string $message): ResponseInterface
+    {
+        return new JsonResponse(['messages' => [$message]], StatusCodeInterface::STATUS_UNSUPPORTED_MEDIA_TYPE);
     }
 }

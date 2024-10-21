@@ -10,10 +10,10 @@ use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\Authentication\OAuth2\TokenEndpointHandler;
 use OpenApi\Attributes as OA;
 
-#[OA\Info(version: '1.0', title: 'DotKernel API')]
+#[OA\Info(version: '1.0', title: 'Dotkernel API')]
 #[OA\Server(url: 'http://api.dotkernel.localhost', description: 'Local development server')]
 #[OA\SecurityScheme(securityScheme: 'AuthToken', type: 'http', in: 'header', bearerFormat: 'JWT', scheme: 'bearer')]
-#[OA\SecurityScheme(securityScheme: 'ErrorReportingToken', type: 'apiKey', in: 'header', name: 'Error-Reporting-Token')]
+#[OA\SecurityScheme(securityScheme: 'ErrorReportingToken', type: 'apiKey', name: 'Error-Reporting-Token', in: 'header')]
 
 #[OA\ExternalDocumentation(
     description: 'Dotkernel API documentation',
@@ -193,7 +193,7 @@ use OpenApi\Attributes as OA;
 #[OA\Schema(
     schema: 'HomeMessage',
     properties: [
-        new OA\Property(property: 'message', type: 'string', default: 'DotKernel API version 5'),
+        new OA\Property(property: 'message', type: 'string', default: 'Dotkernel API version 5'),
     ],
     type: 'object'
 )]
@@ -201,13 +201,18 @@ use OpenApi\Attributes as OA;
 #[OA\Schema(
     schema: 'ErrorMessage',
     properties: [
-        new OA\Property(
-            property: 'error',
-            properties: [
-                new OA\Property(property: 'messages', type: 'array', items: new OA\Items(type: 'string')),
-            ],
-            type: 'object',
-        ),
+        new OA\Property(property: 'title', type: 'string'),
+        new OA\Property(property: 'type', type: 'string', example: 'https://example.com/error/some-error'),
+        new OA\Property(property: 'status', type: 'integer', example: 500),
+        new OA\Property(property: 'detail', type: 'string', example: 'An error occurred'),
+        new OA\Property(property: 'additional', properties: [
+            new OA\Property(
+                property: 'errors',
+                required: null,
+                type: 'array',
+                items: new OA\Items(type: 'string'),
+            ),
+        ], type: 'object'),
     ],
     type: 'object',
 )]
@@ -216,11 +221,9 @@ use OpenApi\Attributes as OA;
     schema: 'InfoMessage',
     properties: [
         new OA\Property(
-            property: 'info',
-            properties: [
-                new OA\Property(property: 'messages', type: 'array', items: new OA\Items(type: 'string')),
-            ],
-            type: 'object',
+            property: 'messages',
+            type: 'array',
+            items: new OA\Items(type: 'string'),
         ),
     ],
     type: 'object',

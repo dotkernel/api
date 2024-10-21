@@ -12,6 +12,7 @@ use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Dot\DependencyInjection\Attribute\Entity;
+use Fig\Http\Message\StatusCodeInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
@@ -118,7 +119,12 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
                     ->setParameter('identity', $username);
                 break;
             default:
-                throw new OAuthServerException(Message::INVALID_CLIENT_ID, 6, 'invalid_client', 401);
+                throw new OAuthServerException(
+                    Message::INVALID_CLIENT_ID,
+                    6,
+                    'invalid_client',
+                    StatusCodeInterface::STATUS_UNAUTHORIZED
+                );
         }
 
         $result = $qb->getQuery()->getArrayResult();
@@ -133,7 +139,12 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         }
 
         if ($clientEntity->getName() === 'frontend' && $result['status'] !== User::STATUS_ACTIVE) {
-            throw new OAuthServerException(Message::USER_NOT_ACTIVATED, 6, 'inactive_user', 401);
+            throw new OAuthServerException(
+                Message::USER_INACTIVE,
+                6,
+                'inactive_user',
+                StatusCodeInterface::STATUS_UNAUTHORIZED
+            );
         }
 
         return new UserEntity($username);

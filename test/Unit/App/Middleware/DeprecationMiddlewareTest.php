@@ -7,7 +7,7 @@ namespace ApiTest\Unit\App\Middleware;
 use Api\App\Attribute\MethodDeprecation;
 use Api\App\Attribute\ResourceDeprecation;
 use Api\App\Exception\DeprecationConflictException;
-use Api\App\Handler\HandlerTrait;
+use Api\App\Handler\AbstractHandler;
 use Api\App\Message;
 use Api\App\Middleware\DeprecationMiddleware as Subject;
 use Fig\Http\Message\RequestMethodInterface;
@@ -213,9 +213,7 @@ class DeprecationMiddlewareTest extends TestCase
      */
     public function testDeprecationMethodUsesRequestMethod(): void
     {
-        $handler = new class implements RequestHandlerInterface {
-            use HandlerTrait;
-
+        $handler = new class extends AbstractHandler implements RequestHandlerInterface {
             #[MethodDeprecation(
                 sunset: '2038-01-01',
                 link: 'get-test-link',

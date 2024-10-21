@@ -9,10 +9,10 @@ use Api\App\Command\TokenGenerateCommand;
 use Api\App\Entity\EntityListenerResolver;
 use Api\App\Factory\AuthenticationMiddlewareFactory;
 use Api\App\Factory\EntityListenerResolverFactory;
+use Api\App\Factory\HandlerDelegatorFactory;
 use Api\App\Factory\RouteListCommandFactory;
 use Api\App\Factory\TokenGenerateCommandFactory;
 use Api\App\Handler\ErrorReportHandler;
-use Api\App\Handler\HomeHandler;
 use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
 use Api\App\Middleware\ContentNegotiationMiddleware;
@@ -57,9 +57,8 @@ class ConfigProvider
     {
         return [
             'delegators' => [
-                Application::class => [
-                    RoutesDelegator::class,
-                ],
+                Application::class        => [RoutesDelegator::class],
+                ErrorReportHandler::class => [HandlerDelegatorFactory::class],
             ],
             'factories'  => [
                 'doctrine.entity_manager.orm_default' => EntityManagerFactory::class,
@@ -72,7 +71,6 @@ class ConfigProvider
                 Environment::class                    => TwigEnvironmentFactory::class,
                 TwigExtension::class                  => TwigExtensionFactory::class,
                 TwigRenderer::class                   => TwigRendererFactory::class,
-                HomeHandler::class                    => AttributedServiceFactory::class,
                 ErrorReportHandler::class             => AttributedServiceFactory::class,
                 ErrorResponseMiddleware::class        => AttributedServiceFactory::class,
                 RouteListCommand::class               => RouteListCommandFactory::class,

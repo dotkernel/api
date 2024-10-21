@@ -7,35 +7,23 @@ namespace Api\User\Handler;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\HandlerTrait;
+use Api\App\Handler\AbstractHandler;
 use Api\App\Message;
 use Api\User\InputFilter\ActivateAccountInputFilter;
 use Api\User\Service\UserServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Dot\Mail\Exception\MailException;
 use Fig\Http\Message\StatusCodeInterface;
-use Mezzio\Hal\HalResponseFactory;
-use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
 use function sprintf;
 
-class AccountActivateHandler implements RequestHandlerInterface
+class AccountActivateHandler extends AbstractHandler
 {
-    use HandlerTrait;
-
-    #[Inject(
-        HalResponseFactory::class,
-        ResourceGenerator::class,
-        UserServiceInterface::class,
-    )]
-    public function __construct(
-        protected HalResponseFactory $responseFactory,
-        protected ResourceGenerator $resourceGenerator,
-        protected UserServiceInterface $userService,
-    ) {
+    #[Inject(UserServiceInterface::class)]
+    public function __construct(protected UserServiceInterface $userService)
+    {
     }
 
     /**
@@ -46,7 +34,7 @@ class AccountActivateHandler implements RequestHandlerInterface
     {
         $user = $this->userService->findOneBy(['hash' => $request->getAttribute('hash')]);
         if ($user->isActive()) {
-            throw new ConflictException(Message::USER_ALREADY_ACTIVATED);
+            throw ConflictException::create(Message::USER_ALREADY_ACTIVE);
         }
 
         $this->userService->activateUser($user);
@@ -64,12 +52,15 @@ class AccountActivateHandler implements RequestHandlerInterface
     {
         $inputFilter = (new ActivateAccountInputFilter())->setData((array) $request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
+            throw BadRequestException::create(
+                detail: Message::VALIDATOR_FIX_ERRORS,
+                additional: ['errors' => $inputFilter->getMessages()],
+            );
         }
 
         $user = $this->userService->findByEmail($inputFilter->getValue('email'));
         if ($user->isActive()) {
-            throw new ConflictException(Message::USER_ALREADY_ACTIVATED);
+            throw ConflictException::create(Message::USER_ALREADY_ACTIVE);
         }
 
         $this->userService->activateUser($user);

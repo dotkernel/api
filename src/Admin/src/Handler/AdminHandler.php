@@ -10,28 +10,17 @@ use Api\Admin\Service\AdminServiceInterface;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\HandlerTrait;
+use Api\App\Handler\AbstractHandler;
+use Api\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
-use Mezzio\Hal\HalResponseFactory;
-use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
-class AdminHandler implements RequestHandlerInterface
+class AdminHandler extends AbstractHandler
 {
-    use HandlerTrait;
-
-    #[Inject(
-        HalResponseFactory::class,
-        ResourceGenerator::class,
-        AdminServiceInterface::class,
-    )]
-    public function __construct(
-        protected HalResponseFactory $responseFactory,
-        protected ResourceGenerator $resourceGenerator,
-        protected AdminServiceInterface $adminService,
-    ) {
+    #[Inject(AdminServiceInterface::class)]
+    public function __construct(protected AdminServiceInterface $adminService)
+    {
     }
 
     /**
@@ -65,7 +54,10 @@ class AdminHandler implements RequestHandlerInterface
     {
         $inputFilter = (new UpdateAdminInputFilter())->setData((array) $request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
+            throw BadRequestException::create(
+                detail: Message::VALIDATOR_FIX_ERRORS,
+                additional: ['errors' => $inputFilter->getMessages()],
+            );
         }
 
         $admin = $this->adminService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
@@ -83,7 +75,10 @@ class AdminHandler implements RequestHandlerInterface
     {
         $inputFilter = (new CreateAdminInputFilter())->setData((array) $request->getParsedBody());
         if (! $inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
+            throw BadRequestException::create(
+                detail: Message::VALIDATOR_FIX_ERRORS,
+                additional: ['errors' => $inputFilter->getMessages()],
+            );
         }
 
         $admin = $this->adminService->createAdmin($inputFilter->getValues());

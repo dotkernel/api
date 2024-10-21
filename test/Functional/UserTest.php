@@ -50,10 +50,8 @@ class UserTest extends AbstractFunctionalTest
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertArrayHasKey('error', $data);
-        $this->assertNotEmpty($data['error']);
-        $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertContains(Message::DUPLICATE_IDENTITY, $data['error']['messages']);
+        $this->assertArrayHasKey('detail', $data);
+        $this->assertSame(Message::DUPLICATE_IDENTITY, $data['detail']);
     }
 
     /**
@@ -76,10 +74,8 @@ class UserTest extends AbstractFunctionalTest
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertArrayHasKey('error', $data);
-        $this->assertNotEmpty($data['error']);
-        $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertContains(Message::DUPLICATE_EMAIL, $data['error']['messages']);
+        $this->assertArrayHasKey('detail', $data);
+        $this->assertSame(Message::DUPLICATE_EMAIL, $data['detail']);
     }
 
     /**
@@ -271,11 +267,11 @@ class UserTest extends AbstractFunctionalTest
         $this->assertResponseCreated($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
-        $this->assertArrayHasKey('info', $data);
-        $this->assertArrayHasKey('messages', $data['info']);
+        $this->assertArrayHasKey('messages', $data);
+        $this->assertNotEmpty($data['messages']);
         $this->assertSame(
             sprintf(Message::MAIL_SENT_USER_ACTIVATION, $user->getDetail()->getEmail()),
-            $data['info']['messages'][0]
+            $data['messages'][0]
         );
     }
 
@@ -332,12 +328,10 @@ class UserTest extends AbstractFunctionalTest
         $this->assertResponseGone($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
-        $this->assertArrayHasKey('error', $data);
-        $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertNotEmpty($data['error']['messages'][0]);
+        $this->assertArrayHasKey('detail', $data);
         $this->assertSame(
             sprintf(Message::RESET_PASSWORD_EXPIRED, $resetPassword->getHash()),
-            $data['error']['messages'][0]
+            $data['detail']
         );
     }
 
@@ -371,13 +365,8 @@ class UserTest extends AbstractFunctionalTest
         $this->assertResponseConflict($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
-        $this->assertArrayHasKey('error', $data);
-        $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertNotEmpty($data['error']['messages'][0]);
-        $this->assertSame(
-            sprintf(Message::RESET_PASSWORD_USED, $resetPassword->getHash()),
-            $data['error']['messages'][0]
-        );
+        $this->assertArrayHasKey('detail', $data);
+        $this->assertSame(Message::RESET_PASSWORD_USED, $data['detail']);
     }
 
     /**
@@ -410,10 +399,9 @@ class UserTest extends AbstractFunctionalTest
         $this->assertResponseOk($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
-        $this->assertArrayHasKey('info', $data);
-        $this->assertArrayHasKey('messages', $data['info']);
-        $this->assertNotEmpty($data['info']['messages'][0]);
-        $this->assertSame(Message::RESET_PASSWORD_OK, $data['info']['messages'][0]);
+        $this->assertArrayHasKey('messages', $data);
+        $this->assertNotEmpty($data['messages']);
+        $this->assertSame(Message::RESET_PASSWORD_OK, $data['messages'][0]);
     }
 
     /**
@@ -492,10 +480,9 @@ class UserTest extends AbstractFunctionalTest
         $this->assertResponseOk($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
-        $this->assertArrayHasKey('info', $data);
-        $this->assertArrayHasKey('messages', $data['info']);
-        $this->assertNotEmpty($data['info']['messages'][0]);
-        $this->assertSame(Message::MAIL_SENT_RECOVER_IDENTITY, $data['info']['messages'][0]);
+        $this->assertArrayHasKey('messages', $data);
+        $this->assertNotEmpty($data['messages']);
+        $this->assertSame(Message::MAIL_SENT_RECOVER_IDENTITY, $data['messages'][0]);
     }
 
     private function createUploadedFile(): UploadedFileInterface
