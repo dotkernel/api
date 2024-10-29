@@ -8,7 +8,7 @@ use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\ExpiredException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\HandlerTrait;
+use Api\App\Handler\AbstractHandler;
 use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\InputFilter\ResetPasswordInputFilter;
@@ -17,26 +17,17 @@ use Api\User\Service\UserServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Dot\Mail\Exception\MailException;
 use Fig\Http\Message\StatusCodeInterface;
-use Mezzio\Hal\HalResponseFactory;
-use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
 use function sprintf;
 
-class AccountResetPasswordHandler implements RequestHandlerInterface
+class AccountResetPasswordHandler extends AbstractHandler
 {
-    use HandlerTrait;
-
     #[Inject(
-        HalResponseFactory::class,
-        ResourceGenerator::class,
         UserServiceInterface::class,
     )]
     public function __construct(
-        protected HalResponseFactory $responseFactory,
-        protected ResourceGenerator $resourceGenerator,
         protected UserServiceInterface $userService,
     ) {
     }

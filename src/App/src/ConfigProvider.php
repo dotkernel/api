@@ -9,10 +9,10 @@ use Api\App\Command\TokenGenerateCommand;
 use Api\App\Entity\EntityListenerResolver;
 use Api\App\Factory\AuthenticationMiddlewareFactory;
 use Api\App\Factory\EntityListenerResolverFactory;
+use Api\App\Factory\HandlerDelegatorFactory;
 use Api\App\Factory\RouteListCommandFactory;
 use Api\App\Factory\TokenGenerateCommandFactory;
 use Api\App\Handler\ErrorReportHandler;
-use Api\App\Handler\HomeHandler;
 use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
 use Api\App\Middleware\ContentNegotiationMiddleware;
@@ -57,9 +57,8 @@ class ConfigProvider
     {
         return [
             'delegators' => [
-                Application::class => [
-                    RoutesDelegator::class,
-                ],
+                Application::class        => [RoutesDelegator::class],
+                ErrorReportHandler::class => [HandlerDelegatorFactory::class],
             ],
             'factories'  => [
                 'doctrine.entity_manager.orm_default' => EntityManagerFactory::class,
@@ -69,24 +68,23 @@ class ConfigProvider
                 AuthorizationMiddleware::class        => AttributedServiceFactory::class,
                 ContentNegotiationMiddleware::class   => AttributedServiceFactory::class,
                 DeprecationMiddleware::class          => AttributedServiceFactory::class,
+                EntityListenerResolver::class         => EntityListenerResolverFactory::class,
                 Environment::class                    => TwigEnvironmentFactory::class,
-                TwigExtension::class                  => TwigExtensionFactory::class,
-                TwigRenderer::class                   => TwigRendererFactory::class,
-                HomeHandler::class                    => AttributedServiceFactory::class,
                 ErrorReportHandler::class             => AttributedServiceFactory::class,
+                ErrorReportService::class             => AttributedServiceFactory::class,
                 ErrorResponseMiddleware::class        => AttributedServiceFactory::class,
                 RouteListCommand::class               => RouteListCommandFactory::class,
                 TokenGenerateCommand::class           => TokenGenerateCommandFactory::class,
-                ErrorReportService::class             => AttributedServiceFactory::class,
-                EntityListenerResolver::class         => EntityListenerResolverFactory::class,
+                TwigExtension::class                  => TwigExtensionFactory::class,
+                TwigRenderer::class                   => TwigRendererFactory::class,
             ],
             'aliases'    => [
                 Authentication\AuthenticationInterface::class => Authentication\OAuth2\OAuth2Adapter::class,
-                MailService::class                            => 'dot-mail.service.default',
                 EntityManager::class                          => 'doctrine.entity_manager.orm_default',
                 EntityManagerInterface::class                 => 'doctrine.entity_manager.orm_default',
-                TemplateRendererInterface::class              => TwigRenderer::class,
                 ErrorReportServiceInterface::class            => ErrorReportService::class,
+                MailService::class                            => 'dot-mail.service.default',
+                TemplateRendererInterface::class              => TwigRenderer::class,
             ],
         ];
     }

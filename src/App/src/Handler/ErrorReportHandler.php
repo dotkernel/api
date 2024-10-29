@@ -11,25 +11,16 @@ use Api\App\Message;
 use Api\App\Service\ErrorReportServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Fig\Http\Message\StatusCodeInterface;
-use Mezzio\Hal\HalResponseFactory;
-use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use RuntimeException;
 
-class ErrorReportHandler implements RequestHandlerInterface
+class ErrorReportHandler extends AbstractHandler
 {
-    use HandlerTrait;
-
     #[Inject(
-        HalResponseFactory::class,
-        ResourceGenerator::class,
         ErrorReportServiceInterface::class,
     )]
     public function __construct(
-        protected HalResponseFactory $responseFactory,
-        protected ResourceGenerator $resourceGenerator,
         protected ErrorReportServiceInterface $errorReportService,
     ) {
     }

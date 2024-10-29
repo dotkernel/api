@@ -7,7 +7,6 @@ namespace Api\App\Middleware;
 use Api\App\Attribute\MethodDeprecation;
 use Api\App\Attribute\ResourceDeprecation;
 use Api\App\Exception\DeprecationConflictException;
-use Api\App\Handler\ResponseTrait;
 use Api\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
 use Laminas\Stratigility\MiddlewarePipe;
@@ -35,8 +34,6 @@ use function strtoupper;
 
 class DeprecationMiddleware implements MiddlewareInterface
 {
-    use ResponseTrait;
-
     public const RESOURCE_DEPRECATION_ATTRIBUTE = ResourceDeprecation::class;
     public const METHOD_DEPRECATION_ATTRIBUTE   = MethodDeprecation::class;
 
@@ -45,9 +42,12 @@ class DeprecationMiddleware implements MiddlewareInterface
         self::METHOD_DEPRECATION_ATTRIBUTE,
     ];
 
-    #[Inject("config.application.versioning")]
-    public function __construct(protected readonly array $config)
-    {
+    #[Inject(
+        "config.application.versioning",
+    )]
+    public function __construct(
+        protected readonly array $config,
+    ) {
     }
 
     /**
