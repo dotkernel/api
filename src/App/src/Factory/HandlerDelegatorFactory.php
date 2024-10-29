@@ -9,7 +9,6 @@ use Api\App\Handler\AbstractHandler;
 use Api\App\Message;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
-use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -34,13 +33,8 @@ class HandlerDelegatorFactory
         if (! $container->has(HalResponseFactory::class)) {
             throw new RuntimeException(sprintf(Message::SERVICE_NOT_FOUND, HalResponseFactory::class));
         }
-
         if (! $container->has(ResourceGenerator::class)) {
             throw new RuntimeException(sprintf(Message::SERVICE_NOT_FOUND, ResourceGenerator::class));
-        }
-
-        if (! $container->has(ProblemDetailsResponseFactory::class)) {
-            throw new RuntimeException(sprintf(Message::SERVICE_NOT_FOUND, ProblemDetailsResponseFactory::class));
         }
 
         $handler = $callback();
