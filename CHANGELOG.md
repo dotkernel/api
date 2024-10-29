@@ -1,5 +1,29 @@
 # Changelog
 
+## 5.0.2 - 2024-10-29
+
+### Changed
+
+* Update qodana_code_quality.yml by [@arhimede](https://github.com/arhimede) in [#323](https://github.com/dotkernel/api/pull/323)
+
+### Added
+
+* Added .gitattributes by [@bidi47](https://github.com/bidi47) in [#321](https://github.com/dotkernel/api/pull/321)
+* Issue [#331](https://github.com/dotkernel/api/issues/331): Added `symfony/var-dumper` to the dev requirements by [@alexmerlin](https://github.com/alexmerlin) in [#333](https://github.com/dotkernel/api/pull/333)
+* Issue [#337](https://github.com/dotkernel/api/issues/337): Implemented handle delegators by [@alexmerlin](https://github.com/alexmerlin) in [#338](https://github.com/dotkernel/api/pull/338)
+
+### Deprecated
+
+* Nothing
+
+### Removed
+
+* Nothing
+
+### Fixed
+
+* Nothing
+
 ## 5.0.1 - 2024-09-13
 
 ### Changed
