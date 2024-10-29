@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Api\User;
 
 use Api\App\ConfigProvider as AppConfigProvider;
+use Api\App\Factory\HandlerDelegatorFactory;
 use Api\User\Collection\UserCollection;
 use Api\User\Collection\UserRoleCollection;
 use Api\User\Entity\User;
@@ -55,31 +56,40 @@ class ConfigProvider
     {
         return [
             'delegators' => [
-                Application::class => [
-                    RoutesDelegator::class,
-                ],
+                Application::class                 => [RoutesDelegator::class],
+                AccountActivateHandler::class      => [HandlerDelegatorFactory::class],
+                AccountAvatarHandler::class        => [HandlerDelegatorFactory::class],
+                AccountHandler::class              => [HandlerDelegatorFactory::class],
+                AccountRecoveryHandler::class      => [HandlerDelegatorFactory::class],
+                AccountResetPasswordHandler::class => [HandlerDelegatorFactory::class],
+                UserActivateHandler::class         => [HandlerDelegatorFactory::class],
+                UserAvatarHandler::class           => [HandlerDelegatorFactory::class],
+                UserCollectionHandler::class       => [HandlerDelegatorFactory::class],
+                UserHandler::class                 => [HandlerDelegatorFactory::class],
+                UserRoleCollectionHandler::class   => [HandlerDelegatorFactory::class],
+                UserRoleHandler::class             => [HandlerDelegatorFactory::class],
             ],
             'factories'  => [
                 AccountActivateHandler::class      => AttributedServiceFactory::class,
                 AccountAvatarHandler::class        => AttributedServiceFactory::class,
                 AccountHandler::class              => AttributedServiceFactory::class,
-                AccountResetPasswordHandler::class => AttributedServiceFactory::class,
                 AccountRecoveryHandler::class      => AttributedServiceFactory::class,
+                AccountResetPasswordHandler::class => AttributedServiceFactory::class,
                 UserActivateHandler::class         => AttributedServiceFactory::class,
-                UserAvatarHandler::class           => AttributedServiceFactory::class,
                 UserAvatarEventListener::class     => AttributedServiceFactory::class,
-                UserHandler::class                 => AttributedServiceFactory::class,
+                UserAvatarHandler::class           => AttributedServiceFactory::class,
                 UserCollectionHandler::class       => AttributedServiceFactory::class,
-                UserRoleHandler::class             => AttributedServiceFactory::class,
+                UserHandler::class                 => AttributedServiceFactory::class,
                 UserRoleCollectionHandler::class   => AttributedServiceFactory::class,
+                UserRoleHandler::class             => AttributedServiceFactory::class,
                 UserService::class                 => AttributedServiceFactory::class,
                 UserRoleService::class             => AttributedServiceFactory::class,
                 UserAvatarService::class           => AttributedServiceFactory::class,
-                UserRepository::class              => AttributedRepositoryFactory::class,
+                UserAvatarRepository::class        => AttributedRepositoryFactory::class,
                 UserDetailRepository::class        => AttributedRepositoryFactory::class,
+                UserRepository::class              => AttributedRepositoryFactory::class,
                 UserResetPasswordRepository::class => AttributedRepositoryFactory::class,
                 UserRoleRepository::class          => AttributedRepositoryFactory::class,
-                UserAvatarRepository::class        => AttributedRepositoryFactory::class,
             ],
             'aliases'    => [
                 UserAvatarServiceInterface::class => UserAvatarService::class,

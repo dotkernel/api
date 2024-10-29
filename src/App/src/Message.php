@@ -24,6 +24,7 @@ class Message
     public const MAIL_SENT_RESET_PASSWORD         = 'If the provided email identifies an account in our system, '
     . 'you will receive an email with further instructions on resetting your account\'s password.';
     public const MAIL_SENT_USER_ACTIVATION        = 'User activation mail has been successfully sent to \'%s\'';
+    public const METHOD_NOT_ALLOWED               = 'The request method is not supported for the requested resource.';
     public const MISSING_CONFIG                   = 'Missing configuration value: \'%s\'.';
     public const RESET_PASSWORD_EXPIRED           = 'Password reset request for hash: \'%s\' is invalid (expired).';
     public const RESET_PASSWORD_NOT_FOUND         = 'Could not find password reset request identified by hash: \'%s\'';
@@ -35,6 +36,7 @@ class Message
     public const RESTRICTION_IMAGE                = 'File must be an image (jpg, png).';
     public const RESTRICTION_ROLES                = 'User accounts must have at least one role.';
     public const ROLE_NOT_FOUND                   = 'Role not found.';
+    public const SERVICE_NOT_FOUND                = 'Service %s not found in container.';
     public const USER_ACTIVATED                   = 'This account has been activated.';
     public const USER_ALREADY_ACTIVATED           = 'This account is already active.';
     public const USER_NOT_ACTIVATED               = 'User account must be activated first.';
