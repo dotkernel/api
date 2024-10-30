@@ -9,6 +9,8 @@ use Api\User\Entity\UserAvatar;
 use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserResetPassword;
 use Api\User\Entity\UserRole;
+use Api\User\Enum\UserResetPasswordStatusEnum;
+use Api\User\Enum\UserStatusEnum;
 use Api\User\Handler\AccountActivateHandler;
 use Api\User\Handler\AccountAvatarHandler;
 use Api\User\Handler\AccountHandler;
@@ -168,7 +170,7 @@ use OpenApi\Attributes as OA;
                 new OA\Property(property: 'identity', type: 'string'),
                 new OA\Property(property: 'password', type: 'string'),
                 new OA\Property(property: 'passwordConfirm', type: 'string'),
-                new OA\Property(property: 'status', type: 'string', default: User::STATUS_ACTIVE),
+                new OA\Property(property: 'status', type: 'string', default: UserStatusEnum::Active),
                 new OA\Property(
                     property: 'detail',
                     properties: [
@@ -243,7 +245,7 @@ use OpenApi\Attributes as OA;
                 new OA\Property(property: 'identity', type: 'string'),
                 new OA\Property(property: 'password', type: 'string'),
                 new OA\Property(property: 'passwordConfirm', type: 'string'),
-                new OA\Property(property: 'status', type: 'string', default: User::STATUS_ACTIVE),
+                new OA\Property(property: 'status', type: 'string', default: UserStatusEnum::Active),
                 new OA\Property(
                     property: 'detail',
                     required: ['email'],
@@ -1064,7 +1066,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'uuid', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
         new OA\Property(property: 'hash', type: 'string'),
         new OA\Property(property: 'identity', type: 'string'),
-        new OA\Property(property: 'status', type: 'string', example: User::STATUS_ACTIVE),
+        new OA\Property(property: 'status', type: 'string', example: UserStatusEnum::Active),
         new OA\Property(property: 'isDeleted', type: 'boolean', example: false),
         new OA\Property(property: 'avatar', ref: '#/components/schemas/UserAvatar', nullable: true),
         new OA\Property(property: 'detail', ref: '#/components/schemas/UserDetail'),
@@ -1166,7 +1168,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'uuid', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
         new OA\Property(property: 'expires', type: 'object', example: new DateTimeImmutable()),
         new OA\Property(property: 'hash', type: 'string'),
-        new OA\Property(property: 'status', type: 'string', example: UserResetPassword::STATUS_REQUESTED),
+        new OA\Property(property: 'status', type: 'string', example: UserResetPasswordStatusEnum::Requested),
         new OA\Property(property: 'created', type: 'object', example: new DateTimeImmutable()),
         new OA\Property(property: 'updated', type: 'object', example: new DateTimeImmutable()),
         new OA\Property(

@@ -8,6 +8,7 @@ use Api\Admin\Collection\AdminCollection;
 use Api\Admin\Collection\AdminRoleCollection;
 use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
+use Api\Admin\Enum\AdminStatusEnum;
 use Api\Admin\Handler\AdminAccountHandler;
 use Api\Admin\Handler\AdminHandler;
 use Api\Admin\Handler\AdminRoleHandler;
@@ -223,7 +224,7 @@ use OpenApi\Attributes as OA;
                 new OA\Property(property: 'passwordConfirm', type: 'string'),
                 new OA\Property(property: 'firstName', type: 'string'),
                 new OA\Property(property: 'lastName', type: 'string'),
-                new OA\Property(property: 'status', type: 'string', default: Admin::STATUS_ACTIVE),
+                new OA\Property(property: 'status', type: 'string', default: AdminStatusEnum::Active),
                 new OA\Property(
                     property: 'roles',
                     type: 'array',
@@ -291,7 +292,7 @@ use OpenApi\Attributes as OA;
                 new OA\Property(property: 'passwordConfirm', type: 'string'),
                 new OA\Property(property: 'firstName', type: 'string'),
                 new OA\Property(property: 'lastName', type: 'string'),
-                new OA\Property(property: 'status', type: 'string', default: Admin::STATUS_ACTIVE),
+                new OA\Property(property: 'status', type: 'string', default: AdminStatusEnum::Active),
                 new OA\Property(
                     property: 'roles',
                     type: 'array',
@@ -440,7 +441,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'identity', type: 'string'),
         new OA\Property(property: 'firstName', type: 'string'),
         new OA\Property(property: 'lastName', type: 'string'),
-        new OA\Property(property: 'status', type: 'string', example: Admin::STATUS_ACTIVE),
+        new OA\Property(property: 'status', type: 'string', example: AdminStatusEnum::Active),
         new OA\Property(
             property: 'roles',
             type: 'array',

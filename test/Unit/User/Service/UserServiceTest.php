@@ -11,6 +11,7 @@ use Api\App\Repository\OAuthRefreshTokenRepository;
 use Api\User\Entity\User;
 use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserRole;
+use Api\User\Enum\UserStatusEnum;
 use Api\User\Repository\UserDetailRepository;
 use Api\User\Repository\UserRepository;
 use Api\User\Repository\UserResetPasswordRepository;
@@ -145,7 +146,7 @@ class UserServiceTest extends TestCase
         $this->assertSame($data['detail']['firstName'], $user->getDetail()->getFirstName());
         $this->assertSame($data['detail']['lastName'], $user->getDetail()->getLastName());
         $this->assertSame($data['detail']['email'], $user->getDetail()->getEmail());
-        $this->assertSame(User::STATUS_PENDING, $user->getStatus());
+        $this->assertSame(UserStatusEnum::Pending, $user->getStatus());
         $this->assertFalse($user->isDeleted());
         $this->assertFalse($user->isActive());
     }
@@ -214,7 +215,7 @@ class UserServiceTest extends TestCase
         $user
             ->setIdentity($data['identity'] ?? '')
             ->usePassword($data['password'] ?? '')
-            ->setStatus($data['status'] ?? User::STATUS_PENDING)
+            ->setStatus($data['status'] ?? UserStatusEnum::Pending)
             ->setDetail(
                 (new UserDetail())
                     ->setUser($user)

@@ -10,6 +10,7 @@ use Api\App\Helper\PaginationHelper;
 use Api\App\Message;
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
+use Api\User\Enum\UserStatusEnum;
 use Doctrine\ORM\EntityRepository;
 use Dot\DependencyInjection\Attribute\Entity;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
@@ -132,7 +133,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             return null;
         }
 
-        if ($clientEntity->getName() === 'frontend' && $result['status'] !== User::STATUS_ACTIVE) {
+        if ($clientEntity->getName() === 'frontend' && $result['status'] !== UserStatusEnum::Active) {
             throw new OAuthServerException(Message::USER_NOT_ACTIVATED, 6, 'inactive_user', 401);
         }
 
