@@ -11,7 +11,6 @@ use Doctrine\DBAL\Types\Type;
 use InvalidArgumentException;
 
 use function array_map;
-use function assert;
 use function gettype;
 use function implode;
 use function is_object;
@@ -36,10 +35,7 @@ abstract class AbstractEnumType extends Type
             return null;
         }
 
-        $enum = $this->getEnumClass();
-        assert($enum instanceof BackedEnum);
-
-        return $enum::from($value);
+        return $this->getEnumClass()::from($value);
     }
 
     public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): mixed
@@ -59,13 +55,13 @@ abstract class AbstractEnumType extends Type
         return $value->value;
     }
 
+    /**
+     * @return class-string
+     */
     abstract protected function getEnumClass(): string;
 
     private function getEnumValues(): array
     {
-        $enum = $this->getEnumClass();
-        assert($enum instanceof BackedEnum);
-
-        return $enum::cases();
+        return $this->getEnumClass()::cases();
     }
 }
