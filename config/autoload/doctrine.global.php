@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
+use Api\Admin\DBAL\Types\AdminStatusEnumType;
 use Api\App\Entity\EntityListenerResolver;
+use Api\User\DBAL\Types\UserResetPasswordStatusEnumType;
+use Api\User\DBAL\Types\UserStatusEnumType;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Dot\Cache\Adapter\ArrayAdapter;
 use Dot\Cache\Adapter\FilesystemAdapter;
@@ -27,9 +30,12 @@ return [
             ],
         ],
         'types'         => [
-            UuidType::NAME                  => UuidType::class,
-            UuidBinaryType::NAME            => UuidBinaryType::class,
-            UuidBinaryOrderedTimeType::NAME => UuidBinaryOrderedTimeType::class,
+            UuidType::NAME                        => UuidType::class,
+            UuidBinaryType::NAME                  => UuidBinaryType::class,
+            UuidBinaryOrderedTimeType::NAME       => UuidBinaryOrderedTimeType::class,
+            AdminStatusEnumType::NAME             => AdminStatusEnumType::class,
+            UserStatusEnumType::NAME              => UserStatusEnumType::class,
+            UserResetPasswordStatusEnumType::NAME => UserResetPasswordStatusEnumType::class,
         ],
         'fixtures'      => getcwd() . '/data/doctrine/fixtures',
         'configuration' => [

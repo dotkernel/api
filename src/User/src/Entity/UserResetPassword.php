@@ -6,6 +6,7 @@ namespace Api\User\Entity;
 
 use Api\App\Entity\AbstractEntity;
 use Api\App\Entity\TimestampsTrait;
+use Api\User\Enum\UserResetPasswordStatusEnum;
 use Api\User\Repository\UserResetPasswordRepository;
 use DateInterval;
 use DateTime;
@@ -20,13 +21,6 @@ class UserResetPassword extends AbstractEntity
 {
     use TimestampsTrait;
 
-    public const STATUS_COMPLETED = 'completed';
-    public const STATUS_REQUESTED = 'requested';
-    public const STATUSES         = [
-        self::STATUS_COMPLETED,
-        self::STATUS_REQUESTED,
-    ];
-
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist', 'remove'], inversedBy: "resetPasswords")]
     #[ORM\JoinColumn(name: "userUuid", referencedColumnName: "uuid")]
     protected User $user;
@@ -37,8 +31,11 @@ class UserResetPassword extends AbstractEntity
     #[ORM\Column(name: "hash", type: "string", length: 64, unique: true)]
     protected string $hash;
 
-    #[ORM\Column(name: "status", type: "string", length: 20)]
-    protected string $status = self::STATUS_REQUESTED;
+    #[ORM\Column(
+        type: 'user_reset_password_status_enum',
+        options: ['default' => UserResetPasswordStatusEnum::Requested],
+    )]
+    protected UserResetPasswordStatusEnum $status = UserResetPasswordStatusEnum::Requested;
 
     public function __construct()
     {
@@ -86,12 +83,12 @@ class UserResetPassword extends AbstractEntity
         return $this;
     }
 
-    public function getStatus(): string
+    public function getStatus(): UserResetPasswordStatusEnum
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(UserResetPasswordStatusEnum $status): self
     {
         $this->status = $status;
 
@@ -100,7 +97,7 @@ class UserResetPassword extends AbstractEntity
 
     public function isCompleted(): bool
     {
-        return $this->getStatus() === self::STATUS_COMPLETED;
+        return $this->getStatus() === UserResetPasswordStatusEnum::Completed;
     }
 
     public function isValid(): bool
@@ -114,7 +111,7 @@ class UserResetPassword extends AbstractEntity
 
     public function markAsCompleted(): self
     {
-        $this->status = self::STATUS_COMPLETED;
+        $this->status = UserResetPasswordStatusEnum::Completed;
 
         return $this;
     }

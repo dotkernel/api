@@ -6,10 +6,12 @@ namespace ApiTest\Functional;
 
 use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
+use Api\Admin\Enum\AdminStatusEnum;
 use Api\App\Entity\RoleInterface;
 use Api\User\Entity\User;
 use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserRole;
+use Api\User\Enum\UserStatusEnum;
 use ApiTest\Functional\Traits\AuthenticationTrait;
 use ApiTest\Functional\Traits\DatabaseTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -373,6 +375,9 @@ class AbstractFunctionalTest extends TestCase
      */
     protected function getValidUserData(array $data = []): array
     {
+        $userRole = $this->findUserRole(UserRole::ROLE_USER);
+        $this->assertInstanceOf(UserRole::class, $userRole);
+
         return [
             'detail'          => [
                 'firstName' => $data['detail']['firstName'] ?? 'First',
@@ -382,9 +387,9 @@ class AbstractFunctionalTest extends TestCase
             'identity'        => $data['identity'] ?? 'user@dotkernel.com',
             'password'        => $data['password'] ?? self::DEFAULT_PASSWORD,
             'passwordConfirm' => $data['password'] ?? self::DEFAULT_PASSWORD,
-            'status'          => $data['status'] ?? User::STATUS_ACTIVE,
+            'status'          => $data['status'] ?? UserStatusEnum::Active,
             'roles'           => [
-                ['uuid' => $this->findUserRole(UserRole::ROLE_USER)->getUuid()->toString()],
+                ['uuid' => $userRole->getUuid()->toString()],
             ],
         ];
     }
@@ -399,7 +404,7 @@ class AbstractFunctionalTest extends TestCase
             ],
             'identity' => 'invalid',
             'password' => 'invalid',
-            'status'   => Admin::STATUS_INACTIVE,
+            'status'   => UserStatusEnum::Pending,
         ];
     }
 
@@ -410,7 +415,7 @@ class AbstractFunctionalTest extends TestCase
             'identity'  => 'admin@dotkernel.com',
             'lastName'  => 'Last',
             'password'  => self::DEFAULT_PASSWORD,
-            'status'    => Admin::STATUS_ACTIVE,
+            'status'    => AdminStatusEnum::Active,
         ];
     }
 
@@ -421,10 +426,14 @@ class AbstractFunctionalTest extends TestCase
             'identity'  => 'invalid',
             'lastName'  => 'invalid',
             'password'  => 'invalid',
-            'status'    => Admin::STATUS_INACTIVE,
+            'status'    => AdminStatusEnum::Inactive,
         ];
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function getValidFrontendAccessTokenCredentials(array $data = []): array
     {
         $userData = $this->getValidUserData();
@@ -531,6 +540,8 @@ class AbstractFunctionalTest extends TestCase
     protected function createUser(array $data = []): User
     {
         $userRole = $this->findUserRole(UserRole::ROLE_USER);
+        $this->assertInstanceOf(UserRole::class, $userRole);
+
         $userData = $this->getValidUserData();
 
         $user       = new User();

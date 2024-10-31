@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\Admin\Entity;
 
+use Api\Admin\Enum\AdminStatusEnum;
 use Api\Admin\Repository\AdminRepository;
 use Api\App\Entity\AbstractEntity;
 use Api\App\Entity\PasswordTrait;
@@ -22,13 +23,6 @@ class Admin extends AbstractEntity implements UserEntityInterface
     use PasswordTrait;
     use TimestampsTrait;
 
-    public const STATUS_ACTIVE   = 'active';
-    public const STATUS_INACTIVE = 'inactive';
-    public const STATUSES        = [
-        self::STATUS_ACTIVE,
-        self::STATUS_INACTIVE,
-    ];
-
     #[ORM\Column(name: "identity", type: "string", length: 100, unique: true)]
     protected string $identity = '';
 
@@ -41,8 +35,8 @@ class Admin extends AbstractEntity implements UserEntityInterface
     #[ORM\Column(name: "password", type: "string", length: 100)]
     protected string $password = '';
 
-    #[ORM\Column(name: "status", type: "string", length: 20)]
-    protected string $status = self::STATUS_ACTIVE;
+    #[ORM\Column(type: 'admin_status_enum', options: ['default' => AdminStatusEnum::Active])]
+    protected AdminStatusEnum $status = AdminStatusEnum::Active;
 
     #[ORM\ManyToMany(targetEntity: AdminRole::class)]
     #[ORM\JoinTable(name: "admin_roles")]
@@ -122,12 +116,12 @@ class Admin extends AbstractEntity implements UserEntityInterface
         return $this;
     }
 
-    public function getStatus(): string
+    public function getStatus(): AdminStatusEnum
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(AdminStatusEnum $status): self
     {
         $this->status = $status;
 
@@ -178,21 +172,21 @@ class Admin extends AbstractEntity implements UserEntityInterface
 
     public function activate(): self
     {
-        $this->status = self::STATUS_ACTIVE;
+        $this->status = AdminStatusEnum::Active;
 
         return $this;
     }
 
     public function deactivate(): self
     {
-        $this->status = self::STATUS_INACTIVE;
+        $this->status = AdminStatusEnum::Inactive;
 
         return $this;
     }
 
     public function isActive(): bool
     {
-        return $this->status === self::STATUS_ACTIVE;
+        return $this->status === AdminStatusEnum::Active;
     }
 
     public function getIdentifier(): string

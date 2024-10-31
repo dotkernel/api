@@ -14,6 +14,7 @@ use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
 use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserResetPassword;
+use Api\User\Enum\UserStatusEnum;
 use Api\User\Repository\UserDetailRepository;
 use Api\User\Repository\UserRepository;
 use Api\User\Repository\UserResetPasswordRepository;
@@ -84,7 +85,7 @@ class UserService implements UserServiceInterface
             ->setDetail($detail)
             ->setIdentity($data['identity'])
             ->usePassword($data['password'])
-            ->setStatus($data['status'] ?? User::STATUS_PENDING);
+            ->setStatus($data['status'] ?? UserStatusEnum::Pending);
         $detail->setUser($user);
 
         if (! empty($data['roles'])) {

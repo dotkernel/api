@@ -6,6 +6,7 @@ namespace Api\Admin\Service;
 
 use Api\Admin\Collection\AdminCollection;
 use Api\Admin\Entity\Admin;
+use Api\Admin\Enum\AdminStatusEnum;
 use Api\Admin\Repository\AdminRepository;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
@@ -43,7 +44,7 @@ class AdminService implements AdminServiceInterface
             ->usePassword($data['password'])
             ->setFirstName($data['firstName'])
             ->setLastName($data['lastName'])
-            ->setStatus($data['status'] ?? Admin::STATUS_ACTIVE);
+            ->setStatus($data['status'] ?? AdminStatusEnum::Active);
 
         foreach ($data['roles'] as $roleData) {
             $admin->addRole(

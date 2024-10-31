@@ -9,10 +9,6 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-/**
- * Class OAuthClientLoader
- * @package Api\Fixtures
- */
 class OAuthClientLoader extends AbstractFixture implements FixtureInterface
 {
     public function load(ObjectManager $manager): void

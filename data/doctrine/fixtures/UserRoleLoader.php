@@ -8,10 +8,6 @@ use Api\User\Entity\UserRole;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-/**
- * Class UserRoleLoader
- * @package Api\Fixtures
- */
 class UserRoleLoader implements FixtureInterface
 {
     public function load(ObjectManager $manager): void

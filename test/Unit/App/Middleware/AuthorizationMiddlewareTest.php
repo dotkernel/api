@@ -6,6 +6,7 @@ namespace ApiTest\Unit\App\Middleware;
 
 use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
+use Api\Admin\Enum\AdminStatusEnum;
 use Api\Admin\Repository\AdminRepository;
 use Api\App\Message;
 use Api\App\Middleware\AuthorizationMiddleware as Subject;
@@ -72,7 +73,7 @@ class AuthorizationMiddlewareTest extends TestCase
     {
         $user = (new Admin())
             ->setIdentity('admin@dotkernel.com')
-            ->setStatus(Admin::STATUS_INACTIVE)
+            ->setStatus(AdminStatusEnum::Inactive)
             ->addRole((new AdminRole())->setName(AdminRole::ROLE_ADMIN));
         $this->adminRepository->method('findOneBy')->willReturn($user);
 
