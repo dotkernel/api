@@ -1,5 +1,27 @@
 # Changelog
 
+## 5.1.0 - 2024-10-31
+
+### Changed
+
+* Nothing
+
+### Added
+
+* Issue [#325](https://github.com/dotkernel/api/issues/325): Implemented enums in database by [@alexmerlin](https://github.com/alexmerlin) in [#339](https://github.com/dotkernel/api/pull/339)
+
+### Deprecated
+
+* Nothing
+
+### Removed
+
+* Nothing
+
+### Fixed
+
+* Nothing
+
 ## 5.0.2 - 2024-10-29
 
 ### Changed
