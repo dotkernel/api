@@ -59,7 +59,6 @@
         "dotkernel/dot-mail": "^4.1.1",
         "dotkernel/dot-response-header": "^3.2.3",
         "laminas/laminas-component-installer": "^3.4.0",
-        "laminas/laminas-config": "^3.9.0",
         "laminas/laminas-config-aggregator": "^1.14.0",
         "laminas/laminas-http": "^2.19.0",
         "laminas/laminas-hydrator": "^4.15.0",
