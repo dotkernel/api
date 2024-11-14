@@ -1,5 +1,27 @@
 # Changelog
 
+## 5.1.1 - 2024-11-14
+
+### Changed
+
+* Issue [#320](https://github.com/dotkernel/api/issues/320): composer.json dependencies cleanup by [@alexmerlin](https://github.com/alexmerlin) in [#346](https://github.com/dotkernel/api/pull/346)
+
+### Added
+
+* Nothing
+
+### Deprecated
+
+* Nothing
+
+### Removed
+
+* Issue [#340](https://github.com/dotkernel/api/issues/340): Removed laminas/laminas-config package by [@MarioRadu](https://github.com/MarioRadu) in [#344](https://github.com/dotkernel/api/pull/344)
+
+### Fixed
+
+* Nothing
+
 ## 5.1.0 - 2024-10-31
 
 ### Changed
