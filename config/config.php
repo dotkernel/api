@@ -26,7 +26,6 @@ $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
     Laminas\HttpHandlerRunner\ConfigProvider::class,
     Laminas\Hydrator\ConfigProvider::class,
     Laminas\Mail\ConfigProvider::class,
-    Laminas\Paginator\ConfigProvider::class,
     Laminas\Validator\ConfigProvider::class,
     // Include cache configuration
     new Laminas\ConfigAggregator\ArrayProvider($cacheConfig),
