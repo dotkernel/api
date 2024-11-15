@@ -7,6 +7,7 @@ namespace Api\App\Entity;
 use Api\App\Repository\OAuthAuthCodeRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
@@ -38,7 +39,7 @@ class OAuthAuthCode implements AuthCodeEntityInterface
     #[ORM\JoinTable(name: "oauth_auth_code_scopes")]
     #[ORM\JoinColumn(name: "auth_code_id", referencedColumnName: "id")]
     #[ORM\InverseJoinColumn(name: "scope_id", referencedColumnName: "id")]
-    protected ArrayCollection $scopes;
+    protected Collection $scopes;
 
     #[ORM\Column(type: "datetime_immutable", nullable: true)]
     private DateTimeImmutable $expiresDatetime;

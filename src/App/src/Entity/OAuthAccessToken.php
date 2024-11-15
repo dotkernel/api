@@ -7,6 +7,7 @@ namespace Api\App\Entity;
 use Api\App\Repository\OAuthAccessTokenRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Lcobucci\JWT\Configuration;
@@ -45,7 +46,7 @@ class OAuthAccessToken implements AccessTokenEntityInterface
     #[ORM\JoinTable(name: "oauth_access_token_scopes")]
     #[ORM\JoinColumn(name: "access_token_id", referencedColumnName: "id")]
     #[ORM\InverseJoinColumn(name: "scope_id", referencedColumnName: "id")]
-    protected ArrayCollection $scopes;
+    protected Collection $scopes;
 
     #[ORM\Column(name: 'expires_at', type: "datetime_immutable")]
     private DateTimeImmutable $expiresAt;
