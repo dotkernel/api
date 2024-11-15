@@ -84,8 +84,7 @@
         "mezzio/mezzio-tooling": "^2.9.0",
         "phpunit/phpunit": "^10.5.10",
         "roave/security-advisories": "dev-latest",
-        "symfony/var-dumper": "^7.1",
-        "vimeo/psalm": "^5.22.0"
+        "symfony/var-dumper": "^7.1"
     },
     "autoload": {
         "psr-4": {
@@ -119,7 +118,6 @@
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
         "serve": "php -S 0.0.0.0:8080 -t public/",
-        "static-analysis": "psalm --shepherd --stats",
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     }
