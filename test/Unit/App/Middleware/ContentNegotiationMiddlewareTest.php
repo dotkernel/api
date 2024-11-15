@@ -99,13 +99,6 @@ class ContentNegotiationMiddlewareTest extends TestCase
         );
     }
 
-    public function testFormatAcceptRequest(): void
-    {
-        $this->assertIsArray(
-            $this->subject->formatAcceptRequest('application/json')
-        );
-    }
-
     public function testCheckAccept(): void
     {
         $this->assertTrue(

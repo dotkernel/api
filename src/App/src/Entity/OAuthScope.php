@@ -27,10 +27,10 @@ class OAuthScope implements ScopeEntityInterface
     private string $scope = '';
 
     #[ORM\ManyToMany(targetEntity: OAuthAccessToken::class, mappedBy: "scopes")]
-    protected Collection $accessTokens;
+    protected ArrayCollection $accessTokens;
 
     #[ORM\ManyToMany(targetEntity: OAuthAuthCode::class, mappedBy: "scopes")]
-    protected Collection $authCodes;
+    protected ArrayCollection $authCodes;
 
     public function __construct()
     {

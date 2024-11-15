@@ -10,11 +10,12 @@ use Api\User\Repository\UserAvatarRepository;
 use Api\User\Service\UserAvatarService;
 use Laminas\Diactoros\UploadedFile;
 use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class UserAvatarServiceTest extends TestCase
 {
-    private UserAvatarService $subject;
+    private UserAvatarService|MockObject $subject;
     private UploadedFile $uploadedFile;
 
     /**
@@ -50,7 +51,6 @@ class UserAvatarServiceTest extends TestCase
         $user   = $this->getUser();
         $avatar = $this->subject->createAvatar($user, $this->uploadedFile);
 
-        $this->assertInstanceOf(UserAvatar::class, $avatar);
         $this->assertSame($fileName, $avatar->getName());
     }
 
@@ -64,7 +64,6 @@ class UserAvatarServiceTest extends TestCase
         $user   = new User();
         $avatar = $this->subject->createAvatar($user, $this->uploadedFile);
 
-        $this->assertInstanceOf(UserAvatar::class, $avatar);
         $this->assertSame($fileName, $avatar->getName());
     }
 

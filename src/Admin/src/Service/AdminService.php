@@ -64,11 +64,7 @@ class AdminService implements AdminServiceInterface
 
     public function exists(string $identity = ''): bool
     {
-        try {
-            return $this->findOneBy(['identity' => $identity]) instanceof Admin;
-        } catch (NotFoundException) {
-            return false;
-        }
+        return $this->adminRepository->findOneBy(['identity' => $identity]) instanceof Admin;
     }
 
     public function existsOther(string $identity = '', string $uuid = ''): bool

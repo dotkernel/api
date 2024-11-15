@@ -10,6 +10,7 @@ use Laminas\Diactoros\ServerRequest;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
 use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,10 +19,10 @@ use Psr\Http\Server\RequestHandlerInterface;
 class AuthenticationMiddlewareTest extends TestCase
 {
     private Subject $subject;
-    private AuthenticationInterface $auth;
+    private AuthenticationInterface|MockObject $auth;
     private ServerRequestInterface $request;
-    private RequestHandlerInterface $handler;
-    private ResponseInterface $response;
+    private RequestHandlerInterface|MockObject $handler;
+    private ResponseInterface|MockObject $response;
 
     /**
      * @throws Exception
