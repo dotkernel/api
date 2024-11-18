@@ -4,8 +4,8 @@ on:
 name: Run PHPStan checks
 
 jobs:
-  code-coverage:
-    name: Code Coverage
+  mutation:
+    name: PHPStan
 
     runs-on: ${{ matrix.os }}
 
