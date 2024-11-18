@@ -15,7 +15,6 @@ Based on Enrico Zimuel's [Zend Expressive API - Skeleton example](https://github
 [![Qodana](https://github.com/dotkernel/api/actions/workflows/qodana_code_quality.yml/badge.svg?branch=5.0)](https://github.com/dotkernel/api/actions/workflows/qodana_code_quality.yml)
 [![PHPStan](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml/badge.svg?branch=5.0)](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml)
 
-
 ## Getting Started
 
 ## Step 1: Clone the project
