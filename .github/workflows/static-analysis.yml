@@ -1,7 +1,7 @@
 on:
   - push
 
-name: Run Codecov checks
+name: Run PHPStan checks
 
 jobs:
   code-coverage:
