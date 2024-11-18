@@ -13,8 +13,8 @@ Based on Enrico Zimuel's [Zend Expressive API - Skeleton example](https://github
 [![Build Static](https://github.com/dotkernel/api/actions/workflows/continuous-integration.yml/badge.svg?branch=5.0)](https://github.com/dotkernel/api/actions/workflows/continuous-integration.yml)
 [![codecov](https://codecov.io/gh/dotkernel/api/graph/badge.svg?token=53FN78G5CK)](https://codecov.io/gh/dotkernel/api)
 [![Qodana](https://github.com/dotkernel/api/actions/workflows/qodana_code_quality.yml/badge.svg?branch=5.0)](https://github.com/dotkernel/api/actions/workflows/qodana_code_quality.yml)
+[![PHPStan](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml/badge.svg?branch=5.0)](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml)
 
-[![SymfonyInsight](https://insight.symfony.com/projects/7f9143cc-5e3c-4cfc-992c-377a001fde3e/big.svg)](https://insight.symfony.com/projects/7f9143cc-5e3c-4cfc-992c-377a001fde3e)
 
 ## Getting Started
 
