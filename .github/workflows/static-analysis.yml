@@ -52,6 +52,3 @@ jobs:
 
       - name: Run static analysis with PHPStan
         run:  vendor/bin/phpstan analyse
-
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
