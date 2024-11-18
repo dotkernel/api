@@ -5,7 +5,7 @@ name: Run PHPStan checks
 
 jobs:
   mutation:
-    name: PHPStan
+    name: PHPStan ${{ matrix.php }}-${{ matrix.os }}
 
     runs-on: ${{ matrix.os }}
 
