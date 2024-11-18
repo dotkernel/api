@@ -87,8 +87,7 @@
         "phpstan/phpstan-phpunit": "^2.0",
         "phpunit/phpunit": "^10.5.10",
         "roave/security-advisories": "dev-latest",
-        "symfony/var-dumper": "^7.1",
-        "vimeo/psalm": "^5.22.0"
+        "symfony/var-dumper": "^7.1"
     },
     "autoload": {
         "psr-4": {
