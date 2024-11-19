@@ -1,5 +1,28 @@
 # Changelog
 
+## 5.2.0 - 2024-11-19
+
+### Changed
+
+* Issue [#347](https://github.com/dotkernel/api/issues/324): Replaced `analyze` with `static-analysis` in `check` command in composer.json by [@MarioRadu](https://github.com/MarioRadu) in [#351](https://github.com/dotkernel/api/pull/351)
+* Issue [#347](https://github.com/dotkernel/api/issues/324): Replaced `analyze` with `static-analysis` command in composer.json by [@MarioRadu](https://github.com/MarioRadu) in [#350](https://github.com/dotkernel/api/pull/350)
+
+### Added
+
+* Issue [#347](https://github.com/dotkernel/api/issues/324): Implemented PHPStan by [@MarioRadu](https://github.com/MarioRadu) in [#349](https://github.com/dotkernel/api/pull/349)
+
+### Deprecated
+
+* Nothing
+
+### Removed
+
+* Issue [#347](https://github.com/dotkernel/api/issues/347): Removed psalm by [@MarioRadu](https://github.com/MarioRadu) in [#348](https://github.com/dotkernel/api/pull/348)
+
+### Fixed
+
+* Nothing
+
 ## 5.1.1 - 2024-11-14
 
 ### Changed
