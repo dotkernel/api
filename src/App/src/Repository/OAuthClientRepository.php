@@ -52,7 +52,7 @@ class OAuthClientRepository extends EntityRepository implements ClientRepository
     public function validateClient($clientIdentifier, $clientSecret, $grantType): bool
     {
         $client = $this->getClientEntity($clientIdentifier);
-        if (! $client instanceof ClientEntityInterface) {
+        if (! $client instanceof OAuthClient) {
             return false;
         }
 

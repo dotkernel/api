@@ -1,0 +1,16 @@
+includes:
+    - vendor/phpstan/phpstan-doctrine/extension.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+parameters:
+    level: 5
+    paths:
+        - src
+        - test
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        -
+            message: '#Call to an undefined method.*setAllowOverride#'
+            path: test/Functional/AbstractFunctionalTest.php
+        -
+            message: '#Call to an undefined method.*setService#'
+            path: test/Functional/AbstractFunctionalTest.php

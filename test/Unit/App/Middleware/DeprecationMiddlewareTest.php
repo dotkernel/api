@@ -18,6 +18,7 @@ use Mezzio\MiddlewareContainer;
 use Mezzio\Router\Route;
 use Mezzio\Router\RouteResult;
 use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -31,9 +32,9 @@ use function sprintf;
 
 class DeprecationMiddlewareTest extends TestCase
 {
-    private Subject $subject;
-    private ServerRequestInterface $request;
-    private RequestHandlerInterface $handler;
+    private Subject|MockObject $subject;
+    private ServerRequestInterface|MockObject $request;
+    private RequestHandlerInterface|MockObject $handler;
     private ResponseInterface $response;
 
     private const VERSIONING_CONFIG = [
@@ -131,8 +132,6 @@ class DeprecationMiddlewareTest extends TestCase
 
         $response = $this->subject->process($this->request, $this->handler);
 
-        $this->assertInstanceOf(ResponseInterface::class, $response);
-        $this->assertIsArray($response->getHeaders());
         $this->assertTrue($response->hasHeader('sunset'));
         $this->assertTrue($response->hasHeader('link'));
         $this->assertSame('2038-01-01', $response->getHeader('sunset')[0]);
@@ -196,8 +195,6 @@ class DeprecationMiddlewareTest extends TestCase
 
         $response = $this->subject->process($this->request, $this->handler);
 
-        $this->assertInstanceOf(ResponseInterface::class, $response);
-        $this->assertIsArray($response->getHeaders());
         $this->assertTrue($response->hasHeader('sunset'));
         $this->assertTrue($response->hasHeader('link'));
         $this->assertSame('2038-01-01', $response->getHeader('sunset')[0]);
@@ -255,8 +252,6 @@ class DeprecationMiddlewareTest extends TestCase
 
         $response = $this->subject->process($this->request, $this->handler);
 
-        $this->assertInstanceOf(ResponseInterface::class, $response);
-        $this->assertIsArray($response->getHeaders());
         $this->assertTrue($response->hasHeader('sunset'));
         $this->assertTrue($response->hasHeader('link'));
         $this->assertSame('2038-01-01', $response->getHeader('sunset')[0]);

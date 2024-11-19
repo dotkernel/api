@@ -21,8 +21,8 @@ use function count;
 class AdminServiceTest extends TestCase
 {
     private Subject|MockObject $subject;
-    private AdminRoleService $adminRoleService;
-    private AdminRepository $adminRepository;
+    private AdminRoleService|MockObject $adminRoleService;
+    private AdminRepository|MockObject $adminRepository;
 
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception

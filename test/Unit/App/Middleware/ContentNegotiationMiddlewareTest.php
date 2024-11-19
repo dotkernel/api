@@ -101,9 +101,10 @@ class ContentNegotiationMiddlewareTest extends TestCase
 
     public function testFormatAcceptRequest(): void
     {
-        $this->assertIsArray(
-            $this->subject->formatAcceptRequest('application/json')
-        );
+        $accept = $this->subject->formatAcceptRequest('application/json');
+
+        $this->assertNotEmpty($accept);
+        $this->assertSame(['application/json'], $accept);
     }
 
     public function testCheckAccept(): void

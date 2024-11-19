@@ -21,6 +21,7 @@ use Dot\Log\LoggerInterface;
 use Dot\Mail\Service\MailService;
 use Exception;
 use Mezzio\Template\TemplateRendererInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 use function array_merge;
@@ -28,11 +29,11 @@ use function count;
 
 class UserServiceTest extends TestCase
 {
-    private Subject $subject;
-    private UserRoleService $userRoleService;
-    private UserRepository $userRepository;
-    private UserDetailRepository $userDetailRepository;
-    private UserResetPasswordRepository $userResetPasswordRepository;
+    private Subject|MockObject $subject;
+    private UserRoleService|MockObject $userRoleService;
+    private UserRepository|MockObject $userRepository;
+    private UserDetailRepository|MockObject $userDetailRepository;
+    private UserResetPasswordRepository|MockObject $userResetPasswordRepository;
 
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
@@ -142,7 +143,6 @@ class UserServiceTest extends TestCase
 
         $this->assertSame($data['identity'], $user->getIdentity());
         $this->assertTrue(User::verifyPassword($data['password'], $user->getPassword()));
-        $this->assertInstanceOf(UserDetail::class, $user->getDetail());
         $this->assertSame($data['detail']['firstName'], $user->getDetail()->getFirstName());
         $this->assertSame($data['detail']['lastName'], $user->getDetail()->getLastName());
         $this->assertSame($data['detail']['email'], $user->getDetail()->getEmail());

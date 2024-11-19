@@ -19,6 +19,7 @@ use Laminas\Http\Response;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authorization\AuthorizationInterface;
 use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -29,12 +30,12 @@ use function sprintf;
 
 class AuthorizationMiddlewareTest extends TestCase
 {
-    private Subject $subject;
-    private UserRepository $userRepository;
-    private AdminRepository $adminRepository;
-    private AuthorizationInterface $authorization;
+    private Subject|MockObject $subject;
+    private UserRepository|MockObject $userRepository;
+    private AdminRepository|MockObject $adminRepository;
+    private AuthorizationInterface|MockObject $authorization;
     private ServerRequestInterface $request;
-    private RequestHandlerInterface $handler;
+    private RequestHandlerInterface|MockObject $handler;
     private ResponseInterface $response;
 
     /**
