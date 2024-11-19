@@ -114,7 +114,7 @@
         "check": [
             "@cs-check",
             "@test",
-            "@analyze"
+            "@static-analysis"
         ],
         "clear-config-cache": "php bin/clear-config-cache.php",
         "cs-check": "phpcs",
