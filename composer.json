@@ -120,7 +120,7 @@
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
         "serve": "php -S 0.0.0.0:8080 -t public/",
-        "static-analysis": "phpstan analyse",
+        "static-analysis": "phpstan analyse --memory-limit 256M",
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     }
