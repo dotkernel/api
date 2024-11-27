@@ -80,7 +80,6 @@
     "require-dev": {
         "laminas/laminas-coding-standard": "^2.5",
         "laminas/laminas-development-mode": "^3.12.0",
-        "laminas/laminas-http": "^2.19.0",
         "mezzio/mezzio-tooling": "^2.9.0",
         "phpstan/phpstan": "^2.0",
         "phpstan/phpstan-doctrine": "^2.0",
