@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace ApiTest\Functional;
 
-use Api\Admin\Entity\Admin;
-use Api\Admin\Entity\AdminRole;
-use Api\Admin\Enum\AdminStatusEnum;
-use Api\App\Entity\RoleInterface;
-use Api\User\Entity\User;
-use Api\User\Entity\UserDetail;
-use Api\User\Entity\UserRole;
-use Api\User\Enum\UserStatusEnum;
 use ApiTest\Functional\Traits\AuthenticationTrait;
 use ApiTest\Functional\Traits\DatabaseTrait;
+use Core\Admin\Entity\Admin;
+use Core\Admin\Entity\AdminRole;
+use Core\Admin\Enum\AdminStatusEnum;
+use Core\App\Entity\RoleInterface;
+use Core\User\Entity\User;
+use Core\User\Entity\UserDetail;
+use Core\User\Entity\UserRole;
+use Core\User\Enum\UserStatusEnum;
 use Doctrine\ORM\EntityManagerInterface;
 use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;

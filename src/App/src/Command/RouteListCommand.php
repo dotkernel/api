@@ -29,7 +29,7 @@ class RouteListCommand extends Command
     protected static $defaultName = 'route:list';
 
     public function __construct(
-        protected Application $application
+        protected Application $application,
     ) {
         parent::__construct(self::$defaultName);
     }

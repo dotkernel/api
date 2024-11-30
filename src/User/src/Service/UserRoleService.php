@@ -8,8 +8,8 @@ use Api\App\Exception\BadRequestException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Message;
 use Api\User\Collection\UserRoleCollection;
-use Api\User\Entity\UserRole;
-use Api\User\Repository\UserRoleRepository;
+use Core\User\Entity\UserRole;
+use Core\User\Repository\UserRoleRepository;
 use Dot\DependencyInjection\Attribute\Inject;
 
 use function in_array;

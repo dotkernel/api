@@ -10,13 +10,13 @@ use Api\App\Factory\OAuthRefreshTokenRepositoryFactory;
 use Api\App\Factory\OAuthScopeRepositoryFactory;
 use Api\App\Factory\UserIdentityFactory;
 use Api\App\Factory\UserRepositoryFactory;
-use Api\App\Repository\OAuthAccessTokenRepository;
-use Api\App\Repository\OAuthAuthCodeRepository;
-use Api\App\Repository\OAuthClientRepository;
-use Api\App\Repository\OAuthRefreshTokenRepository;
-use Api\App\Repository\OAuthScopeRepository;
-use Api\App\UserIdentity;
-use Api\User\Repository\UserRepository;
+use Core\App\Repository\OAuthAccessTokenRepository;
+use Core\App\Repository\OAuthAuthCodeRepository;
+use Core\App\Repository\OAuthClientRepository;
+use Core\App\Repository\OAuthRefreshTokenRepository;
+use Core\App\Repository\OAuthScopeRepository;
+use Core\User\Repository\UserRepository;
+use Core\User\UserIdentity;
 use Doctrine\Migrations\Tools\Console\Command\ExecuteCommand;
 use Dot\ErrorHandler\ErrorHandlerInterface;
 use Dot\ErrorHandler\LogErrorHandler;
@@ -41,8 +41,8 @@ return [
             ClientRepositoryInterface::class                   => OAuthClientRepository::class,
             RefreshTokenRepositoryInterface::class             => OAuthRefreshTokenRepository::class,
             ScopeRepositoryInterface::class                    => OAuthScopeRepository::class,
-            ErrorHandlerInterface::class                       => LogErrorHandler::class,
             Mezzio\Authentication\UserInterface::class         => UserIdentity::class,
+            ErrorHandlerInterface::class                       => LogErrorHandler::class,
             Mezzio\Authorization\AuthorizationInterface::class => Mezzio\Authorization\Rbac\LaminasRbac::class,
             UserRepositoryInterface::class                     => UserRepository::class,
         ],

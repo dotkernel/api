@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\App\Factory;
 
-use Api\App\Entity\OAuthAuthCode;
+use Core\App\Entity\OAuthAuthCode;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Psr\Container\ContainerExceptionInterface;

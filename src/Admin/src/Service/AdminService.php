@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Api\Admin\Service;
 
 use Api\Admin\Collection\AdminCollection;
-use Api\Admin\Entity\Admin;
-use Api\Admin\Enum\AdminStatusEnum;
-use Api\Admin\Repository\AdminRepository;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Message;
+use Core\Admin\Entity\Admin;
+use Core\Admin\Enum\AdminStatusEnum;
+use Core\Admin\Repository\AdminRepository;
 use Dot\DependencyInjection\Attribute\Inject;
 
 use function in_array;

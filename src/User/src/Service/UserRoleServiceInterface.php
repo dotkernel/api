@@ -7,7 +7,7 @@ namespace Api\User\Service;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\NotFoundException;
 use Api\User\Collection\UserRoleCollection;
-use Api\User\Entity\UserRole;
+use Core\User\Entity\UserRole;
 
 interface UserRoleServiceInterface
 {

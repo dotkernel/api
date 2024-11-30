@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Api\App\Handler;
 
 use Api\App\Collection\CollectionInterface;
-use Api\App\Entity\EntityInterface;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\ExpiredException;
@@ -15,6 +14,7 @@ use Api\App\Exception\NotFoundException;
 use Api\App\Exception\RuntimeException;
 use Api\App\Exception\UnauthorizedException;
 use Api\App\Message;
+use Core\App\Entity\EntityInterface;
 use Dot\Mail\Exception\MailException;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;

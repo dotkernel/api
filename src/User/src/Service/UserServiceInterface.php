@@ -8,8 +8,8 @@ use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\User\Collection\UserCollection;
-use Api\User\Entity\User;
-use Api\User\Entity\UserResetPassword;
+use Core\User\Entity\User;
+use Core\User\Entity\UserResetPassword;
 use Dot\Mail\Exception\MailException;
 use RuntimeException;
 

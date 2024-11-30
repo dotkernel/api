@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace ApiTest\Unit\App\Middleware;
 
-use Api\Admin\Entity\Admin;
-use Api\Admin\Entity\AdminRole;
-use Api\Admin\Enum\AdminStatusEnum;
-use Api\Admin\Repository\AdminRepository;
 use Api\App\Message;
 use Api\App\Middleware\AuthorizationMiddleware as Subject;
-use Api\App\UserIdentity;
-use Api\User\Entity\User;
-use Api\User\Entity\UserRole;
-use Api\User\Repository\UserRepository;
+use Core\Admin\Entity\Admin;
+use Core\Admin\Entity\AdminRole;
+use Core\Admin\Enum\AdminStatusEnum;
+use Core\Admin\Repository\AdminRepository;
+use Core\User\Entity\User;
+use Core\User\Entity\UserRole;
+use Core\User\Repository\UserRepository;
+use Core\User\UserIdentity;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\ServerRequest;
 use Mezzio\Authentication\UserInterface;

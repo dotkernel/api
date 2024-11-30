@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Api\Admin\Service;
 
 use Api\Admin\Collection\AdminRoleCollection;
-use Api\Admin\Entity\AdminRole;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\NotFoundException;
+use Core\Admin\Entity\AdminRole;
 
 interface AdminRoleServiceInterface
 {

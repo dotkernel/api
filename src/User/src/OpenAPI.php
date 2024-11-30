@@ -4,13 +4,6 @@ declare(strict_types=1);
 
 namespace Api\User;
 
-use Api\User\Entity\User;
-use Api\User\Entity\UserAvatar;
-use Api\User\Entity\UserDetail;
-use Api\User\Entity\UserResetPassword;
-use Api\User\Entity\UserRole;
-use Api\User\Enum\UserResetPasswordStatusEnum;
-use Api\User\Enum\UserStatusEnum;
 use Api\User\Handler\AccountActivateHandler;
 use Api\User\Handler\AccountAvatarHandler;
 use Api\User\Handler\AccountHandler;
@@ -20,6 +13,13 @@ use Api\User\Handler\UserActivateHandler;
 use Api\User\Handler\UserAvatarHandler;
 use Api\User\Handler\UserHandler;
 use Api\User\Handler\UserRoleHandler;
+use Core\User\Entity\User;
+use Core\User\Entity\UserAvatar;
+use Core\User\Entity\UserDetail;
+use Core\User\Entity\UserResetPassword;
+use Core\User\Entity\UserRole;
+use Core\User\Enum\UserResetPasswordStatusEnum;
+use Core\User\Enum\UserStatusEnum;
 use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
 use OpenApi\Attributes as OA;

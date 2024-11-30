@@ -35,7 +35,7 @@ class ErrorReportService implements ErrorReportServiceInterface
         "config",
     )]
     public function __construct(
-        protected array $config
+        protected array $config,
     ) {
         $this->fileSystem = new Filesystem();
         $this->config     = $config[ErrorReportServiceInterface::class] ?? [];

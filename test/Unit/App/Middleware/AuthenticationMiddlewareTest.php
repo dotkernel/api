@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ApiTest\Unit\App\Middleware;
 
 use Api\App\Middleware\AuthenticationMiddleware as Subject;
-use Api\User\Entity\UserRole;
+use Core\User\Entity\UserRole;
 use Laminas\Diactoros\ServerRequest;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;

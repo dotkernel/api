@@ -6,12 +6,12 @@ namespace Api\Admin;
 
 use Api\Admin\Collection\AdminCollection;
 use Api\Admin\Collection\AdminRoleCollection;
-use Api\Admin\Entity\Admin;
-use Api\Admin\Entity\AdminRole;
-use Api\Admin\Enum\AdminStatusEnum;
 use Api\Admin\Handler\AdminAccountHandler;
 use Api\Admin\Handler\AdminHandler;
 use Api\Admin\Handler\AdminRoleHandler;
+use Core\Admin\Entity\Admin;
+use Core\Admin\Entity\AdminRole;
+use Core\Admin\Enum\AdminStatusEnum;
 use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
 use OpenApi\Attributes as OA;

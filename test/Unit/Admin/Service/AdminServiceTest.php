@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace ApiTest\Unit\Admin\Service;
 
-use Api\Admin\Entity\Admin;
-use Api\Admin\Entity\AdminRole;
-use Api\Admin\Enum\AdminStatusEnum;
-use Api\Admin\Repository\AdminRepository;
 use Api\Admin\Service\AdminRoleService;
 use Api\Admin\Service\AdminService as Subject;
 use Api\App\Message;
+use Core\Admin\Entity\Admin;
+use Core\Admin\Entity\AdminRole;
+use Core\Admin\Enum\AdminStatusEnum;
+use Core\Admin\Repository\AdminRepository;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

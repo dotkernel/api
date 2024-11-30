@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\App\Factory;
 
-use Api\User\Entity\User;
+use Core\User\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Psr\Container\ContainerExceptionInterface;

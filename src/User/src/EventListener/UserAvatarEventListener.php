@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\EventListener;
 
-use Api\User\Entity\UserAvatar;
+use Core\User\Entity\UserAvatar;
 use Dot\DependencyInjection\Attribute\Inject;
 
 use function rtrim;
@@ -16,7 +16,7 @@ class UserAvatarEventListener
         "config",
     )]
     public function __construct(
-        protected array $config = []
+        protected array $config = [],
     ) {
     }
 

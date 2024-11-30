@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Api\User\InputFilter\Input;
 
 use Api\App\Message;
-use Api\User\Enum\UserStatusEnum;
+use Core\User\Enum\UserStatusEnum;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
 use Laminas\InputFilter\Input;

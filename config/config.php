@@ -49,9 +49,13 @@ $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
     Dot\Cache\ConfigProvider::class,
 
     // Default App module config
+    Core\Admin\ConfigProvider::class,
+    Core\App\ConfigProvider::class,
+    Core\User\ConfigProvider::class,
     Api\Admin\ConfigProvider::class,
     Api\App\ConfigProvider::class,
     Api\User\ConfigProvider::class,
+
     // Load application config in a pre-defined order in such a way that local settings
     // overwrite global settings. (Loaded as first to last):
     //   - `global.php`

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Api\Admin\Service;
 
 use Api\Admin\Collection\AdminCollection;
-use Api\Admin\Entity\Admin;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
+use Core\Admin\Entity\Admin;
 
 interface AdminServiceInterface
 {

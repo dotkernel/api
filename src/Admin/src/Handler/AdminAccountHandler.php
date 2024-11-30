@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Api\Admin\Handler;
 
-use Api\Admin\Entity\Admin;
 use Api\Admin\InputFilter\UpdateAdminInputFilter;
 use Api\Admin\Service\AdminServiceInterface;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
+use Core\Admin\Entity\Admin;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

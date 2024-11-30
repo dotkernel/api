@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Api\App\Middleware;
 
-use Api\Admin\Entity\Admin;
-use Api\Admin\Repository\AdminRepository;
-use Api\App\Entity\Guest;
-use Api\App\Entity\RoleInterface;
 use Api\App\Message;
-use Api\App\UserIdentity;
-use Api\User\Entity\User;
-use Api\User\Repository\UserRepository;
+use Core\Admin\Entity\Admin;
+use Core\Admin\Repository\AdminRepository;
+use Core\App\Entity\Guest;
+use Core\App\Entity\RoleInterface;
+use Core\User\Entity\User;
+use Core\User\Repository\UserRepository;
+use Core\User\UserIdentity;
 use Dot\DependencyInjection\Attribute\Inject;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\JsonResponse;

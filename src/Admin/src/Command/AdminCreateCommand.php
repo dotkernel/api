@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Api\Admin\Command;
 
-use Api\Admin\Entity\AdminRole;
 use Api\Admin\InputFilter\CreateAdminInputFilter;
 use Api\Admin\Service\AdminRoleService;
 use Api\Admin\Service\AdminService;
@@ -12,6 +11,7 @@ use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Message;
+use Core\Admin\Entity\AdminRole;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,7 +34,7 @@ class AdminCreateCommand extends Command
 
     public function __construct(
         protected AdminService $adminService,
-        protected AdminRoleService $adminRoleService
+        protected AdminRoleService $adminRoleService,
     ) {
         parent::__construct(self::$defaultName);
     }

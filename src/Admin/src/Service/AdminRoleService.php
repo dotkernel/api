@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Api\Admin\Service;
 
 use Api\Admin\Collection\AdminRoleCollection;
-use Api\Admin\Entity\AdminRole;
-use Api\Admin\Repository\AdminRoleRepository;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Message;
+use Core\Admin\Entity\AdminRole;
+use Core\Admin\Repository\AdminRoleRepository;
 use Dot\DependencyInjection\Attribute\Inject;
 
 use function in_array;

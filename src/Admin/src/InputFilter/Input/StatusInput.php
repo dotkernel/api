@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Api\Admin\InputFilter\Input;
 
-use Api\Admin\Enum\AdminStatusEnum;
 use Api\App\Message;
+use Core\Admin\Enum\AdminStatusEnum;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
 use Laminas\InputFilter\Input;
