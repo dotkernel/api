@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Core\User\Repository;
 
-use Api\App\Helper\PaginationHelper;
-use Api\User\Collection\UserRoleCollection;
+use Core\App\Helper\PaginationHelper;
 use Core\User\Entity\UserRole;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Dot\DependencyInjection\Attribute\Entity;
 
 /**
@@ -16,21 +16,17 @@ use Dot\DependencyInjection\Attribute\Entity;
 #[Entity(name: UserRole::class)]
 class UserRoleRepository extends EntityRepository
 {
-    public function getRoles(array $params = []): UserRoleCollection
+    public function getRoles(array $params = []): QueryBuilder
     {
         $page = PaginationHelper::getOffsetAndLimit($params);
 
-        $query = $this
+        return $this
             ->getEntityManager()
             ->createQueryBuilder()
             ->select(['role'])
             ->from(UserRole::class, 'role')
             ->orderBy($params['order'] ?? 'role.created', $params['dir'] ?? 'desc')
             ->setFirstResult($page['offset'])
-            ->setMaxResults($page['limit'])
-            ->getQuery()
-            ->useQueryCache(true);
-
-        return new UserRoleCollection($query, false);
+            ->setMaxResults($page['limit']);
     }
 }

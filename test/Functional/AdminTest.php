@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace ApiTest\Functional;
 
-use Api\App\Message;
 use BackedEnum;
 use Core\Admin\Entity\Admin;
 use Core\Admin\Entity\AdminRole;
+use Core\App\Message;
 use Core\User\Entity\User;
 use Core\User\Entity\UserDetail;
 use Core\User\Entity\UserRole;

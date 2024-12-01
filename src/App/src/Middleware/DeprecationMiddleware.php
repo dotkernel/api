@@ -7,7 +7,7 @@ namespace Api\App\Middleware;
 use Api\App\Attribute\MethodDeprecation;
 use Api\App\Attribute\ResourceDeprecation;
 use Api\App\Exception\DeprecationConflictException;
-use Api\App\Message;
+use Core\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
 use Laminas\Stratigility\MiddlewarePipe;
 use Mezzio\Middleware\LazyLoadingMiddleware;

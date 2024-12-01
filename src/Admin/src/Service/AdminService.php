@@ -8,10 +8,10 @@ use Api\Admin\Collection\AdminCollection;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Message;
 use Core\Admin\Entity\Admin;
 use Core\Admin\Enum\AdminStatusEnum;
 use Core\Admin\Repository\AdminRepository;
+use Core\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
 
 use function in_array;
@@ -110,7 +110,10 @@ class AdminService implements AdminServiceInterface
             throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'order')]);
         }
 
-        return $this->adminRepository->getAdmins($params);
+        $qb = $this->adminRepository->getAdmins($params);
+        $qb->getQuery()->useQueryCache(true);
+
+        return new AdminCollection($qb, false);
     }
 
     /**

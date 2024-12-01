@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Core\Admin\Repository;
 
-use Api\Admin\Collection\AdminCollection;
-use Api\App\Helper\PaginationHelper;
 use Core\Admin\Entity\Admin;
+use Core\App\Helper\PaginationHelper;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Dot\DependencyInjection\Attribute\Entity;
 
 /**
@@ -30,21 +30,17 @@ class AdminRepository extends EntityRepository
         return $admin;
     }
 
-    public function getAdmins(array $filters = []): AdminCollection
+    public function getAdmins(array $filters = []): QueryBuilder
     {
         $page = PaginationHelper::getOffsetAndLimit($filters);
 
-        $query = $this
+        return $this
             ->getEntityManager()
             ->createQueryBuilder()
             ->select(['admin'])
             ->from(Admin::class, 'admin')
             ->orderBy($filters['order'] ?? 'admin.created', $filters['dir'] ?? 'desc')
             ->setFirstResult($page['offset'])
-            ->setMaxResults($page['limit'])
-            ->getQuery()
-            ->useQueryCache(true);
-
-        return new AdminCollection($query, false);
+            ->setMaxResults($page['limit']);
     }
 }

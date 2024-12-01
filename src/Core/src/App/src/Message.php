@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Api\App;
+namespace Core\App;
 
 class Message
 {

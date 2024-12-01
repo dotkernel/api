@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace ApiTest\Functional;
 
-use Api\App\Message;
 use Api\User\Service\UserAvatarService;
+use Core\App\Message;
 use Core\User\Entity\User;
 use Core\User\Entity\UserAvatar;
 use Core\User\Entity\UserResetPassword;

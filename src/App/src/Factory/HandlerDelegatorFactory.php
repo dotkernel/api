@@ -6,7 +6,7 @@ namespace Api\App\Factory;
 
 use Api\App\Exception\RuntimeException;
 use Api\App\Handler\AbstractHandler;
-use Api\App\Message;
+use Core\App\Message;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
 use Psr\Container\ContainerExceptionInterface;

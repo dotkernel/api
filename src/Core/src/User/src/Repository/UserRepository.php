@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Core\User\Repository;
 
-use Api\App\Helper\PaginationHelper;
-use Api\App\Message;
-use Api\User\Collection\UserCollection;
 use Core\Admin\Entity\Admin;
 use Core\App\Entity\OAuthClient;
+use Core\App\Helper\PaginationHelper;
+use Core\App\Message;
 use Core\User\Entity\User;
 use Core\User\Enum\UserStatusEnum;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Dot\DependencyInjection\Attribute\Entity;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
@@ -32,7 +32,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         $this->getEntityManager()->flush();
     }
 
-    public function getUsers(array $filters = []): UserCollection
+    public function getUsers(array $filters = []): QueryBuilder
     {
         $page = PaginationHelper::getOffsetAndLimit($filters);
 
@@ -78,9 +78,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             $qb->andWhere('roles.name = :role')->setParameter('role', $filters['role']);
         }
 
-        $qb->getQuery()->useQueryCache(true);
-
-        return new UserCollection($qb, false);
+        return $qb;
     }
 
     public function saveUser(User $user): User

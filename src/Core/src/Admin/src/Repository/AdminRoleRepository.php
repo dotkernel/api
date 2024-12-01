@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Core\Admin\Repository;
 
-use Api\Admin\Collection\AdminRoleCollection;
-use Api\App\Helper\PaginationHelper;
 use Core\Admin\Entity\AdminRole;
+use Core\App\Helper\PaginationHelper;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Dot\DependencyInjection\Attribute\Entity;
 
 /**
@@ -16,21 +16,17 @@ use Dot\DependencyInjection\Attribute\Entity;
 #[Entity(name: AdminRole::class)]
 class AdminRoleRepository extends EntityRepository
 {
-    public function getAdminRoles(array $filters = []): AdminRoleCollection
+    public function getAdminRoles(array $filters = []): QueryBuilder
     {
         $page = PaginationHelper::getOffsetAndLimit($filters);
 
-        $query = $this
+        return $this
             ->getEntityManager()
             ->createQueryBuilder()
             ->select(['role'])
             ->from(AdminRole::class, 'role')
             ->orderBy($filters['order'] ?? 'role.created', $filters['dir'] ?? 'desc')
             ->setFirstResult($page['offset'])
-            ->setMaxResults($page['limit'])
-            ->getQuery()
-            ->useQueryCache(true);
-
-        return new AdminRoleCollection($query, false);
+            ->setMaxResults($page['limit']);
     }
 }

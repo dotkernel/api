@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Api\App\Middleware;
 
-use Api\App\Message;
 use Core\Admin\Entity\Admin;
 use Core\Admin\Repository\AdminRepository;
 use Core\App\Entity\Guest;
 use Core\App\Entity\RoleInterface;
+use Core\App\Message;
 use Core\User\Entity\User;
 use Core\User\Repository\UserRepository;
 use Core\User\UserIdentity;

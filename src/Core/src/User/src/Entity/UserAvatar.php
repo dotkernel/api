@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Core\User\Entity;
 
-use Api\User\EventListener\UserAvatarEventListener;
 use Core\App\Entity\AbstractEntity;
 use Core\App\Entity\TimestampsTrait;
+use Core\User\EventListener\UserAvatarEventListener;
 use Core\User\Repository\UserAvatarRepository;
 use Doctrine\ORM\Mapping as ORM;
 

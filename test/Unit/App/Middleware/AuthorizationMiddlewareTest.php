@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace ApiTest\Unit\App\Middleware;
 
-use Api\App\Message;
 use Api\App\Middleware\AuthorizationMiddleware as Subject;
 use Core\Admin\Entity\Admin;
 use Core\Admin\Entity\AdminRole;
 use Core\Admin\Enum\AdminStatusEnum;
 use Core\Admin\Repository\AdminRepository;
+use Core\App\Message;
 use Core\User\Entity\User;
 use Core\User\Entity\UserRole;
 use Core\User\Repository\UserRepository;

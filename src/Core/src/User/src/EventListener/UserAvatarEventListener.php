@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Api\User\EventListener;
+namespace Core\User\EventListener;
 
 use Core\User\Entity\UserAvatar;
 use Dot\DependencyInjection\Attribute\Inject;

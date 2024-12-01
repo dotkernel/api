@@ -6,7 +6,7 @@ namespace Api\App\Service;
 
 use Api\App\Exception\ForbiddenException;
 use Api\App\Exception\UnauthorizedException;
-use Api\App\Message;
+use Core\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;

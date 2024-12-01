@@ -7,8 +7,8 @@ namespace Api\User\Service;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Message;
 use Api\User\Collection\UserCollection;
+use Core\App\Message;
 use Core\App\Repository\OAuthAccessTokenRepository;
 use Core\App\Repository\OAuthRefreshTokenRepository;
 use Core\User\Entity\User;
@@ -243,7 +243,10 @@ class UserService implements UserServiceInterface
             throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'order')]);
         }
 
-        return $this->userRepository->getUsers($params);
+        $qb = $this->userRepository->getUsers($params);
+        $qb->getQuery()->useQueryCache(true);
+
+        return new UserCollection($qb, false);
     }
 
     /**
