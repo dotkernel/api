@@ -52,17 +52,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             $qb->andWhere('user.status = :status')->setParameter('status', $filters['status']);
         }
 
-        if (isset($filters['deleted'])) {
-            switch ($filters['deleted']) {
-                case 'true':
-                    $qb->andWhere('user.isDeleted = :isDeleted')->setParameter('isDeleted', true);
-                    break;
-                case 'false':
-                    $qb->andWhere('user.isDeleted = :isDeleted')->setParameter('isDeleted', false);
-                    break;
-            }
-        }
-
         if (! empty($filters['search'])) {
             $qb->andWhere(
                 $qb->expr()->orX(
@@ -115,8 +104,9 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
                 $qb->select(['u.password', 'u.status'])
                     ->from(User::class, 'u')
                     ->andWhere('u.identity = :identity')
-                    ->andWhere('u.isDeleted = 0')
-                    ->setParameter('identity', $username);
+                    ->andWhere('u.status != :status')
+                    ->setParameter('identity', $username)
+                    ->setParameter('status', UserStatusEnum::Deleted);
                 break;
             default:
                 throw new OAuthServerException(Message::INVALID_CLIENT_ID, 6, 'invalid_client', 401);

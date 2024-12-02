@@ -11,6 +11,7 @@ use Api\App\Entity\RoleInterface;
 use Api\App\Message;
 use Api\App\UserIdentity;
 use Api\User\Entity\User;
+use Api\User\Enum\UserStatusEnum;
 use Api\User\Repository\UserRepository;
 use Dot\DependencyInjection\Attribute\Inject;
 use Fig\Http\Message\StatusCodeInterface;
@@ -60,7 +61,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
                 break;
             case 'frontend':
                 $user = $this->userRepository->findOneBy(['identity' => $defaultUser->getIdentity()]);
-                if (! $user instanceof User || $user->isDeleted()) {
+                if (! $user instanceof User || $user->getStatus() === UserStatusEnum::Deleted) {
                     return $this->unauthorizedResponse(sprintf(
                         Message::USER_NOT_FOUND_BY_IDENTITY,
                         $defaultUser->getIdentity()

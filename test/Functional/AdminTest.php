@@ -401,7 +401,6 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertArrayHasKey('hash', $data);
         $this->assertArrayHasKey('identity', $data);
         $this->assertArrayHasKey('status', $data);
-        $this->assertArrayHasKey('isDeleted', $data);
         $this->assertArrayHasKey('avatar', $data);
         $this->assertArrayHasKey('detail', $data);
         $this->assertArrayHasKey('roles', $data);
@@ -409,7 +408,6 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertNotEmpty($data['hash']);
         $this->assertSame($userData['identity'], $data['identity']);
         $this->assertSame(UserStatusEnum::Pending->value, $data['status']);
-        $this->assertFalse($data['isDeleted']);
         $this->assertEmpty($data['avatar']);
         $this->assertEmpty($data['resetPasswords']);
         $this->assertArrayHasKey('firstName', $data['detail']);
@@ -463,7 +461,7 @@ class AdminTest extends AbstractFunctionalTest
         $userRepository = $this->getEntityManager()->getRepository(User::class);
         $user           = $userRepository->find($user->getUuid()->toString());
 
-        $this->assertTrue($user?->isDeleted());
+        $this->assertTrue($user?->getStatus() === UserStatusEnum::Deleted);
     }
 
     /**

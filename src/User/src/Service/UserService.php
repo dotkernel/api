@@ -115,7 +115,7 @@ class UserService implements UserServiceInterface
     {
         $this->revokeTokens($user);
 
-        return $this->anonymizeUser($user->markAsDeleted());
+        return $this->anonymizeUser($user->setStatus(UserStatusEnum::Deleted));
     }
 
     /**
@@ -368,10 +368,6 @@ class UserService implements UserServiceInterface
 
         if (isset($data['status'])) {
             $user->setStatus($data['status']);
-        }
-
-        if (isset($data['isDeleted'])) {
-            $user->setIsDeleted($data['isDeleted']);
         }
 
         if (isset($data['hash'])) {
