@@ -14,6 +14,9 @@ jobs:
       contents: write
       pull-requests: write
       checks: write
+    strategy:
+      matrix:
+        php-versions: [ '8.1', '8.2', '8.3' ]
     steps:
       - uses: actions/checkout@v4
         with:
