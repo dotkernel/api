@@ -16,7 +16,7 @@ jobs:
       checks: write
     strategy:
       matrix:
-        php-versions: [ '8.1', '8.2', '8.3' ]
+        php-versions: [ '8.2', '8.3' ]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,7 +25,7 @@ jobs:
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.3"
+          php-version: "${{ matrix.php }}"
           coverage: pcov
           ini-values: assert.exception=1, zend.assertions=1, error_reporting=-1, log_errors_max_len=0, display_errors=On
           tools: composer:v2, cs2pr
