@@ -11,7 +11,6 @@ use Api\App\Entity\RoleInterface;
 use Api\App\Message;
 use Api\App\UserIdentity;
 use Api\User\Entity\User;
-use Api\User\Enum\UserStatusEnum;
 use Api\User\Repository\UserRepository;
 use Dot\DependencyInjection\Attribute\Inject;
 use Fig\Http\Message\StatusCodeInterface;
