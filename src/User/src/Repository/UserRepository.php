@@ -50,6 +50,8 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
 
         if (! empty($filters['status'])) {
             $qb->andWhere('user.status = :status')->setParameter('status', $filters['status']);
+        } else {
+            $qb->andWhere('user.status != :status')->setParameter('status', UserStatusEnum::Deleted);
         }
 
         if (! empty($filters['search'])) {

@@ -258,6 +258,11 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this->status === UserStatusEnum::Pending;
     }
 
+    public function isDeleted(): bool
+    {
+        return $this->status === UserStatusEnum::Deleted;
+    }
+
     public function renewHash(): self
     {
         $this->hash = self::generateHash();

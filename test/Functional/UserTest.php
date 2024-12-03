@@ -296,7 +296,7 @@ class UserTest extends AbstractFunctionalTest
 
         $userRepository = $this->getEntityManager()->getRepository(User::class);
         $deletedUser    = $userRepository->find($user->getUuid()->toString());
-        $this->assertTrue($deletedUser?->getStatus() === UserStatusEnum::Deleted);
+        $this->assertTrue($deletedUser?->isDeleted());
     }
 
     public function testRequestResetPasswordInvalidHash(): void

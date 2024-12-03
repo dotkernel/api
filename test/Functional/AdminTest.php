@@ -461,7 +461,7 @@ class AdminTest extends AbstractFunctionalTest
         $userRepository = $this->getEntityManager()->getRepository(User::class);
         $user           = $userRepository->find($user->getUuid()->toString());
 
-        $this->assertTrue($user?->getStatus() === UserStatusEnum::Deleted);
+        $this->assertTrue($user?->isDeleted());
     }
 
     /**

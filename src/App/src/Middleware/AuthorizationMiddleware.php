@@ -61,7 +61,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
                 break;
             case 'frontend':
                 $user = $this->userRepository->findOneBy(['identity' => $defaultUser->getIdentity()]);
-                if (! $user instanceof User || $user->getStatus() === UserStatusEnum::Deleted) {
+                if (! $user instanceof User || $user->isDeleted()) {
                     return $this->unauthorizedResponse(sprintf(
                         Message::USER_NOT_FOUND_BY_IDENTITY,
                         $defaultUser->getIdentity()
