@@ -219,7 +219,7 @@ class UserService implements UserServiceInterface
     public function findOneBy(array $params = []): User
     {
         $user = $this->userRepository->findOneBy($params);
-        if (! $user instanceof User) {
+        if (! $user instanceof User || $user->getStatus() === UserStatusEnum::Deleted) {
             throw new NotFoundException(Message::USER_NOT_FOUND);
         }
 
