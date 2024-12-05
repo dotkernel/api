@@ -78,7 +78,7 @@
         "zircote/swagger-php": "^4.10"
     },
     "require-dev": {
-        "laminas/laminas-coding-standard": "^2.5",
+        "laminas/laminas-coding-standard": "^3.0",
         "laminas/laminas-development-mode": "^3.12.0",
         "mezzio/mezzio-tooling": "^2.9.0",
         "phpstan/phpstan": "^2.0",
