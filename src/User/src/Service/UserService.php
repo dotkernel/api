@@ -198,7 +198,7 @@ class UserService implements UserServiceInterface
     public function findByEmail(string $email): User
     {
         $user = $this->userDetailRepository->findOneBy(['email' => $email])?->getUser();
-        if (! $user instanceof User) {
+        if (! $user instanceof User || $user->isDeleted()) {
             throw new NotFoundException(Message::USER_NOT_FOUND);
         }
 
@@ -219,7 +219,7 @@ class UserService implements UserServiceInterface
     public function findOneBy(array $params = []): User
     {
         $user = $this->userRepository->findOneBy($params);
-        if (! $user instanceof User || $user->getStatus() === UserStatusEnum::Deleted) {
+        if (! $user instanceof User || $user->isDeleted()) {
             throw new NotFoundException(Message::USER_NOT_FOUND);
         }
 
