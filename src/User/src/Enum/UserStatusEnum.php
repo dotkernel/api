@@ -8,4 +8,5 @@ enum UserStatusEnum: string
 {
     case Active  = 'active';
     case Pending = 'pending';
+    case Deleted = 'deleted';
 }

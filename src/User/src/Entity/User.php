@@ -51,9 +51,6 @@ class User extends AbstractEntity implements UserEntityInterface
     #[ORM\Column(type: 'user_status_enum', options: ['default' => UserStatusEnum::Pending])]
     protected UserStatusEnum $status = UserStatusEnum::Pending;
 
-    #[ORM\Column(name: "isDeleted", type: "boolean")]
-    protected bool $isDeleted = false;
-
     #[ORM\Column(name: "hash", type: "string", length: 64, unique: true)]
     protected string $hash;
 
@@ -99,18 +96,6 @@ class User extends AbstractEntity implements UserEntityInterface
     public function setStatus(UserStatusEnum $status): self
     {
         $this->status = $status;
-
-        return $this;
-    }
-
-    public function isDeleted(): bool
-    {
-        return $this->isDeleted;
-    }
-
-    public function setIsDeleted(bool $isDeleted): self
-    {
-        $this->isDeleted = $isDeleted;
 
         return $this;
     }
@@ -273,11 +258,9 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this->status === UserStatusEnum::Pending;
     }
 
-    public function markAsDeleted(): self
+    public function isDeleted(): bool
     {
-        $this->isDeleted = true;
-
-        return $this;
+        return $this->status === UserStatusEnum::Deleted;
     }
 
     public function renewHash(): self
@@ -311,7 +294,6 @@ class User extends AbstractEntity implements UserEntityInterface
             'hash'           => $this->getHash(),
             'identity'       => $this->getIdentity(),
             'status'         => $this->getStatus(),
-            'isDeleted'      => $this->isDeleted(),
             'avatar'         => $this->getAvatar()?->getArrayCopy(),
             'detail'         => $this->getDetail()->getArrayCopy(),
             'roles'          => $this->getRoles()->map(function (UserRole $userRole) {

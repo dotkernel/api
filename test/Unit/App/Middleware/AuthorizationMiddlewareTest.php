@@ -13,6 +13,7 @@ use Api\App\Middleware\AuthorizationMiddleware as Subject;
 use Api\App\UserIdentity;
 use Api\User\Entity\User;
 use Api\User\Entity\UserRole;
+use Api\User\Enum\UserStatusEnum;
 use Api\User\Repository\UserRepository;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\ServerRequest;
@@ -108,7 +109,7 @@ class AuthorizationMiddlewareTest extends TestCase
 
     public function testAuthorizationUserNotFoundOrDeleted(): void
     {
-        $user = (new User())->markAsDeleted();
+        $user = (new User())->setStatus(UserStatusEnum::Deleted);
         $this->userRepository->method('findOneBy')->willReturn($user);
         $this->authorization->method('isGranted')->willReturn(false);
 
