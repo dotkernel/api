@@ -1,0 +1,95 @@
+<?php
+
+declare(strict_types=1);
+
+use Laminas\Mail\Transport\Smtp;
+
+return [
+    /**
+     * Dk mail module configuration
+     * Note that many of these options can be set programmatically too,
+     * when sending mail messages actually that is what you'll usually do,
+     * these configs provide just default and options that remain the same for all mails
+     */
+    'dot_mail' => [
+//        the key is the mail service name, this is the default one, which does not extend any configuration
+        'default' => [
+//            tells which other mail service configuration to extend
+            'extends' => null,
+            /**
+             * the mail transport to use
+             * can be any class implementing Laminas\Mail\Transport\TransportInterface
+             *
+             * for standard mail transports, you can use these aliases
+             * - sendmail => Laminas\Mail\Transport\Sendmail
+             * - smtp => Laminas\Mail\Transport\Smtp
+             * - file => Laminas\Mail\Transport\File
+             * - in_memory => Laminas\Mail\Transport\InMemory
+             *
+             * defaults to sendmail
+             **/
+            'transport' => Smtp::class,
+            /**
+             * Uncomment the below line if you want to save a copy of all sent emails to a certain IMAP folder.
+             * Valid only if the Transport is SMTP
+             */
+//            'save_sent_message_folder' => ['INBOX.Sent'],
+//            message configuration
+            'message_options' => [
+                'from'          => '',
+                'from_name'     => 'DotKernel',
+                'reply_to'      => '',
+                'reply_to_name' => '',
+                'to'            => [],
+                'cc'            => [],
+                'bcc'           => [],
+                'subject'       => '',
+                'body'          => [
+                    'content' => '',
+                    'charset' => 'utf-8',
+                ],
+                'attachments'   => [
+                    'files' => [],
+                    'dir'   => [
+                        'iterate'   => false,
+                        'path'      => 'data/mail/attachments',
+                        'recursive' => false,
+                    ],
+                ],
+            ],
+//            options that will be used only if Laminas\Mail\Transport\Smtp adapter is used
+            'smtp_options' => [
+                'host'              => 'smtp.gmail.com',
+                'port'              => 587,
+                'connection_class'  => 'login',
+                'connection_config' => [
+                    'username' => '',
+                    'password' => '',
+                    'ssl'      => 'tls',
+                ],
+            ],
+//            file options that will be used only if the adapter is Laminas\Mail\Transport\File
+//            'file_options'    => [
+//                'path'     => 'data/mail/output',
+//                //a callable that will get the Laminas\Mail\Transport\File object as an argument
+//                //and should return the filename if null is used, and empty callable will be used
+//                'callback' => null,
+//            ],
+//            listeners to register with the mail service, for mail events
+            'event_listeners' => [
+//                [
+//                    'type' => 'service or class name',
+//                    'priority' => 1,
+//                ],
+            ],
+        ],
+//         option to log the SENT emails
+        'log' => [
+            'sent' => getcwd() . '/log/mail/sent.log',
+        ],
+        /**
+         * You can define other mail services here, with the same structure as the default block
+         * you can even extend from the default block, and overwrite only the differences
+         */
+    ],
+];
