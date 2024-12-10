@@ -106,6 +106,9 @@
         "post-install-cmd": [
             "@development-enable"
         ],
+        "post-update-cmd": [
+            "php bin/composer-post-install-script.php"
+        ],
         "development-disable": "laminas-development-mode disable",
         "development-enable": "laminas-development-mode enable",
         "development-status": "laminas-development-mode status",
