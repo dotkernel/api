@@ -1,2 +1,3 @@
 Contact: mailto:security@dotkernel.com
-Expires: 2022-01-01T00:00:00.000Z
+Expires: 2029-12-31T22:00:00.000Z
+Preferred-Languages: en
