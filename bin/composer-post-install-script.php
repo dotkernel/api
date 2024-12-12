@@ -53,4 +53,6 @@ $files = [
 
 echo "Using environment setting: " . getEnvironment() . PHP_EOL;
 
+var_dump(getenv('COMPOSER_DEV_MODE'));
+
 array_walk($files, 'copyFile');
