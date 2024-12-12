@@ -11,18 +11,20 @@ const ENVIRONMENT_PRODUCTION  = 'production';
 
 function copyFile(array $file): void
 {
+    if (! in_array(getEnvironment(), $file['environment'])) {
+        echo "Skipping the copy of {$file['source']} due to environment settings." . PHP_EOL;
+        return;
+    }
+
     if (is_readable($file['destination'])) {
-        echo "File {$file['destination']} already exists." . PHP_EOL;
+        echo "File {$file['destination']} already exists. Skipping..." . PHP_EOL;
+        return;
+    }
+
+    if (! copy($file['source'], $file['destination'])) {
+        echo "Cannot copy {$file['source']} file to {$file['destination']}" . PHP_EOL;
     } else {
-        if (! in_array(getEnvironment(), $file['environment'])) {
-            echo "Skipping the copy of {$file['source']} due to environment settings." . PHP_EOL;
-        } else {
-            if (! copy($file['source'], $file['destination'])) {
-                echo "Cannot copy {$file['source']} file to {$file['destination']}" . PHP_EOL;
-            } else {
-                echo "File {$file['source']} copied successfully to {$file['destination']}." . PHP_EOL;
-            }
-        }
+        echo "File {$file['source']} copied successfully to {$file['destination']}." . PHP_EOL;
     }
 }
 
@@ -52,6 +54,5 @@ $files = [
 ];
 
 echo "Using environment setting: " . getEnvironment() . PHP_EOL;
-var_dump("getenv('COMPOSER_DEV_MODE')", getenv('COMPOSER_DEV_MODE'));
 
 array_walk($files, 'copyFile');
