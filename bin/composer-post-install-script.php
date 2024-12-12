@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once 'vendor/autoload.php';
+
 const ENVIRONMENT_DEVELOPMENT = 'development';
 const ENVIRONMENT_PRODUCTION  = 'production';
 
@@ -26,7 +28,7 @@ function copyFile(array $file): void
 
 function getEnvironment(): string
 {
-    return file_exists(realpath(__DIR__ . '/../config/development.config.php')) ? ENVIRONMENT_DEVELOPMENT : ENVIRONMENT_PRODUCTION;
+    return file_exists(\Laminas\DevelopmentMode\Status::DEVEL_CONFIG) ? ENVIRONMENT_DEVELOPMENT : ENVIRONMENT_PRODUCTION;
 }
 
 // when adding files to the below array the `source` and `destination` paths must be relative to the project root folder
@@ -51,6 +53,6 @@ $files = [
 
 echo "Using environment setting: " . getEnvironment() . PHP_EOL;
 
-var_dump("File exists " , file_exists(realpath(__DIR__ . '/../config/development.config.php')));
+var_dump(file_exists(\Laminas\DevelopmentMode\Status::DEVEL_CONFIG));
 
 array_walk($files, 'copyFile');
