@@ -51,6 +51,12 @@ $files = [
     ],
 ];
 
+chdir(dirname(__DIR__));
+
+echo __DIR__ . \Laminas\DevelopmentMode\Status::DEVEL_CONFIG .  PHP_EOL;
+
+//echo realpath(__DIR__ . )
+
 echo "Using environment setting: " . getEnvironment() . PHP_EOL;
 
 var_dump(file_exists(\Laminas\DevelopmentMode\Status::DEVEL_CONFIG));
