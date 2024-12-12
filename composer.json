@@ -103,7 +103,7 @@
         }
     },
     "scripts": {
-        "post-install-cmd": [
+        "post-create-project-cmd": [
             "@development-enable"
         ],
         "post-update-cmd": [
