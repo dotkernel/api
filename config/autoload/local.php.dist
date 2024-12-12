@@ -59,4 +59,5 @@ return [
             'path' => realpath(__DIR__ . '/../../public/uploads/user'),
         ],
     ],
+    'userAnonymizeAppend' => '',
 ];

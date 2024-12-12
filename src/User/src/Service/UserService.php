@@ -126,7 +126,7 @@ class UserService implements UserServiceInterface
         $placeholder = $this->getAnonymousPlaceholder();
 
         $user
-            ->setIdentity($placeholder)
+            ->setIdentity($placeholder . $this->config['userAnonymizeAppend'])
             ->getDetail()
                 ->setFirstName($placeholder)
                 ->setLastName($placeholder)
