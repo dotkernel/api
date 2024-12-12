@@ -108,7 +108,8 @@
             "echo Running post-create-project-cmd commands"
         ],
         "post-update-cmd": [
-            "php bin/composer-post-install-script.php"
+            "php bin/composer-post-install-script.php",
+            "echo Running post-update-cmd commands"
         ],
         "development-disable": "laminas-development-mode disable",
         "development-enable": "laminas-development-mode enable",
