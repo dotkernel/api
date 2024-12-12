@@ -49,4 +49,6 @@ $files = [
     ],
 ];
 
+echo "Using environment setting : " . getEnvironment() . PHP_EOL;
+
 array_walk($files, 'copyFile');
