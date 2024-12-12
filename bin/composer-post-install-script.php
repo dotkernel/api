@@ -14,6 +14,7 @@ function copyFile(array $file): void
     } else {
         if (! in_array(getEnvironment(), $file['environment'])) {
             echo "Skipping the copy of {$file['source']} due to environment settings." . PHP_EOL;
+            echo "ENV SETTING : " . getEnvironment() . PHP_EOL;
         } else {
             if (! copy($file['source'], $file['destination'])) {
                 echo "Cannot copy {$file['source']} file to {$file['destination']}" . PHP_EOL;
