@@ -49,7 +49,4 @@ $files = [
     ],
 ];
 
-
-var_dump(getEnvironment()); exit;
-
 array_walk($files, 'copyFile');
