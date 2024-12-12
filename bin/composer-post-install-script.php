@@ -26,7 +26,19 @@ function copyFile(array $file): void
 
 function getEnvironment(): string
 {
-    return file_exists('config/development.config.php') ? ENVIRONMENT_DEVELOPMENT : ENVIRONMENT_PRODUCTION;
+    $composerInstalledJson = 'vendor/composer/installed.json';
+    if (! file_exists($composerInstalledJson)) {
+        throw new RuntimeException('Composer installed JSON file not found.');
+    }
+
+    $data = json_decode(file_get_contents($composerInstalledJson), true);
+    foreach ($data as $package) {
+        if (! empty($package['dev'])) {
+            return ENVIRONMENT_DEVELOPMENT;
+        }
+    }
+
+    return ENVIRONMENT_PRODUCTION;
 }
 
 // when adding files to the below array the `source` and `destination` paths must be relative to the project root folder
@@ -49,6 +61,6 @@ $files = [
     ],
 ];
 
-echo "Using environment setting : " . getEnvironment() . PHP_EOL;
+echo "Using environment setting: " . getEnvironment() . PHP_EOL;
 
 array_walk($files, 'copyFile');
