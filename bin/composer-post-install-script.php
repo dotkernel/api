@@ -26,7 +26,7 @@ function copyFile(array $file): void
 
 function getEnvironment(): string
 {
-    return file_exists('config/development.config.php') ? ENVIRONMENT_DEVELOPMENT : ENVIRONMENT_PRODUCTION;
+    return file_exists(realpath(__DIR__ . '/../config/development.config.php')) ? ENVIRONMENT_DEVELOPMENT : ENVIRONMENT_PRODUCTION;
 }
 
 // when adding files to the below array the `source` and `destination` paths must be relative to the project root folder
@@ -50,5 +50,7 @@ $files = [
 ];
 
 echo "Using environment setting: " . getEnvironment() . PHP_EOL;
+
+var_dump("File exists " . file_exists(realpath(__DIR__ . '/../config/development.config.php')));
 
 array_walk($files, 'copyFile');
