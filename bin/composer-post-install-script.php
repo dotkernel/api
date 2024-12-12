@@ -53,7 +53,4 @@ $files = [
 
 echo "Using environment setting: " . getEnvironment() . PHP_EOL;
 
-var_dump(file_exists(\Laminas\DevelopmentMode\Status::DEVEL_CONFIG));
-var_dump(file_exists(\Laminas\DevelopmentMode\Status::DEVEL_CONFIG . '.dist'));
-
 array_walk($files, 'copyFile');

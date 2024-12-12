@@ -104,7 +104,8 @@
     },
     "scripts": {
         "post-create-project-cmd": [
-            "@development-enable"
+            "@development-enable",
+            "echo Running post-create-project-cmd commands"
         ],
         "post-update-cmd": [
             "php bin/composer-post-install-script.php"
