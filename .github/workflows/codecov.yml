@@ -42,9 +42,9 @@ jobs:
             php${{ matrix.php }}-composer-
 
       - name: Install dependencies with composer
-        run: |
-          unset COMPOSER_NO_DEV
-          composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
+        env:
+          COMPOSER_DEV_MODE: 1
+        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
 
       - name: Collect code coverage with PHPUnit
         run: vendor/bin/phpunit --colors=always --coverage-clover clover.xml
