@@ -2,7 +2,7 @@ JOB=$3
 PHP_VERSION=$4
 COMMAND=$(echo "${JOB}" | jq -r '.command')
 
-echo "Running $COMMAND"
+echo "Running pre-run $COMMAND"
 
 if [[ ${COMMAND} =~ phpunit ]];then
 
