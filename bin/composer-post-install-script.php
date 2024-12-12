@@ -53,9 +53,10 @@ $files = [
 
 chdir(dirname(__DIR__));
 
-echo __DIR__ . \Laminas\DevelopmentMode\Status::DEVEL_CONFIG .  PHP_EOL;
+echo __DIR__ . DIRECTORY_SEPARATOR . \Laminas\DevelopmentMode\Status::DEVEL_CONFIG .  PHP_EOL;
+echo __DIR__ . DIRECTORY_SEPARATOR . \Laminas\DevelopmentMode\Status::DEVEL_CONFIG . '.dist'.  PHP_EOL;
 
-//echo realpath(__DIR__ . )
+echo realpath(__DIR__ . DIRECTORY_SEPARATOR . \Laminas\DevelopmentMode\Status::DEVEL_CONFIG . '.dist');
 
 echo "Using environment setting: " . getEnvironment() . PHP_EOL;
 
