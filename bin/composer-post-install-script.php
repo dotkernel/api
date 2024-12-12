@@ -28,7 +28,7 @@ function copyFile(array $file): void
 
 function getEnvironment(): string
 {
-    return file_exists(\Laminas\DevelopmentMode\Status::DEVEL_CONFIG) ? ENVIRONMENT_DEVELOPMENT : ENVIRONMENT_PRODUCTION;
+    return getenv('COMPOSER_DEV_MODE') === '1' ? ENVIRONMENT_DEVELOPMENT : ENVIRONMENT_PRODUCTION;
 }
 
 // when adding files to the below array the `source` and `destination` paths must be relative to the project root folder
@@ -52,7 +52,6 @@ $files = [
 ];
 
 echo "Using environment setting: " . getEnvironment() . PHP_EOL;
-
-var_dump(getenv('COMPOSER_DEV_MODE'));
+var_dump("getenv('COMPOSER_DEV_MODE')", getenv('COMPOSER_DEV_MODE'));
 
 array_walk($files, 'copyFile');
