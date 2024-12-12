@@ -51,6 +51,6 @@ $files = [
 
 echo "Using environment setting: " . getEnvironment() . PHP_EOL;
 
-var_dump("File exists " . file_exists(realpath(__DIR__ . '/../config/development.config.php')));
+var_dump("File exists " , file_exists(realpath(__DIR__ . '/../config/development.config.php')));
 
 array_walk($files, 'copyFile');
