@@ -103,9 +103,6 @@
         }
     },
     "scripts": {
-        "post-create-project-cmd": [
-            "@development-enable"
-        ],
         "post-update-cmd": [
             "php bin/composer-post-install-script.php"
         ],
