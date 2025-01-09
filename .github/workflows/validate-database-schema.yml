@@ -46,9 +46,10 @@ jobs:
 
       - name: Setup project
         run: |
-          mv config/autoload/local.php.dist config/autoload/local.php
-          mv config/autoload/mail.local.php.dist config/autoload/mail.local.php
-          mv config/autoload/local.test.php.dist config/autoload/local.test.php
+          apt-get install php${{ matrix.php }}-sqlite3
+          cp config/autoload/local.php.dist config/autoload/local.php
+          cp config/autoload/mail.local.php.dist config/autoload/mail.local.php
+          cp config/autoload/local.test.php.dist config/autoload/local.test.php
 
       - name: Validate database schema
         run: php bin/doctrine orm:validate-schema --skip-sync
