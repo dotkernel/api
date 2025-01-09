@@ -51,9 +51,7 @@ jobs:
           mv config/autoload/local.test.php.dist config/autoload/local.test.php
 
       - name: Collect code coverage with PHPUnit
-        run: |
-          vendor/bin/phpunit --colors=always --coverage-clover clover.xml
-          php bin/doctrine orm:validate-schema --skip-sync
+        run: vendor/bin/phpunit --colors=always --coverage-clover clover.xml
 
       - name: Send code coverage report to Codecov.io
         uses: codecov/codecov-action@v3
