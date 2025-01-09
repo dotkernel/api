@@ -1,7 +1,7 @@
 on:
   - push
 
-name: Run PHPStan checks
+name: Validate database schema
 
 jobs:
   mutation:
