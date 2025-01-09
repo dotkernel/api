@@ -1,11 +1,11 @@
 on:
   - push
 
-name: Validate database schema
+name: Run PHPStan checks
 
 jobs:
-  validate-database-schema:
-    name: Validate database schema
+  mutation:
+    name: PHPStan ${{ matrix.php }}-${{ matrix.os }}
 
     runs-on: ${{ matrix.os }}
 
@@ -44,13 +44,5 @@ jobs:
       - name: Install dependencies with composer
         run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
 
-      - name: Setup project
-        run: |
-          sudo apt-get update
-          sudo apt-get install php"${PHP_VERSION}"-sqlite3
-          mv config/autoload/local.php.dist config/autoload/local.php
-          mv config/autoload/mail.local.php.dist config/autoload/mail.local.php
-          mv config/autoload/local.test.php.dist config/autoload/local.test.php
-
-      - name: Run database schema command
-        run: php bin/doctrine orm:validate-schema --skip-sync
+      - name: Run database schema validation
+        run:  php bin/doctrine orm:validate-schema --skip-sync
