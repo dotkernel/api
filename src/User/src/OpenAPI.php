@@ -1067,7 +1067,6 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'hash', type: 'string'),
         new OA\Property(property: 'identity', type: 'string'),
         new OA\Property(property: 'status', type: 'string', example: UserStatusEnum::Active),
-        new OA\Property(property: 'isDeleted', type: 'boolean', example: false),
         new OA\Property(property: 'avatar', ref: '#/components/schemas/UserAvatar', nullable: true),
         new OA\Property(property: 'detail', ref: '#/components/schemas/UserDetail'),
         new OA\Property(

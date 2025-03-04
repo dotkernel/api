@@ -115,7 +115,7 @@ class UserService implements UserServiceInterface
     {
         $this->revokeTokens($user);
 
-        return $this->anonymizeUser($user->markAsDeleted());
+        return $this->anonymizeUser($user->setStatus(UserStatusEnum::Deleted));
     }
 
     /**
@@ -126,7 +126,7 @@ class UserService implements UserServiceInterface
         $placeholder = $this->getAnonymousPlaceholder();
 
         $user
-            ->setIdentity($placeholder)
+            ->setIdentity($placeholder . $this->config['userAnonymizeAppend'])
             ->getDetail()
                 ->setFirstName($placeholder)
                 ->setLastName($placeholder)
@@ -198,7 +198,7 @@ class UserService implements UserServiceInterface
     public function findByEmail(string $email): User
     {
         $user = $this->userDetailRepository->findOneBy(['email' => $email])?->getUser();
-        if (! $user instanceof User) {
+        if (! $user instanceof User || $user->isDeleted()) {
             throw new NotFoundException(Message::USER_NOT_FOUND);
         }
 
@@ -219,7 +219,7 @@ class UserService implements UserServiceInterface
     public function findOneBy(array $params = []): User
     {
         $user = $this->userRepository->findOneBy($params);
-        if (! $user instanceof User) {
+        if (! $user instanceof User || $user->isDeleted()) {
             throw new NotFoundException(Message::USER_NOT_FOUND);
         }
 
@@ -371,10 +371,6 @@ class UserService implements UserServiceInterface
 
         if (isset($data['status'])) {
             $user->setStatus($data['status']);
-        }
-
-        if (isset($data['isDeleted'])) {
-            $user->setIsDeleted($data['isDeleted']);
         }
 
         if (isset($data['hash'])) {

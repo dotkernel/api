@@ -56,7 +56,7 @@
         "dotkernel/dot-data-fixtures": "^1.2.2",
         "dotkernel/dot-dependency-injection": "^1.0",
         "dotkernel/dot-errorhandler": "^4.0.0",
-        "dotkernel/dot-mail": "^4.1.1",
+        "dotkernel/dot-mail": "^5.1.0",
         "dotkernel/dot-response-header": "^3.2.3",
         "laminas/laminas-component-installer": "^3.4.0",
         "laminas/laminas-config-aggregator": "^1.14.0",
@@ -78,7 +78,7 @@
         "zircote/swagger-php": "^4.10"
     },
     "require-dev": {
-        "laminas/laminas-coding-standard": "^2.5",
+        "laminas/laminas-coding-standard": "^3.0",
         "laminas/laminas-development-mode": "^3.12.0",
         "mezzio/mezzio-tooling": "^2.9.0",
         "phpstan/phpstan": "^2.0",
@@ -105,8 +105,8 @@
         }
     },
     "scripts": {
-        "post-install-cmd": [
-            "@development-enable"
+        "post-update-cmd": [
+            "php bin/composer-post-install-script.php"
         ],
         "development-disable": "laminas-development-mode disable",
         "development-enable": "laminas-development-mode enable",

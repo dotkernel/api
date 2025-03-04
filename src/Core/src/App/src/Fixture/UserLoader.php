@@ -34,7 +34,6 @@ class UserLoader implements FixtureInterface, DependentFixtureInterface
             ->setIdentity('test@dotkernel.com')
             ->usePassword('dotkernel')
             ->setStatus(UserStatusEnum::Active)
-            ->setIsDeleted(false)
             ->setHash(User::generateHash())
             ->addRole($guestRole)
             ->addRole($userRole);

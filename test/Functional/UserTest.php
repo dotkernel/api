@@ -108,7 +108,6 @@ class UserTest extends AbstractFunctionalTest
 
         $this->assertSame($user['identity'], $data['identity']);
         $this->assertSame(UserStatusEnum::Pending->value, $data['status']);
-        $this->assertFalse($data['isDeleted']);
         $this->assertArrayHasKey('detail', $data);
         $this->assertArrayHasKey('email', $data['detail']);
         $this->assertArrayHasKey('firstName', $data['detail']);

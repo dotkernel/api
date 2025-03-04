@@ -1,5 +1,37 @@
 # Changelog
 
+## 5.3.0 - 2025-01-08
+
+### Changed
+
+* Issue [#352](https://github.com/dotkernel/api/issues/352): Updated PHPStan memory limit by [@bidi47](https://github.com/bidi47) in [#353](https://github.com/dotkernel/api/pull/353)
+* Issue [#360](https://github.com/dotkernel/api/issues/360): Restricted `Qodana` to supported PHP versions by [@alexmerlin](https://github.com/alexmerlin) in [#361](https://github.com/dotkernel/api/pull/361)
+* Issue [#366](https://github.com/dotkernel/api/issues/366): Updated laminas/laminas-coding-standard to latest version by [@MarioRadu](https://github.com/MarioRadu) in [#367](https://github.com/dotkernel/api/pull/367)
+* Issue [#362](https://github.com/dotkernel/api/issues/362): Updated user status, removed isDeleted by [@bidi47](https://github.com/bidi47) in [#359](https://github.com/dotkernel/api/pull/359)
+* Issue [#355](https://github.com/dotkernel/api/issues/355): Upgraded to dotkernel/dot-mail 5.0 by [@MarioRadu](https://github.com/MarioRadu) in [#368](https://github.com/dotkernel/api/pull/368)
+* Issue [#374](https://github.com/dotkernel/api/issues/374): Updated anonymization by [@bidi47](https://github.com/bidi47) in [#375](https://github.com/dotkernel/api/pull/375)
+* Issue [#374](https://github.com/dotkernel/api/issues/372): Ignore development files on production env by [@MarioRadu](https://github.com/MarioRadu) in [#373](https://github.com/dotkernel/api/pull/373)
+* Update security.txt file by [@arhimede](https://github.com/arhimede) in [#371](https://github.com/dotkernel/api/pull/371)
+
+### Added
+
+* Issue [#363](https://github.com/dotkernel/api/issues/363): Composer post install script which copies config files by [@MarioRadu](https://github.com/MarioRadu) in [#364](https://github.com/dotkernel/api/pull/364)
+
+### Deprecated
+
+* Nothing
+
+### Removed
+
+* Issue [#354](https://github.com/dotkernel/api/issues/354): Removed laminas/laminas-http dependency by [@MarioRadu](https://github.com/MarioRadu) in [#356](https://github.com/dotkernel/api/pull/356)
+* Issue [#362](https://github.com/dotkernel/api/issues/362): Updated user status, removed isDeleted by [@bidi47](https://github.com/bidi47) in [#359](https://github.com/dotkernel/api/pull/359)
+* Issue [#369](https://github.com/dotkernel/api/issues/369): Delete `config/autoload/mail.global.php.dist` by [@alexmerlin](https://github.com/alexmerlin) in [#370](https://github.com/dotkernel/api/pull/370)
+* Removed composer script `post-create-project-cmd` by [@MarioRadu](https://github.com/MarioRadu) in [#376](https://github.com/dotkernel/api/pull/376)
+
+### Fixed
+
+* Issue [#377](https://github.com/dotkernel/api/issues/377): Fixed `.github/workflows/codecov.yml` by [@alexmerlin](https://github.com/alexmerlin) in [#378](https://github.com/dotkernel/api/pull/378)
+
 ## 5.2.0 - 2024-11-19
 
 ### Changed

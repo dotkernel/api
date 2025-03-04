@@ -147,7 +147,6 @@ class UserServiceTest extends TestCase
         $this->assertSame($data['detail']['lastName'], $user->getDetail()->getLastName());
         $this->assertSame($data['detail']['email'], $user->getDetail()->getEmail());
         $this->assertSame(UserStatusEnum::Pending, $user->getStatus());
-        $this->assertFalse($user->isDeleted());
         $this->assertFalse($user->isActive());
     }
 

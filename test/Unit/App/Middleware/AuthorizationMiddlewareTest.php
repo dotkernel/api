@@ -12,6 +12,7 @@ use Core\Admin\Repository\AdminRepository;
 use Core\App\Message;
 use Core\User\Entity\User;
 use Core\User\Entity\UserRole;
+use Core\User\Enum\UserStatusEnum;
 use Core\User\Repository\UserRepository;
 use Core\User\UserIdentity;
 use Fig\Http\Message\StatusCodeInterface;
@@ -108,7 +109,7 @@ class AuthorizationMiddlewareTest extends TestCase
 
     public function testAuthorizationUserNotFoundOrDeleted(): void
     {
-        $user = (new User())->markAsDeleted();
+        $user = (new User())->setStatus(UserStatusEnum::Deleted);
         $this->userRepository->method('findOneBy')->willReturn($user);
         $this->authorization->method('isGranted')->willReturn(false);
 
