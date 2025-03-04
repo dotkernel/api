@@ -9,6 +9,9 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
+    env:
+      TEST_MODE: "true"
+
     strategy:
       matrix:
         os:
