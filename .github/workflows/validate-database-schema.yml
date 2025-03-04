@@ -4,8 +4,12 @@ on:
 name: Validate database schema
 
 jobs:
-  code-coverage:
-    name: Code Coverage
+  validate-database-schema:
+    name: Validate database schema
+
+    permissions:
+      contents: read
+      pull-requests: write
 
     runs-on: ${{ matrix.os }}
 
@@ -29,9 +33,6 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "${{ matrix.php }}"
-          coverage: pcov
-          ini-values: assert.exception=1, zend.assertions=1, error_reporting=-1, log_errors_max_len=0, display_errors=On
-          tools: composer:v2, cs2pr
           extensions: pdo, pdo_sqlite
 
       - name: Determine composer cache directory
