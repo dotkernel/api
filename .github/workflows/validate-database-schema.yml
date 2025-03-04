@@ -32,7 +32,7 @@ jobs:
           coverage: pcov
           ini-values: assert.exception=1, zend.assertions=1, error_reporting=-1, log_errors_max_len=0, display_errors=On
           tools: composer:v2, cs2pr
-          extensions: pdo, pdo_mysql, pdo_sqlite
+          extensions: pdo, pdo_sqlite
 
       - name: Determine composer cache directory
         run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
