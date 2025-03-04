@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Api\Admin;
 
 use Api\Admin\Handler\AdminAccountHandler;
+use Api\Admin\Handler\AdminCollectionHandler;
 use Api\Admin\Handler\AdminHandler;
+use Api\Admin\Handler\AdminRoleCollectionHandler;
 use Api\Admin\Handler\AdminRoleHandler;
 use Mezzio\Application;
 use Psr\Container\ContainerInterface;
@@ -44,7 +46,7 @@ class RoutesDelegator
         );
         $app->get(
             '/admin',
-            AdminHandler::class,
+            AdminCollectionHandler::class,
             'admin.list'
         );
         $app->patch(
@@ -60,7 +62,7 @@ class RoutesDelegator
 
         $app->get(
             '/admin/role',
-            AdminRoleHandler::class,
+            AdminRoleCollectionHandler::class,
             'admin.role.list'
         );
         $app->get(

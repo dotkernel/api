@@ -66,7 +66,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
                         $defaultUser->getIdentity()
                     ));
                 }
-                if ($user->getStatus() !== User::STATUS_ACTIVE) {
+                if (! $user->isActive()) {
                     return $this->unauthorizedResponse(Message::USER_NOT_ACTIVATED);
                 }
                 $request = $request->withAttribute(User::class, $user);

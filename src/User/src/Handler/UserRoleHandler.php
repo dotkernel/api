@@ -5,30 +5,19 @@ declare(strict_types=1);
 namespace Api\User\Handler;
 
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\HandlerTrait;
+use Api\App\Handler\AbstractHandler;
 use Api\User\Service\UserRoleServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
-use Mezzio\Hal\HalResponseFactory;
-use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
-class UserRoleHandler implements RequestHandlerInterface
+class UserRoleHandler extends AbstractHandler
 {
-    use HandlerTrait;
-
     #[Inject(
-        HalResponseFactory::class,
-        ResourceGenerator::class,
         UserRoleServiceInterface::class,
-        "config",
     )]
     public function __construct(
-        protected HalResponseFactory $responseFactory,
-        protected ResourceGenerator $resourceGenerator,
         protected UserRoleServiceInterface $roleService,
-        protected array $config,
     ) {
     }
 
@@ -40,10 +29,5 @@ class UserRoleHandler implements RequestHandlerInterface
         $role = $this->roleService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
 
         return $this->createResponse($request, $role);
-    }
-
-    public function getCollection(ServerRequestInterface $request): ResponseInterface
-    {
-        return $this->createResponse($request, $this->roleService->getRoles($request->getQueryParams()));
     }
 }

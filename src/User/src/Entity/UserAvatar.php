@@ -18,7 +18,7 @@ class UserAvatar extends AbstractEntity
 {
     use TimestampsTrait;
 
-    #[ORM\OneToOne(inversedBy: "avatar", targetEntity: User::class)]
+    #[ORM\OneToOne(targetEntity: User::class, inversedBy: "avatar")]
     #[ORM\JoinColumn(name: "userUuid", referencedColumnName: "uuid")]
     protected User $user;
 
@@ -26,6 +26,13 @@ class UserAvatar extends AbstractEntity
     protected string $name;
 
     protected ?string $url = null;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->created();
+    }
 
     public function getUser(): User
     {

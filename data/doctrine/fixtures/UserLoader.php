@@ -7,35 +7,33 @@ namespace Api\Fixtures;
 use Api\User\Entity\User;
 use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserRole;
+use Api\User\Enum\UserStatusEnum;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-/**
- * Class UserLoader
- * @package Api\Fixtures
- */
+use function assert;
+
 class UserLoader implements FixtureInterface, DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
         $userRoleRepository = $manager->getRepository(UserRole::class);
 
-        /** @var UserRole $guestRole */
         $guestRole = $userRoleRepository->findOneBy([
             'name' => UserRole::ROLE_GUEST,
         ]);
+        assert($guestRole instanceof UserRole);
 
-        /** @var UserRole $userRole */
         $userRole = $userRoleRepository->findOneBy([
             'name' => UserRole::ROLE_USER,
         ]);
+        assert($userRole instanceof UserRole);
 
         $user = (new User())
             ->setIdentity('test@dotkernel.com')
             ->usePassword('dotkernel')
-            ->setStatus(User::STATUS_ACTIVE)
-            ->setIsDeleted(false)
+            ->setStatus(UserStatusEnum::Active)
             ->setHash(User::generateHash())
             ->addRole($guestRole)
             ->addRole($userRole);

@@ -6,18 +6,21 @@ namespace ApiTest\Unit\App\Middleware;
 
 use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
+use Api\Admin\Enum\AdminStatusEnum;
 use Api\Admin\Repository\AdminRepository;
 use Api\App\Message;
 use Api\App\Middleware\AuthorizationMiddleware as Subject;
 use Api\App\UserIdentity;
 use Api\User\Entity\User;
 use Api\User\Entity\UserRole;
+use Api\User\Enum\UserStatusEnum;
 use Api\User\Repository\UserRepository;
+use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\ServerRequest;
-use Laminas\Http\Response;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authorization\AuthorizationInterface;
 use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -28,12 +31,12 @@ use function sprintf;
 
 class AuthorizationMiddlewareTest extends TestCase
 {
-    private Subject $subject;
-    private UserRepository $userRepository;
-    private AdminRepository $adminRepository;
-    private AuthorizationInterface $authorization;
+    private Subject|MockObject $subject;
+    private UserRepository|MockObject $userRepository;
+    private AdminRepository|MockObject $adminRepository;
+    private AuthorizationInterface|MockObject $authorization;
     private ServerRequestInterface $request;
-    private RequestHandlerInterface $handler;
+    private RequestHandlerInterface|MockObject $handler;
     private ResponseInterface $response;
 
     /**
@@ -60,7 +63,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $this->request = $this->request->withAttribute(UserInterface::class, $identity);
 
         $response = $this->subject->process($this->request, $this->handler);
-        $this->assertSame(Response::STATUS_CODE_403, $response->getStatusCode());
+        $this->assertSame(StatusCodeInterface::STATUS_FORBIDDEN, $response->getStatusCode());
 
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertArrayHasKey('error', $data);
@@ -72,7 +75,7 @@ class AuthorizationMiddlewareTest extends TestCase
     {
         $user = (new Admin())
             ->setIdentity('admin@dotkernel.com')
-            ->setStatus(Admin::STATUS_INACTIVE)
+            ->setStatus(AdminStatusEnum::Inactive)
             ->addRole((new AdminRole())->setName(AdminRole::ROLE_ADMIN));
         $this->adminRepository->method('findOneBy')->willReturn($user);
 
@@ -80,7 +83,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $this->request = $this->request->withAttribute(UserInterface::class, $identity);
 
         $response = $this->subject->process($this->request, $this->handler);
-        $this->assertSame(Response::STATUS_CODE_403, $response->getStatusCode());
+        $this->assertSame(StatusCodeInterface::STATUS_FORBIDDEN, $response->getStatusCode());
 
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertArrayHasKey('error', $data);
@@ -96,7 +99,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $this->request = $this->request->withAttribute(UserInterface::class, $identity);
 
         $response = $this->subject->process($this->request, $this->handler);
-        $this->assertSame(Response::STATUS_CODE_403, $response->getStatusCode());
+        $this->assertSame(StatusCodeInterface::STATUS_FORBIDDEN, $response->getStatusCode());
 
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertArrayHasKey('error', $data);
@@ -106,7 +109,7 @@ class AuthorizationMiddlewareTest extends TestCase
 
     public function testAuthorizationUserNotFoundOrDeleted(): void
     {
-        $user = (new User())->markAsDeleted();
+        $user = (new User())->setStatus(UserStatusEnum::Deleted);
         $this->userRepository->method('findOneBy')->willReturn($user);
         $this->authorization->method('isGranted')->willReturn(false);
 
@@ -114,7 +117,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $this->request = $this->request->withAttribute(UserInterface::class, $identity);
 
         $response = $this->subject->process($this->request, $this->handler);
-        $this->assertSame(Response::STATUS_CODE_403, $response->getStatusCode());
+        $this->assertSame(StatusCodeInterface::STATUS_FORBIDDEN, $response->getStatusCode());
 
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertArrayHasKey('error', $data);
@@ -137,7 +140,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $this->request = $this->request->withAttribute(UserInterface::class, $identity);
 
         $response = $this->subject->process($this->request, $this->handler);
-        $this->assertSame(Response::STATUS_CODE_403, $response->getStatusCode());
+        $this->assertSame(StatusCodeInterface::STATUS_FORBIDDEN, $response->getStatusCode());
 
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertArrayHasKey('error', $data);

@@ -6,17 +6,18 @@ namespace ApiTest\Functional;
 
 use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
+use Api\Admin\Enum\AdminStatusEnum;
 use Api\App\Entity\RoleInterface;
 use Api\User\Entity\User;
 use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserRole;
+use Api\User\Enum\UserStatusEnum;
 use ApiTest\Functional\Traits\AuthenticationTrait;
 use ApiTest\Functional\Traits\DatabaseTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\ServerRequest;
-use Laminas\ServiceManager\ServiceManager;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use PHPUnit\Framework\TestCase;
@@ -29,7 +30,6 @@ use RuntimeException;
 
 use function array_merge;
 use function getenv;
-use function method_exists;
 use function putenv;
 use function realpath;
 
@@ -39,7 +39,7 @@ class AbstractFunctionalTest extends TestCase
     use DatabaseTrait;
 
     protected Application $app;
-    protected ContainerInterface|ServiceManager $container;
+    protected ContainerInterface $container;
     protected const DEFAULT_PASSWORD = 'dotkernel';
 
     /**
@@ -57,12 +57,8 @@ class AbstractFunctionalTest extends TestCase
 
         $this->ensureTestMode();
 
-        if (method_exists($this, 'runMigrations')) {
-            $this->runMigrations();
-        }
-        if (method_exists($this, 'runSeeders')) {
-            $this->runSeeders();
-        }
+        $this->runMigrations();
+        $this->runSeeders();
     }
 
     public function tearDown(): void
@@ -130,7 +126,7 @@ class AbstractFunctionalTest extends TestCase
         return $this->container->get(EntityManagerInterface::class);
     }
 
-    protected function getContainer(): ContainerInterface|ServiceManager
+    protected function getContainer(): ContainerInterface
     {
         return $this->container;
     }
@@ -148,7 +144,7 @@ class AbstractFunctionalTest extends TestCase
             );
         }
 
-        if (! $this->getEntityManager()->getConnection()->getParams()['memory'] ?? false) {
+        if (! ($this->getEntityManager()->getConnection()->getParams()['memory'] ?? false)) {
             throw new RuntimeException(
                 'You are running tests in a non in-memory database. Did you forget to create local.test.php?'
             );
@@ -269,7 +265,7 @@ class AbstractFunctionalTest extends TestCase
         string $body = 'php://input',
         string $protocol = '1.1'
     ): ServerRequestInterface {
-        if (method_exists($this, 'isAuthenticated') && $this->isAuthenticated()) {
+        if ($this->isAuthenticated()) {
             $headers = array_merge($headers, $this->getAuthorizationHeader());
         }
 
@@ -367,8 +363,15 @@ class AbstractFunctionalTest extends TestCase
         $this->getContainer()->setAllowOverride(false);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function getValidUserData(array $data = []): array
     {
+        $userRole = $this->findUserRole(UserRole::ROLE_USER);
+        $this->assertInstanceOf(UserRole::class, $userRole);
+
         return [
             'detail'          => [
                 'firstName' => $data['detail']['firstName'] ?? 'First',
@@ -378,7 +381,10 @@ class AbstractFunctionalTest extends TestCase
             'identity'        => $data['identity'] ?? 'user@dotkernel.com',
             'password'        => $data['password'] ?? self::DEFAULT_PASSWORD,
             'passwordConfirm' => $data['password'] ?? self::DEFAULT_PASSWORD,
-            'status'          => $data['status'] ?? User::STATUS_ACTIVE,
+            'status'          => $data['status'] ?? UserStatusEnum::Active,
+            'roles'           => [
+                ['uuid' => $userRole->getUuid()->toString()],
+            ],
         ];
     }
 
@@ -392,7 +398,7 @@ class AbstractFunctionalTest extends TestCase
             ],
             'identity' => 'invalid',
             'password' => 'invalid',
-            'status'   => Admin::STATUS_INACTIVE,
+            'status'   => UserStatusEnum::Pending,
         ];
     }
 
@@ -403,7 +409,7 @@ class AbstractFunctionalTest extends TestCase
             'identity'  => 'admin@dotkernel.com',
             'lastName'  => 'Last',
             'password'  => self::DEFAULT_PASSWORD,
-            'status'    => Admin::STATUS_ACTIVE,
+            'status'    => AdminStatusEnum::Active,
         ];
     }
 
@@ -414,10 +420,14 @@ class AbstractFunctionalTest extends TestCase
             'identity'  => 'invalid',
             'lastName'  => 'invalid',
             'password'  => 'invalid',
-            'status'    => Admin::STATUS_INACTIVE,
+            'status'    => AdminStatusEnum::Inactive,
         ];
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function getValidFrontendAccessTokenCredentials(array $data = []): array
     {
         $userData = $this->getValidUserData();
@@ -523,10 +533,8 @@ class AbstractFunctionalTest extends TestCase
      */
     protected function createUser(array $data = []): User
     {
-        $userRoleRepository = $this->getEntityManager()->getRepository(UserRole::class);
-
-        /** @var RoleInterface $userRole */
-        $userRole = $userRoleRepository->findOneBy(['name' => UserRole::ROLE_USER]);
+        $userRole = $this->findUserRole(UserRole::ROLE_USER);
+        $this->assertInstanceOf(UserRole::class, $userRole);
 
         $userData = $this->getValidUserData();
 
@@ -548,5 +556,16 @@ class AbstractFunctionalTest extends TestCase
         $this->getEntityManager()->flush();
 
         return $user;
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function findUserRole(string $name): ?UserRole
+    {
+        $userRoleRepository = $this->getEntityManager()->getRepository(UserRole::class);
+
+        return $userRoleRepository->findOneBy(['name' => $name]);
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Api\User\InputFilter\Input;
 
 use Api\App\Message;
-use Api\User\Entity\User;
+use Api\User\Enum\UserStatusEnum;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
 use Laminas\InputFilter\Input;
@@ -23,11 +23,12 @@ class StatusInput extends Input
 
         $this->getFilterChain()
             ->attachByName(StringTrim::class)
-            ->attachByName(StripTags::class);
+            ->attachByName(StripTags::class)
+            ->attach(fn($value) => $value === null ? UserStatusEnum::Active : UserStatusEnum::from($value));
 
         $this->getValidatorChain()
             ->attachByName(InArray::class, [
-                'haystack' => User::STATUSES,
+                'haystack' => UserStatusEnum::cases(),
                 'message'  => sprintf(Message::INVALID_VALUE, 'status'),
             ], true);
     }

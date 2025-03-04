@@ -57,7 +57,7 @@ class OAuthAuthCode implements AuthCodeEntityInterface
         return $this;
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -74,9 +74,9 @@ class OAuthAuthCode implements AuthCodeEntityInterface
         return $this->client;
     }
 
-    public function getIdentifier(): ?int
+    public function getIdentifier(): string
     {
-        return $this->getId();
+        return (string) $this->getId();
     }
 
     /**

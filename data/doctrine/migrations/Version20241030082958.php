@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240613153602 extends AbstractMigration
+final class Version20241030082958 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,7 +20,7 @@ final class Version20240613153602 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE admin (uuid BINARY(16) NOT NULL, identity VARCHAR(100) NOT NULL, firstName VARCHAR(191) NOT NULL, lastName VARCHAR(191) NOT NULL, password VARCHAR(100) NOT NULL, status VARCHAR(20) NOT NULL, created DATETIME NOT NULL, updated DATETIME DEFAULT NULL, UNIQUE INDEX UNIQ_880E0D766A95E9C4 (identity), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4');
+        $this->addSql('CREATE TABLE admin (uuid BINARY(16) NOT NULL, identity VARCHAR(100) NOT NULL, firstName VARCHAR(191) NOT NULL, lastName VARCHAR(191) NOT NULL, password VARCHAR(100) NOT NULL, status ENUM(\'active\', \'inactive\') DEFAULT \'active\' NOT NULL, created DATETIME NOT NULL, updated DATETIME DEFAULT NULL, UNIQUE INDEX UNIQ_880E0D766A95E9C4 (identity), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE admin_roles (userUuid BINARY(16) NOT NULL, roleUuid BINARY(16) NOT NULL, INDEX IDX_1614D53DD73087E9 (userUuid), INDEX IDX_1614D53D88446210 (roleUuid), PRIMARY KEY(userUuid, roleUuid)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE admin_role (uuid BINARY(16) NOT NULL, name VARCHAR(30) NOT NULL, created DATETIME NOT NULL, updated DATETIME DEFAULT NULL, UNIQUE INDEX UNIQ_7770088A5E237E06 (name), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE oauth_access_tokens (id INT UNSIGNED AUTO_INCREMENT NOT NULL, user_id VARCHAR(25) DEFAULT NULL, token VARCHAR(100) NOT NULL, revoked TINYINT(1) DEFAULT 0 NOT NULL, expires_at DATETIME NOT NULL, client_id INT UNSIGNED DEFAULT NULL, INDEX IDX_CA42527C19EB6921 (client_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
@@ -30,11 +30,11 @@ final class Version20240613153602 extends AbstractMigration
         $this->addSql('CREATE TABLE oauth_clients (id INT UNSIGNED AUTO_INCREMENT NOT NULL, name VARCHAR(40) NOT NULL, secret VARCHAR(100) DEFAULT NULL, redirect VARCHAR(191) NOT NULL, revoked TINYINT(1) DEFAULT 0 NOT NULL, isConfidential TINYINT(1) DEFAULT 0 NOT NULL, user_id BINARY(16) DEFAULT NULL, INDEX IDX_13CE8101A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE oauth_refresh_tokens (id INT UNSIGNED AUTO_INCREMENT NOT NULL, revoked TINYINT(1) DEFAULT 0 NOT NULL, expires_at DATETIME NOT NULL, access_token_id INT UNSIGNED DEFAULT NULL, INDEX IDX_5AB6872CCB2688 (access_token_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE oauth_scopes (id INT UNSIGNED AUTO_INCREMENT NOT NULL, scope VARCHAR(191) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
-        $this->addSql('CREATE TABLE user (uuid BINARY(16) NOT NULL, identity VARCHAR(191) NOT NULL, password VARCHAR(191) NOT NULL, status VARCHAR(20) NOT NULL, isDeleted TINYINT(1) NOT NULL, hash VARCHAR(64) NOT NULL, created DATETIME NOT NULL, updated DATETIME DEFAULT NULL, UNIQUE INDEX UNIQ_8D93D6496A95E9C4 (identity), UNIQUE INDEX UNIQ_8D93D649D1B862B8 (hash), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4');
+        $this->addSql('CREATE TABLE user (uuid BINARY(16) NOT NULL, identity VARCHAR(191) NOT NULL, password VARCHAR(191) NOT NULL, status ENUM(\'active\', \'pending\', \'deleted\') DEFAULT \'pending\' NOT NULL, hash VARCHAR(64) NOT NULL, created DATETIME NOT NULL, updated DATETIME DEFAULT NULL, UNIQUE INDEX UNIQ_8D93D6496A95E9C4 (identity), UNIQUE INDEX UNIQ_8D93D649D1B862B8 (hash), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE user_roles (userUuid BINARY(16) NOT NULL, roleUuid BINARY(16) NOT NULL, INDEX IDX_54FCD59FD73087E9 (userUuid), INDEX IDX_54FCD59F88446210 (roleUuid), PRIMARY KEY(userUuid, roleUuid)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE user_avatar (uuid BINARY(16) NOT NULL, name VARCHAR(191) NOT NULL, created DATETIME NOT NULL, updated DATETIME DEFAULT NULL, userUuid BINARY(16) DEFAULT NULL, UNIQUE INDEX UNIQ_73256912D73087E9 (userUuid), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE user_detail (uuid BINARY(16) NOT NULL, firstName VARCHAR(191) DEFAULT NULL, lastName VARCHAR(191) DEFAULT NULL, email VARCHAR(191) NOT NULL, created DATETIME NOT NULL, updated DATETIME DEFAULT NULL, userUuid BINARY(16) DEFAULT NULL, UNIQUE INDEX UNIQ_4B5464AED73087E9 (userUuid), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4');
-        $this->addSql('CREATE TABLE user_reset_password (uuid BINARY(16) NOT NULL, expires DATETIME NOT NULL, hash VARCHAR(64) NOT NULL, status VARCHAR(20) NOT NULL, created DATETIME NOT NULL, updated DATETIME DEFAULT NULL, userUuid BINARY(16) DEFAULT NULL, UNIQUE INDEX UNIQ_D21DE3BCD1B862B8 (hash), INDEX IDX_D21DE3BCD73087E9 (userUuid), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4');
+        $this->addSql('CREATE TABLE user_reset_password (uuid BINARY(16) NOT NULL, expires DATETIME NOT NULL, hash VARCHAR(64) NOT NULL, status ENUM(\'completed\', \'requested\') DEFAULT \'requested\' NOT NULL, created DATETIME NOT NULL, updated DATETIME DEFAULT NULL, userUuid BINARY(16) DEFAULT NULL, UNIQUE INDEX UNIQ_D21DE3BCD1B862B8 (hash), INDEX IDX_D21DE3BCD73087E9 (userUuid), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE user_role (uuid BINARY(16) NOT NULL, name VARCHAR(20) NOT NULL, created DATETIME NOT NULL, updated DATETIME DEFAULT NULL, UNIQUE INDEX UNIQ_2DE8C6A35E237E06 (name), PRIMARY KEY(uuid)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('ALTER TABLE admin_roles ADD CONSTRAINT FK_1614D53DD73087E9 FOREIGN KEY (userUuid) REFERENCES admin (uuid)');
         $this->addSql('ALTER TABLE admin_roles ADD CONSTRAINT FK_1614D53D88446210 FOREIGN KEY (roleUuid) REFERENCES admin_role (uuid)');

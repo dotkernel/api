@@ -10,29 +10,18 @@ use Api\Admin\Service\AdminServiceInterface;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\HandlerTrait;
+use Api\App\Handler\AbstractHandler;
 use Dot\DependencyInjection\Attribute\Inject;
-use Mezzio\Hal\HalResponseFactory;
-use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
-class AdminHandler implements RequestHandlerInterface
+class AdminHandler extends AbstractHandler
 {
-    use HandlerTrait;
-
     #[Inject(
-        HalResponseFactory::class,
-        ResourceGenerator::class,
         AdminServiceInterface::class,
-        "config",
     )]
     public function __construct(
-        protected HalResponseFactory $responseFactory,
-        protected ResourceGenerator $resourceGenerator,
         protected AdminServiceInterface $adminService,
-        protected array $config,
     ) {
     }
 
@@ -56,11 +45,6 @@ class AdminHandler implements RequestHandlerInterface
         $admin = $this->adminService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
 
         return $this->createResponse($request, $admin);
-    }
-
-    public function getCollection(ServerRequestInterface $request): ResponseInterface
-    {
-        return $this->createResponse($request, $this->adminService->getAdmins($request->getQueryParams()));
     }
 
     /**

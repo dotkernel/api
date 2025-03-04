@@ -6,32 +6,21 @@ namespace Api\User\Handler;
 
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\HandlerTrait;
+use Api\App\Handler\AbstractHandler;
 use Api\App\Message;
 use Api\User\Service\UserServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Dot\Mail\Exception\MailException;
-use Mezzio\Hal\HalResponseFactory;
-use Mezzio\Hal\ResourceGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
-class UserActivateHandler implements RequestHandlerInterface
+class UserActivateHandler extends AbstractHandler
 {
-    use HandlerTrait;
-
     #[Inject(
-        HalResponseFactory::class,
-        ResourceGenerator::class,
         UserServiceInterface::class,
-        "config",
     )]
     public function __construct(
-        protected HalResponseFactory $responseFactory,
-        protected ResourceGenerator $resourceGenerator,
         protected UserServiceInterface $userService,
-        protected array $config,
     ) {
     }
 
@@ -40,7 +29,7 @@ class UserActivateHandler implements RequestHandlerInterface
      * @throws MailException
      * @throws NotFoundException
      */
-    public function post(ServerRequestInterface $request): ResponseInterface
+    public function patch(ServerRequestInterface $request): ResponseInterface
     {
         $user = $this->userService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
         if ($user->isActive()) {

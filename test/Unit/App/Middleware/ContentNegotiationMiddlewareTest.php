@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace ApiTest\Unit\App\Middleware;
 
 use Api\App\Middleware\ContentNegotiationMiddleware as Subject;
+use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\ServerRequest;
-use Laminas\Http\Response;
 use Mezzio\Router\Route;
 use Mezzio\Router\RouteResult;
 use PHPUnit\Framework\MockObject\Exception;
@@ -66,7 +66,7 @@ class ContentNegotiationMiddlewareTest extends TestCase
         );
         $request = $request->withHeader('Accept', 'text/html');
         $this->assertSame(
-            Response::STATUS_CODE_406,
+            StatusCodeInterface::STATUS_NOT_ACCEPTABLE,
             $this->subject->process($request, $this->handler)->getStatusCode()
         );
     }
@@ -80,7 +80,7 @@ class ContentNegotiationMiddlewareTest extends TestCase
         $request = $request->withHeader('Accept', 'application/hal+json');
         $request = $request->withHeader('Content-Type', 'text/html');
         $this->assertSame(
-            Response::STATUS_CODE_415,
+            StatusCodeInterface::STATUS_UNSUPPORTED_MEDIA_TYPE,
             $this->subject->process($request, $this->handler)->getStatusCode()
         );
     }
@@ -94,16 +94,17 @@ class ContentNegotiationMiddlewareTest extends TestCase
         $request = $request->withHeader('Accept', 'application/json');
         $request = $request->withHeader('Content-Type', 'application/json');
         $this->assertSame(
-            Response::STATUS_CODE_406,
+            StatusCodeInterface::STATUS_NOT_ACCEPTABLE,
             $this->subject->process($request, $this->handler)->getStatusCode()
         );
     }
 
     public function testFormatAcceptRequest(): void
     {
-        $this->assertIsArray(
-            $this->subject->formatAcceptRequest('application/json')
-        );
+        $accept = $this->subject->formatAcceptRequest('application/json');
+
+        $this->assertNotEmpty($accept);
+        $this->assertSame(['application/json'], $accept);
     }
 
     public function testCheckAccept(): void

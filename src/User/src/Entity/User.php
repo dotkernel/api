@@ -8,6 +8,7 @@ use Api\App\Entity\AbstractEntity;
 use Api\App\Entity\PasswordTrait;
 use Api\App\Entity\RoleInterface;
 use Api\App\Entity\TimestampsTrait;
+use Api\User\Enum\UserStatusEnum;
 use Api\User\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -26,20 +27,13 @@ class User extends AbstractEntity implements UserEntityInterface
     use PasswordTrait;
     use TimestampsTrait;
 
-    public const STATUS_PENDING = 'pending';
-    public const STATUS_ACTIVE  = 'active';
-    public const STATUSES       = [
-        self::STATUS_PENDING,
-        self::STATUS_ACTIVE,
-    ];
-
-    #[ORM\OneToOne(mappedBy: "user", targetEntity: UserAvatar::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: UserAvatar::class, mappedBy: "user", cascade: ['persist', 'remove'])]
     protected ?UserAvatar $avatar = null;
 
-    #[ORM\OneToOne(mappedBy: "user", targetEntity: UserDetail::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: UserDetail::class, mappedBy: "user", cascade: ['persist', 'remove'])]
     protected UserDetail $detail;
 
-    #[ORM\OneToMany(mappedBy: "user", targetEntity: UserResetPassword::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: UserResetPassword::class, mappedBy: "user", cascade: ['persist', 'remove'])]
     protected Collection $resetPasswords;
 
     #[ORM\ManyToMany(targetEntity: UserRole::class)]
@@ -54,11 +48,8 @@ class User extends AbstractEntity implements UserEntityInterface
     #[ORM\Column(name: "password", type: "string", length: 191)]
     protected string $password;
 
-    #[ORM\Column(name: "status", type: "string", length: 20)]
-    protected string $status = self::STATUS_PENDING;
-
-    #[ORM\Column(name: "isDeleted", type: "boolean")]
-    protected bool $isDeleted = false;
+    #[ORM\Column(type: 'user_status_enum', options: ['default' => UserStatusEnum::Pending])]
+    protected UserStatusEnum $status = UserStatusEnum::Pending;
 
     #[ORM\Column(name: "hash", type: "string", length: 64, unique: true)]
     protected string $hash;
@@ -70,6 +61,7 @@ class User extends AbstractEntity implements UserEntityInterface
         $this->roles          = new ArrayCollection();
         $this->resetPasswords = new ArrayCollection();
 
+        $this->created();
         $this->renewHash();
     }
 
@@ -96,29 +88,14 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this;
     }
 
-    public function getStatus(): string
+    public function getStatus(): UserStatusEnum
     {
         return $this->status;
     }
 
-    /**
-     * @psalm-param 'active'|'pending' $status
-     */
-    public function setStatus(string $status): self
+    public function setStatus(UserStatusEnum $status): self
     {
         $this->status = $status;
-
-        return $this;
-    }
-
-    public function isDeleted(): bool
-    {
-        return $this->isDeleted;
-    }
-
-    public function setIsDeleted(bool $isDeleted): self
-    {
-        $this->isDeleted = $isDeleted;
 
         return $this;
     }
@@ -253,12 +230,12 @@ class User extends AbstractEntity implements UserEntityInterface
 
     public function activate(): self
     {
-        return $this->setStatus(self::STATUS_ACTIVE);
+        return $this->setStatus(UserStatusEnum::Active);
     }
 
     public function deactivate(): self
     {
-        return $this->setStatus(self::STATUS_PENDING);
+        return $this->setStatus(UserStatusEnum::Pending);
     }
 
     public static function generateHash(): string
@@ -273,19 +250,17 @@ class User extends AbstractEntity implements UserEntityInterface
 
     public function isActive(): bool
     {
-        return $this->status === self::STATUS_ACTIVE;
+        return $this->status === UserStatusEnum::Active;
     }
 
     public function isPending(): bool
     {
-        return $this->status === self::STATUS_PENDING;
+        return $this->status === UserStatusEnum::Pending;
     }
 
-    public function markAsDeleted(): self
+    public function isDeleted(): bool
     {
-        $this->isDeleted = true;
-
-        return $this;
+        return $this->status === UserStatusEnum::Deleted;
     }
 
     public function renewHash(): self
@@ -319,7 +294,6 @@ class User extends AbstractEntity implements UserEntityInterface
             'hash'           => $this->getHash(),
             'identity'       => $this->getIdentity(),
             'status'         => $this->getStatus(),
-            'isDeleted'      => $this->isDeleted(),
             'avatar'         => $this->getAvatar()?->getArrayCopy(),
             'detail'         => $this->getDetail()->getArrayCopy(),
             'roles'          => $this->getRoles()->map(function (UserRole $userRole) {

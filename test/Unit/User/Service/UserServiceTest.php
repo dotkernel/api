@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace ApiTest\Unit\User\Service;
 
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\NotFoundException;
 use Api\App\Repository\OAuthAccessTokenRepository;
 use Api\App\Repository\OAuthRefreshTokenRepository;
 use Api\User\Entity\User;
 use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserRole;
+use Api\User\Enum\UserStatusEnum;
 use Api\User\Repository\UserDetailRepository;
 use Api\User\Repository\UserRepository;
 use Api\User\Repository\UserResetPasswordRepository;
 use Api\User\Service\UserRoleService;
 use Api\User\Service\UserService as Subject;
+use Dot\Log\LoggerInterface;
 use Dot\Mail\Service\MailService;
 use Exception;
-use Laminas\Log\LoggerInterface;
 use Mezzio\Template\TemplateRendererInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 use function array_merge;
@@ -25,11 +29,11 @@ use function count;
 
 class UserServiceTest extends TestCase
 {
-    private Subject $subject;
-    private UserRoleService $userRoleService;
-    private UserRepository $userRepository;
-    private UserDetailRepository $userDetailRepository;
-    private UserResetPasswordRepository $userResetPasswordRepository;
+    private Subject|MockObject $subject;
+    private UserRoleService|MockObject $userRoleService;
+    private UserRepository|MockObject $userRepository;
+    private UserDetailRepository|MockObject $userDetailRepository;
+    private UserResetPasswordRepository|MockObject $userResetPasswordRepository;
 
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
@@ -54,6 +58,10 @@ class UserServiceTest extends TestCase
         );
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws ConflictException
+     */
     public function testCreateUserThrowsExceptionDuplicateIdentity(): void
     {
         $this->userRepository->method('findOneBy')->willReturn(
@@ -135,12 +143,10 @@ class UserServiceTest extends TestCase
 
         $this->assertSame($data['identity'], $user->getIdentity());
         $this->assertTrue(User::verifyPassword($data['password'], $user->getPassword()));
-        $this->assertInstanceOf(UserDetail::class, $user->getDetail());
         $this->assertSame($data['detail']['firstName'], $user->getDetail()->getFirstName());
         $this->assertSame($data['detail']['lastName'], $user->getDetail()->getLastName());
         $this->assertSame($data['detail']['email'], $user->getDetail()->getEmail());
-        $this->assertSame(User::STATUS_PENDING, $user->getStatus());
-        $this->assertFalse($user->isDeleted());
+        $this->assertSame(UserStatusEnum::Pending, $user->getStatus());
         $this->assertFalse($user->isActive());
     }
 
@@ -194,6 +200,9 @@ class UserServiceTest extends TestCase
                 'lastName'  => 'last',
                 'email'     => 'test@dotkernel2.com',
             ],
+            'roles'    => [
+                ['uuid' => 'uuid', 'name' => UserRole::ROLE_USER],
+            ],
         ];
 
         return array_merge($user, $data);
@@ -205,7 +214,7 @@ class UserServiceTest extends TestCase
         $user
             ->setIdentity($data['identity'] ?? '')
             ->usePassword($data['password'] ?? '')
-            ->setStatus($data['status'] ?? User::STATUS_PENDING)
+            ->setStatus($data['status'] ?? UserStatusEnum::Pending)
             ->setDetail(
                 (new UserDetail())
                     ->setUser($user)

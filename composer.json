@@ -55,18 +55,14 @@
         "dotkernel/dot-cli": "^3.5.0",
         "dotkernel/dot-data-fixtures": "^1.2.2",
         "dotkernel/dot-dependency-injection": "^1.0",
-        "dotkernel/dot-errorhandler": "^3.3.2",
-        "dotkernel/dot-mail": "^4.1.1",
+        "dotkernel/dot-errorhandler": "^4.0.0",
+        "dotkernel/dot-mail": "^5.1.0",
         "dotkernel/dot-response-header": "^3.2.3",
         "laminas/laminas-component-installer": "^3.4.0",
-        "laminas/laminas-config": "^3.9.0",
         "laminas/laminas-config-aggregator": "^1.14.0",
-        "laminas/laminas-http": "^2.19.0",
         "laminas/laminas-hydrator": "^4.15.0",
         "laminas/laminas-inputfilter": "^2.29.0",
-        "laminas/laminas-paginator": "^2.18.0",
         "laminas/laminas-stdlib": "^3.19.0",
-        "laminas/laminas-text": "^2.11.0",
         "mezzio/mezzio": "^3.19.0",
         "mezzio/mezzio-authentication-oauth2": "^2.8.0",
         "mezzio/mezzio-authorization-acl": "^1.10.0",
@@ -77,17 +73,20 @@
         "mezzio/mezzio-problem-details": "^1.13.1",
         "mezzio/mezzio-twigrenderer": "^2.15.0",
         "ramsey/uuid-doctrine": "^2.1.0",
-        "roave/psr-container-doctrine": "^5.1.0",
-        "doctrine/orm": "^3.2",
-        "symfony/filesystem": "^7.0.3"
+        "roave/psr-container-doctrine": "^5.2.1",
+        "symfony/filesystem": "^7.0.3",
+        "zircote/swagger-php": "^4.10"
     },
     "require-dev": {
-        "laminas/laminas-coding-standard": "^2.5",
+        "laminas/laminas-coding-standard": "^3.0",
         "laminas/laminas-development-mode": "^3.12.0",
         "mezzio/mezzio-tooling": "^2.9.0",
+        "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan-doctrine": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.0",
         "phpunit/phpunit": "^10.5.10",
         "roave/security-advisories": "dev-latest",
-        "vimeo/psalm": "^5.22.0"
+        "symfony/var-dumper": "^7.1"
     },
     "autoload": {
         "psr-4": {
@@ -104,8 +103,8 @@
         }
     },
     "scripts": {
-        "post-install-cmd": [
-            "@development-enable"
+        "post-update-cmd": [
+            "php bin/composer-post-install-script.php"
         ],
         "development-disable": "laminas-development-mode disable",
         "development-enable": "laminas-development-mode enable",
@@ -114,14 +113,13 @@
         "check": [
             "@cs-check",
             "@test",
-            "@analyze"
+            "@static-analysis"
         ],
-        "analyze": "phpstan analyze -l max -c ./phpstan.installer.neon ./src ./config",
         "clear-config-cache": "php bin/clear-config-cache.php",
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
         "serve": "php -S 0.0.0.0:8080 -t public/",
-        "static-analysis": "psalm --shepherd --stats",
+        "static-analysis": "phpstan analyse --memory-limit 1G",
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     }

@@ -9,7 +9,7 @@ use Mezzio\Authentication\UserInterface;
 class UserIdentity implements UserInterface
 {
     protected string $identity;
-    /** @var iterable<int|string, string> $roles */
+    /** @var array<int|string, string> $roles */
     protected array $roles;
     protected array $details;
 

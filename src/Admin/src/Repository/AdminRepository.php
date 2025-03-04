@@ -6,9 +6,7 @@ namespace Api\Admin\Repository;
 
 use Api\Admin\Collection\AdminCollection;
 use Api\Admin\Entity\Admin;
-use Api\App\Exception\ConflictException;
 use Api\App\Helper\PaginationHelper;
-use Api\App\Message;
 use Doctrine\ORM\EntityRepository;
 use Dot\DependencyInjection\Attribute\Entity;
 
@@ -24,15 +22,8 @@ class AdminRepository extends EntityRepository
         $this->getEntityManager()->flush();
     }
 
-    /**
-     * @throws ConflictException
-     */
     public function saveAdmin(Admin $admin): Admin
     {
-        if (! $admin->hasRoles()) {
-            throw new ConflictException(Message::RESTRICTION_ROLES);
-        }
-
         $this->getEntityManager()->persist($admin);
         $this->getEntityManager()->flush();
 

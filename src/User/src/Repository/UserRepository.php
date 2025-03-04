@@ -10,13 +10,13 @@ use Api\App\Helper\PaginationHelper;
 use Api\App\Message;
 use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
+use Api\User\Enum\UserStatusEnum;
 use Doctrine\ORM\EntityRepository;
 use Dot\DependencyInjection\Attribute\Entity;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use Mezzio\Authentication\OAuth2\Entity\UserEntity;
-use RuntimeException;
 
 use function password_verify;
 
@@ -52,17 +52,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             $qb->andWhere('user.status = :status')->setParameter('status', $filters['status']);
         }
 
-        if (isset($filters['deleted'])) {
-            switch ($filters['deleted']) {
-                case 'true':
-                    $qb->andWhere('user.isDeleted = :isDeleted')->setParameter('isDeleted', true);
-                    break;
-                case 'false':
-                    $qb->andWhere('user.isDeleted = :isDeleted')->setParameter('isDeleted', false);
-                    break;
-            }
-        }
-
         if (! empty($filters['search'])) {
             $qb->andWhere(
                 $qb->expr()->orX(
@@ -78,20 +67,15 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             $qb->andWhere('roles.name = :role')->setParameter('role', $filters['role']);
         }
 
+        //ignore deleted users
+        $qb->andWhere('user.status != :status')->setParameter('status', UserStatusEnum::Deleted);
         $qb->getQuery()->useQueryCache(true);
 
         return new UserCollection($qb, false);
     }
 
-    /**
-     * @throws RuntimeException
-     */
     public function saveUser(User $user): User
     {
-        if (! $user->hasRoles()) {
-            throw new RuntimeException(Message::RESTRICTION_ROLES);
-        }
-
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
 
@@ -122,8 +106,9 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
                 $qb->select(['u.password', 'u.status'])
                     ->from(User::class, 'u')
                     ->andWhere('u.identity = :identity')
-                    ->andWhere('u.isDeleted = 0')
-                    ->setParameter('identity', $username);
+                    ->andWhere('u.status != :status')
+                    ->setParameter('identity', $username)
+                    ->setParameter('status', UserStatusEnum::Deleted);
                 break;
             default:
                 throw new OAuthServerException(Message::INVALID_CLIENT_ID, 6, 'invalid_client', 401);
@@ -140,7 +125,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             return null;
         }
 
-        if ($clientEntity->getName() === 'frontend' && $result['status'] !== User::STATUS_ACTIVE) {
+        if ($clientEntity->getName() === 'frontend' && $result['status'] !== UserStatusEnum::Active) {
             throw new OAuthServerException(Message::USER_NOT_ACTIVATED, 6, 'inactive_user', 401);
         }
 

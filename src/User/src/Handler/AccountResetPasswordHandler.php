@@ -8,7 +8,7 @@ use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\ExpiredException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Handler\HandlerTrait;
+use Api\App\Handler\AbstractHandler;
 use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\InputFilter\ResetPasswordInputFilter;
@@ -16,29 +16,19 @@ use Api\User\InputFilter\UpdatePasswordInputFilter;
 use Api\User\Service\UserServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Dot\Mail\Exception\MailException;
-use Mezzio\Hal\HalResponseFactory;
-use Mezzio\Hal\ResourceGenerator;
+use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
 use function sprintf;
 
-class AccountResetPasswordHandler implements RequestHandlerInterface
+class AccountResetPasswordHandler extends AbstractHandler
 {
-    use HandlerTrait;
-
     #[Inject(
-        HalResponseFactory::class,
-        ResourceGenerator::class,
         UserServiceInterface::class,
-        "config",
     )]
     public function __construct(
-        protected HalResponseFactory $responseFactory,
-        protected ResourceGenerator $resourceGenerator,
         protected UserServiceInterface $userService,
-        protected array $config,
     ) {
     }
 
@@ -123,6 +113,6 @@ class AccountResetPasswordHandler implements RequestHandlerInterface
         $this->userService->updateUser($user->createResetPassword());
         $this->userService->sendResetPasswordRequestedMail($user);
 
-        return $this->infoResponse(Message::MAIL_SENT_RESET_PASSWORD);
+        return $this->infoResponse(Message::MAIL_SENT_RESET_PASSWORD, StatusCodeInterface::STATUS_CREATED);
     }
 }

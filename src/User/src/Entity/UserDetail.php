@@ -16,7 +16,7 @@ class UserDetail extends AbstractEntity
 {
     use TimestampsTrait;
 
-    #[ORM\OneToOne(inversedBy: "detail", targetEntity: User::class)]
+    #[ORM\OneToOne(targetEntity: User::class, inversedBy: "detail")]
     #[ORM\JoinColumn(name: "userUuid", referencedColumnName: "uuid")]
     protected User $user;
 
@@ -28,6 +28,13 @@ class UserDetail extends AbstractEntity
 
     #[ORM\Column(name: "email", type: "string", length: 191)]
     protected string $email;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->created();
+    }
 
     public function getUser(): User
     {
@@ -80,6 +87,7 @@ class UserDetail extends AbstractEntity
     public function getArrayCopy(): array
     {
         return [
+            'uuid'      => $this->getUuid()->toString(),
             'firstName' => $this->getFirstName(),
             'lastName'  => $this->getLastName(),
             'email'     => $this->getEmail(),

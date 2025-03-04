@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Api\App\Middleware;
 
-use Api\App\Handler\ResponseTrait;
 use Dot\DependencyInjection\Attribute\Inject;
+use Fig\Http\Message\StatusCodeInterface;
+use Laminas\Diactoros\Response\JsonResponse;
 use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -22,10 +23,8 @@ use function str_contains;
 use function strtok;
 use function trim;
 
-class ContentNegotiationMiddleware implements MiddlewareInterface
+readonly class ContentNegotiationMiddleware implements MiddlewareInterface
 {
-    use ResponseTrait;
-
     #[Inject(
         "config.content-negotiation",
     )]
@@ -58,6 +57,7 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         $response = $handler->handle($request);
 
         $responseContentType = $response->getHeaderLine('Content-Type');
+
         if (! $this->validateResponseContentType($responseContentType, $accept)) {
             return $this->notAcceptableResponse('Unable to resolve Accept header to a representation');
         }
@@ -98,15 +98,17 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
             return true;
         }
 
+        $contentType = explode(';', $contentType);
+
         $acceptList = $this->config['default']['Content-Type'] ?? [];
         if (! empty($this->config[$routeName]['Content-Type'])) {
             $acceptList = $this->config[$routeName]['Content-Type'] ?? [];
         }
 
         if (is_array($acceptList)) {
-            return in_array($contentType, $acceptList, true);
+            return ! empty(array_intersect($contentType, $acceptList));
         } else {
-            return $contentType === $acceptList;
+            return in_array($acceptList, $contentType, true);
         }
     }
 
@@ -129,5 +131,15 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         }
 
         return in_array($contentType, $accept, true);
+    }
+
+    public function notAcceptableResponse(string $message): ResponseInterface
+    {
+        return new JsonResponse(['messages' => [$message]], StatusCodeInterface::STATUS_NOT_ACCEPTABLE);
+    }
+
+    public function unsupportedMediaTypeResponse(string $message): ResponseInterface
+    {
+        return new JsonResponse(['messages' => [$message]], StatusCodeInterface::STATUS_UNSUPPORTED_MEDIA_TYPE);
     }
 }

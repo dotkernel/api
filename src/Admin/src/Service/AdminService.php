@@ -6,12 +6,16 @@ namespace Api\Admin\Service;
 
 use Api\Admin\Collection\AdminCollection;
 use Api\Admin\Entity\Admin;
-use Api\Admin\Entity\AdminRole;
+use Api\Admin\Enum\AdminStatusEnum;
 use Api\Admin\Repository\AdminRepository;
+use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
+
+use function in_array;
+use function sprintf;
 
 class AdminService implements AdminServiceInterface
 {
@@ -40,17 +44,11 @@ class AdminService implements AdminServiceInterface
             ->usePassword($data['password'])
             ->setFirstName($data['firstName'])
             ->setLastName($data['lastName'])
-            ->setStatus($data['status'] ?? Admin::STATUS_ACTIVE);
+            ->setStatus($data['status'] ?? AdminStatusEnum::Active);
 
-        if (! empty($data['roles'])) {
-            foreach ($data['roles'] as $roleData) {
-                $admin->addRole(
-                    $this->adminRoleService->findOneBy(['uuid' => $roleData['uuid']])
-                );
-            }
-        } else {
+        foreach ($data['roles'] as $roleData) {
             $admin->addRole(
-                $this->adminRoleService->findOneBy(['name' => AdminRole::ROLE_ADMIN])
+                $this->adminRoleService->findOneBy(['uuid' => $roleData['uuid']])
             );
         }
 
@@ -66,8 +64,15 @@ class AdminService implements AdminServiceInterface
 
     public function exists(string $identity = ''): bool
     {
+        return $this->adminRepository->findOneBy(['identity' => $identity]) instanceof Admin;
+    }
+
+    public function existsOther(string $identity = '', string $uuid = ''): bool
+    {
         try {
-            return $this->findOneBy(['identity' => $identity]) instanceof Admin;
+            $admin = $this->findOneBy(['identity' => $identity]);
+
+            return $admin->getUuid()->toString() !== $uuid;
         } catch (NotFoundException) {
             return false;
         }
@@ -86,17 +91,39 @@ class AdminService implements AdminServiceInterface
         return $admin;
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function getAdmins(array $params = []): AdminCollection
     {
+        $values = [
+            'admin.identity',
+            'admin.firstName',
+            'admin.lastName',
+            'admin.status',
+            'admin.created',
+            'admin.updated',
+        ];
+
+        $params['order'] = $params['order'] ?? 'admin.created';
+        if (! in_array($params['order'], $values)) {
+            throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'order')]);
+        }
+
         return $this->adminRepository->getAdmins($params);
     }
 
     /**
+     * @throws BadRequestException
      * @throws ConflictException
      * @throws NotFoundException
      */
     public function updateAdmin(Admin $admin, array $data = []): Admin
     {
+        if (isset($data['identity']) && $this->existsOther($data['identity'], $admin->getUuid()->toString())) {
+            throw new ConflictException(Message::DUPLICATE_IDENTITY);
+        }
+
         if (! empty($data['password'])) {
             $admin->usePassword($data['password']);
         }
@@ -120,6 +147,10 @@ class AdminService implements AdminServiceInterface
                     $this->adminRoleService->findOneBy(['uuid' => $roleData['uuid']])
                 );
             }
+        }
+
+        if (! $admin->hasRoles()) {
+            throw (new BadRequestException())->setMessages([Message::RESTRICTION_ROLES]);
         }
 
         return $this->adminRepository->saveAdmin($admin);

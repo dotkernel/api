@@ -6,6 +6,7 @@ namespace ApiTest\Unit\Admin\Service;
 
 use Api\Admin\Entity\Admin;
 use Api\Admin\Entity\AdminRole;
+use Api\Admin\Enum\AdminStatusEnum;
 use Api\Admin\Repository\AdminRepository;
 use Api\Admin\Service\AdminRoleService;
 use Api\Admin\Service\AdminService as Subject;
@@ -20,8 +21,8 @@ use function count;
 class AdminServiceTest extends TestCase
 {
     private Subject|MockObject $subject;
-    private AdminRoleService $adminRoleService;
-    private AdminRepository $adminRepository;
+    private AdminRoleService|MockObject $adminRoleService;
+    private AdminRepository|MockObject $adminRepository;
 
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
@@ -81,7 +82,7 @@ class AdminServiceTest extends TestCase
         $this->assertTrue(Admin::verifyPassword($data['password'], $admin->getPassword()));
         $this->assertCount(count($data['roles']), $admin->getRoles());
         $this->assertSame($role->getName(), ($admin->getRoles()->first())->getName());
-        $this->assertSame(Admin::STATUS_ACTIVE, $admin->getStatus());
+        $this->assertSame(AdminStatusEnum::Active, $admin->getStatus());
     }
 
     private function getAdmin(array $data = []): array
@@ -103,7 +104,7 @@ class AdminServiceTest extends TestCase
             ->usePassword($data['password'] ?? '')
             ->setFirstName($data['firstName'] ?? '')
             ->setLastName($data['lastName'] ?? '')
-            ->setStatus($data['status'] ?? Admin::STATUS_ACTIVE);
+            ->setStatus($data['status'] ?? AdminStatusEnum::Active);
 
         foreach ($data['roles'] ?? [] as $role) {
             $admin->addRole(

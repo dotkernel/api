@@ -8,6 +8,8 @@ use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\Entity\UserAvatar;
 use Api\User\Entity\UserResetPassword;
+use Api\User\Enum\UserResetPasswordStatusEnum;
+use Api\User\Enum\UserStatusEnum;
 use Api\User\Service\UserAvatarService;
 use DateInterval;
 use DateTimeImmutable;
@@ -39,13 +41,13 @@ class UserTest extends AbstractFunctionalTest
     public function testRegisterAccountDuplicateIdentity(): void
     {
         $this->createUser([
-            'status' => User::STATUS_PENDING,
+            'status' => UserStatusEnum::Pending,
         ]);
 
         $userAvatarService = $this->createMock(UserAvatarService::class);
         $this->replaceService(UserAvatarService::class, $userAvatarService);
 
-        $response = $this->post('/user', $this->getValidUserData());
+        $response = $this->post('/user', $this->getValidUserData(['status' => UserStatusEnum::Pending->value]));
         $this->assertResponseConflict($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
@@ -65,13 +67,13 @@ class UserTest extends AbstractFunctionalTest
     {
         $this->createUser([
             'identity' => 'foo@dotkernel.com',
-            'status'   => User::STATUS_PENDING,
+            'status'   => UserStatusEnum::Pending,
         ]);
 
         $userAvatarService = $this->createMock(UserAvatarService::class);
         $this->replaceService(UserAvatarService::class, $userAvatarService);
 
-        $response = $this->post('/user', $this->getValidUserData());
+        $response = $this->post('/user', $this->getValidUserData(['status' => UserStatusEnum::Pending->value]));
         $this->assertResponseConflict($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
@@ -83,7 +85,9 @@ class UserTest extends AbstractFunctionalTest
     }
 
     /**
+     * @throws ContainerExceptionInterface
      * @throws Exception
+     * @throws NotFoundExceptionInterface
      */
     public function testRegisterAccount(): void
     {
@@ -94,7 +98,7 @@ class UserTest extends AbstractFunctionalTest
         $this->replaceService(MailService::class, $mailService);
 
         $user = $this->getValidUserData([
-            'status' => User::STATUS_PENDING,
+            'status' => UserStatusEnum::Pending->value,
         ]);
 
         $response = $this->post('/user', $user);
@@ -103,8 +107,7 @@ class UserTest extends AbstractFunctionalTest
         $data = json_decode($response->getBody()->getContents(), true);
 
         $this->assertSame($user['identity'], $data['identity']);
-        $this->assertSame(User::STATUS_PENDING, $data['status']);
-        $this->assertFalse($data['isDeleted']);
+        $this->assertSame(UserStatusEnum::Pending->value, $data['status']);
         $this->assertArrayHasKey('detail', $data);
         $this->assertArrayHasKey('email', $data['detail']);
         $this->assertArrayHasKey('firstName', $data['detail']);
@@ -239,7 +242,7 @@ class UserTest extends AbstractFunctionalTest
     public function testActivateMyAccount(): void
     {
         $user = $this->createUser([
-            'status' => User::STATUS_PENDING,
+            'status' => UserStatusEnum::Pending,
         ]);
         $this->assertFalse($user->isActive());
 
@@ -248,7 +251,7 @@ class UserTest extends AbstractFunctionalTest
 
         $userRepository = $this->getEntityManager()->getRepository(User::class);
         $user           = $userRepository->find($user->getUuid()->toString());
-        $this->assertTrue($user->isActive());
+        $this->assertTrue($user?->isActive());
     }
 
     /**
@@ -259,7 +262,7 @@ class UserTest extends AbstractFunctionalTest
     public function testActivateAccountByEmail(): void
     {
         $user = $this->createUser([
-            'status' => User::STATUS_PENDING,
+            'status' => UserStatusEnum::Pending,
         ]);
 
         $mailService = $this->createMock(MailService::class);
@@ -293,7 +296,7 @@ class UserTest extends AbstractFunctionalTest
 
         $userRepository = $this->getEntityManager()->getRepository(User::class);
         $deletedUser    = $userRepository->find($user->getUuid()->toString());
-        $this->assertTrue($deletedUser->isDeleted());
+        $this->assertTrue($deletedUser?->isDeleted());
     }
 
     public function testRequestResetPasswordInvalidHash(): void
@@ -313,7 +316,7 @@ class UserTest extends AbstractFunctionalTest
 
         $resetPassword = (new UserResetPassword())
             ->setUser($user)
-            ->setStatus(UserResetPassword::STATUS_REQUESTED)
+            ->setStatus(UserResetPasswordStatusEnum::Requested)
             ->setHash('test')
             ->setExpires((new DateTimeImmutable())->sub(new DateInterval('P1D')));
         $user->addResetPassword($resetPassword);
@@ -352,7 +355,7 @@ class UserTest extends AbstractFunctionalTest
 
         $resetPassword = (new UserResetPassword())
             ->setUser($user)
-            ->setStatus(UserResetPassword::STATUS_COMPLETED)
+            ->setStatus(UserResetPasswordStatusEnum::Completed)
             ->setHash('test')
             ->setExpires((new DateTimeImmutable())->add(new DateInterval('P1D')));
         $user->addResetPassword($resetPassword);
@@ -391,7 +394,7 @@ class UserTest extends AbstractFunctionalTest
 
         $resetPassword = (new UserResetPassword())
             ->setUser($user)
-            ->setStatus(UserResetPassword::STATUS_REQUESTED)
+            ->setStatus(UserResetPasswordStatusEnum::Requested)
             ->setHash('test')
             ->setExpires((new DateTimeImmutable())->add(new DateInterval('P1D')));
         $user->addResetPassword($resetPassword);
@@ -431,7 +434,7 @@ class UserTest extends AbstractFunctionalTest
         $response = $this->post('/account/reset-password', [
             'email' => $user->getDetail()->getEmail(),
         ]);
-        $this->assertResponseOk($response);
+        $this->assertResponseCreated($response);
         $this->assertCount(1, $user->getResetPasswords());
     }
 

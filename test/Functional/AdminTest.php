@@ -10,6 +10,8 @@ use Api\App\Message;
 use Api\User\Entity\User;
 use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserRole;
+use Api\User\Enum\UserStatusEnum;
+use BackedEnum;
 use Dot\Mail\Service\MailService;
 use PHPUnit\Framework\MockObject\Exception;
 use Psr\Container\ContainerExceptionInterface;
@@ -173,6 +175,7 @@ class AdminTest extends AbstractFunctionalTest
         $adminRepository     = $this->getEntityManager()->getRepository(Admin::class);
 
         $adminRole = $adminRoleRepository->findOneBy(['name' => AdminRole::ROLE_ADMIN]);
+        $this->assertInstanceOf(AdminRole::class, $adminRole);
 
         $requestBody = [
             'identity'        => 'newadmin@test.com',
@@ -192,6 +195,7 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertResponseCreated($response);
 
         $newAdmin = $adminRepository->findOneBy(['identity' => $requestBody['identity']]);
+        $this->assertInstanceOf(Admin::class, $newAdmin);
         $this->assertSame($requestBody['identity'], $newAdmin->getIdentity());
         $this->assertSame($requestBody['firstName'], $newAdmin->getFirstName());
         $this->assertSame($requestBody['lastName'], $newAdmin->getLastName());
@@ -330,15 +334,21 @@ class AdminTest extends AbstractFunctionalTest
 
         $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
+        $userRole = $this->findUserRole(UserRole::ROLE_USER);
+        $this->assertInstanceOf(UserRole::class, $userRole);
+
         $userData = [
             'identity'        => 'test@user.com',
             'password'        => self::DEFAULT_PASSWORD,
             'passwordConfirm' => self::DEFAULT_PASSWORD,
-            'status'          => 'pending',
+            'status'          => UserStatusEnum::Pending->value,
             'detail'          => [
                 'firstName' => 'User',
                 'lastName'  => 'Test',
                 'email'     => 'user1@test.com',
+            ],
+            'roles'           => [
+                ['uuid' => $userRole->getUuid()->toString()],
             ],
         ];
 
@@ -363,6 +373,7 @@ class AdminTest extends AbstractFunctionalTest
 
         $userRoleRepository = $this->getEntityManager()->getRepository(UserRole::class);
         $userRole           = $userRoleRepository->findOneBy(['name' => UserRole::ROLE_USER]);
+        $this->assertInstanceOf(UserRole::class, $userRole);
 
         $mailService = $this->createMock(MailService::class);
         $this->replaceService(MailService::class, $mailService);
@@ -371,11 +382,14 @@ class AdminTest extends AbstractFunctionalTest
             'identity'        => 'test@user.com',
             'password'        => self::DEFAULT_PASSWORD,
             'passwordConfirm' => self::DEFAULT_PASSWORD,
-            'status'          => 'pending',
+            'status'          => UserStatusEnum::Pending->value,
             'detail'          => [
                 'firstName' => 'User',
                 'lastName'  => 'Test',
                 'email'     => 'test@user.com',
+            ],
+            'roles'           => [
+                ['uuid' => $userRole->getUuid()->toString()],
             ],
         ];
 
@@ -387,15 +401,13 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertArrayHasKey('hash', $data);
         $this->assertArrayHasKey('identity', $data);
         $this->assertArrayHasKey('status', $data);
-        $this->assertArrayHasKey('isDeleted', $data);
         $this->assertArrayHasKey('avatar', $data);
         $this->assertArrayHasKey('detail', $data);
         $this->assertArrayHasKey('roles', $data);
         $this->assertNotEmpty($data['uuid']);
         $this->assertNotEmpty($data['hash']);
         $this->assertSame($userData['identity'], $data['identity']);
-        $this->assertSame(User::STATUS_PENDING, $data['status']);
-        $this->assertFalse($data['isDeleted']);
+        $this->assertSame(UserStatusEnum::Pending->value, $data['status']);
         $this->assertEmpty($data['avatar']);
         $this->assertEmpty($data['resetPasswords']);
         $this->assertArrayHasKey('firstName', $data['detail']);
@@ -417,19 +429,19 @@ class AdminTest extends AbstractFunctionalTest
     {
         $admin = $this->createAdmin();
         $user  = $this->createUser([
-            'status' => User::STATUS_PENDING,
+            'status' => UserStatusEnum::Pending,
         ]);
         $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $this->assertFalse($user->isActive());
-        $response = $this->post(sprintf('/user/%s/activate', $user->getUuid()->toString()));
+        $response = $this->patch(sprintf('/user/%s/activate', $user->getUuid()->toString()));
 
         $this->assertResponseOk($response);
 
         $userRepository = $this->getEntityManager()->getRepository(User::class);
         $user           = $userRepository->find($user->getUuid()->toString());
 
-        $this->assertTrue($user->isActive());
+        $this->assertTrue($user?->isActive());
     }
 
     /**
@@ -449,7 +461,7 @@ class AdminTest extends AbstractFunctionalTest
         $userRepository = $this->getEntityManager()->getRepository(User::class);
         $user           = $userRepository->find($user->getUuid()->toString());
 
-        $this->assertTrue($user->isDeleted());
+        $this->assertTrue($user?->isDeleted());
     }
 
     /**
@@ -493,7 +505,7 @@ class AdminTest extends AbstractFunctionalTest
 
         $userDetailRepository = $this->getEntityManager()->getRepository(UserDetail::class);
         $userDetail           = $userDetailRepository->find($user2->getDetail()->getUuid());
-        $this->assertSame($user2->getDetail()->getEmail(), $userDetail->getEmail());
+        $this->assertSame($user2->getDetail()->getEmail(), $userDetail?->getEmail());
     }
 
     /**
@@ -516,7 +528,7 @@ class AdminTest extends AbstractFunctionalTest
                 'lastName'  => 'Bar',
                 'email'     => 'foobar@dotkernel.com',
             ],
-            'status' => User::STATUS_ACTIVE,
+            'status' => UserStatusEnum::Active->value,
             'roles'  => [
                 [
                     'uuid' => $userRole->getUuid()->toString(),
@@ -530,7 +542,8 @@ class AdminTest extends AbstractFunctionalTest
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertSame($updateData['status'], $data['status']);
+        $status = UserStatusEnum::tryFrom($updateData['status']);
+        $this->assertInstanceOf(BackedEnum::class, $status);
         $this->assertSame($updateData['detail']['firstName'], $data['detail']['firstName']);
         $this->assertSame($updateData['detail']['lastName'], $data['detail']['lastName']);
         $this->assertSame($updateData['roles'][0]['uuid'], $data['roles'][0]['uuid']);

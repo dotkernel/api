@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
+use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Message;
@@ -13,18 +14,19 @@ use Api\User\Collection\UserCollection;
 use Api\User\Entity\User;
 use Api\User\Entity\UserDetail;
 use Api\User\Entity\UserResetPassword;
-use Api\User\Entity\UserRole;
+use Api\User\Enum\UserStatusEnum;
 use Api\User\Repository\UserDetailRepository;
 use Api\User\Repository\UserRepository;
 use Api\User\Repository\UserResetPasswordRepository;
 use Dot\DependencyInjection\Attribute\Inject;
+use Dot\Log\LoggerInterface;
 use Dot\Mail\Exception\MailException;
 use Dot\Mail\Service\MailService;
-use Laminas\Log\LoggerInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use RuntimeException;
 
 use function date;
+use function in_array;
 use function sprintf;
 
 class UserService implements UserServiceInterface
@@ -55,9 +57,6 @@ class UserService implements UserServiceInterface
     ) {
     }
 
-    /**
-     * @throws RuntimeException
-     */
     public function activateUser(User $user): User
     {
         return $this->userRepository->saveUser($user->activate());
@@ -66,7 +65,6 @@ class UserService implements UserServiceInterface
     /**
      * @throws ConflictException
      * @throws NotFoundException
-     * @throws RuntimeException
      */
     public function createUser(array $data = []): User
     {
@@ -87,7 +85,7 @@ class UserService implements UserServiceInterface
             ->setDetail($detail)
             ->setIdentity($data['identity'])
             ->usePassword($data['password'])
-            ->setStatus($data['status'] ?? User::STATUS_PENDING);
+            ->setStatus($data['status'] ?? UserStatusEnum::Pending);
         $detail->setUser($user);
 
         if (! empty($data['roles'])) {
@@ -96,10 +94,6 @@ class UserService implements UserServiceInterface
                     $this->userRoleService->findOneBy(['uuid' => $roleData['uuid']])
                 );
             }
-        } else {
-            $user->addRole(
-                $this->userRoleService->findOneBy(['name' => UserRole::ROLE_USER])
-            );
         }
 
         return $this->userRepository->saveUser($user);
@@ -121,7 +115,7 @@ class UserService implements UserServiceInterface
     {
         $this->revokeTokens($user);
 
-        return $this->anonymizeUser($user->markAsDeleted());
+        return $this->anonymizeUser($user->setStatus(UserStatusEnum::Deleted));
     }
 
     /**
@@ -132,7 +126,7 @@ class UserService implements UserServiceInterface
         $placeholder = $this->getAnonymousPlaceholder();
 
         $user
-            ->setIdentity($placeholder)
+            ->setIdentity($placeholder . $this->config['userAnonymizeAppend'])
             ->getDetail()
                 ->setFirstName($placeholder)
                 ->setLastName($placeholder)
@@ -204,7 +198,7 @@ class UserService implements UserServiceInterface
     public function findByEmail(string $email): User
     {
         $user = $this->userDetailRepository->findOneBy(['email' => $email])?->getUser();
-        if (! $user instanceof User) {
+        if (! $user instanceof User || $user->isDeleted()) {
             throw new NotFoundException(Message::USER_NOT_FOUND);
         }
 
@@ -225,15 +219,30 @@ class UserService implements UserServiceInterface
     public function findOneBy(array $params = []): User
     {
         $user = $this->userRepository->findOneBy($params);
-        if (! $user instanceof User) {
+        if (! $user instanceof User || $user->isDeleted()) {
             throw new NotFoundException(Message::USER_NOT_FOUND);
         }
 
         return $user;
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function getUsers(array $params = []): UserCollection
     {
+        $values = [
+            'user.identity',
+            'user.status',
+            'user.created',
+            'user.updated',
+        ];
+
+        $params['order'] = $params['order'] ?? 'user.created';
+        if (! in_array($params['order'], $values)) {
+            throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'order')]);
+        }
+
         return $this->userRepository->getUsers($params);
     }
 
@@ -334,9 +343,9 @@ class UserService implements UserServiceInterface
     }
 
     /**
+     * @throws BadRequestException
      * @throws ConflictException
      * @throws NotFoundException
-     * @throws RuntimeException
      */
     public function updateUser(User $user, array $data = []): User
     {
@@ -344,6 +353,7 @@ class UserService implements UserServiceInterface
             if ($this->existsOther($data['identity'], $user->getUuid()->toString())) {
                 throw new ConflictException(Message::DUPLICATE_IDENTITY);
             }
+            $user->setIdentity($data['identity']);
         }
 
         if (isset($data['detail']['email'])) {
@@ -358,10 +368,6 @@ class UserService implements UserServiceInterface
 
         if (isset($data['status'])) {
             $user->setStatus($data['status']);
-        }
-
-        if (isset($data['isDeleted'])) {
-            $user->setIsDeleted($data['isDeleted']);
         }
 
         if (isset($data['hash'])) {
@@ -389,6 +395,10 @@ class UserService implements UserServiceInterface
                     $this->userRoleService->findOneBy(['uuid' => $roleData['uuid']])
                 );
             }
+        }
+
+        if (! $user->hasRoles()) {
+            throw (new BadRequestException())->setMessages([Message::RESTRICTION_ROLES]);
         }
 
         return $this->userRepository->saveUser($user);
