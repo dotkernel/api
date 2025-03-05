@@ -1,0 +1,53 @@
+on:
+  - push
+
+name: Validate database schema
+
+jobs:
+  validate-database-schema:
+    name: Validate database schema
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      TEST_MODE: "true"
+
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+
+        php:
+          - "8.2"
+          - "8.3"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "${{ matrix.php }}"
+          extensions: pdo, pdo_sqlite
+
+      - name: Determine composer cache directory
+        run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
+
+      - name: Cache dependencies installed with composer
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: php${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            php${{ matrix.php }}-composer-
+
+      - name: Install dependencies with composer
+        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
+
+      - name: Validate database schema
+        run: php bin/doctrine orm:validate-schema --skip-sync
