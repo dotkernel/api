@@ -8,10 +8,6 @@ use Api\App\ConfigProvider as AppConfigProvider;
 use Api\App\Factory\HandlerDelegatorFactory;
 use Api\User\Collection\UserCollection;
 use Api\User\Collection\UserRoleCollection;
-use Api\User\Entity\User;
-use Api\User\Entity\UserAvatar;
-use Api\User\Entity\UserRole;
-use Api\User\EventListener\UserAvatarEventListener;
 use Api\User\Handler\AccountActivateHandler;
 use Api\User\Handler\AccountAvatarHandler;
 use Api\User\Handler\AccountHandler;
@@ -23,18 +19,21 @@ use Api\User\Handler\UserCollectionHandler;
 use Api\User\Handler\UserHandler;
 use Api\User\Handler\UserRoleCollectionHandler;
 use Api\User\Handler\UserRoleHandler;
-use Api\User\Repository\UserAvatarRepository;
-use Api\User\Repository\UserDetailRepository;
-use Api\User\Repository\UserRepository;
-use Api\User\Repository\UserResetPasswordRepository;
-use Api\User\Repository\UserRoleRepository;
 use Api\User\Service\UserAvatarService;
 use Api\User\Service\UserAvatarServiceInterface;
 use Api\User\Service\UserRoleService;
 use Api\User\Service\UserRoleServiceInterface;
 use Api\User\Service\UserService;
 use Api\User\Service\UserServiceInterface;
-use Doctrine\ORM\Mapping\Driver\AttributeDriver;
+use Core\User\Entity\User;
+use Core\User\Entity\UserAvatar;
+use Core\User\Entity\UserRole;
+use Core\User\EventListener\UserAvatarEventListener;
+use Core\User\Repository\UserAvatarRepository;
+use Core\User\Repository\UserDetailRepository;
+use Core\User\Repository\UserRepository;
+use Core\User\Repository\UserResetPasswordRepository;
+use Core\User\Repository\UserRoleRepository;
 use Dot\DependencyInjection\Factory\AttributedRepositoryFactory;
 use Dot\DependencyInjection\Factory\AttributedServiceFactory;
 use Mezzio\Application;
@@ -46,7 +45,6 @@ class ConfigProvider
     {
         return [
             'dependencies'     => $this->getDependencies(),
-            'doctrine'         => $this->getDoctrineConfig(),
             MetadataMap::class => $this->getHalConfig(),
             'templates'        => $this->getTemplates(),
         ];
@@ -95,24 +93,6 @@ class ConfigProvider
                 UserAvatarServiceInterface::class => UserAvatarService::class,
                 UserRoleServiceInterface::class   => UserRoleService::class,
                 UserServiceInterface::class       => UserService::class,
-            ],
-        ];
-    }
-
-    private function getDoctrineConfig(): array
-    {
-        return [
-            'driver' => [
-                'orm_default'  => [
-                    'drivers' => [
-                        'Api\User\Entity' => 'UserEntities',
-                    ],
-                ],
-                'UserEntities' => [
-                    'class' => AttributeDriver::class,
-                    'cache' => 'array',
-                    'paths' => __DIR__ . '/Entity',
-                ],
             ],
         ];
     }

@@ -7,23 +7,22 @@ namespace Api\Admin;
 use Api\Admin\Collection\AdminCollection;
 use Api\Admin\Collection\AdminRoleCollection;
 use Api\Admin\Command\AdminCreateCommand;
-use Api\Admin\Entity\Admin;
-use Api\Admin\Entity\AdminRole;
 use Api\Admin\Factory\AdminCreateCommandFactory;
 use Api\Admin\Handler\AdminAccountHandler;
 use Api\Admin\Handler\AdminCollectionHandler;
 use Api\Admin\Handler\AdminHandler;
 use Api\Admin\Handler\AdminRoleCollectionHandler;
 use Api\Admin\Handler\AdminRoleHandler;
-use Api\Admin\Repository\AdminRepository;
-use Api\Admin\Repository\AdminRoleRepository;
 use Api\Admin\Service\AdminRoleService;
 use Api\Admin\Service\AdminRoleServiceInterface;
 use Api\Admin\Service\AdminService;
 use Api\Admin\Service\AdminServiceInterface;
 use Api\App\ConfigProvider as AppConfigProvider;
 use Api\App\Factory\HandlerDelegatorFactory;
-use Doctrine\ORM\Mapping\Driver\AttributeDriver;
+use Core\Admin\Entity\Admin;
+use Core\Admin\Entity\AdminRole;
+use Core\Admin\Repository\AdminRepository;
+use Core\Admin\Repository\AdminRoleRepository;
 use Dot\DependencyInjection\Factory\AttributedRepositoryFactory;
 use Dot\DependencyInjection\Factory\AttributedServiceFactory;
 use Mezzio\Application;
@@ -35,7 +34,6 @@ class ConfigProvider
     {
         return [
             'dependencies'     => $this->getDependencies(),
-            'doctrine'         => $this->getDoctrineConfig(),
             MetadataMap::class => $this->getHalConfig(),
         ];
     }
@@ -66,24 +64,6 @@ class ConfigProvider
             'aliases'    => [
                 AdminRoleServiceInterface::class => AdminRoleService::class,
                 AdminServiceInterface::class     => AdminService::class,
-            ],
-        ];
-    }
-
-    private function getDoctrineConfig(): array
-    {
-        return [
-            'driver' => [
-                'orm_default'   => [
-                    'drivers' => [
-                        'Api\Admin\Entity' => 'AdminEntities',
-                    ],
-                ],
-                'AdminEntities' => [
-                    'class' => AttributeDriver::class,
-                    'cache' => 'array',
-                    'paths' => __DIR__ . '/Entity',
-                ],
             ],
         ];
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\App\Factory;
 
-use Api\App\Entity\OAuthRefreshToken;
+use Core\App\Entity\OAuthRefreshToken;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Psr\Container\ContainerExceptionInterface;

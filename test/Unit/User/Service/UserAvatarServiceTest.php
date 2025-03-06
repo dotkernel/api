@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace ApiTest\Unit\User\Service;
 
-use Api\User\Entity\User;
-use Api\User\Entity\UserAvatar;
-use Api\User\Repository\UserAvatarRepository;
 use Api\User\Service\UserAvatarService;
+use Core\User\Entity\User;
+use Core\User\Entity\UserAvatar;
+use Core\User\Repository\UserAvatarRepository;
 use Laminas\Diactoros\UploadedFile;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;

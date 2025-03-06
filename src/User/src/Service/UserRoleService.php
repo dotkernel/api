@@ -6,10 +6,10 @@ namespace Api\User\Service;
 
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Message;
 use Api\User\Collection\UserRoleCollection;
-use Api\User\Entity\UserRole;
-use Api\User\Repository\UserRoleRepository;
+use Core\App\Message;
+use Core\User\Entity\UserRole;
+use Core\User\Repository\UserRoleRepository;
 use Dot\DependencyInjection\Attribute\Inject;
 
 use function in_array;
@@ -54,6 +54,9 @@ class UserRoleService implements UserRoleServiceInterface
             throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'order')]);
         }
 
-        return $this->roleRepository->getRoles($params);
+        $qb = $this->roleRepository->getRoles($params);
+        $qb->getQuery()->useQueryCache(true);
+
+        return new UserRoleCollection($qb, false);
     }
 }

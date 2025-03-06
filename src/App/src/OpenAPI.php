@@ -13,7 +13,7 @@ use OpenApi\Attributes as OA;
 #[OA\Info(version: '1.0', title: 'DotKernel API')]
 #[OA\Server(url: 'http://api.dotkernel.localhost', description: 'Local development server')]
 #[OA\SecurityScheme(securityScheme: 'AuthToken', type: 'http', in: 'header', bearerFormat: 'JWT', scheme: 'bearer')]
-#[OA\SecurityScheme(securityScheme: 'ErrorReportingToken', type: 'apiKey', in: 'header', name: 'Error-Reporting-Token')]
+#[OA\SecurityScheme(securityScheme: 'ErrorReportingToken', type: 'apiKey', name: 'Error-Reporting-Token', in: 'header')]
 
 #[OA\ExternalDocumentation(
     description: 'Dotkernel API documentation',

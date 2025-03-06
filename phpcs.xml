@@ -18,6 +18,8 @@
     <file>src</file>
     <file>test</file>
 
+    <exclude-pattern>src/Core/src/App/src/Migration/*</exclude-pattern>
+
     <!-- Include all rules from the Laminas Coding Standard -->
     <rule ref="LaminasCodingStandard">
         <!-- Exclude rule -->

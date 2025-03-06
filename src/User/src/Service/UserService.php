@@ -7,17 +7,17 @@ namespace Api\User\Service;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Message;
-use Api\App\Repository\OAuthAccessTokenRepository;
-use Api\App\Repository\OAuthRefreshTokenRepository;
 use Api\User\Collection\UserCollection;
-use Api\User\Entity\User;
-use Api\User\Entity\UserDetail;
-use Api\User\Entity\UserResetPassword;
-use Api\User\Enum\UserStatusEnum;
-use Api\User\Repository\UserDetailRepository;
-use Api\User\Repository\UserRepository;
-use Api\User\Repository\UserResetPasswordRepository;
+use Core\App\Message;
+use Core\App\Repository\OAuthAccessTokenRepository;
+use Core\App\Repository\OAuthRefreshTokenRepository;
+use Core\User\Entity\User;
+use Core\User\Entity\UserDetail;
+use Core\User\Entity\UserResetPassword;
+use Core\User\Enum\UserStatusEnum;
+use Core\User\Repository\UserDetailRepository;
+use Core\User\Repository\UserRepository;
+use Core\User\Repository\UserResetPasswordRepository;
 use Dot\DependencyInjection\Attribute\Inject;
 use Dot\Log\LoggerInterface;
 use Dot\Mail\Exception\MailException;
@@ -243,7 +243,10 @@ class UserService implements UserServiceInterface
             throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'order')]);
         }
 
-        return $this->userRepository->getUsers($params);
+        $qb = $this->userRepository->getUsers($params);
+        $qb->getQuery()->useQueryCache(true);
+
+        return new UserCollection($qb, false);
     }
 
     /**

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Api\Admin\Service;
 
 use Api\Admin\Collection\AdminRoleCollection;
-use Api\Admin\Entity\AdminRole;
-use Api\Admin\Repository\AdminRoleRepository;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\NotFoundException;
-use Api\App\Message;
+use Core\Admin\Entity\AdminRole;
+use Core\Admin\Repository\AdminRoleRepository;
+use Core\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
 
 use function in_array;
@@ -54,6 +54,9 @@ class AdminRoleService implements AdminRoleServiceInterface
             throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'order')]);
         }
 
-        return $this->adminRoleRepository->getAdminRoles($params);
+        $qb = $this->adminRoleRepository->getAdminRoles($params);
+        $qb->getQuery()->useQueryCache(true);
+
+        return new AdminRoleCollection($qb, false);
     }
 }

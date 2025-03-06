@@ -31,25 +31,35 @@ Documentation is available at: https://docs.dotkernel.org/api-documentation/
 
 Using your terminal, navigate inside the directory you want to download the project files into. Make sure that the directory is empty before proceeding to the download process. Once there, run the following command:
 
-    git clone https://github.com/dotkernel/api.git .
+```shell
+git clone https://github.com/dotkernel/api.git .
+```
 
 ## Step 2: Install project's dependencies
 
-    composer install
+```shell
+composer install
+```
 
 ## Step 3: Development mode
 
 If you're installing the project for development, make sure you have development mode enabled, by running:
 
-    composer development-enable
+```shell
+composer development-enable
+```
 
 You can disable development mode by running:
 
-    composer development-disable
+```shell
+composer development-disable
+```
 
 You can check if you have development mode enabled by running:
 
-    composer development-status
+```shell
+composer development-status
+```
 
 ## Step 4: Prepare config files
 
@@ -66,11 +76,13 @@ You can check if you have development mode enabled by running:
 * fill out the database connection params in `config/autoload/local.php` under `$databases['default']`
 * run the database migrations by using the following command:
 
-    php vendor/bin/doctrine-migrations migrate
+```shell
+php vendor/bin/doctrine-migrations migrate
+```
 
 This command will prompt you to confirm that you want to run it:
 
-    WARNING! You are about to execute a migration in database "..." that could result in schema changes and data loss. Are you sure you wish to continue? (yes/no) [yes]:
+> WARNING! You are about to execute a migration in database "..." that could result in schema changes and data loss. Are you sure you wish to continue? (yes/no) [yes]:
 
 Hit `Enter` to confirm the operation.
 
@@ -80,29 +92,39 @@ Hit `Enter` to confirm the operation.
 
 To list all the fixtures, run:
 
-    php bin/doctrine fixtures:list
+```shell
+php bin/doctrine fixtures:list
+```
 
 This will output all the fixtures in the order of execution.
 
 To execute all fixtures, run:
 
-    php bin/doctrine fixtures:execute
+```shell
+php bin/doctrine fixtures:execute
+```
 
 To execute a specific fixture, run:
 
-    php bin/doctrine fixtures:execute --class=FixtureClassName
+```shell
+php bin/doctrine fixtures:execute --class=FixtureClassName
+```
 
 More details on how fixtures work can be found here: https://github.com/dotkernel/dot-data-fixtures#creating-fixtures
 
 ## Step 6: Test the installation
 
-    php -S 0.0.0.0:8080 -t public
+```shell
+php -S 0.0.0.0:8080 -t public
+```
 
 Sending a GET request to the [home page](http://0.0.0.0:8080/) should output the following message:
 
-    {
+```text
+{
     "message": "DotKernel API version 5"
-    }
+}
+```
 
 ## Documentation
 

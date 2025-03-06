@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace ApiTest\Functional;
 
-use Api\App\Message;
-use Api\User\Entity\User;
-use Api\User\Entity\UserAvatar;
-use Api\User\Entity\UserResetPassword;
-use Api\User\Enum\UserResetPasswordStatusEnum;
-use Api\User\Enum\UserStatusEnum;
 use Api\User\Service\UserAvatarService;
+use Core\App\Message;
+use Core\User\Entity\User;
+use Core\User\Entity\UserAvatar;
+use Core\User\Entity\UserResetPassword;
+use Core\User\Enum\UserResetPasswordStatusEnum;
+use Core\User\Enum\UserStatusEnum;
 use DateInterval;
 use DateTimeImmutable;
 use Dot\Mail\Service\MailService;

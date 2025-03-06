@@ -25,7 +25,7 @@ class TokenGenerateCommand extends Command
     private string $typeErrorReporting = 'error-reporting';
 
     public function __construct(
-        protected ErrorReportServiceInterface $errorReportService
+        protected ErrorReportServiceInterface $errorReportService,
     ) {
         parent::__construct(self::$defaultName);
     }

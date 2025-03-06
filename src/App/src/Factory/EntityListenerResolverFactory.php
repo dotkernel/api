@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\App\Factory;
 
-use Api\App\Entity\EntityListenerResolver;
+use Core\App\Entity\EntityListenerResolver;
 use Psr\Container\ContainerInterface;
 
 class EntityListenerResolverFactory

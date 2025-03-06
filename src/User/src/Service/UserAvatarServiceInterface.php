@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
-use Api\User\Entity\User;
-use Api\User\Entity\UserAvatar;
+use Core\User\Entity\User;
+use Core\User\Entity\UserAvatar;
 use Laminas\Diactoros\UploadedFile;
 
 interface UserAvatarServiceInterface

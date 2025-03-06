@@ -93,7 +93,9 @@
             "Api\\Admin\\": "src/Admin/src/",
             "Api\\App\\": "src/App/src/",
             "Api\\User\\": "src/User/src/",
-            "Api\\Fixtures\\": "data/doctrine/fixtures/"
+            "Core\\Admin\\": "src/Core/src/Admin/src/",
+            "Core\\App\\": "src/Core/src/App/src/",
+            "Core\\User\\": "src/Core/src/User/src/"
         }
     },
     "autoload-dev": {
@@ -109,7 +111,6 @@
         "development-disable": "laminas-development-mode disable",
         "development-enable": "laminas-development-mode enable",
         "development-status": "laminas-development-mode status",
-        "mezzio": "mezzio --ansi",
         "check": [
             "@cs-check",
             "@test",
@@ -120,7 +121,6 @@
         "cs-fix": "phpcbf",
         "serve": "php -S 0.0.0.0:8080 -t public/",
         "static-analysis": "phpstan analyse --memory-limit 1G",
-        "test": "phpunit --colors=always",
-        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+        "test": "phpunit --colors=always"
     }
 }

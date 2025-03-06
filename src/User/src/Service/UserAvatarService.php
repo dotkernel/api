@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
-use Api\User\Entity\User;
-use Api\User\Entity\UserAvatar;
-use Api\User\Repository\UserAvatarRepository;
+use Core\User\Entity\User;
+use Core\User\Entity\UserAvatar;
+use Core\User\Repository\UserAvatarRepository;
 use Dot\DependencyInjection\Attribute\Inject;
 use Laminas\Diactoros\UploadedFile;
 use Psr\Http\Message\UploadedFileInterface;

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Api\Admin\Entity\AdminRole;
-use Api\User\Entity\UserRole;
+use Core\Admin\Entity\AdminRole;
+use Core\User\Entity\UserRole;
 
 return [
     /**

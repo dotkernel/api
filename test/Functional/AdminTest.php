@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace ApiTest\Functional;
 
-use Api\Admin\Entity\Admin;
-use Api\Admin\Entity\AdminRole;
-use Api\App\Message;
-use Api\User\Entity\User;
-use Api\User\Entity\UserDetail;
-use Api\User\Entity\UserRole;
-use Api\User\Enum\UserStatusEnum;
 use BackedEnum;
+use Core\Admin\Entity\Admin;
+use Core\Admin\Entity\AdminRole;
+use Core\App\Message;
+use Core\User\Entity\User;
+use Core\User\Entity\UserDetail;
+use Core\User\Entity\UserRole;
+use Core\User\Enum\UserStatusEnum;
 use Dot\Mail\Service\MailService;
 use PHPUnit\Framework\MockObject\Exception;
 use Psr\Container\ContainerExceptionInterface;

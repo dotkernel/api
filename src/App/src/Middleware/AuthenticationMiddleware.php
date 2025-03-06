@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Api\App\Middleware;
 
-use Api\App\UserIdentity;
-use Api\User\Entity\UserRole;
+use Core\User\Entity\UserRole;
+use Core\User\UserIdentity;
 use Mezzio\Authentication\UserInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

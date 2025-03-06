@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\App\Factory;
 
-use Api\App\UserIdentity;
+use Core\User\UserIdentity;
 use Mezzio\Authentication\UserInterface;
 use Psr\Container\ContainerInterface;
 
