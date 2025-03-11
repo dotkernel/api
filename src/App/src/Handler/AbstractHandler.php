@@ -23,8 +23,6 @@ abstract class AbstractHandler implements RequestHandlerInterface
     protected ?HalResponseFactory $responseFactory  = null;
     protected ?ResourceGenerator $resourceGenerator = null;
 
-    abstract public function handle(ServerRequestInterface $request): ResponseInterface;
-
     public function setResponseFactory(HalResponseFactory $responseFactory): self
     {
         $this->responseFactory = $responseFactory;
