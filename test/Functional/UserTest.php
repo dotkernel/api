@@ -47,7 +47,7 @@ class UserTest extends AbstractFunctionalTest
         $userAvatarService = $this->createMock(UserAvatarService::class);
         $this->replaceService(UserAvatarService::class, $userAvatarService);
 
-        $response = $this->post('/user', $this->getValidUserData(['status' => UserStatusEnum::Pending->value]));
+        $response = $this->post('/user/account', $this->getValidUserData(['status' => UserStatusEnum::Pending->value]));
         $this->assertResponseConflict($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
@@ -73,7 +73,7 @@ class UserTest extends AbstractFunctionalTest
         $userAvatarService = $this->createMock(UserAvatarService::class);
         $this->replaceService(UserAvatarService::class, $userAvatarService);
 
-        $response = $this->post('/user', $this->getValidUserData(['status' => UserStatusEnum::Pending->value]));
+        $response = $this->post('/user/account', $this->getValidUserData(['status' => UserStatusEnum::Pending->value]));
         $this->assertResponseConflict($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
@@ -101,7 +101,7 @@ class UserTest extends AbstractFunctionalTest
             'status' => UserStatusEnum::Pending->value,
         ]);
 
-        $response = $this->post('/user', $user);
+        $response = $this->post('/user/account', $user);
         $this->assertResponseCreated($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
@@ -142,7 +142,7 @@ class UserTest extends AbstractFunctionalTest
 
         $uploadedFile = $this->createUploadedFile();
 
-        $response = $this->post('/user/my-avatar', [], [], ['avatar' => $uploadedFile]);
+        $response = $this->post('/user/account/avatar', [], [], ['avatar' => $uploadedFile]);
         $this->assertResponseCreated($response);
 
         $path = __DIR__ . DIRECTORY_SEPARATOR . $uploadedFile->getClientFilename();
@@ -158,7 +158,7 @@ class UserTest extends AbstractFunctionalTest
         $user = $this->createUser();
         $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
-        $response = $this->get('/user/my-avatar');
+        $response = $this->get('/user/account/avatar');
         $this->assertResponseNotFound($response);
     }
 
@@ -179,7 +179,7 @@ class UserTest extends AbstractFunctionalTest
 
         $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
-        $response = $this->get('/user/my-avatar');
+        $response = $this->get('/user/account/avatar');
         $this->assertResponseOk($response);
     }
 
@@ -192,7 +192,7 @@ class UserTest extends AbstractFunctionalTest
         $user = $this->createUser();
         $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
-        $response = $this->delete('/user/my-avatar');
+        $response = $this->delete('/user/account/avatar');
         $this->assertResponseNotFound($response);
     }
 
@@ -213,7 +213,7 @@ class UserTest extends AbstractFunctionalTest
 
         $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
-        $response = $this->delete('/user/my-avatar');
+        $response = $this->delete('/user/account/avatar');
         $this->assertResponseNoContent($response);
     }
 
@@ -231,7 +231,7 @@ class UserTest extends AbstractFunctionalTest
     {
         $user = $this->createUser();
 
-        $response = $this->patch('/account/activate/' . $user->getHash());
+        $response = $this->patch('/user/account/activate/' . $user->getHash());
         $this->assertResponseConflict($response);
     }
 
@@ -246,7 +246,7 @@ class UserTest extends AbstractFunctionalTest
         ]);
         $this->assertFalse($user->isActive());
 
-        $response = $this->patch('/account/activate/' . $user->getHash());
+        $response = $this->patch('/user/account/activate/' . $user->getHash());
         $this->assertResponseOk($response);
 
         $userRepository = $this->getEntityManager()->getRepository(User::class);
@@ -268,7 +268,7 @@ class UserTest extends AbstractFunctionalTest
         $mailService = $this->createMock(MailService::class);
         $this->replaceService(MailService::class, $mailService);
 
-        $response = $this->post('/account/activate', [
+        $response = $this->post('/user/account/activate', [
             'email' => $user->getDetail()->getEmail(),
         ]);
         $this->assertResponseCreated($response);
@@ -291,7 +291,7 @@ class UserTest extends AbstractFunctionalTest
         $user = $this->createUser();
         $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
-        $response = $this->delete('/user/my-account');
+        $response = $this->delete('/user/account');
         $this->assertResponseNoContent($response);
 
         $userRepository = $this->getEntityManager()->getRepository(User::class);
@@ -301,7 +301,7 @@ class UserTest extends AbstractFunctionalTest
 
     public function testRequestResetPasswordInvalidHash(): void
     {
-        $response = $this->patch('/account/reset-password/invalid_hash');
+        $response = $this->patch('/user/account/reset-password/invalid_hash');
         $this->assertResponseNotFound($response);
     }
 
@@ -328,7 +328,7 @@ class UserTest extends AbstractFunctionalTest
         $mailService = $this->createMock(MailService::class);
         $this->replaceService(MailService::class, $mailService);
 
-        $response = $this->patch('/account/reset-password/' . $resetPassword->getHash(), [
+        $response = $this->patch('/user/account/reset-password/' . $resetPassword->getHash(), [
             'password'        => '654321',
             'passwordConfirm' => '654321',
         ]);
@@ -367,7 +367,7 @@ class UserTest extends AbstractFunctionalTest
         $mailService = $this->createMock(MailService::class);
         $this->replaceService(MailService::class, $mailService);
 
-        $response = $this->patch('/account/reset-password/' . $resetPassword->getHash(), [
+        $response = $this->patch('/user/account/reset-password/' . $resetPassword->getHash(), [
             'password'        => '654321',
             'passwordConfirm' => '654321',
         ]);
@@ -406,7 +406,7 @@ class UserTest extends AbstractFunctionalTest
         $mailService = $this->createMock(MailService::class);
         $this->replaceService(MailService::class, $mailService);
 
-        $response = $this->patch('/account/reset-password/' . $resetPassword->getHash(), [
+        $response = $this->patch('/user/account/reset-password/' . $resetPassword->getHash(), [
             'password'        => '654321',
             'passwordConfirm' => '654321',
         ]);
@@ -431,7 +431,7 @@ class UserTest extends AbstractFunctionalTest
 
         $user = $this->createUser();
 
-        $response = $this->post('/account/reset-password', [
+        $response = $this->post('/user/account/reset-password', [
             'email' => $user->getDetail()->getEmail(),
         ]);
         $this->assertResponseCreated($response);
@@ -448,7 +448,7 @@ class UserTest extends AbstractFunctionalTest
 
         $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
-        $response = $this->get('/user/my-account');
+        $response = $this->get('/user/account');
         $this->assertResponseOk($response);
     }
 
@@ -469,7 +469,7 @@ class UserTest extends AbstractFunctionalTest
             ],
         ];
 
-        $response = $this->patch('/user/my-account', $updateData);
+        $response = $this->patch('/user/account', $updateData);
         $this->assertResponseOk($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
@@ -489,7 +489,7 @@ class UserTest extends AbstractFunctionalTest
         $mailService = $this->createMock(MailService::class);
         $this->replaceService(MailService::class, $mailService);
 
-        $response = $this->post('/account/recover-identity', [
+        $response = $this->post('/user/account/recover', [
             'email' => $user->getDetail()->getEmail(),
         ]);
         $this->assertResponseOk($response);

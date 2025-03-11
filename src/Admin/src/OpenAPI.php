@@ -6,9 +6,15 @@ namespace Api\Admin;
 
 use Api\Admin\Collection\AdminCollection;
 use Api\Admin\Collection\AdminRoleCollection;
-use Api\Admin\Handler\AdminAccountHandler;
-use Api\Admin\Handler\AdminHandler;
-use Api\Admin\Handler\AdminRoleHandler;
+use Api\Admin\Handler\Admin\DeleteAdminResourceHandler;
+use Api\Admin\Handler\Admin\GetAdminAccountResourceHandler;
+use Api\Admin\Handler\Admin\GetAdminCollectionHandler;
+use Api\Admin\Handler\Admin\GetAdminResourceHandler;
+use Api\Admin\Handler\Admin\PatchAdminAccountResourceHandler;
+use Api\Admin\Handler\Admin\PatchAdminResourceHandler;
+use Api\Admin\Handler\Admin\PostAdminResourceHandler;
+use Api\Admin\Handler\Admin\Role\GetAdminRoleCollectionHandler;
+use Api\Admin\Handler\Admin\Role\GetAdminRoleResourceHandler;
 use Core\Admin\Entity\Admin;
 use Core\Admin\Entity\AdminRole;
 use Core\Admin\Enum\AdminStatusEnum;
@@ -17,127 +23,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use OpenApi\Attributes as OA;
 
 /**
- * @see AdminAccountHandler::get()
- */
-#[OA\Get(
-    path: '/admin/my-account',
-    description: 'Authenticated (super)admin fetches their own account data',
-    summary: 'Admin fetches their own account',
-    security: [['AuthToken' => []]],
-    tags: ['Admin'],
-    responses: [
-        new OA\Response(
-            response: StatusCodeInterface::STATUS_OK,
-            description: 'My admin account',
-            content: new OA\JsonContent(ref: '#/components/schemas/Admin'),
-        ),
-    ],
-)]
-
-/**
- * @see AdminAccountHandler::patch()
- */
-#[OA\Patch(
-    path: '/admin/my-account',
-    description: 'Authenticated (super)admin updates their own account data',
-    summary: 'Admin updates their own account',
-    security: [['AuthToken' => []]],
-    requestBody: new OA\RequestBody(
-        description: 'Update my admin account request',
-        required: true,
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'password', type: 'string'),
-                new OA\Property(property: 'passwordConfirm', type: 'string'),
-                new OA\Property(property: 'firstName', type: 'string'),
-                new OA\Property(property: 'lastName', type: 'string'),
-                new OA\Property(
-                    property: 'roles',
-                    type: 'array',
-                    items: new OA\Items(
-                        required: ['uuid'],
-                        properties: [
-                            new OA\Property(property: 'uuid', type: 'string'),
-                        ],
-                    ),
-                ),
-            ],
-            type: 'object',
-        ),
-    ),
-    tags: ['Admin'],
-    responses: [
-        new OA\Response(
-            response: StatusCodeInterface::STATUS_OK,
-            description: 'My admin account',
-            content: new OA\JsonContent(ref: '#/components/schemas/Admin'),
-        ),
-    ],
-)]
-
-/**
- * @see AdminHandler::delete()
- */
-#[OA\Delete(
-    path: '/admin/{uuid}',
-    description: 'Authenticated (super)admin deletes an admin account identified by its UUID',
-    summary: 'Admin deletes an admin account',
-    security: [['AuthToken' => []]],
-    tags: ['Admin'],
-    parameters: [
-        new OA\Parameter(
-            name: 'uuid',
-            description: 'Admin UUID',
-            in: 'path',
-            required: true,
-            schema: new OA\Schema(type: 'string'),
-        ),
-    ],
-    responses: [
-        new OA\Response(
-            response: StatusCodeInterface::STATUS_NO_CONTENT,
-            description: 'Admin account has been deleted',
-        ),
-        new OA\Response(
-            response: StatusCodeInterface::STATUS_NOT_FOUND,
-            description: 'Not Found',
-        ),
-    ],
-)]
-
-/**
- * @see AdminHandler::get()
- */
-#[OA\Get(
-    path: '/admin/{uuid}',
-    description: 'Authenticated (super)admin fetches an admin account identified by its UUID',
-    summary: 'Admin fetches an admin account',
-    security: [['AuthToken' => []]],
-    tags: ['Admin'],
-    parameters: [
-        new OA\Parameter(
-            name: 'uuid',
-            description: 'Admin UUID',
-            in: 'path',
-            required: true,
-            schema: new OA\Schema(type: 'string'),
-        ),
-    ],
-    responses: [
-        new OA\Response(
-            response: StatusCodeInterface::STATUS_OK,
-            description: 'Admin account',
-            content: new OA\JsonContent(ref: '#/components/schemas/Admin'),
-        ),
-        new OA\Response(
-            response: StatusCodeInterface::STATUS_NOT_FOUND,
-            description: 'Not Found',
-        ),
-    ],
-)]
-
-/**
- * @see AdminHandler::getCollection()
+ * @see GetAdminCollectionHandler::handle()
  */
 #[OA\Get(
     path: '/admin',
@@ -208,7 +94,127 @@ use OpenApi\Attributes as OA;
 )]
 
 /**
- * @see AdminHandler::patch()
+ * @see PostAdminResourceHandler::handle()
+ */
+#[OA\Post(
+    path: '/admin',
+    description: 'Authenticated (super)admin creates a new admin account',
+    summary: 'Admin creates an admin account',
+    security: [['AuthToken' => []]],
+    requestBody: new OA\RequestBody(
+        description: 'Create admin account request',
+        required: true,
+        content: new OA\JsonContent(
+            required: ['identity', 'password', 'passwordConfirm', 'firstName', 'lastName', 'roles'],
+            properties: [
+                new OA\Property(property: 'identity', type: 'string'),
+                new OA\Property(property: 'password', type: 'string'),
+                new OA\Property(property: 'passwordConfirm', type: 'string'),
+                new OA\Property(property: 'firstName', type: 'string'),
+                new OA\Property(property: 'lastName', type: 'string'),
+                new OA\Property(property: 'status', type: 'string', default: AdminStatusEnum::Active),
+                new OA\Property(
+                    property: 'roles',
+                    type: 'array',
+                    items: new OA\Items(
+                        required: ['uuid'],
+                        properties: [
+                            new OA\Property(property: 'uuid', type: 'string'),
+                        ],
+                    ),
+                ),
+            ],
+            type: 'object',
+        ),
+    ),
+    tags: ['Admin'],
+    responses: [
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_CREATED,
+            description: 'Admin account created',
+            content: new OA\JsonContent(ref: '#/components/schemas/Admin'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_BAD_REQUEST,
+            description: 'Bad Request',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_CONFLICT,
+            description: 'Conflict',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_NOT_FOUND,
+            description: 'Not Found',
+            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
+        ),
+    ],
+)]
+
+/**
+ * @see DeleteAdminResourceHandler::handle()
+ */
+#[OA\Delete(
+    path: '/admin/{uuid}',
+    description: 'Authenticated (super)admin deletes an admin account identified by its UUID',
+    summary: 'Admin deletes an admin account',
+    security: [['AuthToken' => []]],
+    tags: ['Admin'],
+    parameters: [
+        new OA\Parameter(
+            name: 'uuid',
+            description: 'Admin UUID',
+            in: 'path',
+            required: true,
+            schema: new OA\Schema(type: 'string'),
+        ),
+    ],
+    responses: [
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_NO_CONTENT,
+            description: 'Admin account has been deleted',
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_NOT_FOUND,
+            description: 'Not Found',
+        ),
+    ],
+)]
+
+/**
+ * @see GetAdminResourceHandler::handle()
+ */
+#[OA\Get(
+    path: '/admin/{uuid}',
+    description: 'Authenticated (super)admin fetches an admin account identified by its UUID',
+    summary: 'Admin fetches an admin account',
+    security: [['AuthToken' => []]],
+    tags: ['Admin'],
+    parameters: [
+        new OA\Parameter(
+            name: 'uuid',
+            description: 'Admin UUID',
+            in: 'path',
+            required: true,
+            schema: new OA\Schema(type: 'string'),
+        ),
+    ],
+    responses: [
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_OK,
+            description: 'Admin account',
+            content: new OA\JsonContent(ref: '#/components/schemas/Admin'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_NOT_FOUND,
+            description: 'Not Found',
+        ),
+    ],
+)]
+
+/**
+ * @see PatchAdminResourceHandler::handle()
  */
 #[OA\Patch(
     path: '/admin/{uuid}',
@@ -274,97 +280,7 @@ use OpenApi\Attributes as OA;
 )]
 
 /**
- * @see AdminHandler::post()
- */
-#[OA\Post(
-    path: '/admin',
-    description: 'Authenticated (super)admin creates a new admin account',
-    summary: 'Admin creates an admin account',
-    security: [['AuthToken' => []]],
-    requestBody: new OA\RequestBody(
-        description: 'Create admin account request',
-        required: true,
-        content: new OA\JsonContent(
-            required: ['identity', 'password', 'passwordConfirm', 'firstName', 'lastName', 'roles'],
-            properties: [
-                new OA\Property(property: 'identity', type: 'string'),
-                new OA\Property(property: 'password', type: 'string'),
-                new OA\Property(property: 'passwordConfirm', type: 'string'),
-                new OA\Property(property: 'firstName', type: 'string'),
-                new OA\Property(property: 'lastName', type: 'string'),
-                new OA\Property(property: 'status', type: 'string', default: AdminStatusEnum::Active),
-                new OA\Property(
-                    property: 'roles',
-                    type: 'array',
-                    items: new OA\Items(
-                        required: ['uuid'],
-                        properties: [
-                            new OA\Property(property: 'uuid', type: 'string'),
-                        ],
-                    ),
-                ),
-            ],
-            type: 'object',
-        ),
-    ),
-    tags: ['Admin'],
-    responses: [
-        new OA\Response(
-            response: StatusCodeInterface::STATUS_CREATED,
-            description: 'Admin account created',
-            content: new OA\JsonContent(ref: '#/components/schemas/Admin'),
-        ),
-        new OA\Response(
-            response: StatusCodeInterface::STATUS_BAD_REQUEST,
-            description: 'Bad Request',
-            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
-        ),
-        new OA\Response(
-            response: StatusCodeInterface::STATUS_CONFLICT,
-            description: 'Conflict',
-            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
-        ),
-        new OA\Response(
-            response: StatusCodeInterface::STATUS_NOT_FOUND,
-            description: 'Not Found',
-            content: new OA\JsonContent(ref: '#/components/schemas/ErrorMessage'),
-        ),
-    ],
-)]
-
-/**
- * @see AdminRoleHandler::get()
- */
-#[OA\Get(
-    path: '/admin/role/{uuid}',
-    description: 'Authenticated (super)admin fetches an admin role identified by its UUID',
-    summary: 'Admin fetches an admin role',
-    security: [['AuthToken' => []]],
-    tags: ['AdminRole'],
-    parameters: [
-        new OA\Parameter(
-            name: 'uuid',
-            description: 'Admin role UUID',
-            in: 'path',
-            required: true,
-            schema: new OA\Schema(type: 'string'),
-        ),
-    ],
-    responses: [
-        new OA\Response(
-            response: StatusCodeInterface::STATUS_OK,
-            description: 'Admin role',
-            content: new OA\JsonContent(ref: '#/components/schemas/AdminRole'),
-        ),
-        new OA\Response(
-            response: StatusCodeInterface::STATUS_NOT_FOUND,
-            description: 'Not Found',
-        ),
-    ],
-)]
-
-/**
- * @see AdminRoleHandler::getCollection()
+ * @see GetAdminRoleCollectionHandler::handle()
  */
 #[OA\Get(
     path: '/admin/role',
@@ -427,6 +343,96 @@ use OpenApi\Attributes as OA;
         new OA\Response(
             response: StatusCodeInterface::STATUS_NOT_FOUND,
             description: 'Not Found',
+        ),
+    ],
+)]
+
+/**
+ * @see GetAdminRoleResourceHandler::handle()
+ */
+#[OA\Get(
+    path: '/admin/role/{uuid}',
+    description: 'Authenticated (super)admin fetches an admin role identified by its UUID',
+    summary: 'Admin fetches an admin role',
+    security: [['AuthToken' => []]],
+    tags: ['AdminRole'],
+    parameters: [
+        new OA\Parameter(
+            name: 'uuid',
+            description: 'Admin role UUID',
+            in: 'path',
+            required: true,
+            schema: new OA\Schema(type: 'string'),
+        ),
+    ],
+    responses: [
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_OK,
+            description: 'Admin role',
+            content: new OA\JsonContent(ref: '#/components/schemas/AdminRole'),
+        ),
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_NOT_FOUND,
+            description: 'Not Found',
+        ),
+    ],
+)]
+
+/**
+ * @see GetAdminAccountResourceHandler::handle()
+ */
+#[OA\Get(
+    path: '/admin/account',
+    description: 'Authenticated (super)admin fetches their own account data',
+    summary: 'Admin fetches their own account',
+    security: [['AuthToken' => []]],
+    tags: ['Admin'],
+    responses: [
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_OK,
+            description: 'My admin account',
+            content: new OA\JsonContent(ref: '#/components/schemas/Admin'),
+        ),
+    ],
+)]
+
+/**
+ * @see PatchAdminAccountResourceHandler::handle()
+ */
+#[OA\Patch(
+    path: '/admin/account',
+    description: 'Authenticated (super)admin updates their own account data',
+    summary: 'Admin updates their own account',
+    security: [['AuthToken' => []]],
+    requestBody: new OA\RequestBody(
+        description: 'Update my admin account request',
+        required: true,
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'password', type: 'string'),
+                new OA\Property(property: 'passwordConfirm', type: 'string'),
+                new OA\Property(property: 'firstName', type: 'string'),
+                new OA\Property(property: 'lastName', type: 'string'),
+                new OA\Property(
+                    property: 'roles',
+                    type: 'array',
+                    items: new OA\Items(
+                        required: ['uuid'],
+                        properties: [
+                            new OA\Property(property: 'uuid', type: 'string'),
+                        ],
+                    ),
+                ),
+            ],
+            type: 'object',
+        ),
+    ),
+    tags: ['Admin'],
+    responses: [
+        new OA\Response(
+            response: StatusCodeInterface::STATUS_OK,
+            description: 'My admin account',
+            content: new OA\JsonContent(ref: '#/components/schemas/Admin'),
         ),
     ],
 )]
@@ -530,6 +536,7 @@ use OpenApi\Attributes as OA;
         new OA\Schema(ref: '#/components/schemas/Collection'),
     ],
 )]
+
 /**
  * @see AdminRoleCollection
  */

@@ -24,6 +24,7 @@ use Dot\Mail\Exception\MailException;
 use Dot\Mail\Service\MailService;
 use Mezzio\Template\TemplateRendererInterface;
 use RuntimeException;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 use function date;
 use function in_array;
@@ -60,6 +61,11 @@ class UserService implements UserServiceInterface
     public function activateUser(User $user): User
     {
         return $this->userRepository->saveUser($user->activate());
+    }
+
+    public function deactivateUser(User $user): User
+    {
+        return $this->userRepository->saveUser($user->deactivate());
     }
 
     /**
@@ -269,7 +275,7 @@ class UserService implements UserServiceInterface
 
         try {
             return $this->mailService->send()->isValid();
-        } catch (MailException $exception) {
+        } catch (MailException | TransportExceptionInterface $exception) {
             $this->logger->err($exception->getMessage());
             throw new MailException(sprintf(Message::MAIL_NOT_SENT_TO, $user->getDetail()->getEmail()));
         }
@@ -293,7 +299,7 @@ class UserService implements UserServiceInterface
 
         try {
             return $this->mailService->send()->isValid();
-        } catch (MailException $exception) {
+        } catch (MailException | TransportExceptionInterface $exception) {
             $this->logger->err($exception->getMessage());
             throw new MailException(sprintf(Message::MAIL_NOT_SENT_TO, $user->getDetail()->getEmail()));
         }
@@ -317,7 +323,7 @@ class UserService implements UserServiceInterface
 
         try {
             return $this->mailService->send()->isValid();
-        } catch (MailException $exception) {
+        } catch (MailException | TransportExceptionInterface $exception) {
             $this->logger->err($exception->getMessage());
             throw new MailException(sprintf(Message::MAIL_NOT_SENT_TO, $user->getDetail()->getEmail()));
         }
@@ -339,7 +345,7 @@ class UserService implements UserServiceInterface
 
         try {
             return $this->mailService->send()->isValid();
-        } catch (MailException $exception) {
+        } catch (MailException | TransportExceptionInterface $exception) {
             $this->logger->err($exception->getMessage());
             throw new MailException(sprintf(Message::MAIL_NOT_SENT_TO, $user->getDetail()->getEmail()));
         }
@@ -425,7 +431,7 @@ class UserService implements UserServiceInterface
 
         try {
             return $this->mailService->send()->isValid();
-        } catch (MailException $exception) {
+        } catch (MailException | TransportExceptionInterface $exception) {
             $this->logger->err($exception->getMessage());
             throw new MailException(sprintf(Message::MAIL_NOT_SENT_TO, $user->getDetail()->getEmail()));
         }

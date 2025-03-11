@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Api\App;
 
-use Api\App\Handler\ErrorReportHandler;
-use Api\App\Handler\HomeHandler;
+use Api\App\Handler\GetIndexResourceHandler;
+use Api\App\Handler\PostErrorReportResourceHandler;
 use Fig\Http\Message\StatusCodeInterface;
-use Mezzio\Authentication\OAuth2\TokenEndpointHandler;
 use OpenApi\Attributes as OA;
 
-#[OA\Info(version: '1.0', title: 'DotKernel API')]
+#[OA\Info(version: '1.0', title: 'Dotkernel API')]
 #[OA\Server(url: 'http://api.dotkernel.localhost', description: 'Local development server')]
 #[OA\SecurityScheme(securityScheme: 'AuthToken', type: 'http', in: 'header', bearerFormat: 'JWT', scheme: 'bearer')]
 #[OA\SecurityScheme(securityScheme: 'ErrorReportingToken', type: 'apiKey', name: 'Error-Reporting-Token', in: 'header')]
@@ -21,7 +20,7 @@ use OpenApi\Attributes as OA;
 )]
 
 /**
- * @see HomeHandler::get()
+ * @see GetIndexResourceHandler::handle()
  */
 #[OA\Get(
     path: '/',
@@ -42,7 +41,7 @@ use OpenApi\Attributes as OA;
 )]
 
 /**
- * @see ErrorReportHandler::post()
+ * @see PostErrorReportResourceHandler::handle()
  */
 #[OA\Post(
     path: '/error-report',
@@ -85,117 +84,12 @@ use OpenApi\Attributes as OA;
     ],
 )]
 
-/**
- * @see TokenEndpointHandler::handle()
- */
-#[OA\Post(
-    path: '/security/generate-token',
-    description: 'Client generates access token using username and password',
-    summary: 'Generate access token',
-    requestBody: new OA\RequestBody(
-        description: 'Access token generation request',
-        required: true,
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'grant_type', type: 'string', default: 'password'),
-                new OA\Property(property: 'client_id', type: 'string', enum: ['admin', 'frontend']),
-                new OA\Property(property: 'client_secret', type: 'string', enum: ['admin', 'frontend']),
-                new OA\Property(property: 'scope', type: 'string', default: 'api'),
-                new OA\Property(property: 'username', type: 'string'),
-                new OA\Property(property: 'password', type: 'string'),
-            ],
-            type: 'object',
-        ),
-    ),
-    tags: ['AccessToken'],
-    responses: [
-        new OA\Response(
-            response: StatusCodeInterface::STATUS_OK,
-            description: 'OK',
-            content: new OA\JsonContent(ref: '#/components/schemas/OAuth2SuccessMessage'),
-        ),
-        new OA\Response(
-            response: StatusCodeInterface::STATUS_BAD_REQUEST,
-            description: 'Bad Request',
-            content: new OA\JsonContent(ref: '#/components/schemas/OAuth2GenerateErrorMessage'),
-        ),
-    ],
-)]
-
-/**
- * @see TokenEndpointHandler::handle()
- */
-#[OA\Post(
-    path: '/security/refresh-token',
-    description: 'Client refreshes access token using refresh token',
-    summary: 'Refresh access token',
-    requestBody: new OA\RequestBody(
-        description: 'Access token refresh request',
-        required: true,
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'grant_type', type: 'string', default: 'refresh_token'),
-                new OA\Property(property: 'client_id', type: 'string', enum: ['admin', 'frontend']),
-                new OA\Property(property: 'client_secret', type: 'string', enum: ['admin', 'frontend']),
-                new OA\Property(property: 'scope', type: 'string', default: 'api'),
-                new OA\Property(property: 'refresh_token', type: 'string'),
-            ],
-            type: 'object',
-        ),
-    ),
-    tags: ['AccessToken'],
-    responses: [
-        new OA\Response(
-            response: StatusCodeInterface::STATUS_OK,
-            description: 'OK',
-            content: new OA\JsonContent(ref: '#/components/schemas/OAuth2SuccessMessage'),
-        ),
-        new OA\Response(
-            response: StatusCodeInterface::STATUS_UNAUTHORIZED,
-            description: 'Unauthorized',
-            content: new OA\JsonContent(ref: '#/components/schemas/OAuth2RefreshErrorMessage'),
-        ),
-    ],
-)]
-
-#[OA\Schema(
-    schema: 'OAuth2GenerateErrorMessage',
-    properties: [
-        new OA\Property(property: 'error', type: 'string'),
-        new OA\Property(property: 'error_description', type: 'string'),
-        new OA\Property(property: 'message', type: 'string'),
-    ],
-    type: 'object',
-)]
-
-#[OA\Schema(
-    schema: 'OAuth2RefreshErrorMessage',
-    properties: [
-        new OA\Property(property: 'hint', type: 'string'),
-    ],
-    type: 'object',
-    allOf: [
-        new OA\Schema(ref: '#/components/schemas/OAuth2GenerateErrorMessage'),
-    ],
-)]
-
-#[OA\Schema(
-    schema: 'OAuth2SuccessMessage',
-    properties: [
-        new OA\Property(property: 'token_type', type: 'string', default: 'Bearer'),
-        new OA\Property(property: 'expires_in', type: 'integer', default: 86400),
-        new OA\Property(property: 'access_token', type: 'string'),
-        new OA\Property(property: 'refresh_token', type: 'string'),
-    ],
-    type: 'object',
-)]
-
 #[OA\Schema(
     schema: 'HomeMessage',
     properties: [
-        new OA\Property(property: 'message', type: 'string', default: 'DotKernel API version 5'),
+        new OA\Property(property: 'message', type: 'string', default: 'Dotkernel API version 5'),
     ],
-    type: 'object'
+    type: 'object',
 )]
 
 #[OA\Schema(

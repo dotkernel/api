@@ -17,6 +17,8 @@ interface UserServiceInterface
 {
     public function activateUser(User $user): User;
 
+    public function deactivateUser(User $user): User;
+
     /**
      * @throws ConflictException
      * @throws NotFoundException

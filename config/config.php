@@ -53,6 +53,7 @@ $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
     Core\User\ConfigProvider::class,
     Api\Admin\ConfigProvider::class,
     Api\App\ConfigProvider::class,
+    Api\Security\ConfigProvider::class,
     Api\User\ConfigProvider::class,
 
     // Load application config in a pre-defined order in such a way that local settings

@@ -1,6 +1,6 @@
-# DotKernel API
+# Dotkernel API
 
-DotKernel API is a PHP skeleton app for building REST APIs using [Laminas](https://github.com/laminas) and [Mezzio](https://github.com/mezzio) components and implements standards like PSR-3, PSR-4, PSR-7, PSR-11 and PSR-15.
+Dotkernel API is a PHP skeleton app for building REST APIs using [Laminas](https://github.com/laminas) and [Mezzio](https://github.com/mezzio) components and implements standards like PSR-3, PSR-4, PSR-7, PSR-11 and PSR-15.
 
 Dotkernel API is an alternative for legacy Laminas API Tools (formerly Apigility) applications, and is based on Enrico Zimuel's [Zend Expressive API - Skeleton example](https://github.com/ezimuel/zend-expressive-api).
 
@@ -122,13 +122,13 @@ Sending a GET request to the [home page](http://0.0.0.0:8080/) should output the
 
 ```text
 {
-    "message": "DotKernel API version 5"
+    "message": "Dotkernel API version 5"
 }
 ```
 
 ## Documentation
 
-In order to access DotKernel API documentation, check the provided [readme file](documentation/README.md).
+In order to access Dotkernel API documentation, check the provided [readme file](documentation/README.md).
 
 Additionally, each CLI command available has it's own documentation:
 

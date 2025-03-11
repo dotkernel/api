@@ -31,7 +31,7 @@ class AdminTest extends AbstractFunctionalTest
         $user = $this->createUser();
         $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
 
-        $response = $this->get('/admin/my-account');
+        $response = $this->get('/admin/account');
 
         $this->assertResponseForbidden($response);
     }
@@ -105,7 +105,7 @@ class AdminTest extends AbstractFunctionalTest
         $admin = $this->createAdmin();
         $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
-        $response = $this->get('/admin/my-account');
+        $response = $this->get('/admin/account');
 
         $this->assertResponseOk($response);
     }
@@ -255,7 +255,7 @@ class AdminTest extends AbstractFunctionalTest
         $admin = $this->createAdmin();
         $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
 
-        $response = $this->get('/admin/my-account');
+        $response = $this->get('/admin/account');
         $data     = json_decode($response->getBody()->getContents(), true);
 
         $this->assertResponseOk($response);
@@ -279,7 +279,7 @@ class AdminTest extends AbstractFunctionalTest
             'lastName'  => 'admin',
         ];
 
-        $response = $this->patch('/admin/my-account', $updateData);
+        $response = $this->patch('/admin/account', $updateData);
         $data     = json_decode($response->getBody()->getContents(), true);
 
         $this->assertResponseOk($response);

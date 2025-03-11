@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-use Api\App\Handler\NotFoundHandler;
+use Api\App\Handler\GetNotFoundViewHandler;
 use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
 use Api\App\Middleware\ContentNegotiationMiddleware;
 use Api\App\Middleware\DeprecationMiddleware;
+use Api\App\Middleware\ResponseMiddleware;
 use Dot\ErrorHandler\ErrorHandlerInterface;
 use Dot\ResponseHeader\Middleware\ResponseHeaderMiddleware;
 use Mezzio\Application;
@@ -79,10 +80,12 @@ return function (Application $app): void {
     // - route-based validation
     // - etc.
 
+    $app->pipe(ResponseMiddleware::class);
+
     // Register the dispatch middleware in the middleware pipeline
     $app->pipe(DispatchMiddleware::class);
     // At this point, if no Response is returned by any middleware, the
     // NotFoundHandler kicks in; alternately, you can provide other fallback
     // middleware to execute.
-    $app->pipe(NotFoundHandler::class);
+    $app->pipe(GetNotFoundViewHandler::class);
 };

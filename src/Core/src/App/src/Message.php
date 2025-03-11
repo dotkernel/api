@@ -39,6 +39,8 @@ class Message
     public const SERVICE_NOT_FOUND                = 'Service %s not found in container.';
     public const USER_ACTIVATED                   = 'This account has been activated.';
     public const USER_ALREADY_ACTIVATED           = 'This account is already active.';
+    public const USER_ALREADY_DEACTIVATED         = 'This account is already inactive.';
+    public const USER_DEACTIVATED                 = 'This account has been deactivated.';
     public const USER_NOT_ACTIVATED               = 'User account must be activated first.';
     public const USER_NOT_FOUND                   = 'User not found.';
     public const USER_NOT_FOUND_BY_IDENTITY       = 'Could not find account by identity \'%s\'';
