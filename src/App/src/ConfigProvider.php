@@ -83,6 +83,9 @@ class ConfigProvider
         return [];
     }
 
+    /**
+     * @param class-string $collectionClass
+     */
     public static function getCollection(string $collectionClass, string $route, string $collectionRelation): array
     {
         return [
@@ -93,6 +96,9 @@ class ConfigProvider
         ];
     }
 
+    /**
+     * @param class-string $resourceClass
+     */
     public static function getResource(
         string $resourceClass,
         string $route,
