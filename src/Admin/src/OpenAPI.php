@@ -6,11 +6,11 @@ namespace Api\Admin;
 
 use Api\Admin\Collection\AdminCollection;
 use Api\Admin\Collection\AdminRoleCollection;
+use Api\Admin\Handler\Account\GetAdminAccountResourceHandler;
+use Api\Admin\Handler\Account\PatchAdminAccountResourceHandler;
 use Api\Admin\Handler\Admin\DeleteAdminResourceHandler;
-use Api\Admin\Handler\Admin\GetAdminAccountResourceHandler;
 use Api\Admin\Handler\Admin\GetAdminCollectionHandler;
 use Api\Admin\Handler\Admin\GetAdminResourceHandler;
-use Api\Admin\Handler\Admin\PatchAdminAccountResourceHandler;
 use Api\Admin\Handler\Admin\PatchAdminResourceHandler;
 use Api\Admin\Handler\Admin\PostAdminResourceHandler;
 use Api\Admin\Handler\Admin\Role\GetAdminRoleCollectionHandler;
