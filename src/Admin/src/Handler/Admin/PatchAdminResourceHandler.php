@@ -18,9 +18,11 @@ class PatchAdminResourceHandler extends AbstractHandler
 {
     #[Inject(
         AdminServiceInterface::class,
+        UpdateAdminInputFilter::class,
     )]
     public function __construct(
         protected AdminServiceInterface $adminService,
+        protected UpdateAdminInputFilter $inputFilter,
     ) {
     }
 
@@ -31,13 +33,13 @@ class PatchAdminResourceHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new UpdateAdminInputFilter())->setData((array) $request->getParsedBody());
-        if (! $inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
+        $this->inputFilter->setData((array) $request->getParsedBody());
+        if (! $this->inputFilter->isValid()) {
+            throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
         }
 
         $admin = $this->adminService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
-        $this->adminService->updateAdmin($admin, $inputFilter->getValues());
+        $this->adminService->updateAdmin($admin, (array) $this->inputFilter->getValues());
 
         return $this->createResponse($request, $admin);
     }
