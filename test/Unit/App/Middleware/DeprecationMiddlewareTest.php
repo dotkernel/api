@@ -32,7 +32,7 @@ use function sprintf;
 
 class DeprecationMiddlewareTest extends TestCase
 {
-    private Subject|MockObject $subject;
+    private Subject $subject;
     private ServerRequestInterface|MockObject $request;
     private RequestHandlerInterface|MockObject $handler;
     private ResponseInterface $response;
