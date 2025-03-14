@@ -13,11 +13,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use function array_map;
+use function count;
 use function ksort;
 use function sprintf;
 use function str_contains;
+use function str_pad;
 use function str_replace;
+
+use const STR_PAD_LEFT;
 
 #[AsCommand(
     name: 'route:list',
@@ -64,7 +67,7 @@ class RouteListCommand extends Command
                     continue;
                 }
 
-                $routes[sprintf('%s:%s', $route->getName(), $method)] = [
+                $routes[sprintf('%s-%s', $route->getPath(), $method)] = [
                     'name'   => $route->getName(),
                     'path'   => $route->getPath(),
                     'method' => $method,
@@ -73,17 +76,19 @@ class RouteListCommand extends Command
         }
         ksort($routes);
 
-        (new Table($output))
-            ->setHeaders(['Method', 'Name', 'Path'])
-            ->setRows(array_map(function ($route) {
-                $path = str_replace(RoutesDelegator::REGEXP_UUID, '{uuid}', $route['path']);
-                return [
-                    $route['method'],
-                    $route['name'],
-                    $path,
-                ];
-            }, $routes))
-            ->render();
+        $index = 1;
+        $table = (new Table($output))
+            ->setHeaders(['   #', 'Request method', 'Route name', 'Route path'])
+            ->setHeaderTitle(sprintf('%d Routes', count($routes)));
+        foreach ($routes as $route) {
+            $table->addRow([
+                str_pad((string) $index++, 4, ' ', STR_PAD_LEFT),
+                $route['method'],
+                $route['name'],
+                str_replace(RoutesDelegator::REGEXP_UUID, '{uuid}', $route['path']),
+            ]);
+        }
+        $table->render();
 
         return Command::SUCCESS;
     }

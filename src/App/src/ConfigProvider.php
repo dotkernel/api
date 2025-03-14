@@ -10,12 +10,12 @@ use Api\App\Factory\AuthenticationMiddlewareFactory;
 use Api\App\Factory\HandlerDelegatorFactory;
 use Api\App\Factory\RouteListCommandFactory;
 use Api\App\Factory\TokenGenerateCommandFactory;
-use Api\App\Handler\ErrorReportHandler;
+use Api\App\Handler\PostErrorReportResourceHandler;
 use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
 use Api\App\Middleware\ContentNegotiationMiddleware;
 use Api\App\Middleware\DeprecationMiddleware;
-use Api\App\Middleware\ErrorResponseMiddleware;
+use Api\App\Middleware\ResponseMiddleware;
 use Api\App\Service\ErrorReportService;
 use Api\App\Service\ErrorReportServiceInterface;
 use Dot\DependencyInjection\Factory\AttributedServiceFactory;
@@ -50,24 +50,24 @@ class ConfigProvider
     {
         return [
             'delegators' => [
-                Application::class        => [RoutesDelegator::class],
-                ErrorReportHandler::class => [HandlerDelegatorFactory::class],
+                Application::class                    => [RoutesDelegator::class],
+                PostErrorReportResourceHandler::class => [HandlerDelegatorFactory::class],
             ],
             'factories'  => [
-                'dot-mail.options.default'          => MailOptionsAbstractFactory::class,
-                'dot-mail.service.default'          => MailServiceAbstractFactory::class,
-                AuthenticationMiddleware::class     => AuthenticationMiddlewareFactory::class,
-                AuthorizationMiddleware::class      => AttributedServiceFactory::class,
-                ContentNegotiationMiddleware::class => AttributedServiceFactory::class,
-                DeprecationMiddleware::class        => AttributedServiceFactory::class,
-                Environment::class                  => TwigEnvironmentFactory::class,
-                ErrorReportHandler::class           => AttributedServiceFactory::class,
-                ErrorReportService::class           => AttributedServiceFactory::class,
-                ErrorResponseMiddleware::class      => AttributedServiceFactory::class,
-                RouteListCommand::class             => RouteListCommandFactory::class,
-                TokenGenerateCommand::class         => TokenGenerateCommandFactory::class,
-                TwigExtension::class                => TwigExtensionFactory::class,
-                TwigRenderer::class                 => TwigRendererFactory::class,
+                'dot-mail.options.default'            => MailOptionsAbstractFactory::class,
+                'dot-mail.service.default'            => MailServiceAbstractFactory::class,
+                AuthenticationMiddleware::class       => AuthenticationMiddlewareFactory::class,
+                AuthorizationMiddleware::class        => AttributedServiceFactory::class,
+                ContentNegotiationMiddleware::class   => AttributedServiceFactory::class,
+                DeprecationMiddleware::class          => AttributedServiceFactory::class,
+                Environment::class                    => TwigEnvironmentFactory::class,
+                PostErrorReportResourceHandler::class => AttributedServiceFactory::class,
+                ErrorReportService::class             => AttributedServiceFactory::class,
+                ResponseMiddleware::class             => AttributedServiceFactory::class,
+                RouteListCommand::class               => RouteListCommandFactory::class,
+                TokenGenerateCommand::class           => TokenGenerateCommandFactory::class,
+                TwigExtension::class                  => TwigExtensionFactory::class,
+                TwigRenderer::class                   => TwigRendererFactory::class,
             ],
             'aliases'    => [
                 Authentication\AuthenticationInterface::class => Authentication\OAuth2\OAuth2Adapter::class,
@@ -83,6 +83,9 @@ class ConfigProvider
         return [];
     }
 
+    /**
+     * @param class-string $collectionClass
+     */
     public static function getCollection(string $collectionClass, string $route, string $collectionRelation): array
     {
         return [
@@ -93,6 +96,9 @@ class ConfigProvider
         ];
     }
 
+    /**
+     * @param class-string $resourceClass
+     */
     public static function getResource(
         string $resourceClass,
         string $route,

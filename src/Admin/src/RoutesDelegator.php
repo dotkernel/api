@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Api\Admin;
 
-use Api\Admin\Handler\AdminAccountHandler;
-use Api\Admin\Handler\AdminCollectionHandler;
-use Api\Admin\Handler\AdminHandler;
-use Api\Admin\Handler\AdminRoleCollectionHandler;
-use Api\Admin\Handler\AdminRoleHandler;
+use Api\Admin\Handler\Account\GetAdminAccountResourceHandler;
+use Api\Admin\Handler\Account\PatchAdminAccountResourceHandler;
+use Api\Admin\Handler\Admin\DeleteAdminResourceHandler;
+use Api\Admin\Handler\Admin\GetAdminCollectionHandler;
+use Api\Admin\Handler\Admin\GetAdminResourceHandler;
+use Api\Admin\Handler\Admin\PatchAdminResourceHandler;
+use Api\Admin\Handler\Admin\PostAdminResourceHandler;
+use Api\Admin\Handler\Admin\Role\GetAdminRoleCollectionHandler;
+use Api\Admin\Handler\Admin\Role\GetAdminRoleResourceHandler;
 use Mezzio\Application;
 use Psr\Container\ContainerInterface;
 
@@ -23,53 +27,18 @@ class RoutesDelegator
 
         $uuid = \Api\App\RoutesDelegator::REGEXP_UUID;
 
-        $app->get(
-            '/admin/my-account',
-            AdminAccountHandler::class,
-            'admin.my-account.view'
-        );
-        $app->patch(
-            '/admin/my-account',
-            AdminAccountHandler::class,
-            'admin.my-account.update'
-        );
+        $app->get('/admin', GetAdminCollectionHandler::class, 'admin::list-admin');
+        $app->post('/admin', PostAdminResourceHandler::class, 'admin::create-admin');
 
-        $app->post(
-            '/admin',
-            AdminHandler::class,
-            'admin.create'
-        );
-        $app->delete(
-            '/admin/' . $uuid,
-            AdminHandler::class,
-            'admin.delete'
-        );
-        $app->get(
-            '/admin',
-            AdminCollectionHandler::class,
-            'admin.list'
-        );
-        $app->patch(
-            '/admin/' . $uuid,
-            AdminHandler::class,
-            'admin.update'
-        );
-        $app->get(
-            '/admin/' . $uuid,
-            AdminHandler::class,
-            'admin.view'
-        );
+        $app->delete('/admin/' . $uuid, DeleteAdminResourceHandler::class, 'admin::delete-admin');
+        $app->get('/admin/' . $uuid, GetAdminResourceHandler::class, 'admin::view-admin');
+        $app->patch('/admin/' . $uuid, PatchAdminResourceHandler::class, 'admin::update-admin');
 
-        $app->get(
-            '/admin/role',
-            AdminRoleCollectionHandler::class,
-            'admin.role.list'
-        );
-        $app->get(
-            '/admin/role/' . $uuid,
-            AdminRoleHandler::class,
-            'admin.role.view'
-        );
+        $app->get('/admin/role', GetAdminRoleCollectionHandler::class, 'admin::list-role');
+        $app->get('/admin/role/' . $uuid, GetAdminRoleResourceHandler::class, 'admin::view-role');
+
+        $app->get('/admin/account', GetAdminAccountResourceHandler::class, 'admin::view-account');
+        $app->patch('/admin/account', PatchAdminAccountResourceHandler::class, 'admin::update-account');
 
         return $app;
     }

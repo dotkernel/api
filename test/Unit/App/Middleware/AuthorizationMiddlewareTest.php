@@ -31,7 +31,7 @@ use function sprintf;
 
 class AuthorizationMiddlewareTest extends TestCase
 {
-    private Subject|MockObject $subject;
+    private Subject $subject;
     private UserRepository|MockObject $userRepository;
     private AdminRepository|MockObject $adminRepository;
     private AuthorizationInterface|MockObject $authorization;

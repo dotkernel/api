@@ -32,7 +32,7 @@ class AdminLoader implements FixtureInterface, DependentFixtureInterface
         $admin = (new Admin())
             ->setIdentity('admin')
             ->usePassword('dotkernel')
-            ->setFirstName('DotKernel')
+            ->setFirstName('Dotkernel')
             ->setLastName('Admin')
             ->setStatus(AdminStatusEnum::Active)
             ->addRole($adminRole)

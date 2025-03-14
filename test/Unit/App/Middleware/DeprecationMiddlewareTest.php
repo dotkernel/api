@@ -7,7 +7,6 @@ namespace ApiTest\Unit\App\Middleware;
 use Api\App\Attribute\MethodDeprecation;
 use Api\App\Attribute\ResourceDeprecation;
 use Api\App\Exception\DeprecationConflictException;
-use Api\App\Handler\AbstractHandler;
 use Api\App\Middleware\DeprecationMiddleware as Subject;
 use Core\App\Message;
 use Fig\Http\Message\RequestMethodInterface;
@@ -32,7 +31,7 @@ use function sprintf;
 
 class DeprecationMiddlewareTest extends TestCase
 {
-    private Subject|MockObject $subject;
+    private Subject $subject;
     private ServerRequestInterface|MockObject $request;
     private RequestHandlerInterface|MockObject $handler;
     private ResponseInterface $response;
@@ -201,63 +200,6 @@ class DeprecationMiddlewareTest extends TestCase
         $this->assertSame($this->formatLink('test-link', [
             'rel'  => 'test-rel',
             'type' => 'test-type',
-        ]), $response->getHeader('link')[0]);
-    }
-
-    /**
-     * @throws ReflectionException
-     * @throws Exception
-     */
-    public function testDeprecationMethodUsesRequestMethod(): void
-    {
-        $handler = new class extends AbstractHandler {
-            #[MethodDeprecation(
-                sunset: '2038-01-01',
-                link: 'get-test-link',
-                deprecationReason: 'get-test-deprecation-reason',
-                rel: 'get-rel',
-                type: 'get-type',
-            )]
-            public function get(): ResponseInterface
-            {
-                return new EmptyResponse();
-            }
-
-            #[MethodDeprecation(
-                sunset: '2038-01-01',
-                link: 'post-test-link',
-                deprecationReason: 'post-test-deprecation-reason',
-                rel: 'post-rel',
-                type: 'post-type',
-            )]
-            public function post(): ResponseInterface
-            {
-                return new EmptyResponse();
-            }
-        };
-
-        $routeResult           = $this->createMock(RouteResult::class);
-        $route                 = $this->createMock(Route::class);
-        $lazyLoadingMiddleware = new LazyLoadingMiddleware(
-            $this->createMock(MiddlewareContainer::class),
-            $handler::class,
-        );
-
-        $route->method('getMiddleware')->willReturn($lazyLoadingMiddleware);
-        $routeResult->method('isFailure')->willReturn(false);
-        $routeResult->method('getMatchedRoute')->willReturn($route);
-        $this->request->method('getAttribute')->with(RouteResult::class)->willReturn($routeResult);
-        $this->request->method('getMethod')->willReturn(RequestMethodInterface::METHOD_POST);
-        $this->handler->method('handle')->with($this->request)->willReturn($this->response);
-
-        $response = $this->subject->process($this->request, $this->handler);
-
-        $this->assertTrue($response->hasHeader('sunset'));
-        $this->assertTrue($response->hasHeader('link'));
-        $this->assertSame('2038-01-01', $response->getHeader('sunset')[0]);
-        $this->assertSame($this->formatLink('post-test-link', [
-            'rel'  => 'post-rel',
-            'type' => 'post-type',
         ]), $response->getHeader('link')[0]);
     }
 

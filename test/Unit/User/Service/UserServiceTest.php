@@ -29,7 +29,7 @@ use function count;
 
 class UserServiceTest extends TestCase
 {
-    private Subject|MockObject $subject;
+    private Subject $subject;
     private UserRoleService|MockObject $userRoleService;
     private UserRepository|MockObject $userRepository;
     private UserDetailRepository|MockObject $userDetailRepository;

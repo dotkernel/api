@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Api\App;
 
-use Api\App\Handler\ErrorReportHandler;
-use Api\App\Handler\HomeHandler;
-use Api\App\Middleware\ErrorResponseMiddleware;
+use Api\App\Handler\GetIndexResourceHandler;
+use Api\App\Handler\PostErrorReportResourceHandler;
 use Mezzio\Application;
-use Mezzio\Authentication\OAuth2\TokenEndpointHandler;
 use Psr\Container\ContainerInterface;
 
 use function assert;
@@ -22,45 +20,11 @@ class RoutesDelegator
         $app = $callback();
         assert($app instanceof Application);
 
-        /**
-         * Home page
-         */
-        $app->get(
-            '/',
-            HomeHandler::class,
-            'home'
-        );
+        // Home page
+        $app->get('/', GetIndexResourceHandler::class, 'app::view-index');
 
-        /**
-         * OAuth authentication
-         */
-        $app->post(
-            '/security/generate-token',
-            [
-                ErrorResponseMiddleware::class,
-                TokenEndpointHandler::class,
-            ],
-            'security.generate-token'
-        );
-        $app->post(
-            '/security/refresh-token',
-            [
-                ErrorResponseMiddleware::class,
-                TokenEndpointHandler::class,
-            ],
-            'security.refresh-token'
-        );
-
-        /**
-         * Other application reports an error
-         */
-        $app->post(
-            '/error-report',
-            [
-                ErrorReportHandler::class,
-            ],
-            'error.report'
-        );
+        // Other application reports an error
+        $app->post('/error-report', PostErrorReportResourceHandler::class, 'app::create-error-report');
 
         return $app;
     }

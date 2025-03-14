@@ -30,7 +30,6 @@ use function count;
 use function implode;
 use function is_string;
 use function sprintf;
-use function strtoupper;
 
 class DeprecationMiddleware implements MiddlewareInterface
 {
@@ -79,7 +78,7 @@ class DeprecationMiddleware implements MiddlewareInterface
         }
 
         $this->validateAttributes($attributes);
-        $attribute = $this->getAttribute($attributes, $request->getMethod());
+        $attribute = $this->getAttribute($attributes);
         if (null === $attribute) {
             return $response;
         }
@@ -96,17 +95,22 @@ class DeprecationMiddleware implements MiddlewareInterface
         return $response;
     }
 
-    private function getAttribute(array $attributes, string $requestMethod): ?array
+    private function getAttribute(array $attributes): ?array
     {
-        $attribute = array_values(array_filter($attributes, function (array $attribute): bool {
-            return $attribute['deprecationType'] === self::RESOURCE_DEPRECATION_ATTRIBUTE;
-        }))[0] ?? null;
+        $attribute = array_values(
+            array_filter(
+                $attributes,
+                fn (array $attribute): bool => $attribute['deprecationType'] === self::RESOURCE_DEPRECATION_ATTRIBUTE
+            )
+        )[0] ?? null;
 
         if (null === $attribute) {
-            $attribute = array_values(array_filter($attributes, function (array $attr) use ($requestMethod): bool {
-                return $attr['deprecationType'] === self::METHOD_DEPRECATION_ATTRIBUTE &&
-                    strtoupper($attr['identifier']) === strtoupper($requestMethod);
-            }))[0] ?? null;
+            $attribute = array_values(
+                array_filter(
+                    $attributes,
+                    fn (array $attribute): bool => $attribute['deprecationType'] === self::METHOD_DEPRECATION_ATTRIBUTE
+                )
+            )[0] ?? null;
         }
 
         return $attribute;

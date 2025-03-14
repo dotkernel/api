@@ -8,11 +8,15 @@ use Api\Admin\Collection\AdminCollection;
 use Api\Admin\Collection\AdminRoleCollection;
 use Api\Admin\Command\AdminCreateCommand;
 use Api\Admin\Factory\AdminCreateCommandFactory;
-use Api\Admin\Handler\AdminAccountHandler;
-use Api\Admin\Handler\AdminCollectionHandler;
-use Api\Admin\Handler\AdminHandler;
-use Api\Admin\Handler\AdminRoleCollectionHandler;
-use Api\Admin\Handler\AdminRoleHandler;
+use Api\Admin\Handler\Account\GetAdminAccountResourceHandler;
+use Api\Admin\Handler\Account\PatchAdminAccountResourceHandler;
+use Api\Admin\Handler\Admin\DeleteAdminResourceHandler;
+use Api\Admin\Handler\Admin\GetAdminCollectionHandler;
+use Api\Admin\Handler\Admin\GetAdminResourceHandler;
+use Api\Admin\Handler\Admin\PatchAdminResourceHandler;
+use Api\Admin\Handler\Admin\PostAdminResourceHandler;
+use Api\Admin\Handler\Admin\Role\GetAdminRoleCollectionHandler;
+use Api\Admin\Handler\Admin\Role\GetAdminRoleResourceHandler;
 use Api\Admin\Service\AdminRoleService;
 use Api\Admin\Service\AdminRoleServiceInterface;
 use Api\Admin\Service\AdminService;
@@ -42,24 +46,32 @@ class ConfigProvider
     {
         return [
             'delegators' => [
-                Application::class                => [RoutesDelegator::class],
-                AdminAccountHandler::class        => [HandlerDelegatorFactory::class],
-                AdminCollectionHandler::class     => [HandlerDelegatorFactory::class],
-                AdminHandler::class               => [HandlerDelegatorFactory::class],
-                AdminRoleCollectionHandler::class => [HandlerDelegatorFactory::class],
-                AdminRoleHandler::class           => [HandlerDelegatorFactory::class],
+                Application::class                      => [RoutesDelegator::class],
+                DeleteAdminResourceHandler::class       => [HandlerDelegatorFactory::class],
+                GetAdminAccountResourceHandler::class   => [HandlerDelegatorFactory::class],
+                GetAdminCollectionHandler::class        => [HandlerDelegatorFactory::class],
+                GetAdminResourceHandler::class          => [HandlerDelegatorFactory::class],
+                GetAdminRoleCollectionHandler::class    => [HandlerDelegatorFactory::class],
+                GetAdminRoleResourceHandler::class      => [HandlerDelegatorFactory::class],
+                PatchAdminAccountResourceHandler::class => [HandlerDelegatorFactory::class],
+                PatchAdminResourceHandler::class        => [HandlerDelegatorFactory::class],
+                PostAdminResourceHandler::class         => [HandlerDelegatorFactory::class],
             ],
             'factories'  => [
-                AdminAccountHandler::class        => AttributedServiceFactory::class,
-                AdminCollectionHandler::class     => AttributedServiceFactory::class,
-                AdminCreateCommand::class         => AdminCreateCommandFactory::class,
-                AdminHandler::class               => AttributedServiceFactory::class,
-                AdminRepository::class            => AttributedRepositoryFactory::class,
-                AdminRoleCollectionHandler::class => AttributedServiceFactory::class,
-                AdminRoleHandler::class           => AttributedServiceFactory::class,
-                AdminRoleRepository::class        => AttributedRepositoryFactory::class,
-                AdminRoleService::class           => AttributedServiceFactory::class,
-                AdminService::class               => AttributedServiceFactory::class,
+                AdminCreateCommand::class               => AdminCreateCommandFactory::class,
+                AdminRepository::class                  => AttributedRepositoryFactory::class,
+                AdminRoleRepository::class              => AttributedRepositoryFactory::class,
+                AdminRoleService::class                 => AttributedServiceFactory::class,
+                AdminService::class                     => AttributedServiceFactory::class,
+                DeleteAdminResourceHandler::class       => AttributedServiceFactory::class,
+                GetAdminAccountResourceHandler::class   => AttributedServiceFactory::class,
+                GetAdminCollectionHandler::class        => AttributedServiceFactory::class,
+                GetAdminResourceHandler::class          => AttributedServiceFactory::class,
+                GetAdminRoleCollectionHandler::class    => AttributedServiceFactory::class,
+                GetAdminRoleResourceHandler::class      => AttributedServiceFactory::class,
+                PatchAdminAccountResourceHandler::class => AttributedServiceFactory::class,
+                PatchAdminResourceHandler::class        => AttributedServiceFactory::class,
+                PostAdminResourceHandler::class         => AttributedServiceFactory::class,
             ],
             'aliases'    => [
                 AdminRoleServiceInterface::class => AdminRoleService::class,
@@ -71,10 +83,10 @@ class ConfigProvider
     public function getHalConfig(): array
     {
         return [
-            AppConfigProvider::getCollection(AdminCollection::class, 'admin.list', 'admins'),
-            AppConfigProvider::getCollection(AdminRoleCollection::class, 'admin.role.list', 'roles'),
-            AppConfigProvider::getResource(Admin::class, 'admin.view'),
-            AppConfigProvider::getResource(AdminRole::class, 'admin.role.view'),
+            AppConfigProvider::getCollection(AdminCollection::class, 'admin::list-admin', 'admins'),
+            AppConfigProvider::getCollection(AdminRoleCollection::class, 'admin::list-role', 'roles'),
+            AppConfigProvider::getResource(Admin::class, 'admin::view-admin'),
+            AppConfigProvider::getResource(AdminRole::class, 'admin::view-role'),
         ];
     }
 }
