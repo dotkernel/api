@@ -18,9 +18,11 @@ class PatchUserResourceHandler extends AbstractHandler
 {
     #[Inject(
         UserServiceInterface::class,
+        UpdateUserInputFilter::class,
     )]
     public function __construct(
         protected UserServiceInterface $userService,
+        protected UpdateUserInputFilter $inputFilter,
     ) {
     }
 
@@ -31,13 +33,13 @@ class PatchUserResourceHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new UpdateUserInputFilter())->setData((array) $request->getParsedBody());
-        if (! $inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
+        $this->inputFilter->setData((array) $request->getParsedBody());
+        if (! $this->inputFilter->isValid()) {
+            throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
         }
 
         $user = $this->userService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
-        $this->userService->updateUser($user, $inputFilter->getValues());
+        $this->userService->updateUser($user, (array) $this->inputFilter->getValues());
 
         return $this->createResponse($request, $user);
     }

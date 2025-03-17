@@ -22,9 +22,11 @@ class PostUserAccountResetPasswordHandler extends AbstractHandler
 {
     #[Inject(
         UserServiceInterface::class,
+        ResetPasswordInputFilter::class,
     )]
     public function __construct(
         protected UserServiceInterface $userService,
+        protected ResetPasswordInputFilter $inputFilter,
     ) {
     }
 
@@ -36,15 +38,15 @@ class PostUserAccountResetPasswordHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new ResetPasswordInputFilter())->setData((array) $request->getParsedBody());
-        if (! $inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
+        $this->inputFilter->setData((array) $request->getParsedBody());
+        if (! $this->inputFilter->isValid()) {
+            throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
         }
 
-        if (! empty($inputFilter->getValue('email'))) {
-            $user = $this->userService->findByEmail($inputFilter->getValue('email'));
-        } elseif (! empty($inputFilter->getValue('identity'))) {
-            $user = $this->userService->findByIdentity($inputFilter->getValue('identity'));
+        if (! empty($this->inputFilter->getValue('email'))) {
+            $user = $this->userService->findByEmail($this->inputFilter->getValue('email'));
+        } elseif (! empty($this->inputFilter->getValue('identity'))) {
+            $user = $this->userService->findByIdentity($this->inputFilter->getValue('identity'));
         } else {
             $user = null;
         }

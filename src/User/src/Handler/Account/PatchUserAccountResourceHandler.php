@@ -19,9 +19,11 @@ class PatchUserAccountResourceHandler extends AbstractHandler
 {
     #[Inject(
         UserServiceInterface::class,
+        UpdateUserInputFilter::class,
     )]
     public function __construct(
         protected UserServiceInterface $userService,
+        protected UpdateUserInputFilter $inputFilter,
     ) {
     }
 
@@ -32,14 +34,15 @@ class PatchUserAccountResourceHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new UpdateUserInputFilter())
+        $this->inputFilter
             ->setValidationGroup(['password', 'passwordConfirm', 'detail'])
             ->setData((array) $request->getParsedBody());
-        if (! $inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
+        if (! $this->inputFilter->isValid()) {
+            throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
         }
 
-        $user = $this->userService->updateUser($request->getAttribute(User::class), $inputFilter->getValues());
+        $user = $request->getAttribute(User::class);
+        $this->userService->updateUser($user, (array) $this->inputFilter->getValues());
 
         return $this->createResponse($request, $user);
     }

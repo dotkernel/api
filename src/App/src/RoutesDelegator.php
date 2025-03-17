@@ -6,6 +6,7 @@ namespace Api\App;
 
 use Api\App\Handler\GetIndexResourceHandler;
 use Api\App\Handler\PostErrorReportResourceHandler;
+use Api\App\Middleware\ErrorReportPermissionMiddleware;
 use Mezzio\Application;
 use Psr\Container\ContainerInterface;
 
@@ -24,7 +25,11 @@ class RoutesDelegator
         $app->get('/', GetIndexResourceHandler::class, 'app::view-index');
 
         // Other application reports an error
-        $app->post('/error-report', PostErrorReportResourceHandler::class, 'app::create-error-report');
+        $app->post(
+            '/error-report',
+            [ErrorReportPermissionMiddleware::class, PostErrorReportResourceHandler::class],
+            'app::create-error-report'
+        );
 
         return $app;
     }

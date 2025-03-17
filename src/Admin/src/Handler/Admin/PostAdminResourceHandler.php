@@ -18,9 +18,11 @@ class PostAdminResourceHandler extends AbstractHandler
 {
     #[Inject(
         AdminServiceInterface::class,
+        CreateAdminInputFilter::class,
     )]
     public function __construct(
         protected AdminServiceInterface $adminService,
+        protected CreateAdminInputFilter $inputFilter,
     ) {
     }
 
@@ -31,12 +33,12 @@ class PostAdminResourceHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new CreateAdminInputFilter())->setData((array) $request->getParsedBody());
-        if (! $inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
+        $this->inputFilter->setData((array) $request->getParsedBody());
+        if (! $this->inputFilter->isValid()) {
+            throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
         }
 
-        $admin = $this->adminService->createAdmin($inputFilter->getValues());
+        $admin = $this->adminService->createAdmin((array) $this->inputFilter->getValues());
 
         return $this->createdResponse($request, $admin);
     }

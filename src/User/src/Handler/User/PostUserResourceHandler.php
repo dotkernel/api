@@ -19,9 +19,11 @@ class PostUserResourceHandler extends AbstractHandler
 {
     #[Inject(
         UserServiceInterface::class,
+        CreateUserInputFilter::class,
     )]
     public function __construct(
         protected UserServiceInterface $userService,
+        protected CreateUserInputFilter $inputFilter,
     ) {
     }
 
@@ -33,12 +35,12 @@ class PostUserResourceHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new CreateUserInputFilter())->setData((array) $request->getParsedBody());
-        if (! $inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
+        $this->inputFilter->setData((array) $request->getParsedBody());
+        if (! $this->inputFilter->isValid()) {
+            throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
         }
 
-        $user = $this->userService->createUser($inputFilter->getValues());
+        $user = $this->userService->createUser((array) $this->inputFilter->getValues());
         if ($user->isPending()) {
             $this->userService->sendActivationMail($user);
         } elseif ($user->isActive()) {

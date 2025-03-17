@@ -17,9 +17,11 @@ class PostUserAccountAvatarHandler extends AbstractHandler
 {
     #[Inject(
         UserAvatarServiceInterface::class,
+        UpdateAvatarInputFilter::class,
     )]
     public function __construct(
         protected UserAvatarServiceInterface $userAvatarService,
+        protected UpdateAvatarInputFilter $inputFilter,
     ) {
     }
 
@@ -28,14 +30,14 @@ class PostUserAccountAvatarHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new UpdateAvatarInputFilter())->setData($request->getUploadedFiles());
-        if (! $inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
+        $this->inputFilter->setData($request->getUploadedFiles());
+        if (! $this->inputFilter->isValid()) {
+            throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
         }
 
         $userAvatar = $this->userAvatarService->createAvatar(
             $request->getAttribute(User::class),
-            $inputFilter->getValue('avatar')
+            $this->inputFilter->getValue('avatar')
         );
 
         return $this->createdResponse($request, $userAvatar);

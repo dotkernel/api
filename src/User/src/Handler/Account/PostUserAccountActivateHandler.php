@@ -23,9 +23,11 @@ class PostUserAccountActivateHandler extends AbstractHandler
 {
     #[Inject(
         UserServiceInterface::class,
+        ActivateAccountInputFilter::class,
     )]
     public function __construct(
         protected UserServiceInterface $userService,
+        protected ActivateAccountInputFilter $inputFilter,
     ) {
     }
 
@@ -37,12 +39,12 @@ class PostUserAccountActivateHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new ActivateAccountInputFilter())->setData((array) $request->getParsedBody());
-        if (! $inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
+        $this->inputFilter->setData((array) $request->getParsedBody());
+        if (! $this->inputFilter->isValid()) {
+            throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
         }
 
-        $user = $this->userService->findByEmail($inputFilter->getValue('email'));
+        $user = $this->userService->findByEmail($this->inputFilter->getValue('email'));
         if ($user->isActive()) {
             throw new ConflictException(Message::USER_ALREADY_ACTIVATED);
         }

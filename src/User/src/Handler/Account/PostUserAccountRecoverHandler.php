@@ -19,9 +19,11 @@ class PostUserAccountRecoverHandler extends AbstractHandler
 {
     #[Inject(
         UserServiceInterface::class,
+        RecoverIdentityInputFilter::class,
     )]
     public function __construct(
         protected UserServiceInterface $userService,
+        protected RecoverIdentityInputFilter $inputFilter,
     ) {
     }
 
@@ -32,12 +34,12 @@ class PostUserAccountRecoverHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $inputFilter = (new RecoverIdentityInputFilter())->setData((array) $request->getParsedBody());
-        if (! $inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
+        $this->inputFilter->setData((array) $request->getParsedBody());
+        if (! $this->inputFilter->isValid()) {
+            throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
         }
 
-        $user = $this->userService->findByEmail($inputFilter->getValue('email'));
+        $user = $this->userService->findByEmail($this->inputFilter->getValue('email'));
         $this->userService->sendRecoverIdentityMail($user);
 
         return $this->infoResponse(Message::MAIL_SENT_RECOVER_IDENTITY);

@@ -23,9 +23,11 @@ class PatchUserAccountResetPasswordHandler extends AbstractHandler
 {
     #[Inject(
         UserServiceInterface::class,
+        UpdatePasswordInputFilter::class,
     )]
     public function __construct(
         protected UserServiceInterface $userService,
+        protected UpdatePasswordInputFilter $inputFilter,
     ) {
     }
 
@@ -48,14 +50,14 @@ class PatchUserAccountResetPasswordHandler extends AbstractHandler
             throw new ConflictException(sprintf(Message::RESET_PASSWORD_USED, $hash));
         }
 
-        $inputFilter = (new UpdatePasswordInputFilter())->setData((array) $request->getParsedBody());
-        if (! $inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($inputFilter->getMessages());
+        $this->inputFilter->setData((array) $request->getParsedBody());
+        if (! $this->inputFilter->isValid()) {
+            throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
         }
 
         $this->userService->updateUser(
             $userResetPassword->markAsCompleted()->getUser(),
-            $inputFilter->getValues()
+            (array) $this->inputFilter->getValues()
         );
 
         $this->userService->sendResetPasswordCompletedMail($userResetPassword->getUser());
