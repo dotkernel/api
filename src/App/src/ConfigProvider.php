@@ -10,6 +10,7 @@ use Api\App\Factory\AuthenticationMiddlewareFactory;
 use Api\App\Factory\HandlerDelegatorFactory;
 use Api\App\Factory\RouteListCommandFactory;
 use Api\App\Factory\TokenGenerateCommandFactory;
+use Api\App\Handler\GetIndexResourceHandler;
 use Api\App\Handler\PostErrorReportResourceHandler;
 use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
@@ -52,6 +53,7 @@ class ConfigProvider
         return [
             'delegators' => [
                 Application::class                    => [RoutesDelegator::class],
+                GetIndexResourceHandler::class        => [HandlerDelegatorFactory::class],
                 PostErrorReportResourceHandler::class => [HandlerDelegatorFactory::class],
             ],
             'factories'  => [
@@ -63,6 +65,7 @@ class ConfigProvider
                 DeprecationMiddleware::class           => AttributedServiceFactory::class,
                 Environment::class                     => TwigEnvironmentFactory::class,
                 ErrorReportPermissionMiddleware::class => AttributedServiceFactory::class,
+                GetIndexResourceHandler::class         => AttributedServiceFactory::class,
                 PostErrorReportResourceHandler::class  => AttributedServiceFactory::class,
                 ErrorReportService::class              => AttributedServiceFactory::class,
                 ResponseMiddleware::class              => AttributedServiceFactory::class,

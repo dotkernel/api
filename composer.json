@@ -58,6 +58,7 @@
         "dotkernel/dot-errorhandler": "^4.0.0",
         "dotkernel/dot-mail": "^5.3.0",
         "dotkernel/dot-response-header": "^3.4.1",
+        "dotkernel/dot-router": "^1.0.4",
         "laminas/laminas-component-installer": "^3.5.0",
         "laminas/laminas-config-aggregator": "^1.18.0",
         "laminas/laminas-hydrator": "^4.16.0",

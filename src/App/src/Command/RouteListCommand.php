@@ -56,7 +56,12 @@ class RouteListCommand extends Command
 
         $routes = [];
         foreach ($this->application->getRoutes() as $route) {
-            foreach ($route->getAllowedMethods() as $method) {
+            $methods = $route->getAllowedMethods();
+            if (empty($methods)) {
+                $methods = ['*'];
+            }
+
+            foreach ($methods as $method) {
                 if (! str_contains($route->getName(), $nameFilter)) {
                     continue;
                 }
