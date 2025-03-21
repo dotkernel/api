@@ -50,14 +50,16 @@ class RoutesDelegator
 
         $routeCollector->group('/user')
             ->get('', GetUserCollectionHandler::class, 'user::list-user')
-            ->post('', PostUserResourceHandler::class, 'user::create-user')
-            ->patch('/' . $uuid . '/activate', PatchUserActivateHandler::class, 'user::activate-user')
-            ->patch('/' . $uuid . '/deactivate', PatchUserDeactivateHandler::class, 'user::deactivate-user');
+            ->post('', PostUserResourceHandler::class, 'user::create-user');
 
-        $routeCollector->group('/user')
-            ->delete('/' . $uuid, DeleteUserResourceHandler::class, 'user::delete-user')
-            ->get('/' . $uuid, GetUserResourceHandler::class, 'user::view-user')
-            ->patch('/' . $uuid, PatchUserResourceHandler::class, 'user::update-user');
+        $routeCollector
+            ->patch('/user/' . $uuid . '/activate', PatchUserActivateHandler::class, 'user::activate-user')
+            ->patch('/user/' . $uuid . '/deactivate', PatchUserDeactivateHandler::class, 'user::deactivate-user');
+
+        $routeCollector->group('/user/' . $uuid)
+            ->delete('', DeleteUserResourceHandler::class, 'user::delete-user')
+            ->get('', GetUserResourceHandler::class, 'user::view-user')
+            ->patch('', PatchUserResourceHandler::class, 'user::update-user');
 
         $routeCollector->group('/user/' . $uuid . '/avatar')
             ->delete('', DeleteUserAvatarResourceHandler::class, 'user::delete-user-avatar')
@@ -72,10 +74,13 @@ class RoutesDelegator
             ->delete('', DeleteUserAccountResourceHandler::class, 'user::delete-account')
             ->get('', GetUserAccountResourceHandler::class, 'user::view-account')
             ->patch('', PatchUserAccountResourceHandler::class, 'user::update-account')
-            ->post('', PostUserAccountResourceHandler::class, 'user::create-account')
-            ->patch('/activate/{hash}', PatchUserAccountActivateHandler::class, 'user::activate-account')
-            ->post('/activate', PostUserAccountActivateHandler::class, 'user::request-activate-account')
-            ->post('/recover', PostUserAccountRecoverHandler::class, 'user::recover-account');
+            ->post('', PostUserAccountResourceHandler::class, 'user::create-account');
+
+        $routeCollector->group('/user/account/activate')
+            ->patch('/{hash}', PatchUserAccountActivateHandler::class, 'user::activate-account')
+            ->post('', PostUserAccountActivateHandler::class, 'user::request-activate-account');
+
+        $routeCollector->post('/user/account/recover', PostUserAccountRecoverHandler::class, 'user::recover-account');
 
         $routeCollector->group('/user/account/avatar')
             ->delete('', DeleteUserAccountAvatarHandler::class, 'user::delete-account-avatar')
