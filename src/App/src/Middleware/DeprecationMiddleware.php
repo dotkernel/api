@@ -9,8 +9,9 @@ use Api\App\Attribute\ResourceDeprecation;
 use Api\App\Exception\DeprecationConflictException;
 use Core\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
+use Dot\Router\Middleware\LazyLoadingMiddleware;
 use Laminas\Stratigility\MiddlewarePipe;
-use Mezzio\Middleware\LazyLoadingMiddleware;
+use Mezzio\Middleware\LazyLoadingMiddleware as MezzioLazyLoadingMiddleware;
 use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -141,7 +142,10 @@ class DeprecationMiddleware implements MiddlewareInterface
     private function getHandler(MiddlewareInterface $routeMiddleware): ?ReflectionClass
     {
         $reflectionHandler = null;
-        if ($routeMiddleware instanceof LazyLoadingMiddleware) {
+        if (
+            $routeMiddleware instanceof MezzioLazyLoadingMiddleware
+            || $routeMiddleware instanceof LazyLoadingMiddleware
+        ) {
             /** @var class-string $routeMiddlewareName */
             $routeMiddlewareName       = $routeMiddleware->middlewareName;
             $reflectionMiddlewareClass = new ReflectionClass($routeMiddlewareName);

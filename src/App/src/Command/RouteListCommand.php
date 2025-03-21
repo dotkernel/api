@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Api\App\Command;
 
 use Api\App\RoutesDelegator;
+use Fig\Http\Message\RequestMethodInterface;
 use Mezzio\Application;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -56,7 +57,18 @@ class RouteListCommand extends Command
 
         $routes = [];
         foreach ($this->application->getRoutes() as $route) {
-            foreach ($route->getAllowedMethods() as $method) {
+            $methods = $route->getAllowedMethods();
+            if (empty($methods)) {
+                $methods = [
+                    RequestMethodInterface::METHOD_DELETE,
+                    RequestMethodInterface::METHOD_GET,
+                    RequestMethodInterface::METHOD_PATCH,
+                    RequestMethodInterface::METHOD_POST,
+                    RequestMethodInterface::METHOD_PUT,
+                ];
+            }
+
+            foreach ($methods as $method) {
                 if (! str_contains($route->getName(), $nameFilter)) {
                     continue;
                 }

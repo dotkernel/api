@@ -13,33 +13,42 @@ use Api\Admin\Handler\Admin\PatchAdminResourceHandler;
 use Api\Admin\Handler\Admin\PostAdminResourceHandler;
 use Api\Admin\Handler\Admin\Role\GetAdminRoleCollectionHandler;
 use Api\Admin\Handler\Admin\Role\GetAdminRoleResourceHandler;
+use Dot\Router\RouteCollectorInterface;
 use Mezzio\Application;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-
-use function assert;
+use Psr\Container\NotFoundExceptionInterface;
 
 class RoutesDelegator
 {
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __invoke(ContainerInterface $container, string $serviceName, callable $callback): Application
     {
-        $app = $callback();
-        assert($app instanceof Application);
-
         $uuid = \Api\App\RoutesDelegator::REGEXP_UUID;
 
-        $app->get('/admin', GetAdminCollectionHandler::class, 'admin::list-admin');
-        $app->post('/admin', PostAdminResourceHandler::class, 'admin::create-admin');
+        /** @var RouteCollectorInterface $routeCollector */
+        $routeCollector = $container->get(RouteCollectorInterface::class);
 
-        $app->delete('/admin/' . $uuid, DeleteAdminResourceHandler::class, 'admin::delete-admin');
-        $app->get('/admin/' . $uuid, GetAdminResourceHandler::class, 'admin::view-admin');
-        $app->patch('/admin/' . $uuid, PatchAdminResourceHandler::class, 'admin::update-admin');
+        $routeCollector->group('/admin')
+            ->get('', GetAdminCollectionHandler::class, 'admin::list-admin')
+            ->post('', PostAdminResourceHandler::class, 'admin::create-admin');
 
-        $app->get('/admin/role', GetAdminRoleCollectionHandler::class, 'admin::list-role');
-        $app->get('/admin/role/' . $uuid, GetAdminRoleResourceHandler::class, 'admin::view-role');
+        $routeCollector->group('/admin/' . $uuid)
+            ->delete('', DeleteAdminResourceHandler::class, 'admin::delete-admin')
+            ->get('', GetAdminResourceHandler::class, 'admin::view-admin')
+            ->patch('', PatchAdminResourceHandler::class, 'admin::update-admin');
 
-        $app->get('/admin/account', GetAdminAccountResourceHandler::class, 'admin::view-account');
-        $app->patch('/admin/account', PatchAdminAccountResourceHandler::class, 'admin::update-account');
+        $routeCollector->group('/admin/role')
+            ->get('', GetAdminRoleCollectionHandler::class, 'admin::list-role')
+            ->get('/' . $uuid, GetAdminRoleResourceHandler::class, 'admin::view-role');
 
-        return $app;
+        $routeCollector->group('/admin/account')
+            ->get('', GetAdminAccountResourceHandler::class, 'admin::view-account')
+            ->patch('', PatchAdminAccountResourceHandler::class, 'admin::update-account');
+
+        return $callback();
     }
 }

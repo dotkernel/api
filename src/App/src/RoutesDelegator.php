@@ -7,30 +7,33 @@ namespace Api\App;
 use Api\App\Handler\GetIndexResourceHandler;
 use Api\App\Handler\PostErrorReportResourceHandler;
 use Api\App\Middleware\ErrorReportPermissionMiddleware;
+use Dot\Router\RouteCollectorInterface;
 use Mezzio\Application;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-
-use function assert;
+use Psr\Container\NotFoundExceptionInterface;
 
 class RoutesDelegator
 {
     public const REGEXP_UUID = '{uuid:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}';
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __invoke(ContainerInterface $container, string $serviceName, callable $callback): Application
     {
-        $app = $callback();
-        assert($app instanceof Application);
+        /** @var RouteCollectorInterface $routeCollector */
+        $routeCollector = $container->get(RouteCollectorInterface::class);
 
-        // Home page
-        $app->get('/', GetIndexResourceHandler::class, 'app::view-index');
+        $routeCollector
+            ->get('/', GetIndexResourceHandler::class, 'app::view-index')
+            ->post(
+                '/error-report',
+                [ErrorReportPermissionMiddleware::class, PostErrorReportResourceHandler::class],
+                'app::create-error-report'
+            );
 
-        // Other application reports an error
-        $app->post(
-            '/error-report',
-            [ErrorReportPermissionMiddleware::class, PostErrorReportResourceHandler::class],
-            'app::create-error-report'
-        );
-
-        return $app;
+        return $callback();
     }
 }

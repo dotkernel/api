@@ -29,73 +29,69 @@ use Api\User\Handler\User\PatchUserResourceHandler;
 use Api\User\Handler\User\PostUserResourceHandler;
 use Api\User\Handler\User\Role\GetUserRoleCollectionHandler;
 use Api\User\Handler\User\Role\GetUserRoleResourceHandler;
+use Dot\Router\RouteCollectorInterface;
 use Mezzio\Application;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-
-use function assert;
+use Psr\Container\NotFoundExceptionInterface;
 
 class RoutesDelegator
 {
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __invoke(ContainerInterface $container, string $serviceName, callable $callback): Application
     {
-        $app = $callback();
-        assert($app instanceof Application);
-
         $uuid = \Api\App\RoutesDelegator::REGEXP_UUID;
 
-        // Accounts having higher than user permissions manage user accounts
+        /** @var RouteCollectorInterface $routeCollector */
+        $routeCollector = $container->get(RouteCollectorInterface::class);
 
-        $app->get('/user', GetUserCollectionHandler::class, 'user::list-user');
-        $app->post('/user', PostUserResourceHandler::class, 'user::create-user');
+        $routeCollector->group('/user')
+            ->get('', GetUserCollectionHandler::class, 'user::list-user')
+            ->post('', PostUserResourceHandler::class, 'user::create-user');
 
-        $app->delete('/user/' . $uuid, DeleteUserResourceHandler::class, 'user::delete-user');
-        $app->get('/user/' . $uuid, GetUserResourceHandler::class, 'user::view-user');
-        $app->patch('/user/' . $uuid, PatchUserResourceHandler::class, 'user::update-user');
+        $routeCollector
+            ->patch('/user/' . $uuid . '/activate', PatchUserActivateHandler::class, 'user::activate-user')
+            ->patch('/user/' . $uuid . '/deactivate', PatchUserDeactivateHandler::class, 'user::deactivate-user');
 
-        $app->delete('/user/' . $uuid . '/avatar', DeleteUserAvatarResourceHandler::class, 'user::delete-user-avatar');
-        $app->get('/user/' . $uuid . '/avatar', GetUserAvatarResourceHandler::class, 'user::view-user-avatar');
-        $app->post('/user/' . $uuid . '/avatar', PostUserAvatarResourceHandler::class, 'user::create-user-avatar');
+        $routeCollector->group('/user/' . $uuid)
+            ->delete('', DeleteUserResourceHandler::class, 'user::delete-user')
+            ->get('', GetUserResourceHandler::class, 'user::view-user')
+            ->patch('', PatchUserResourceHandler::class, 'user::update-user');
 
-        $app->get('/user/role', GetUserRoleCollectionHandler::class, 'user::list-role');
-        $app->get('/user/role/' . $uuid, GetUserRoleResourceHandler::class, 'user::view-role');
+        $routeCollector->group('/user/' . $uuid . '/avatar')
+            ->delete('', DeleteUserAvatarResourceHandler::class, 'user::delete-user-avatar')
+            ->get('', GetUserAvatarResourceHandler::class, 'user::view-user-avatar')
+            ->post('', PostUserAvatarResourceHandler::class, 'user::create-user-avatar');
 
-        $app->patch('/user/' . $uuid . '/activate', PatchUserActivateHandler::class, 'user::activate-user');
-        $app->patch('/user/' . $uuid . '/deactivate', PatchUserDeactivateHandler::class, 'user::deactivate-user');
+        $routeCollector->group('/user/role')
+            ->get('', GetUserRoleCollectionHandler::class, 'user::list-role')
+            ->get('/' . $uuid, GetUserRoleResourceHandler::class, 'user::view-role');
 
-        // Users manage their user accounts
+        $routeCollector->group('/user/account')
+            ->delete('', DeleteUserAccountResourceHandler::class, 'user::delete-account')
+            ->get('', GetUserAccountResourceHandler::class, 'user::view-account')
+            ->patch('', PatchUserAccountResourceHandler::class, 'user::update-account')
+            ->post('', PostUserAccountResourceHandler::class, 'user::create-account');
 
-        $app->delete('/user/account', DeleteUserAccountResourceHandler::class, 'user::delete-account');
-        $app->get('/user/account', GetUserAccountResourceHandler::class, 'user::view-account');
-        $app->patch('/user/account', PatchUserAccountResourceHandler::class, 'user::update-account');
-        $app->post('/user/account', PostUserAccountResourceHandler::class, 'user::create-account');
+        $routeCollector->group('/user/account/activate')
+            ->patch('/{hash}', PatchUserAccountActivateHandler::class, 'user::activate-account')
+            ->post('', PostUserAccountActivateHandler::class, 'user::request-activate-account');
 
-        $app->delete('/user/account/avatar', DeleteUserAccountAvatarHandler::class, 'user::delete-account-avatar');
-        $app->get('/user/account/avatar', GetUserAccountAvatarHandler::class, 'user::view-account-avatar');
-        $app->post('/user/account/avatar', PostUserAccountAvatarHandler::class, 'user::create-account-avatar');
+        $routeCollector->post('/user/account/recover', PostUserAccountRecoverHandler::class, 'user::recover-account');
 
-        // Unauthenticated users manage their user accounts
+        $routeCollector->group('/user/account/avatar')
+            ->delete('', DeleteUserAccountAvatarHandler::class, 'user::delete-account-avatar')
+            ->get('', GetUserAccountAvatarHandler::class, 'user::view-account-avatar')
+            ->post('', PostUserAccountAvatarHandler::class, 'user::create-account-avatar');
 
-        $app->patch('/user/account/activate/{hash}', PatchUserAccountActivateHandler::class, 'user::activate-account');
-        $app->post('/user/account/activate', PostUserAccountActivateHandler::class, 'user::request-activate-account');
+        $routeCollector->group('/user/account/reset-password')
+            ->get('/{hash}', GetUserAccountResetPasswordHandler::class, 'user::check-account-reset-password')
+            ->patch('/{hash}', PatchUserAccountResetPasswordHandler::class, 'user::update-account-reset-password')
+            ->post('', PostUserAccountResetPasswordHandler::class, 'user::create-account-reset-password');
 
-        $app->post('/user/account/recover', PostUserAccountRecoverHandler::class, 'user::recover-account');
-
-        $app->get(
-            '/user/account/reset-password/{hash}',
-            GetUserAccountResetPasswordHandler::class,
-            'user::check-account-reset-password'
-        );
-        $app->patch(
-            '/user/account/reset-password/{hash}',
-            PatchUserAccountResetPasswordHandler::class,
-            'user::update-account-reset-password'
-        );
-        $app->post(
-            '/user/account/reset-password',
-            PostUserAccountResetPasswordHandler::class,
-            'user::create-account-reset-password'
-        );
-
-        return $app;
+        return $callback();
     }
 }
