@@ -23,6 +23,11 @@ interface AdminServiceInterface
     public function deleteAdmin(Admin $admin): void;
 
     /**
+     * @throws NotFoundException
+     */
+    public function find(string $id): Admin;
+
+    /**
      * @throws BadRequestException
      * @throws ConflictException
      * @throws NotFoundException

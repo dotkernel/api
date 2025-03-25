@@ -65,6 +65,19 @@ class AdminService implements AdminServiceInterface
     }
 
     /**
+     * @throws NotFoundException
+     */
+    public function find(string $id): Admin
+    {
+        $admin = $this->adminRepository->find($id);
+        if (! $admin instanceof Admin) {
+            throw new NotFoundException(Message::ADMIN_NOT_FOUND);
+        }
+
+        return $admin;
+    }
+
+    /**
      * @throws BadRequestException
      * @throws ConflictException
      * @throws NotFoundException

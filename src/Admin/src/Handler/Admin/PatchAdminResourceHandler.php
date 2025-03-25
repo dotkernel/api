@@ -6,12 +6,10 @@ namespace Api\Admin\Handler\Admin;
 
 use Api\Admin\InputFilter\UpdateAdminInputFilter;
 use Api\App\Handler\AbstractHandler;
-use Core\Admin\Entity\Admin;
 use Core\Admin\Service\AdminServiceInterface;
 use Core\App\Exception\BadRequestException;
 use Core\App\Exception\ConflictException;
 use Core\App\Exception\NotFoundException;
-use Core\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,10 +38,7 @@ class PatchAdminResourceHandler extends AbstractHandler
             throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
         }
 
-        $admin = $this->adminService->getAdminRepository()->find($request->getAttribute('uuid'));
-        if (! $admin instanceof Admin) {
-            throw new NotFoundException(Message::ADMIN_NOT_FOUND);
-        }
+        $admin = $this->adminService->find($request->getAttribute('uuid'));
 
         $this->adminService->updateAdmin($admin, (array) $this->inputFilter->getValues());
 

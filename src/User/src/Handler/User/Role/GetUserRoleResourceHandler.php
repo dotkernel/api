@@ -6,8 +6,6 @@ namespace Api\User\Handler\User\Role;
 
 use Api\App\Handler\AbstractHandler;
 use Core\App\Exception\NotFoundException;
-use Core\App\Message;
-use Core\User\Entity\UserRole;
 use Core\User\Service\UserRoleServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
@@ -28,11 +26,9 @@ class GetUserRoleResourceHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $userRole = $this->userRoleService->getRoleRepository()->find($request->getAttribute('uuid'));
-        if (! $userRole instanceof UserRole) {
-            throw new NotFoundException(Message::ROLE_NOT_FOUND);
-        }
-
-        return $this->createResponse($request, $userRole);
+        return $this->createResponse(
+            $request,
+            $this->userRoleService->find($request->getAttribute('uuid'))
+        );
     }
 }

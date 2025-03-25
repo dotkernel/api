@@ -29,7 +29,9 @@ class GetUserRoleCollectionHandler extends AbstractHandler
     {
         return $this->createResponse(
             $request,
-            new UserRoleCollection($this->userRoleService->getRoleRepository()->getRoles($request->getQueryParams()))
+            new UserRoleCollection(
+                $this->userRoleService->getUserRoleRepository()->getRoles($request->getQueryParams())
+            )
         );
     }
 }
