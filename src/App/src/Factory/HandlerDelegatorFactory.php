@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Api\App\Factory;
 
-use Api\App\Exception\RuntimeException;
 use Api\App\Handler\AbstractHandler;
+use Core\App\Exception\RuntimeException;
 use Core\App\Message;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;

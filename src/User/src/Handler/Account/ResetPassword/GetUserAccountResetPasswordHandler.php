@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Api\User\Handler\Account\ResetPassword;
 
-use Api\App\Exception\ExpiredException;
-use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
-use Api\User\Service\UserServiceInterface;
+use Core\App\Exception\ExpiredException;
+use Core\App\Exception\NotFoundException;
 use Core\App\Message;
+use Core\User\Service\UserResetPasswordServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,10 +18,10 @@ use function sprintf;
 class GetUserAccountResetPasswordHandler extends AbstractHandler
 {
     #[Inject(
-        UserServiceInterface::class,
+        UserResetPasswordServiceInterface::class,
     )]
     public function __construct(
-        protected UserServiceInterface $userService,
+        protected UserResetPasswordServiceInterface $userResetPasswordService,
     ) {
     }
 
@@ -33,7 +33,7 @@ class GetUserAccountResetPasswordHandler extends AbstractHandler
     {
         $hash = $request->getAttribute('hash');
 
-        $userResetPassword = $this->userService->findResetPasswordByHash($hash);
+        $userResetPassword = $this->userResetPasswordService->findOneBy(['hash' => $hash]);
         if (! $userResetPassword->isValid()) {
             throw new ExpiredException(sprintf(Message::RESET_PASSWORD_EXPIRED, $hash));
         }

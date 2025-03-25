@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ApiTest\Unit\App\Middleware;
 
-use Api\App\Middleware\AuthenticationMiddleware as Subject;
+use Api\App\Middleware\AuthenticationMiddleware;
 use Core\User\Entity\UserRole;
 use Laminas\Diactoros\ServerRequest;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -18,7 +18,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class AuthenticationMiddlewareTest extends TestCase
 {
-    private Subject $subject;
+    private AuthenticationMiddleware $authenticationMiddleware;
     private AuthenticationInterface|MockObject $auth;
     private ServerRequestInterface $request;
     private RequestHandlerInterface|MockObject $handler;
@@ -33,7 +33,8 @@ class AuthenticationMiddlewareTest extends TestCase
         $this->handler  = $this->createMock(RequestHandlerInterface::class);
         $this->response = $this->createMock(ResponseInterface::class);
         $this->request  = new ServerRequest();
-        $this->subject  = new Subject($this->auth);
+
+        $this->authenticationMiddleware = new AuthenticationMiddleware($this->auth);
     }
 
     public function testAuthenticationFailsFallbackToGuestUser(): void
@@ -42,15 +43,15 @@ class AuthenticationMiddlewareTest extends TestCase
 
         $this->handler->expects($this->once())
             ->method('handle')
-            ->will($this->returnCallback(function (ServerRequestInterface $request) {
+            ->willReturnCallback(function (ServerRequestInterface $request) {
                 $user = $request->getAttribute(UserInterface::class);
                 $this->assertInstanceOf(UserInterface::class, $user);
                 $this->assertSame(UserRole::ROLE_GUEST, $user->getIdentity());
                 $this->assertSame(['guest'], $user->getRoles());
                 $this->assertCount(1, $user->getRoles());
                 return $this->response;
-            }));
+            });
 
-        $this->subject->process($this->request, $this->handler);
+        $this->authenticationMiddleware->process($this->request, $this->handler);
     }
 }

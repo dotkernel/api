@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Core\User\Repository;
 
 use Core\Admin\Entity\Admin;
-use Core\App\Entity\OAuthClient;
+use Core\App\Exception\BadRequestException;
 use Core\App\Helper\PaginationHelper;
 use Core\App\Message;
+use Core\Security\Entity\OAuthClient;
 use Core\User\Entity\User;
 use Core\User\Enum\UserStatusEnum;
 use Doctrine\ORM\EntityRepository;
@@ -18,7 +19,9 @@ use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use Mezzio\Authentication\OAuth2\Entity\UserEntity;
 
+use function in_array;
 use function password_verify;
+use function sprintf;
 
 /**
  * @extends EntityRepository<object>
@@ -26,15 +29,28 @@ use function password_verify;
 #[Entity(name: User::class)]
 class UserRepository extends EntityRepository implements UserRepositoryInterface
 {
-    public function deleteUser(User $user): void
+    /**
+     * @throws BadRequestException
+     */
+    public function getUsers(array $params = []): QueryBuilder
     {
-        $this->getEntityManager()->remove($user);
-        $this->getEntityManager()->flush();
-    }
+        $page = PaginationHelper::getOffsetAndLimit($params);
 
-    public function getUsers(array $filters = []): QueryBuilder
-    {
-        $page = PaginationHelper::getOffsetAndLimit($filters);
+        $values = [
+            'user.identity',
+            'user.status',
+            'user.created',
+            'user.updated',
+        ];
+
+        $params['order'] = $params['order'] ?? 'user.created';
+        if (! in_array($params['order'], $values)) {
+            throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'order')]);
+        }
+        $params['dir'] = $params['dir'] ?? 'desc';
+        if (! in_array($params['dir'], ['asc', 'desc'])) {
+            throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'dir')]);
+        }
 
         $qb = $this
             ->getEntityManager()
@@ -44,15 +60,18 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             ->leftJoin('user.avatar', 'avatar')
             ->leftJoin('user.detail', 'detail')
             ->leftJoin('user.roles', 'roles')
-            ->orderBy($filters['order'] ?? 'user.created', $filters['dir'] ?? 'desc')
+            ->andWhere('user.status != :status')
+            ->setParameter('status', UserStatusEnum::Deleted)
+            ->orderBy($params['order'], $params['dir'])
             ->setFirstResult($page['offset'])
             ->setMaxResults($page['limit']);
+        $qb->getQuery()->useQueryCache(true);
 
-        if (! empty($filters['status'])) {
-            $qb->andWhere('user.status = :status')->setParameter('status', $filters['status']);
+        if (! empty($params['status'])) {
+            $qb->andWhere('user.status = :status')->setParameter('status', $params['status']);
         }
 
-        if (! empty($filters['search'])) {
+        if (! empty($params['search'])) {
             $qb->andWhere(
                 $qb->expr()->orX(
                     $qb->expr()->like('user.identity', ':search'),
@@ -60,16 +79,12 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
                     $qb->expr()->like('detail.lastName', ':search'),
                     $qb->expr()->like('detail.email', ':search')
                 )
-            )->setParameter('search', '%' . $filters['search'] . '%');
+            )->setParameter('search', '%' . $params['search'] . '%');
         }
 
-        if (! empty($filters['role'])) {
-            $qb->andWhere('roles.name = :role')->setParameter('role', $filters['role']);
+        if (! empty($params['role'])) {
+            $qb->andWhere('roles.name = :role')->setParameter('role', $params['role']);
         }
-
-        //ignore deleted users
-        $qb->andWhere('user.status != :status')->setParameter('status', UserStatusEnum::Deleted);
-        $qb->getQuery()->useQueryCache(true);
 
         return $qb;
     }

@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace Api\App\Command;
 
-use Api\App\Exception\NotFoundException;
 use Api\App\Service\ErrorReportServiceInterface;
+use Core\App\Exception\NotFoundException;
+use Dot\DependencyInjection\Attribute\Inject;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 use function sprintf;
+
+use const PHP_EOL;
 
 #[AsCommand(
     name: 'token:generate',
@@ -24,6 +28,9 @@ class TokenGenerateCommand extends Command
     protected static $defaultName      = 'token:generate';
     private string $typeErrorReporting = 'error-reporting';
 
+    #[Inject(
+        ErrorReportServiceInterface::class,
+    )]
     public function __construct(
         protected ErrorReportServiceInterface $errorReportService,
     ) {
@@ -38,18 +45,14 @@ class TokenGenerateCommand extends Command
             ->addArgument('type', InputArgument::REQUIRED, 'The type of token to be generated.')
             ->addUsage($this->typeErrorReporting)
             ->setHelp(
-            // @codingStandardsIgnoreStart
-                <<<MSG
-<info>%command.name%</info> is a multipurpose command that allows creating tokens required by different parts of the API.
+                sprintf(
+                    '<info>%%command.name%%</info> is a multipurpose command'
+                    . ' that allows creating tokens required by different parts of the API.
 
 Usage:
-1. Create token for the error reporting endpoint:
-* run: <info>%command.full_name% $this->typeErrorReporting</info>
-* copy the generated token
-* open <comment>config/autoload/error-handling.global.php</comment>
-* paste the copied string inside the <comment>tokens</comment> array found under the <comment>ErrorReportServiceInterface::class</comment> key.
-MSG
-            // @codingStandardsIgnoreEnd
+- Create token for the error reporting endpoint: <info>./%%command.full_name%% %s</info>',
+                    $this->typeErrorReporting
+                )
             );
     }
 
@@ -58,9 +61,11 @@ MSG
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
+
         $type = $input->getArgument('type');
         match ($type) {
-            $this->typeErrorReporting => $this->generateErrorReportingToken($output),
+            $this->typeErrorReporting => $this->generateErrorReportingToken($io),
             default => throw new NotFoundException(
                 sprintf('Unknown token type: %s', $type)
             )
@@ -69,22 +74,20 @@ MSG
         return Command::SUCCESS;
     }
 
-    private function generateErrorReportingToken(OutputInterface $output): void
+    private function generateErrorReportingToken(SymfonyStyle $io): void
     {
         $token = $this->errorReportService->generateToken();
 
-        $output->writeln(
-        // @codingStandardsIgnoreStart
-            <<<MSG
-Error reporting token:
+        $io->writeln('Error reporting token:' . PHP_EOL);
+        $io->writeln('<info>    ' . $token . '</info>' . PHP_EOL);
 
-    <info>$token</info>
-
-* copy the generated token
+        $io->writeln(
+            sprintf(
+                '* copy the generated token
 * open <comment>config/autoload/error-handling.global.php</comment>
-* paste the copied string inside the <comment>tokens</comment> array found under the <comment>ErrorReportServiceInterface::class</comment> key.
-MSG
-        // @codingStandardsIgnoreEnd
+* paste the copied string inside the <comment>tokens</comment> array found under the <comment>%s</comment> key.',
+                'ErrorReportServiceInterface::class'
+            )
         );
     }
 }

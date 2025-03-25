@@ -23,9 +23,9 @@ after replacing:
 
 If the submitted data is valid, the outputted response is:
 
-```text
-Admin account has been created.
-```
+>
+> [INFO] Admin account has been created.
+>
 
 The new admin account is ready to use.
 

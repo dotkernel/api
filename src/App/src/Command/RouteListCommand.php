@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Api\App\Command;
 
 use Api\App\RoutesDelegator;
+use Dot\DependencyInjection\Attribute\Inject;
 use Fig\Http\Message\RequestMethodInterface;
 use Mezzio\Application;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -32,6 +33,9 @@ class RouteListCommand extends Command
     /** @var string $defaultName */
     protected static $defaultName = 'route:list';
 
+    #[Inject(
+        Application::class,
+    )]
     public function __construct(
         protected Application $application,
     ) {

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Api\Admin\Handler\Account;
 
 use Api\Admin\InputFilter\UpdateAdminInputFilter;
-use Api\Admin\Service\AdminServiceInterface;
-use Api\App\Exception\BadRequestException;
-use Api\App\Exception\ConflictException;
-use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
 use Core\Admin\Entity\Admin;
+use Core\Admin\Service\AdminServiceInterface;
+use Core\App\Exception\BadRequestException;
+use Core\App\Exception\ConflictException;
+use Core\App\Exception\NotFoundException;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

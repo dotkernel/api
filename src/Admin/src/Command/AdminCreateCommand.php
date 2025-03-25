@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace Api\Admin\Command;
 
 use Api\Admin\InputFilter\CreateAdminInputFilter;
-use Api\Admin\Service\AdminRoleService;
-use Api\Admin\Service\AdminService;
-use Api\App\Exception\BadRequestException;
-use Api\App\Exception\ConflictException;
-use Api\App\Exception\NotFoundException;
 use Core\Admin\Entity\AdminRole;
+use Core\Admin\Service\AdminRoleServiceInterface;
+use Core\Admin\Service\AdminServiceInterface;
+use Core\App\Exception\BadRequestException;
+use Core\App\Exception\ConflictException;
+use Core\App\Exception\NotFoundException;
 use Core\App\Message;
+use Dot\DependencyInjection\Attribute\Inject;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 use function implode;
 use function sprintf;
@@ -32,9 +34,13 @@ class AdminCreateCommand extends Command
     /** @var string $defaultName */
     protected static $defaultName = 'admin:create';
 
+    #[Inject(
+        AdminServiceInterface::class,
+        AdminRoleServiceInterface::class,
+    )]
     public function __construct(
-        protected AdminService $adminService,
-        protected AdminRoleService $adminRoleService,
+        protected AdminServiceInterface $adminService,
+        protected AdminRoleServiceInterface $adminRoleService,
     ) {
         parent::__construct(self::$defaultName);
     }
@@ -74,7 +80,7 @@ class AdminCreateCommand extends Command
 
         $this->adminService->createAdmin($inputFilter->getValues());
 
-        $output->writeln(Message::ADMIN_CREATED);
+        (new SymfonyStyle($input, $output))->info(Message::ADMIN_CREATED);
 
         return Command::SUCCESS;
     }
@@ -84,7 +90,10 @@ class AdminCreateCommand extends Command
      */
     private function getData(InputInterface $input): array
     {
-        $role = $this->adminRoleService->findOneBy(['name' => AdminRole::ROLE_ADMIN]);
+        $adminRole = $this->adminRoleService->getAdminRoleRepository()->findOneBy(['name' => AdminRole::ROLE_ADMIN]);
+        if (! $adminRole instanceof AdminRole) {
+            throw new NotFoundException(Message::ROLE_NOT_FOUND);
+        }
 
         return [
             'identity'        => $input->getOption('identity'),
@@ -93,7 +102,7 @@ class AdminCreateCommand extends Command
             'firstName'       => $input->getOption('firstName'),
             'lastName'        => $input->getOption('lastName'),
             'roles'           => [
-                ['uuid' => $role->getUuid()->toString()],
+                ['uuid' => $adminRole->getUuid()->toString()],
             ],
         ];
     }

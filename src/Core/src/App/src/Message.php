@@ -27,7 +27,7 @@ class Message
     public const METHOD_NOT_ALLOWED               = 'The request method is not supported for the requested resource.';
     public const MISSING_CONFIG                   = 'Missing configuration value: \'%s\'.';
     public const RESET_PASSWORD_EXPIRED           = 'Password reset request for hash: \'%s\' is invalid (expired).';
-    public const RESET_PASSWORD_NOT_FOUND         = 'Could not find password reset request identified by hash: \'%s\'';
+    public const RESET_PASSWORD_NOT_FOUND         = 'Reset password not found.';
     public const RESET_PASSWORD_OK                = 'Password successfully modified.';
     public const RESET_PASSWORD_USED              = 'Password reset request for hash: \'%s\' is invalid (used).';
     public const RESET_PASSWORD_VALID             = 'Password reset request for hash: \'%s\' is valid.';

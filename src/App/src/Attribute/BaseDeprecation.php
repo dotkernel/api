@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\App\Attribute;
 
-use Api\App\Exception\DeprecationSunsetException;
+use Core\App\Exception\DeprecationSunsetException;
 use Core\App\Message;
 use Laminas\Validator\Date;
 

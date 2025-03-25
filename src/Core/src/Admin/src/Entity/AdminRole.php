@@ -11,7 +11,7 @@ use Core\App\Entity\TimestampsTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdminRoleRepository::class)]
-#[ORM\Table("admin_role")]
+#[ORM\Table('admin_role')]
 #[ORM\HasLifecycleCallbacks]
 class AdminRole extends AbstractEntity implements RoleInterface
 {
@@ -24,15 +24,15 @@ class AdminRole extends AbstractEntity implements RoleInterface
         self::ROLE_SUPERUSER,
     ];
 
+    #[ORM\Column(name: 'name', type: 'string', length: 30, unique: true)]
+    protected string $name = '';
+
     public function __construct()
     {
         parent::__construct();
 
         $this->created();
     }
-
-    #[ORM\Column(name: "name", type: "string", length: 30, unique: true)]
-    protected string $name = '';
 
     public function getName(): string
     {

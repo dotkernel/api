@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Api\User\Handler\Account\Avatar;
 
-use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
-use Api\User\Service\UserAvatarServiceInterface;
+use Core\App\Exception\NotFoundException;
 use Core\App\Message;
 use Core\User\Entity\User;
+use Core\User\Service\UserAvatarServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

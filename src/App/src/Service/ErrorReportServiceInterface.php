@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Api\App\Service;
 
-use Api\App\Exception\ForbiddenException;
-use Api\App\Exception\UnauthorizedException;
+use Core\App\Exception\ForbiddenException;
+use Core\App\Exception\RuntimeException;
+use Core\App\Exception\UnauthorizedException;
 use Psr\Http\Message\ServerRequestInterface;
-use RuntimeException;
 use Symfony\Component\Filesystem\Exception\IOException;
 
 interface ErrorReportServiceInterface

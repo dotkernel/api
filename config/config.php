@@ -51,6 +51,7 @@ $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
     // Default App module config
     Core\Admin\ConfigProvider::class,
     Core\App\ConfigProvider::class,
+    Core\Security\ConfigProvider::class,
     Core\User\ConfigProvider::class,
     Api\Admin\ConfigProvider::class,
     Api\App\ConfigProvider::class,

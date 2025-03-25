@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Api\App\Service;
 
-use Api\App\Exception\ForbiddenException;
-use Api\App\Exception\UnauthorizedException;
+use Core\App\Exception\ForbiddenException;
+use Core\App\Exception\RuntimeException;
+use Core\App\Exception\UnauthorizedException;
 use Core\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ServerRequestInterface;
-use RuntimeException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -32,7 +32,7 @@ class ErrorReportService implements ErrorReportServiceInterface
     private ?string $token = null;
 
     #[Inject(
-        "config",
+        'config',
     )]
     public function __construct(
         protected array $config,

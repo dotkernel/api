@@ -97,6 +97,7 @@
             "Api\\User\\": "src/User/src/",
             "Core\\Admin\\": "src/Core/src/Admin/src/",
             "Core\\App\\": "src/Core/src/App/src/",
+            "Core\\Security\\": "src/Core/src/Security/src/",
             "Core\\User\\": "src/Core/src/User/src/"
         }
     },

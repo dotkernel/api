@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ApiTest\Unit\App\Middleware;
 
-use Api\App\Middleware\AuthorizationMiddleware as Subject;
+use Api\App\Middleware\AuthorizationMiddleware;
 use Core\Admin\Entity\Admin;
 use Core\Admin\Entity\AdminRole;
 use Core\Admin\Enum\AdminStatusEnum;
@@ -31,7 +31,7 @@ use function sprintf;
 
 class AuthorizationMiddlewareTest extends TestCase
 {
-    private Subject $subject;
+    private AuthorizationMiddleware $authorizationMiddleware;
     private UserRepository|MockObject $userRepository;
     private AdminRepository|MockObject $adminRepository;
     private AuthorizationInterface|MockObject $authorization;
@@ -50,7 +50,8 @@ class AuthorizationMiddlewareTest extends TestCase
         $this->handler         = $this->createMock(RequestHandlerInterface::class);
         $this->response        = $this->createMock(ResponseInterface::class);
         $this->request         = new ServerRequest();
-        $this->subject         = new Subject(
+
+        $this->authorizationMiddleware = new AuthorizationMiddleware(
             $this->authorization,
             $this->userRepository,
             $this->adminRepository
@@ -62,7 +63,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $identity      = new UserIdentity('test@dotkernel.com', ['user'], ['oauth_client_id' => 'invalid_client_id']);
         $this->request = $this->request->withAttribute(UserInterface::class, $identity);
 
-        $response = $this->subject->process($this->request, $this->handler);
+        $response = $this->authorizationMiddleware->process($this->request, $this->handler);
         $this->assertSame(StatusCodeInterface::STATUS_FORBIDDEN, $response->getStatusCode());
 
         $data = json_decode($response->getBody()->getContents(), true);
@@ -82,7 +83,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $identity      = new UserIdentity('admin@dotkernel.com', ['admin'], ['oauth_client_id' => 'admin']);
         $this->request = $this->request->withAttribute(UserInterface::class, $identity);
 
-        $response = $this->subject->process($this->request, $this->handler);
+        $response = $this->authorizationMiddleware->process($this->request, $this->handler);
         $this->assertSame(StatusCodeInterface::STATUS_FORBIDDEN, $response->getStatusCode());
 
         $data = json_decode($response->getBody()->getContents(), true);
@@ -98,7 +99,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $identity      = new UserIdentity('test@dotkernel.com', ['user'], ['oauth_client_id' => 'frontend']);
         $this->request = $this->request->withAttribute(UserInterface::class, $identity);
 
-        $response = $this->subject->process($this->request, $this->handler);
+        $response = $this->authorizationMiddleware->process($this->request, $this->handler);
         $this->assertSame(StatusCodeInterface::STATUS_FORBIDDEN, $response->getStatusCode());
 
         $data = json_decode($response->getBody()->getContents(), true);
@@ -116,7 +117,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $identity      = new UserIdentity('test@dotkernel.com', ['user'], ['oauth_client_id' => 'frontend']);
         $this->request = $this->request->withAttribute(UserInterface::class, $identity);
 
-        $response = $this->subject->process($this->request, $this->handler);
+        $response = $this->authorizationMiddleware->process($this->request, $this->handler);
         $this->assertSame(StatusCodeInterface::STATUS_FORBIDDEN, $response->getStatusCode());
 
         $data = json_decode($response->getBody()->getContents(), true);
@@ -139,7 +140,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $identity      = new UserIdentity('test@dotkernel.com', ['user'], ['oauth_client_id' => 'frontend']);
         $this->request = $this->request->withAttribute(UserInterface::class, $identity);
 
-        $response = $this->subject->process($this->request, $this->handler);
+        $response = $this->authorizationMiddleware->process($this->request, $this->handler);
         $this->assertSame(StatusCodeInterface::STATUS_FORBIDDEN, $response->getStatusCode());
 
         $data = json_decode($response->getBody()->getContents(), true);
@@ -166,14 +167,14 @@ class AuthorizationMiddlewareTest extends TestCase
         $this->handler
             ->expects($this->once())
             ->method('handle')
-            ->will($this->returnCallback(function (ServerRequestInterface $request) use ($identity) {
+            ->willReturnCallback(function (ServerRequestInterface $request) use ($identity) {
                 $user = $request->getAttribute(UserInterface::class);
                 $this->assertSame($identity->getIdentity(), $user->getIdentity());
                 $this->assertSame($identity->getDetails(), $user->getDetails());
                 $this->assertSame($identity->getRoles(), $user->getRoles());
                 return $this->response;
-            }));
+            });
 
-        $this->subject->process($this->request, $this->handler);
+        $this->authorizationMiddleware->process($this->request, $this->handler);
     }
 }

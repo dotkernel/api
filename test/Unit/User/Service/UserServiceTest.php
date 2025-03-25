@@ -4,23 +4,20 @@ declare(strict_types=1);
 
 namespace ApiTest\Unit\User\Service;
 
-use Api\App\Exception\ConflictException;
-use Api\App\Exception\NotFoundException;
-use Api\User\Service\UserRoleService;
-use Api\User\Service\UserService as Subject;
-use Core\App\Repository\OAuthAccessTokenRepository;
-use Core\App\Repository\OAuthRefreshTokenRepository;
+use Core\App\Exception\BadRequestException;
+use Core\App\Exception\ConflictException;
+use Core\App\Exception\NotFoundException;
+use Core\Security\Repository\OAuthAccessTokenRepository;
+use Core\Security\Repository\OAuthRefreshTokenRepository;
 use Core\User\Entity\User;
 use Core\User\Entity\UserDetail;
 use Core\User\Entity\UserRole;
 use Core\User\Enum\UserStatusEnum;
 use Core\User\Repository\UserDetailRepository;
 use Core\User\Repository\UserRepository;
-use Core\User\Repository\UserResetPasswordRepository;
-use Dot\Log\LoggerInterface;
-use Dot\Mail\Service\MailService;
+use Core\User\Repository\UserRoleRepository;
+use Core\User\Service\UserService;
 use Exception;
-use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -29,31 +26,27 @@ use function count;
 
 class UserServiceTest extends TestCase
 {
-    private Subject $subject;
-    private UserRoleService|MockObject $userRoleService;
-    private UserRepository|MockObject $userRepository;
-    private UserDetailRepository|MockObject $userDetailRepository;
-    private UserResetPasswordRepository|MockObject $userResetPasswordRepository;
+    private UserService $subject;
+    private UserRepository&MockObject $userRepository;
+    private UserDetailRepository&MockObject $userDetailRepository;
+    private UserRoleRepository&MockObject $userRoleRepository;
 
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function setUp(): void
     {
-        $this->userRoleService             = $this->createMock(UserRoleService::class);
-        $this->userRepository              = $this->createMock(UserRepository::class);
-        $this->userDetailRepository        = $this->createMock(UserDetailRepository::class);
-        $this->userResetPasswordRepository = $this->createMock(UserResetPasswordRepository::class);
-        $this->subject                     = new Subject(
-            $this->userRoleService,
-            $this->createMock(MailService::class),
-            $this->createMock(TemplateRendererInterface::class),
-            $this->createMock(OAuthAccessTokenRepository::class),
-            $this->createMock(OAuthRefreshTokenRepository::class),
+        $oAuthAccessTokenRepository  = $this->createMock(OAuthAccessTokenRepository::class);
+        $oAuthRefreshTokenRepository = $this->createMock(OAuthRefreshTokenRepository::class);
+        $this->userRepository        = $this->createMock(UserRepository::class);
+        $this->userDetailRepository  = $this->createMock(UserDetailRepository::class);
+        $this->userRoleRepository    = $this->createMock(UserRoleRepository::class);
+        $this->subject               = new UserService(
+            $oAuthAccessTokenRepository,
+            $oAuthRefreshTokenRepository,
             $this->userRepository,
             $this->userDetailRepository,
-            $this->userResetPasswordRepository,
-            $this->createMock(LoggerInterface::class),
+            $this->userRoleRepository,
             []
         );
     }
@@ -64,15 +57,14 @@ class UserServiceTest extends TestCase
      */
     public function testCreateUserThrowsExceptionDuplicateIdentity(): void
     {
-        $this->userRepository->method('findOneBy')->willReturn(
-            $this->getUserEntity($this->getUser())
-        );
+        $request = $this->getUser();
+        $this->userRepository
+            ->method('findOneBy')
+            ->willReturn($this->getUserEntity(['identity' => $request['identity']]));
 
         $this->expectException(Exception::class);
 
-        $this->subject->createUser([
-            'identity' => 'test@dotkernel.com',
-        ]);
+        $this->subject->createUser($request);
     }
 
     /**
@@ -93,7 +85,7 @@ class UserServiceTest extends TestCase
             ],
         ]);
 
-        $this->userRoleService->method('findOneBy')->willReturn(new UserRole());
+        $this->userRoleRepository->method('find')->willReturn(new UserRole());
         $this->userRepository->method('saveUser')->willReturn(
             $this->getUserEntity($data)
         );
@@ -117,7 +109,7 @@ class UserServiceTest extends TestCase
         ]);
 
         $defaultRole = (new UserRole())->setName(UserRole::ROLE_USER);
-        $this->userRoleService->method('findOneBy')->willReturn($defaultRole);
+        $this->userRoleRepository->method('find')->willReturn($defaultRole);
         $this->userRepository->method('saveUser')->willReturn(
             $this->getUserEntity($data)
         );
@@ -133,7 +125,7 @@ class UserServiceTest extends TestCase
      */
     public function testCreateUser(): void
     {
-        $this->userRoleService->method('findOneBy')->willReturn(new UserRole());
+        $this->userRoleRepository->method('find')->willReturn(new UserRole());
         $this->userRepository->method('saveUser')->willReturn(
             $this->getUserEntity($this->getUser())
         );
@@ -150,6 +142,11 @@ class UserServiceTest extends TestCase
         $this->assertFalse($user->isActive());
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws ConflictException
+     * @throws BadRequestException
+     */
     public function testUpdateUserThrowsExceptionDuplicateUserDetailEmail(): void
     {
         $this->userDetailRepository->method('findOneBy')->willReturn($this->getUserEntity()->getDetail());

@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace ApiTest\Unit\Admin\Service;
 
-use Api\Admin\Service\AdminRoleService;
-use Api\Admin\Service\AdminService as Subject;
 use Core\Admin\Entity\Admin;
 use Core\Admin\Entity\AdminRole;
 use Core\Admin\Enum\AdminStatusEnum;
 use Core\Admin\Repository\AdminRepository;
+use Core\Admin\Repository\AdminRoleRepository;
+use Core\Admin\Service\AdminService;
+use Core\App\Exception\ConflictException;
 use Core\App\Message;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -20,26 +21,18 @@ use function count;
 
 class AdminServiceTest extends TestCase
 {
-    private Subject|MockObject $subject;
-    private AdminRoleService|MockObject $adminRoleService;
+    private AdminService $adminService;
     private AdminRepository|MockObject $adminRepository;
+    private AdminRoleRepository|MockObject $adminRoleRepository;
 
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function setUp(): void
     {
-        $this->adminRoleService = $this->createMock(AdminRoleService::class);
-        $this->adminRepository  = $this->createMock(AdminRepository::class);
-        $this->subject          = $this->getMockBuilder(Subject::class)
-            ->setConstructorArgs([
-                $this->adminRoleService,
-                $this->adminRepository,
-            ])
-            ->onlyMethods([
-                'exists',
-            ])
-            ->getMock();
+        $this->adminRepository     = $this->createMock(AdminRepository::class);
+        $this->adminRoleRepository = $this->createMock(AdminRoleRepository::class);
+        $this->adminService        = new AdminService($this->adminRepository, $this->adminRoleRepository);
     }
 
     /**
@@ -47,12 +40,15 @@ class AdminServiceTest extends TestCase
      */
     public function testCreateAdminThrowsDuplicateIdentity(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ConflictException::class);
         $this->expectExceptionMessage(Message::DUPLICATE_IDENTITY);
 
-        $this->subject->method('exists')->willReturn(true);
+        $request = $this->getAdmin();
+        $this->adminRepository
+            ->method('findOneBy')
+            ->willReturn($this->getAdminEntity(['identity' => $request['identity']]));
 
-        $this->subject->createAdmin(['identity' => 'admin@dotkernel.com']);
+        $this->adminService->createAdmin($request);
     }
 
     /**
@@ -71,12 +67,12 @@ class AdminServiceTest extends TestCase
 
         $role = (new AdminRole())->setName(AdminRole::ROLE_SUPERUSER);
 
-        $this->adminRoleService->method('findOneBy')->willReturn($role);
+        $this->adminRoleRepository->method('find')->willReturn($role);
         $this->adminRepository->method('saveAdmin')->willReturn(
             $this->getAdminEntity($data)
         );
 
-        $admin = $this->subject->createAdmin($data);
+        $admin = $this->adminService->createAdmin($data);
 
         $this->assertSame($data['identity'], $admin->getIdentity());
         $this->assertTrue(Admin::verifyPassword($data['password'], $admin->getPassword()));

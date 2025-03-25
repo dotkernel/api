@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Api\User\Handler\User;
 
-use Api\App\Exception\BadRequestException;
 use Api\App\Handler\AbstractHandler;
-use Api\User\Service\UserServiceInterface;
+use Api\User\Collection\UserCollection;
+use Core\App\Exception\BadRequestException;
+use Core\User\Service\UserServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -26,6 +27,9 @@ class GetUserCollectionHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->createResponse($request, $this->userService->getUsers($request->getQueryParams()));
+        return $this->createResponse(
+            $request,
+            new UserCollection($this->userService->getUserRepository()->getUsers($request->getQueryParams()))
+        );
     }
 }

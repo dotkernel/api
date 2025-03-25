@@ -15,20 +15,20 @@ use Doctrine\ORM\Mapping as ORM;
 use Exception;
 
 #[ORM\Entity(repositoryClass: UserResetPasswordRepository::class)]
-#[ORM\Table(name: "user_reset_password")]
+#[ORM\Table(name: 'user_reset_password')]
 #[ORM\HasLifecycleCallbacks]
 class UserResetPassword extends AbstractEntity
 {
     use TimestampsTrait;
 
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist', 'remove'], inversedBy: "resetPasswords")]
-    #[ORM\JoinColumn(name: "userUuid", referencedColumnName: "uuid")]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist', 'remove'], inversedBy: 'resetPasswords')]
+    #[ORM\JoinColumn(name: 'userUuid', referencedColumnName: 'uuid')]
     protected User $user;
 
-    #[ORM\Column(name: "expires", type: "datetime_immutable")]
+    #[ORM\Column(name: 'expires', type: 'datetime_immutable')]
     protected DateTimeImmutable $expires;
 
-    #[ORM\Column(name: "hash", type: "string", length: 64, unique: true)]
+    #[ORM\Column(name: 'hash', type: 'string', length: 64, unique: true)]
     protected string $hash;
 
     #[ORM\Column(

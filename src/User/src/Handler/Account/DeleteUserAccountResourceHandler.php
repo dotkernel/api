@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Api\User\Handler\Account;
 
 use Api\App\Handler\AbstractHandler;
-use Api\User\Service\UserServiceInterface;
 use Core\User\Entity\User;
+use Core\User\Service\UserServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use RuntimeException;
 
 class DeleteUserAccountResourceHandler extends AbstractHandler
 {
@@ -22,9 +21,6 @@ class DeleteUserAccountResourceHandler extends AbstractHandler
     ) {
     }
 
-    /**
-     * @throws RuntimeException
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->userService->deleteUser($request->getAttribute(User::class));

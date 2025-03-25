@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Api\App\Handler;
 
 use Api\App\Attribute\MethodDeprecation;
-use Api\App\Exception\BadRequestException;
 use Api\App\InputFilter\ErrorReportInputFilter;
 use Api\App\Service\ErrorReportServiceInterface;
+use Core\App\Exception\BadRequestException;
 use Core\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
 use Fig\Http\Message\StatusCodeInterface;

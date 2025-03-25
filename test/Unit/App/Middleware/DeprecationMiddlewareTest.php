@@ -6,8 +6,8 @@ namespace ApiTest\Unit\App\Middleware;
 
 use Api\App\Attribute\MethodDeprecation;
 use Api\App\Attribute\ResourceDeprecation;
-use Api\App\Exception\DeprecationConflictException;
-use Api\App\Middleware\DeprecationMiddleware as Subject;
+use Api\App\Middleware\DeprecationMiddleware;
+use Core\App\Exception\DeprecationConflictException;
 use Core\App\Message;
 use Fig\Http\Message\RequestMethodInterface;
 use Laminas\Diactoros\Response\EmptyResponse;
@@ -31,7 +31,7 @@ use function sprintf;
 
 class DeprecationMiddlewareTest extends TestCase
 {
-    private Subject $subject;
+    private DeprecationMiddleware $deprecationMiddleware;
     private ServerRequestInterface|MockObject $request;
     private RequestHandlerInterface|MockObject $handler;
     private ResponseInterface $response;
@@ -48,7 +48,8 @@ class DeprecationMiddlewareTest extends TestCase
         $this->handler  = $this->createMock(RequestHandlerInterface::class);
         $this->request  = $this->createMock(ServerRequestInterface::class);
         $this->response = new EmptyResponse();
-        $this->subject  = new Subject(self::VERSIONING_CONFIG);
+
+        $this->deprecationMiddleware = new DeprecationMiddleware(self::VERSIONING_CONFIG);
     }
 
     /**
@@ -89,11 +90,11 @@ class DeprecationMiddlewareTest extends TestCase
         $this->expectException(DeprecationConflictException::class);
         $this->expectExceptionMessage(sprintf(
             Message::RESTRICTION_DEPRECATION,
-            Subject::RESOURCE_DEPRECATION_ATTRIBUTE,
-            Subject::METHOD_DEPRECATION_ATTRIBUTE
+            DeprecationMiddleware::RESOURCE_DEPRECATION_ATTRIBUTE,
+            DeprecationMiddleware::METHOD_DEPRECATION_ATTRIBUTE
         ));
 
-        $this->subject->process($this->request, $this->handler);
+        $this->deprecationMiddleware->process($this->request, $this->handler);
     }
 
     /**
@@ -129,7 +130,7 @@ class DeprecationMiddlewareTest extends TestCase
         $this->request->method('getMethod')->willReturn(RequestMethodInterface::METHOD_GET);
         $this->handler->method('handle')->with($this->request)->willReturn($this->response);
 
-        $response = $this->subject->process($this->request, $this->handler);
+        $response = $this->deprecationMiddleware->process($this->request, $this->handler);
 
         $this->assertTrue($response->hasHeader('sunset'));
         $this->assertTrue($response->hasHeader('link'));
@@ -192,7 +193,7 @@ class DeprecationMiddlewareTest extends TestCase
         $this->request->method('getMethod')->willReturn(RequestMethodInterface::METHOD_GET);
         $this->handler->method('handle')->with($this->request)->willReturn($this->response);
 
-        $response = $this->subject->process($this->request, $this->handler);
+        $response = $this->deprecationMiddleware->process($this->request, $this->handler);
 
         $this->assertTrue($response->hasHeader('sunset'));
         $this->assertTrue($response->hasHeader('link'));
@@ -230,7 +231,7 @@ class DeprecationMiddlewareTest extends TestCase
         $this->request->method('getMethod')->willReturn(RequestMethodInterface::METHOD_GET);
         $this->handler->method('handle')->with($this->request)->willReturn($this->response);
 
-        $response = $this->subject->process($this->request, $this->handler);
+        $response = $this->deprecationMiddleware->process($this->request, $this->handler);
 
         $this->assertTrue($response->hasHeader('link'));
         $this->assertFalse($response->hasHeader('sunset'));
@@ -268,7 +269,7 @@ class DeprecationMiddlewareTest extends TestCase
         $this->request->method('getMethod')->willReturn(RequestMethodInterface::METHOD_GET);
         $this->handler->method('handle')->with($this->request)->willReturn($this->response);
 
-        $response = $this->subject->process($this->request, $this->handler);
+        $response = $this->deprecationMiddleware->process($this->request, $this->handler);
 
         $this->assertTrue($response->hasHeader('link'));
         $this->assertFalse($response->hasHeader('sunset'));
@@ -306,7 +307,7 @@ class DeprecationMiddlewareTest extends TestCase
         $this->request->method('getMethod')->willReturn(RequestMethodInterface::METHOD_GET);
         $this->handler->method('handle')->with($this->request)->willReturn($this->response);
 
-        $response = (new Subject([]))->process($this->request, $this->handler);
+        $response = (new DeprecationMiddleware([]))->process($this->request, $this->handler);
 
         $this->assertFalse($response->hasHeader('link'));
         $this->assertTrue($response->hasHeader('sunset'));

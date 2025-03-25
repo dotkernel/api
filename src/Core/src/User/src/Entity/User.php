@@ -20,38 +20,38 @@ use function md5;
 use function uniqid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: "user")]
+#[ORM\Table(name: 'user')]
 #[ORM\HasLifecycleCallbacks]
 class User extends AbstractEntity implements UserEntityInterface
 {
     use PasswordTrait;
     use TimestampsTrait;
 
-    #[ORM\OneToOne(targetEntity: UserAvatar::class, mappedBy: "user", cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: UserAvatar::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     protected ?UserAvatar $avatar = null;
 
-    #[ORM\OneToOne(targetEntity: UserDetail::class, mappedBy: "user", cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: UserDetail::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     protected UserDetail $detail;
 
-    #[ORM\OneToMany(targetEntity: UserResetPassword::class, mappedBy: "user", cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: UserResetPassword::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     protected Collection $resetPasswords;
 
     #[ORM\ManyToMany(targetEntity: UserRole::class)]
-    #[ORM\JoinTable(name: "user_roles")]
-    #[ORM\JoinColumn(name: "userUuid", referencedColumnName: "uuid")]
-    #[ORM\InverseJoinColumn(name: "roleUuid", referencedColumnName: "uuid")]
+    #[ORM\JoinTable(name: 'user_roles')]
+    #[ORM\JoinColumn(name: 'userUuid', referencedColumnName: 'uuid')]
+    #[ORM\InverseJoinColumn(name: 'roleUuid', referencedColumnName: 'uuid')]
     protected Collection $roles;
 
-    #[ORM\Column(name: "identity", type: "string", length: 191, unique: true)]
+    #[ORM\Column(name: 'identity', type: 'string', length: 191, unique: true)]
     protected string $identity;
 
-    #[ORM\Column(name: "password", type: "string", length: 191)]
+    #[ORM\Column(name: 'password', type: 'string', length: 191)]
     protected string $password;
 
     #[ORM\Column(type: 'user_status_enum', options: ['default' => UserStatusEnum::Pending])]
     protected UserStatusEnum $status = UserStatusEnum::Pending;
 
-    #[ORM\Column(name: "hash", type: "string", length: 64, unique: true)]
+    #[ORM\Column(name: 'hash', type: 'string', length: 64, unique: true)]
     protected string $hash;
 
     public function __construct()

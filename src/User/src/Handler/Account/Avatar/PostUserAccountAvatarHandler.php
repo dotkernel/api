@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Api\User\Handler\Account\Avatar;
 
-use Api\App\Exception\BadRequestException;
 use Api\App\Handler\AbstractHandler;
 use Api\User\InputFilter\UpdateAvatarInputFilter;
-use Api\User\Service\UserAvatarServiceInterface;
+use Core\App\Exception\BadRequestException;
 use Core\User\Entity\User;
+use Core\User\Service\UserAvatarServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -35,11 +35,12 @@ class PostUserAccountAvatarHandler extends AbstractHandler
             throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
         }
 
-        $userAvatar = $this->userAvatarService->createAvatar(
-            $request->getAttribute(User::class),
-            $this->inputFilter->getValue('avatar')
+        return $this->createdResponse(
+            $request,
+            $this->userAvatarService->createAvatar(
+                $request->getAttribute(User::class),
+                $this->inputFilter->getValue('avatar')
+            )
         );
-
-        return $this->createdResponse($request, $userAvatar);
     }
 }

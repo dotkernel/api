@@ -4,14 +4,20 @@ declare(strict_types=1);
 
 namespace Core\App;
 
-use Api\App\Factory\EntityListenerResolverFactory;
-use Core\App\Entity\EntityListenerResolver;
+use Core\App\Factory\EntityListenerResolverFactory;
+use Core\App\Resolver\EntityListenerResolver;
+use Core\App\Service\MailService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Dot\Cache\Adapter\ArrayAdapter;
 use Dot\Cache\Adapter\FilesystemAdapter;
+use Dot\DependencyInjection\Factory\AttributedServiceFactory;
+use Dot\ErrorHandler\ErrorHandlerInterface;
+use Dot\ErrorHandler\LogErrorHandler;
+use Dot\Mail\Factory\MailOptionsAbstractFactory;
+use Dot\Mail\Factory\MailServiceAbstractFactory;
+use Dot\Mail\Service\MailService as DotMailService;
 use Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType;
 use Ramsey\Uuid\Doctrine\UuidBinaryType;
 use Ramsey\Uuid\Doctrine\UuidType;
@@ -30,16 +36,21 @@ class ConfigProvider
         ];
     }
 
-    public function getDependencies(): array
+    private function getDependencies(): array
     {
         return [
             'factories' => [
                 'doctrine.entity_manager.orm_default' => EntityManagerFactory::class,
+                'dot-mail.options.default'            => MailOptionsAbstractFactory::class,
+                'dot-mail.service.default'            => MailServiceAbstractFactory::class,
                 EntityListenerResolver::class         => EntityListenerResolverFactory::class,
+                MailService::class                    => AttributedServiceFactory::class,
             ],
             'aliases'   => [
+                DotMailService::class         => 'dot-mail.service.default',
                 EntityManager::class          => 'doctrine.entity_manager.orm_default',
                 EntityManagerInterface::class => 'doctrine.entity_manager.orm_default',
+                ErrorHandlerInterface::class  => LogErrorHandler::class,
             ],
         ];
     }
@@ -84,15 +95,7 @@ class ConfigProvider
             ],
             'driver'        => [
                 'orm_default' => [
-                    'class'   => MappingDriverChain::class,
-                    'drivers' => [
-                        'Core\App\Entity' => 'AppEntities',
-                    ],
-                ],
-                'AppEntities' => [
-                    'class' => AttributeDriver::class,
-                    'cache' => 'array',
-                    'paths' => getcwd() . '/src/Core/src/App/src/Entity',
+                    'class' => MappingDriverChain::class,
                 ],
             ],
             'fixtures'      => getcwd() . '/src/Core/src/App/src/Fixture',

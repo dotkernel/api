@@ -4,6 +4,9 @@ includes:
 parameters:
     level: 5
     paths:
+        - bin
+        - config
+        - public
         - src
         - test
     treatPhpDocTypesAsCertain: false
