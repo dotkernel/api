@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "5f4c1b92-b1e1-4f8e-840f-f92b6f4cb670",
+		"_postman_id": "aae441d2-e81b-462a-97c1-4541564a9894",
 		"name": "Dotkernel_API",
 		"description": "Dotkernel API documentation.",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "3494496"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "13971428"
 	},
 	"item": [
 		{
@@ -27,16 +27,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{APPLICATION_URL}}/admin/my-account",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"admin",
-										"my-account"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/admin/account",
 								"description": "Admin updated their own account."
 							},
 							"response": []
@@ -46,16 +37,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{APPLICATION_URL}}/admin/my-account",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"admin",
-										"my-account"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/admin/account",
 								"description": "Admin views their own account."
 							},
 							"response": []
@@ -112,17 +94,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{APPLICATION_URL}}/admin/role/{{$randomUUID}}",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"admin",
-										"role",
-										"{{$randomUUID}}"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/admin/role/{{$randomUUID}}",
 								"description": "Admin views admin role.\n\nReplace random UUID in URL with a valid user UUID."
 							},
 							"response": []
@@ -141,7 +113,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -150,7 +123,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -166,16 +140,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{APPLICATION_URL}}/security/generate-token",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"security",
-										"generate-token"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/security/token",
 								"description": "Generate OAuth2 Bearer token for identity with admin privileges."
 							},
 							"response": []
@@ -214,16 +179,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{APPLICATION_URL}}/security/refresh-token",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"security",
-										"refresh-token"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/security/refresh-token",
 								"description": "Refresh OAuth2 Bearer token for identity with admin privileges."
 							},
 							"response": []
@@ -270,23 +226,27 @@
 								"exec": [
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{APPLICATION_URL}}/admin/{{$randomUUID}}",
-							"host": [
-								"{{APPLICATION_URL}}"
-							],
-							"path": [
-								"admin",
-								"{{$randomUUID}}"
-							]
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
+						"url": "{{APPLICATION_URL}}/admin/{{$randomUUID}}",
 						"description": "Admin views admin account.\n\nReplace random UUID in URL with a valid user UUID."
 					},
 					"response": []
@@ -345,15 +305,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{APPLICATION_URL}}/admin",
-							"host": [
-								"{{APPLICATION_URL}}"
-							],
-							"path": [
-								"admin"
-							]
-						},
+						"url": "{{APPLICATION_URL}}/admin",
 						"description": "Admin creates admin account."
 					},
 					"response": []
@@ -363,16 +315,7 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"url": {
-							"raw": "{{APPLICATION_URL}}/admin/{{$randomUUID}}",
-							"host": [
-								"{{APPLICATION_URL}}"
-							],
-							"path": [
-								"admin",
-								"{{$randomUUID}}"
-							]
-						},
+						"url": "{{APPLICATION_URL}}/admin/{{$randomUUID}}",
 						"description": "Admin deleted admin account.\n\nReplace random UUID in URL with a valid user UUID."
 					},
 					"response": []
@@ -391,16 +334,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "{{APPLICATION_URL}}/admin/{{$randomUUID}}",
-							"host": [
-								"{{APPLICATION_URL}}"
-							],
-							"path": [
-								"admin",
-								"{{$randomUUID}}"
-							]
-						},
+						"url": "{{APPLICATION_URL}}/admin/{{$randomUUID}}",
 						"description": "Admin updates admin account.\n\nReplace random UUID in URL with a valid user UUID."
 					},
 					"response": []
@@ -451,17 +385,7 @@
 												}
 											]
 										},
-										"url": {
-											"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}/avatar",
-											"host": [
-												"{{APPLICATION_URL}}"
-											],
-											"path": [
-												"user",
-												"{{$randomUUID}}",
-												"avatar"
-											]
-										},
+										"url": "{{APPLICATION_URL}}/user/{{$randomUUID}}/avatar",
 										"description": "Admin creates avatar for user account.\r\n\r\nReplace random UUID in URL with a valid user UUID."
 									},
 									"response": []
@@ -471,17 +395,7 @@
 									"request": {
 										"method": "DELETE",
 										"header": [],
-										"url": {
-											"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}/avatar",
-											"host": [
-												"{{APPLICATION_URL}}"
-											],
-											"path": [
-												"user",
-												"{{$randomUUID}}",
-												"avatar"
-											]
-										},
+										"url": "{{APPLICATION_URL}}/user/{{$randomUUID}}/avatar",
 										"description": "Admin deletes user avatar.\n\nReplace random UUID in URL with a valid user UUID."
 									},
 									"response": []
@@ -491,17 +405,7 @@
 									"request": {
 										"method": "GET",
 										"header": [],
-										"url": {
-											"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}/avatar",
-											"host": [
-												"{{APPLICATION_URL}}"
-											],
-											"path": [
-												"user",
-												"{{$randomUUID}}",
-												"avatar"
-											]
-										},
+										"url": "{{APPLICATION_URL}}/user/{{$randomUUID}}/avatar",
 										"description": "Admin deletes user avatar.\n\nReplace random UUID in URL with a valid user UUID."
 									},
 									"response": []
@@ -557,17 +461,7 @@
 									"request": {
 										"method": "GET",
 										"header": [],
-										"url": {
-											"raw": "{{APPLICATION_URL}}/user/role/{{$randomUUID}}",
-											"host": [
-												"{{APPLICATION_URL}}"
-											],
-											"path": [
-												"user",
-												"role",
-												"{{$randomUUID}}"
-											]
-										},
+										"url": "{{APPLICATION_URL}}/user/role/{{$randomUUID}}",
 										"description": "Admin views user role.\n\nReplace random UUID in URL with a valid user UUID."
 									},
 									"response": []
@@ -577,19 +471,9 @@
 						{
 							"name": "Activate user account",
 							"request": {
-								"method": "POST",
+								"method": "PATCH",
 								"header": [],
-								"url": {
-									"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}/activate",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"user",
-										"{{$randomUUID}}",
-										"activate"
-									]
-								}
+								"url": "{{APPLICATION_URL}}/user/{{$randomUUID}}/activate"
 							},
 							"response": []
 						},
@@ -618,15 +502,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{APPLICATION_URL}}/user",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"user"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/user",
 								"description": "Admin creates new user account."
 							},
 							"response": []
@@ -636,16 +512,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"user",
-										"{{$randomUUID}}"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/user/{{$randomUUID}}",
 								"description": "Admin anonymizes and marks user account as deleted.\n\nReplace random UUID in URL with a valid user UUID."
 							},
 							"response": []
@@ -708,16 +575,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"user",
-										"{{$randomUUID}}"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/user/{{$randomUUID}}",
 								"description": "Admin updates user account.\r\n\r\nReplace random UUID in URL with a valid user UUID."
 							},
 							"response": []
@@ -727,17 +585,17 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"user",
-										"{{$randomUUID}}"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/user/{{$randomUUID}}",
 								"description": "Admin views user account.\r\n\r\nReplace random UUID in URL with a valid user UUID."
+							},
+							"response": []
+						},
+						{
+							"name": "Deactivate user account",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": "{{APPLICATION_URL}}/user/{{$randomUUID}}/deactivate"
 							},
 							"response": []
 						}
@@ -764,16 +622,7 @@
 												}
 											]
 										},
-										"url": {
-											"raw": "{{APPLICATION_URL}}/user/my-avatar",
-											"host": [
-												"{{APPLICATION_URL}}"
-											],
-											"path": [
-												"user",
-												"my-avatar"
-											]
-										},
+										"url": "{{APPLICATION_URL}}/user/account/avatar",
 										"description": "Authenticated user creates their avatar."
 									},
 									"response": []
@@ -783,16 +632,7 @@
 									"request": {
 										"method": "GET",
 										"header": [],
-										"url": {
-											"raw": "{{APPLICATION_URL}}/user/my-avatar",
-											"host": [
-												"{{APPLICATION_URL}}"
-											],
-											"path": [
-												"user",
-												"my-avatar"
-											]
-										},
+										"url": "{{APPLICATION_URL}}/user/account/avatar",
 										"description": "Authenticated user views their avatar."
 									},
 									"response": []
@@ -802,16 +642,7 @@
 									"request": {
 										"method": "DELETE",
 										"header": [],
-										"url": {
-											"raw": "{{APPLICATION_URL}}/user/my-avatar",
-											"host": [
-												"{{APPLICATION_URL}}"
-											],
-											"path": [
-												"user",
-												"my-avatar"
-											]
-										},
+										"url": "{{APPLICATION_URL}}/user/account/avatar",
 										"description": "Authenticated user deletes their avatar."
 									},
 									"response": []
@@ -826,17 +657,7 @@
 								},
 								"method": "PATCH",
 								"header": [],
-								"url": {
-									"raw": "{{APPLICATION_URL}}/account/activate/{{RANDOM_HASH}}",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"account",
-										"activate",
-										"{{RANDOM_HASH}}"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/account/activate/{{RANDOM_HASH}}",
 								"description": "Guest activates their account."
 							},
 							"response": []
@@ -858,16 +679,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{APPLICATION_URL}}/account/activate",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"account",
-										"activate"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/account/activate",
 								"description": "Guest requests account activation email."
 							},
 							"response": []
@@ -877,16 +689,7 @@
 							"request": {
 								"method": "DELETE",
 								"header": [],
-								"url": {
-									"raw": "{{APPLICATION_URL}}/user/my-account",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"user",
-										"my-account"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/user/account",
 								"description": "Authenticated user deletes their account."
 							},
 							"response": []
@@ -908,17 +711,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{APPLICATION_URL}}/account/reset-password/{{RANDOM_HASH}}",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"account",
-										"reset-password",
-										"{{RANDOM_HASH}}"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/account/reset-password/{{RANDOM_HASH}}",
 								"description": "Guest modifies password using validated password reset hash."
 							},
 							"response": []
@@ -940,16 +733,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{APPLICATION_URL}}/account/recover-identity",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"account",
-										"recover-identity"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/account/recover",
 								"description": "Guest recovers identity using email."
 							},
 							"response": []
@@ -982,16 +766,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{APPLICATION_URL}}/account/register",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"account",
-										"register"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/account/register",
 								"description": "Guest registers new user account."
 							},
 							"response": []
@@ -1013,16 +788,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{APPLICATION_URL}}/account/reset-password",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"account",
-										"reset-password"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/account/reset-password",
 								"description": "Guest requests password reset via `email`."
 							},
 							"response": []
@@ -1044,16 +810,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{APPLICATION_URL}}/account/reset-password",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"account",
-										"reset-password"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/account/reset-password",
 								"description": "Guest requests password reset via `identity`."
 							},
 							"response": []
@@ -1066,17 +823,7 @@
 								},
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{APPLICATION_URL}}/account/reset-password/{{RANDOM_HASH}}",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"account",
-										"reset-password",
-										"{{RANDOM_HASH}}"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/account/reset-password/{{RANDOM_HASH}}",
 								"description": "Guest validates password reset hash."
 							},
 							"response": []
@@ -1086,16 +833,7 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": {
-									"raw": "{{APPLICATION_URL}}/user/my-account",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"user",
-										"my-account"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/user/account",
 								"description": "Authenticated user views their account."
 							},
 							"response": []
@@ -1114,16 +852,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{APPLICATION_URL}}/user/my-account",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"user",
-										"my-account"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/user/account",
 								"description": "Authenticated user updates their account."
 							},
 							"response": []
@@ -1159,16 +888,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{APPLICATION_URL}}/security/generate-token",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"security",
-										"generate-token"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/security/generate-token",
 								"description": "Generate OAuth2 Bearer token for identity with regular user privileges."
 							},
 							"response": []
@@ -1198,16 +918,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "{{APPLICATION_URL}}/security/refresh-token",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"security",
-										"refresh-token"
-									]
-								},
+								"url": "{{APPLICATION_URL}}/security/refresh-token",
 								"description": "Refresh OAuth2 Bearer token for identity with regular user privileges."
 							},
 							"response": []
@@ -1276,12 +987,7 @@
 				},
 				"method": "GET",
 				"header": [],
-				"url": {
-					"raw": "{{APPLICATION_URL}}",
-					"host": [
-						"{{APPLICATION_URL}}"
-					]
-				},
+				"url": "{{APPLICATION_URL}}",
 				"description": "View application homepage."
 			},
 			"response": []
@@ -1309,15 +1015,7 @@
 						}
 					}
 				},
-				"url": {
-					"raw": "{{APPLICATION_URL}}/error-report",
-					"host": [
-						"{{APPLICATION_URL}}"
-					],
-					"path": [
-						"error-report"
-					]
-				},
+				"url": "{{APPLICATION_URL}}/error-report",
 				"description": "Some application reports an error."
 			},
 			"response": []
@@ -1325,13 +1023,9 @@
 	],
 	"auth": {
 		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{ACCESS_TOKEN}}",
-				"type": "string"
-			}
-		]
+		"bearer": {
+			"token": "{{ACCESS_TOKEN}}"
+		}
 	},
 	"event": [
 		{
