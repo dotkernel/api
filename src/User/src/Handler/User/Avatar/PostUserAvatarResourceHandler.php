@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Api\User\Handler\User\Avatar;
 
-use Api\App\Exception\BadRequestException;
-use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
 use Api\User\InputFilter\UpdateAvatarInputFilter;
-use Api\User\Service\UserAvatarServiceInterface;
-use Api\User\Service\UserServiceInterface;
+use Core\App\Exception\BadRequestException;
+use Core\App\Exception\NotFoundException;
+use Core\App\Message;
+use Core\User\Entity\User;
+use Core\User\Service\UserAvatarServiceInterface;
+use Core\User\Service\UserServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -39,9 +41,14 @@ class PostUserAvatarResourceHandler extends AbstractHandler
             throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
         }
 
-        $user       = $this->userService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
-        $userAvatar = $this->userAvatarService->createAvatar($user, $this->inputFilter->getValue('avatar'));
+        $user = $this->userService->getUserRepository()->find($request->getAttribute('uuid'));
+        if (! $user instanceof User) {
+            throw new NotFoundException(Message::USER_NOT_FOUND);
+        }
 
-        return $this->createdResponse($request, $userAvatar);
+        return $this->createdResponse(
+            $request,
+            $this->userAvatarService->createAvatar($user, $this->inputFilter->getValue('avatar'))
+        );
     }
 }

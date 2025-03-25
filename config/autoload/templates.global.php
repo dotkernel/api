@@ -17,6 +17,6 @@ return [
         'globals'         => [],
         'optimizations'   => -1,
         'runtime_loaders' => [],
-//        'timezone'        => '',
+        'timezone'        => 'UTC',
     ],
 ];

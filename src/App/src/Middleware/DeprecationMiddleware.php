@@ -6,7 +6,7 @@ namespace Api\App\Middleware;
 
 use Api\App\Attribute\MethodDeprecation;
 use Api\App\Attribute\ResourceDeprecation;
-use Api\App\Exception\DeprecationConflictException;
+use Core\App\Exception\DeprecationConflictException;
 use Core\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
 use Dot\Router\Middleware\LazyLoadingMiddleware;
@@ -43,10 +43,10 @@ class DeprecationMiddleware implements MiddlewareInterface
     ];
 
     #[Inject(
-        "config.application.versioning",
+        'config.application.versioning',
     )]
     public function __construct(
-        protected readonly array $config,
+        private readonly array $config,
     ) {
     }
 

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Api\User\Handler\User\Role;
 
-use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
-use Api\User\Service\UserRoleServiceInterface;
+use Core\App\Exception\NotFoundException;
+use Core\User\Service\UserRoleServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -17,7 +17,7 @@ class GetUserRoleResourceHandler extends AbstractHandler
         UserRoleServiceInterface::class,
     )]
     public function __construct(
-        protected UserRoleServiceInterface $roleService,
+        protected UserRoleServiceInterface $userRoleService,
     ) {
     }
 
@@ -26,8 +26,9 @@ class GetUserRoleResourceHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $role = $this->roleService->findOneBy(['uuid' => $request->getAttribute('uuid')]);
-
-        return $this->createResponse($request, $role);
+        return $this->createResponse(
+            $request,
+            $this->userRoleService->find($request->getAttribute('uuid'))
+        );
     }
 }

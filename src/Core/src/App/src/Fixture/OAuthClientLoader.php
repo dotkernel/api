@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Core\App\Fixture;
 
-use Core\App\Entity\OAuthClient;
+use Core\Security\Entity\OAuthClient;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;

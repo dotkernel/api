@@ -16,32 +16,32 @@ use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 
 #[ORM\Entity(repositoryClass: AdminRepository::class)]
-#[ORM\Table("admin")]
+#[ORM\Table('admin')]
 #[ORM\HasLifecycleCallbacks]
 class Admin extends AbstractEntity implements UserEntityInterface
 {
     use PasswordTrait;
     use TimestampsTrait;
 
-    #[ORM\Column(name: "identity", type: "string", length: 100, unique: true)]
+    #[ORM\Column(name: 'identity', type: 'string', length: 100, unique: true)]
     protected string $identity = '';
 
-    #[ORM\Column(name: "firstName", type: "string", length: 191)]
+    #[ORM\Column(name: 'firstName', type: 'string', length: 191)]
     protected string $firstName = '';
 
-    #[ORM\Column(name: "lastName", type: "string", length: 191)]
+    #[ORM\Column(name: 'lastName', type: 'string', length: 191)]
     protected string $lastName = '';
 
-    #[ORM\Column(name: "password", type: "string", length: 100)]
+    #[ORM\Column(name: 'password', type: 'string', length: 100)]
     protected string $password = '';
 
     #[ORM\Column(type: 'admin_status_enum', options: ['default' => AdminStatusEnum::Active])]
     protected AdminStatusEnum $status = AdminStatusEnum::Active;
 
     #[ORM\ManyToMany(targetEntity: AdminRole::class)]
-    #[ORM\JoinTable(name: "admin_roles")]
-    #[ORM\JoinColumn(name: "userUuid", referencedColumnName: "uuid")]
-    #[ORM\InverseJoinColumn(name: "roleUuid", referencedColumnName: "uuid")]
+    #[ORM\JoinTable(name: 'admin_roles')]
+    #[ORM\JoinColumn(name: 'userUuid', referencedColumnName: 'uuid')]
+    #[ORM\InverseJoinColumn(name: 'roleUuid', referencedColumnName: 'uuid')]
     protected Collection $roles;
 
     public function __construct()

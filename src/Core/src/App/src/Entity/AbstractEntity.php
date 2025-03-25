@@ -17,7 +17,7 @@ use function ucfirst;
 abstract class AbstractEntity implements ArraySerializableInterface, EntityInterface
 {
     #[ORM\Id]
-    #[ORM\Column(name: 'uuid', type: "uuid_binary", unique: true)]
+    #[ORM\Column(name: 'uuid', type: 'uuid_binary', unique: true)]
     protected UuidInterface $uuid;
 
     public function __construct()

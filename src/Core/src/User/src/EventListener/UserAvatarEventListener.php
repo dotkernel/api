@@ -13,7 +13,7 @@ use function sprintf;
 class UserAvatarEventListener
 {
     #[Inject(
-        "config",
+        'config',
     )]
     public function __construct(
         protected array $config = [],

@@ -17,7 +17,7 @@ class ConfigProvider
         ];
     }
 
-    public function getDependencies(): array
+    private function getDependencies(): array
     {
         return [
             'delegators' => [

@@ -26,7 +26,7 @@ use function trim;
 readonly class ContentNegotiationMiddleware implements MiddlewareInterface
 {
     #[Inject(
-        "config.content-negotiation",
+        'config.content-negotiation',
     )]
     public function __construct(
         private array $config,

@@ -11,18 +11,18 @@ use Core\User\Repository\UserAvatarRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserAvatarRepository::class)]
-#[ORM\Table(name: "user_avatar")]
+#[ORM\Table(name: 'user_avatar')]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\EntityListeners([UserAvatarEventListener::class])]
 class UserAvatar extends AbstractEntity
 {
     use TimestampsTrait;
 
-    #[ORM\OneToOne(targetEntity: User::class, inversedBy: "avatar")]
-    #[ORM\JoinColumn(name: "userUuid", referencedColumnName: "uuid")]
+    #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'avatar')]
+    #[ORM\JoinColumn(name: 'userUuid', referencedColumnName: 'uuid')]
     protected User $user;
 
-    #[ORM\Column(name: "name", type: "string", length: 191)]
+    #[ORM\Column(name: 'name', type: 'string', length: 191)]
     protected string $name;
 
     protected ?string $url = null;

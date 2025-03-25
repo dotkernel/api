@@ -33,22 +33,9 @@ use Api\User\Handler\User\PatchUserResourceHandler;
 use Api\User\Handler\User\PostUserResourceHandler;
 use Api\User\Handler\User\Role\GetUserRoleCollectionHandler;
 use Api\User\Handler\User\Role\GetUserRoleResourceHandler;
-use Api\User\Service\UserAvatarService;
-use Api\User\Service\UserAvatarServiceInterface;
-use Api\User\Service\UserRoleService;
-use Api\User\Service\UserRoleServiceInterface;
-use Api\User\Service\UserService;
-use Api\User\Service\UserServiceInterface;
 use Core\User\Entity\User;
 use Core\User\Entity\UserAvatar;
 use Core\User\Entity\UserRole;
-use Core\User\EventListener\UserAvatarEventListener;
-use Core\User\Repository\UserAvatarRepository;
-use Core\User\Repository\UserDetailRepository;
-use Core\User\Repository\UserRepository;
-use Core\User\Repository\UserResetPasswordRepository;
-use Core\User\Repository\UserRoleRepository;
-use Dot\DependencyInjection\Factory\AttributedRepositoryFactory;
 use Dot\DependencyInjection\Factory\AttributedServiceFactory;
 use Mezzio\Application;
 use Mezzio\Hal\Metadata\MetadataMap;
@@ -64,7 +51,7 @@ class ConfigProvider
         ];
     }
 
-    public function getDependencies(): array
+    private function getDependencies(): array
     {
         return [
             'delegators' => [
@@ -96,10 +83,6 @@ class ConfigProvider
                 PostUserResourceHandler::class              => [HandlerDelegatorFactory::class],
             ],
             'factories'  => [
-                UserAvatarEventListener::class              => AttributedServiceFactory::class,
-                UserService::class                          => AttributedServiceFactory::class,
-                UserRoleService::class                      => AttributedServiceFactory::class,
-                UserAvatarService::class                    => AttributedServiceFactory::class,
                 DeleteUserAccountAvatarHandler::class       => AttributedServiceFactory::class,
                 DeleteUserAccountResourceHandler::class     => AttributedServiceFactory::class,
                 DeleteUserAvatarResourceHandler::class      => AttributedServiceFactory::class,
@@ -125,21 +108,11 @@ class ConfigProvider
                 PostUserAccountResourceHandler::class       => AttributedServiceFactory::class,
                 PostUserAvatarResourceHandler::class        => AttributedServiceFactory::class,
                 PostUserResourceHandler::class              => AttributedServiceFactory::class,
-                UserAvatarRepository::class                 => AttributedRepositoryFactory::class,
-                UserDetailRepository::class                 => AttributedRepositoryFactory::class,
-                UserRepository::class                       => AttributedRepositoryFactory::class,
-                UserResetPasswordRepository::class          => AttributedRepositoryFactory::class,
-                UserRoleRepository::class                   => AttributedRepositoryFactory::class,
-            ],
-            'aliases'    => [
-                UserAvatarServiceInterface::class => UserAvatarService::class,
-                UserRoleServiceInterface::class   => UserRoleService::class,
-                UserServiceInterface::class       => UserService::class,
             ],
         ];
     }
 
-    public function getHalConfig(): array
+    private function getHalConfig(): array
     {
         return [
             AppConfigProvider::getCollection(UserCollection::class, 'user::list-user', 'users'),
@@ -150,7 +123,7 @@ class ConfigProvider
         ];
     }
 
-    public function getTemplates(): array
+    private function getTemplates(): array
     {
         return [
             'paths' => [

@@ -10,23 +10,23 @@ use Core\User\Repository\UserDetailRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserDetailRepository::class)]
-#[ORM\Table(name: "user_detail")]
+#[ORM\Table(name: 'user_detail')]
 #[ORM\HasLifecycleCallbacks]
 class UserDetail extends AbstractEntity
 {
     use TimestampsTrait;
 
-    #[ORM\OneToOne(targetEntity: User::class, inversedBy: "detail")]
-    #[ORM\JoinColumn(name: "userUuid", referencedColumnName: "uuid")]
+    #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'detail')]
+    #[ORM\JoinColumn(name: 'userUuid', referencedColumnName: 'uuid')]
     protected User $user;
 
-    #[ORM\Column(name: "firstName", type: "string", length: 191, nullable: true)]
+    #[ORM\Column(name: 'firstName', type: 'string', length: 191, nullable: true)]
     protected ?string $firstName = null;
 
-    #[ORM\Column(name: "lastName", type: "string", length: 191, nullable: true)]
+    #[ORM\Column(name: 'lastName', type: 'string', length: 191, nullable: true)]
     protected ?string $lastName = null;
 
-    #[ORM\Column(name: "email", type: "string", length: 191)]
+    #[ORM\Column(name: 'email', type: 'string', length: 191)]
     protected string $email;
 
     public function __construct()

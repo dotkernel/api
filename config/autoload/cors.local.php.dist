@@ -11,7 +11,7 @@ return [
              * Leaving this line here makes your application accessible by any origin.
              *
              * To restrict, replace this line with a list of origins that should have access to your application.
-             * Example: "domain1.com", "domain2.com"
+             * Example: 'domain1.com', 'domain2.com'
              */
             ConfigurationInterface::ANY_ORIGIN,
         ],

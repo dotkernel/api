@@ -36,6 +36,10 @@ The output should look similar to this:
 Error reporting token:
 
     0123456789abcdef0123456789abcdef01234567
+
+* copy the generated token
+* open config/autoload/error-handling.global.php
+* paste the copied string inside the tokens array found under the ErrorReportServiceInterface::class key.
 ```
 
 Copy the generated token.

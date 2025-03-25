@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Api\User\Handler\User\Role;
 
-use Api\App\Exception\BadRequestException;
 use Api\App\Handler\AbstractHandler;
-use Api\User\Service\UserRoleServiceInterface;
+use Api\User\Collection\UserRoleCollection;
+use Core\App\Exception\BadRequestException;
+use Core\User\Service\UserRoleServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -17,7 +18,7 @@ class GetUserRoleCollectionHandler extends AbstractHandler
         UserRoleServiceInterface::class,
     )]
     public function __construct(
-        protected UserRoleServiceInterface $roleService,
+        protected UserRoleServiceInterface $userRoleService,
     ) {
     }
 
@@ -26,6 +27,11 @@ class GetUserRoleCollectionHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->createResponse($request, $this->roleService->getRoles($request->getQueryParams()));
+        return $this->createResponse(
+            $request,
+            new UserRoleCollection(
+                $this->userRoleService->getUserRoleRepository()->getRoles($request->getQueryParams())
+            )
+        );
     }
 }

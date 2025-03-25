@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Core\App\Fixture;
 
-use Core\App\Entity\OAuthScope;
+use Core\Security\Entity\OAuthScope;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 

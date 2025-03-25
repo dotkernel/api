@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace ApiTest\Functional;
 
-use Api\User\Service\UserAvatarService;
 use Core\App\Message;
+use Core\App\Service\MailService;
 use Core\User\Entity\User;
 use Core\User\Entity\UserAvatar;
 use Core\User\Entity\UserResetPassword;
 use Core\User\Enum\UserResetPasswordStatusEnum;
 use Core\User\Enum\UserStatusEnum;
+use Core\User\Service\UserAvatarService;
 use DateInterval;
 use DateTimeImmutable;
-use Dot\Mail\Service\MailService;
 use Laminas\Diactoros\UploadedFile;
 use PHPUnit\Framework\MockObject\Exception;
 use Psr\Container\ContainerExceptionInterface;
@@ -299,9 +299,18 @@ class UserTest extends AbstractFunctionalTest
         $this->assertTrue($deletedUser?->isDeleted());
     }
 
-    public function testRequestResetPasswordInvalidHash(): void
+    public function testRequestResetPasswordBadRequest(): void
     {
         $response = $this->patch('/user/account/reset-password/invalid_hash');
+        $this->assertResponseBadRequest($response);
+    }
+
+    public function testRequestResetPasswordInvalidHash(): void
+    {
+        $response = $this->patch('/user/account/reset-password/invalid_hash', [
+            'password'        => 'password',
+            'passwordConfirm' => 'password',
+        ]);
         $this->assertResponseNotFound($response);
     }
 

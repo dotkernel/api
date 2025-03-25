@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ApiTest\Unit\App\Middleware;
 
-use Api\App\Middleware\ContentNegotiationMiddleware as Subject;
+use Api\App\Middleware\ContentNegotiationMiddleware;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\ServerRequest;
 use Mezzio\Router\Route;
@@ -17,7 +17,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class ContentNegotiationMiddlewareTest extends TestCase
 {
-    private Subject $subject;
+    private ContentNegotiationMiddleware $contentNegotiationMiddleware;
     private ServerRequestInterface $request;
     private RequestHandlerInterface $handler;
     private RouteResult $routeResult;
@@ -55,7 +55,7 @@ class ContentNegotiationMiddlewareTest extends TestCase
 
         $this->request = new ServerRequest();
 
-        $this->subject = new Subject(self::CONFIG);
+        $this->contentNegotiationMiddleware = new ContentNegotiationMiddleware(self::CONFIG);
     }
 
     public function testWrongAccept(): void
@@ -67,7 +67,7 @@ class ContentNegotiationMiddlewareTest extends TestCase
         $request = $request->withHeader('Accept', 'text/html');
         $this->assertSame(
             StatusCodeInterface::STATUS_NOT_ACCEPTABLE,
-            $this->subject->process($request, $this->handler)->getStatusCode()
+            $this->contentNegotiationMiddleware->process($request, $this->handler)->getStatusCode()
         );
     }
 
@@ -81,7 +81,7 @@ class ContentNegotiationMiddlewareTest extends TestCase
         $request = $request->withHeader('Content-Type', 'text/html');
         $this->assertSame(
             StatusCodeInterface::STATUS_UNSUPPORTED_MEDIA_TYPE,
-            $this->subject->process($request, $this->handler)->getStatusCode()
+            $this->contentNegotiationMiddleware->process($request, $this->handler)->getStatusCode()
         );
     }
 
@@ -95,13 +95,13 @@ class ContentNegotiationMiddlewareTest extends TestCase
         $request = $request->withHeader('Content-Type', 'application/json');
         $this->assertSame(
             StatusCodeInterface::STATUS_NOT_ACCEPTABLE,
-            $this->subject->process($request, $this->handler)->getStatusCode()
+            $this->contentNegotiationMiddleware->process($request, $this->handler)->getStatusCode()
         );
     }
 
     public function testFormatAcceptRequest(): void
     {
-        $accept = $this->subject->formatAcceptRequest('application/json');
+        $accept = $this->contentNegotiationMiddleware->formatAcceptRequest('application/json');
 
         $this->assertNotEmpty($accept);
         $this->assertSame(['application/json'], $accept);
@@ -110,36 +110,36 @@ class ContentNegotiationMiddlewareTest extends TestCase
     public function testCheckAccept(): void
     {
         $this->assertTrue(
-            $this->subject->checkAccept(
+            $this->contentNegotiationMiddleware->checkAccept(
                 self::ROUTE_NAME,
                 ['*/*']
             )
         );
         $this->assertTrue(
-            $this->subject->checkAccept(
+            $this->contentNegotiationMiddleware->checkAccept(
                 self::ROUTE_NAME,
                 ['application/json']
             )
         );
         $this->assertFalse(
-            $this->subject->checkAccept(self::ROUTE_NAME, ['text/html'])
+            $this->contentNegotiationMiddleware->checkAccept(self::ROUTE_NAME, ['text/html'])
         );
     }
 
     public function testCheckContentType(): void
     {
         $this->assertTrue(
-            $this->subject->checkContentType(self::ROUTE_NAME, '')
+            $this->contentNegotiationMiddleware->checkContentType(self::ROUTE_NAME, '')
         );
 
         $this->assertTrue(
-            $this->subject->checkContentType(
+            $this->contentNegotiationMiddleware->checkContentType(
                 self::ROUTE_NAME,
                 'application/json'
             )
         );
         $this->assertFalse(
-            $this->subject->checkContentType(self::ROUTE_NAME, 'text/html')
+            $this->contentNegotiationMiddleware->checkContentType(self::ROUTE_NAME, 'text/html')
         );
     }
 }

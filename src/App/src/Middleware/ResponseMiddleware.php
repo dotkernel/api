@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace Api\App\Middleware;
 
-use Api\App\Exception\BadRequestException;
-use Api\App\Exception\ConflictException;
-use Api\App\Exception\ExpiredException;
-use Api\App\Exception\ForbiddenException;
-use Api\App\Exception\MethodNotAllowedException;
-use Api\App\Exception\NotFoundException;
-use Api\App\Exception\RuntimeException;
-use Api\App\Exception\UnauthorizedException;
-use Dot\DependencyInjection\Attribute\Inject;
+use Core\App\Exception\BadRequestException;
+use Core\App\Exception\ConflictException;
+use Core\App\Exception\ExpiredException;
+use Core\App\Exception\ForbiddenException;
+use Core\App\Exception\MethodNotAllowedException;
+use Core\App\Exception\NotFoundException;
+use Core\App\Exception\RuntimeException;
+use Core\App\Exception\UnauthorizedException;
 use Dot\Mail\Exception\MailException;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\JsonResponse;
-use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator\Exception\OutOfBoundsException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -28,14 +26,6 @@ use function is_array;
 
 class ResponseMiddleware implements MiddlewareInterface
 {
-    #[Inject(
-        HalResponseFactory::class,
-    )]
-    public function __construct(
-        protected HalResponseFactory $responseFactory,
-    ) {
-    }
-
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         try {

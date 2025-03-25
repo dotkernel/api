@@ -11,7 +11,7 @@ use Core\User\Repository\UserRoleRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRoleRepository::class)]
-#[ORM\Table(name: "user_role")]
+#[ORM\Table(name: 'user_role')]
 #[ORM\HasLifecycleCallbacks]
 class UserRole extends AbstractEntity implements RoleInterface
 {
@@ -24,7 +24,7 @@ class UserRole extends AbstractEntity implements RoleInterface
         self::ROLE_USER,
     ];
 
-    #[ORM\Column(name: "name", type: "string", length: 20, unique: true)]
+    #[ORM\Column(name: 'name', type: 'string', length: 20, unique: true)]
     protected ?string $name = null;
 
     public function __construct()

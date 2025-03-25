@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Api\User\Handler\Account;
 
-use Api\App\Exception\BadRequestException;
-use Api\App\Exception\ConflictException;
-use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
 use Api\User\InputFilter\ActivateAccountInputFilter;
-use Api\User\Service\UserServiceInterface;
+use Core\App\Exception\BadRequestException;
+use Core\App\Exception\ConflictException;
+use Core\App\Exception\NotFoundException;
 use Core\App\Message;
+use Core\App\Service\MailService;
+use Core\User\Service\UserServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Dot\Mail\Exception\MailException;
 use Fig\Http\Message\StatusCodeInterface;
@@ -22,10 +23,12 @@ use function sprintf;
 class PostUserAccountActivateHandler extends AbstractHandler
 {
     #[Inject(
+        MailService::class,
         UserServiceInterface::class,
         ActivateAccountInputFilter::class,
     )]
     public function __construct(
+        protected MailService $mailService,
         protected UserServiceInterface $userService,
         protected ActivateAccountInputFilter $inputFilter,
     ) {
@@ -50,7 +53,7 @@ class PostUserAccountActivateHandler extends AbstractHandler
         }
 
         $this->userService->activateUser($user);
-        $this->userService->sendActivationMail($user);
+        $this->mailService->sendActivationMail($user);
 
         return $this->infoResponse(
             sprintf(Message::MAIL_SENT_USER_ACTIVATION, $user->getDetail()->getEmail()),

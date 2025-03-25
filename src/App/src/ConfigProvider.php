@@ -6,10 +6,7 @@ namespace Api\App;
 
 use Api\App\Command\RouteListCommand;
 use Api\App\Command\TokenGenerateCommand;
-use Api\App\Factory\AuthenticationMiddlewareFactory;
 use Api\App\Factory\HandlerDelegatorFactory;
-use Api\App\Factory\RouteListCommandFactory;
-use Api\App\Factory\TokenGenerateCommandFactory;
 use Api\App\Handler\GetIndexResourceHandler;
 use Api\App\Handler\PostErrorReportResourceHandler;
 use Api\App\Middleware\AuthenticationMiddleware;
@@ -17,17 +14,13 @@ use Api\App\Middleware\AuthorizationMiddleware;
 use Api\App\Middleware\ContentNegotiationMiddleware;
 use Api\App\Middleware\DeprecationMiddleware;
 use Api\App\Middleware\ErrorReportPermissionMiddleware;
-use Api\App\Middleware\ResponseMiddleware;
 use Api\App\Service\ErrorReportService;
 use Api\App\Service\ErrorReportServiceInterface;
 use Dot\DependencyInjection\Factory\AttributedServiceFactory;
-use Dot\Mail\Factory\MailOptionsAbstractFactory;
-use Dot\Mail\Factory\MailServiceAbstractFactory;
-use Dot\Mail\Service\MailService;
 use Laminas\Hydrator\ArraySerializableHydrator;
 use Mezzio\Application;
-use Mezzio\Authentication;
-use Mezzio\Hal\Metadata\MetadataMap;
+use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\OAuth2\OAuth2Adapter;
 use Mezzio\Hal\Metadata\RouteBasedCollectionMetadata;
 use Mezzio\Hal\Metadata\RouteBasedResourceMetadata;
 use Mezzio\Template\TemplateRendererInterface;
@@ -43,12 +36,11 @@ class ConfigProvider
     public function __invoke(): array
     {
         return [
-            'dependencies'     => $this->getDependencies(),
-            MetadataMap::class => $this->getHalConfig(),
+            'dependencies' => $this->getDependencies(),
         ];
     }
 
-    public function getDependencies(): array
+    private function getDependencies(): array
     {
         return [
             'delegators' => [
@@ -57,35 +49,26 @@ class ConfigProvider
                 PostErrorReportResourceHandler::class => [HandlerDelegatorFactory::class],
             ],
             'factories'  => [
-                'dot-mail.options.default'             => MailOptionsAbstractFactory::class,
-                'dot-mail.service.default'             => MailServiceAbstractFactory::class,
-                AuthenticationMiddleware::class        => AuthenticationMiddlewareFactory::class,
+                AuthenticationMiddleware::class        => AttributedServiceFactory::class,
                 AuthorizationMiddleware::class         => AttributedServiceFactory::class,
                 ContentNegotiationMiddleware::class    => AttributedServiceFactory::class,
                 DeprecationMiddleware::class           => AttributedServiceFactory::class,
-                Environment::class                     => TwigEnvironmentFactory::class,
                 ErrorReportPermissionMiddleware::class => AttributedServiceFactory::class,
                 GetIndexResourceHandler::class         => AttributedServiceFactory::class,
                 PostErrorReportResourceHandler::class  => AttributedServiceFactory::class,
                 ErrorReportService::class              => AttributedServiceFactory::class,
-                ResponseMiddleware::class              => AttributedServiceFactory::class,
-                RouteListCommand::class                => RouteListCommandFactory::class,
-                TokenGenerateCommand::class            => TokenGenerateCommandFactory::class,
+                RouteListCommand::class                => AttributedServiceFactory::class,
+                TokenGenerateCommand::class            => AttributedServiceFactory::class,
+                Environment::class                     => TwigEnvironmentFactory::class,
                 TwigExtension::class                   => TwigExtensionFactory::class,
                 TwigRenderer::class                    => TwigRendererFactory::class,
             ],
             'aliases'    => [
-                Authentication\AuthenticationInterface::class => Authentication\OAuth2\OAuth2Adapter::class,
-                ErrorReportServiceInterface::class            => ErrorReportService::class,
-                MailService::class                            => 'dot-mail.service.default',
-                TemplateRendererInterface::class              => TwigRenderer::class,
+                AuthenticationInterface::class     => OAuth2Adapter::class,
+                ErrorReportServiceInterface::class => ErrorReportService::class,
+                TemplateRendererInterface::class   => TwigRenderer::class,
             ],
         ];
-    }
-
-    public function getHalConfig(): array
-    {
-        return [];
     }
 
     /**
