@@ -1,17 +1,17 @@
 {
 	"info": {
-		"_postman_id": "5f4c1b92-b1e1-4f8e-840f-f92b6f4cb670",
+		"_postman_id": "aae441d2-e81b-462a-97c1-4541564a9894",
 		"name": "Dotkernel_API",
 		"description": "Dotkernel API documentation.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "3494496"
+		"_exporter_id": "13971428"
 	},
 	"item": [
 		{
 			"name": "Admin",
 			"item": [
 				{
-					"name": "My Account",
+					"name": "Account",
 					"item": [
 						{
 							"name": "Update my account",
@@ -28,13 +28,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/admin/my-account",
+									"raw": "{{APPLICATION_URL}}/admin/account",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
 										"admin",
-										"my-account"
+										"account"
 									]
 								},
 								"description": "Admin updated their own account."
@@ -47,13 +47,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{APPLICATION_URL}}/admin/my-account",
+									"raw": "{{APPLICATION_URL}}/admin/account",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
 										"admin",
-										"my-account"
+										"account"
 									]
 								},
 								"description": "Admin views their own account."
@@ -62,6 +62,168 @@
 						}
 					],
 					"description": "Admins manager their accounts."
+				},
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "Create admin",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/admin",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"admin"
+									]
+								},
+								"description": "Admin creates admin account."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete admin",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/admin/{{$randomUUID}}",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"admin",
+										"{{$randomUUID}}"
+									]
+								},
+								"description": "Admin deleted admin account.\n\nReplace random UUID in URL with a valid user UUID."
+							},
+							"response": []
+						},
+						{
+							"name": "List admin",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/admin",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"admin"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "10",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "admin.created",
+											"disabled": true
+										},
+										{
+											"key": "dir",
+											"value": "desc",
+											"disabled": true
+										}
+									]
+								},
+								"description": "Admin lists admin accounts."
+							},
+							"response": []
+						},
+						{
+							"name": "Update admin",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/admin/{{$randomUUID}}",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"admin",
+										"{{$randomUUID}}"
+									]
+								},
+								"description": "Admin updates admin account.\n\nReplace random UUID in URL with a valid user UUID."
+							},
+							"response": []
+						},
+						{
+							"name": "View admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/admin/{{$randomUUID}}",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"admin",
+										"{{$randomUUID}}"
+									]
+								},
+								"description": "Admin views admin account.\n\nReplace random UUID in URL with a valid user UUID."
+							},
+							"response": []
+						}
+					]
 				},
 				{
 					"name": "Role",
@@ -141,7 +303,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -150,7 +313,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -167,13 +331,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/security/generate-token",
+									"raw": "{{APPLICATION_URL}}/security/token",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
 										"security",
-										"generate-token"
+										"token"
 									]
 								},
 								"description": "Generate OAuth2 Bearer token for identity with admin privileges."
@@ -189,7 +353,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								},
 								{
@@ -198,7 +363,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -215,13 +381,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/security/refresh-token",
+									"raw": "{{APPLICATION_URL}}/security/token",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
 										"security",
-										"refresh-token"
+										"token"
 									]
 								},
 								"description": "Refresh OAuth2 Bearer token for identity with admin privileges."
@@ -260,150 +426,6 @@
 							}
 						}
 					]
-				},
-				{
-					"name": "View admin account",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{APPLICATION_URL}}/admin/{{$randomUUID}}",
-							"host": [
-								"{{APPLICATION_URL}}"
-							],
-							"path": [
-								"admin",
-								"{{$randomUUID}}"
-							]
-						},
-						"description": "Admin views admin account.\n\nReplace random UUID in URL with a valid user UUID."
-					},
-					"response": []
-				},
-				{
-					"name": "List admin accounts",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{APPLICATION_URL}}/admin",
-							"host": [
-								"{{APPLICATION_URL}}"
-							],
-							"path": [
-								"admin"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "1",
-									"disabled": true
-								},
-								{
-									"key": "limit",
-									"value": "10",
-									"disabled": true
-								},
-								{
-									"key": "order",
-									"value": "admin.created",
-									"disabled": true
-								},
-								{
-									"key": "dir",
-									"value": "desc",
-									"disabled": true
-								}
-							]
-						},
-						"description": "Admin lists admin accounts."
-					},
-					"response": []
-				},
-				{
-					"name": "Create admin account",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{APPLICATION_URL}}/admin",
-							"host": [
-								"{{APPLICATION_URL}}"
-							],
-							"path": [
-								"admin"
-							]
-						},
-						"description": "Admin creates admin account."
-					},
-					"response": []
-				},
-				{
-					"name": "Delete admin account",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{APPLICATION_URL}}/admin/{{$randomUUID}}",
-							"host": [
-								"{{APPLICATION_URL}}"
-							],
-							"path": [
-								"admin",
-								"{{$randomUUID}}"
-							]
-						},
-						"description": "Admin deleted admin account.\n\nReplace random UUID in URL with a valid user UUID."
-					},
-					"response": []
-				},
-				{
-					"name": "Update admin account",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{APPLICATION_URL}}/admin/{{$randomUUID}}",
-							"host": [
-								"{{APPLICATION_URL}}"
-							],
-							"path": [
-								"admin",
-								"{{$randomUUID}}"
-							]
-						},
-						"description": "Admin updates admin account.\n\nReplace random UUID in URL with a valid user UUID."
-					},
-					"response": []
 				}
 			],
 			"event": [
@@ -437,319 +459,6 @@
 							"name": "Avatar",
 							"item": [
 								{
-									"name": "Create user avatar",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "formdata",
-											"formdata": [
-												{
-													"key": "avatar",
-													"type": "file",
-													"src": []
-												}
-											]
-										},
-										"url": {
-											"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}/avatar",
-											"host": [
-												"{{APPLICATION_URL}}"
-											],
-											"path": [
-												"user",
-												"{{$randomUUID}}",
-												"avatar"
-											]
-										},
-										"description": "Admin creates avatar for user account.\r\n\r\nReplace random UUID in URL with a valid user UUID."
-									},
-									"response": []
-								},
-								{
-									"name": "Delete user avatar",
-									"request": {
-										"method": "DELETE",
-										"header": [],
-										"url": {
-											"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}/avatar",
-											"host": [
-												"{{APPLICATION_URL}}"
-											],
-											"path": [
-												"user",
-												"{{$randomUUID}}",
-												"avatar"
-											]
-										},
-										"description": "Admin deletes user avatar.\n\nReplace random UUID in URL with a valid user UUID."
-									},
-									"response": []
-								},
-								{
-									"name": "View user avatar",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}/avatar",
-											"host": [
-												"{{APPLICATION_URL}}"
-											],
-											"path": [
-												"user",
-												"{{$randomUUID}}",
-												"avatar"
-											]
-										},
-										"description": "Admin deletes user avatar.\n\nReplace random UUID in URL with a valid user UUID."
-									},
-									"response": []
-								}
-							]
-						},
-						{
-							"name": "Role",
-							"item": [
-								{
-									"name": "List user roles",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "{{APPLICATION_URL}}/user/role",
-											"host": [
-												"{{APPLICATION_URL}}"
-											],
-											"path": [
-												"user",
-												"role"
-											],
-											"query": [
-												{
-													"key": "page",
-													"value": "1",
-													"disabled": true
-												},
-												{
-													"key": "limit",
-													"value": "10",
-													"disabled": true
-												},
-												{
-													"key": "order",
-													"value": "role.created",
-													"disabled": true
-												},
-												{
-													"key": "dir",
-													"value": "desc",
-													"disabled": true
-												}
-											]
-										},
-										"description": "Admin lists user roles."
-									},
-									"response": []
-								},
-								{
-									"name": "View user role",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "{{APPLICATION_URL}}/user/role/{{$randomUUID}}",
-											"host": [
-												"{{APPLICATION_URL}}"
-											],
-											"path": [
-												"user",
-												"role",
-												"{{$randomUUID}}"
-											]
-										},
-										"description": "Admin views user role.\n\nReplace random UUID in URL with a valid user UUID."
-									},
-									"response": []
-								}
-							]
-						},
-						{
-							"name": "Activate user account",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}/activate",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"user",
-										"{{$randomUUID}}",
-										"activate"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Create user account",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"status\": \"pending\",\r\n    \"detail\": {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    },\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{APPLICATION_URL}}/user",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"user"
-									]
-								},
-								"description": "Admin creates new user account."
-							},
-							"response": []
-						},
-						{
-							"name": "Delete user account",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"user",
-										"{{$randomUUID}}"
-									]
-								},
-								"description": "Admin anonymizes and marks user account as deleted.\n\nReplace random UUID in URL with a valid user UUID."
-							},
-							"response": []
-						},
-						{
-							"name": "List user accounts",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{APPLICATION_URL}}/user",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"user"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "1",
-											"description": "Page number",
-											"disabled": true
-										},
-										{
-											"key": "limit",
-											"value": "10",
-											"description": "Items per page",
-											"disabled": true
-										},
-										{
-											"key": "order",
-											"value": "user.created",
-											"description": "order results by this field",
-											"disabled": true
-										},
-										{
-											"key": "dir",
-											"value": "desc",
-											"description": "order results direction",
-											"disabled": true
-										}
-									]
-								},
-								"description": "Admin lists user accounts."
-							},
-							"response": []
-						},
-						{
-							"name": "Update user account",
-							"request": {
-								"method": "PATCH",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"status\": \"active\",\r\n    \"detail\": {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    },\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"user",
-										"{{$randomUUID}}"
-									]
-								},
-								"description": "Admin updates user account.\r\n\r\nReplace random UUID in URL with a valid user UUID."
-							},
-							"response": []
-						},
-						{
-							"name": "View user account",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}",
-									"host": [
-										"{{APPLICATION_URL}}"
-									],
-									"path": [
-										"user",
-										"{{$randomUUID}}"
-									]
-								},
-								"description": "Admin views user account.\r\n\r\nReplace random UUID in URL with a valid user UUID."
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "My Account",
-					"item": [
-						{
-							"name": "Avatar",
-							"item": [
-								{
 									"name": "Create my avatar",
 									"request": {
 										"method": "POST",
@@ -765,13 +474,14 @@
 											]
 										},
 										"url": {
-											"raw": "{{APPLICATION_URL}}/user/my-avatar",
+											"raw": "{{APPLICATION_URL}}/user/account/avatar",
 											"host": [
 												"{{APPLICATION_URL}}"
 											],
 											"path": [
 												"user",
-												"my-avatar"
+												"account",
+												"avatar"
 											]
 										},
 										"description": "Authenticated user creates their avatar."
@@ -784,13 +494,14 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{APPLICATION_URL}}/user/my-avatar",
+											"raw": "{{APPLICATION_URL}}/user/account/avatar",
 											"host": [
 												"{{APPLICATION_URL}}"
 											],
 											"path": [
 												"user",
-												"my-avatar"
+												"account",
+												"avatar"
 											]
 										},
 										"description": "Authenticated user views their avatar."
@@ -803,13 +514,14 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "{{APPLICATION_URL}}/user/my-avatar",
+											"raw": "{{APPLICATION_URL}}/user/account/avatar",
 											"host": [
 												"{{APPLICATION_URL}}"
 											],
 											"path": [
 												"user",
-												"my-avatar"
+												"account",
+												"avatar"
 											]
 										},
 										"description": "Authenticated user deletes their avatar."
@@ -878,13 +590,13 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{APPLICATION_URL}}/user/my-account",
+									"raw": "{{APPLICATION_URL}}/user/account",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
 										"user",
-										"my-account"
+										"account"
 									]
 								},
 								"description": "Authenticated user deletes their account."
@@ -941,13 +653,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/account/recover-identity",
+									"raw": "{{APPLICATION_URL}}/account/recover",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
 										"account",
-										"recover-identity"
+										"recover"
 									]
 								},
 								"description": "Guest recovers identity using email."
@@ -1087,13 +799,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{APPLICATION_URL}}/user/my-account",
+									"raw": "{{APPLICATION_URL}}/user/account",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
 										"user",
-										"my-account"
+										"account"
 									]
 								},
 								"description": "Authenticated user views their account."
@@ -1115,13 +827,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/user/my-account",
+									"raw": "{{APPLICATION_URL}}/user/account",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
 										"user",
-										"my-account"
+										"account"
 									]
 								},
 								"description": "Authenticated user updates their account."
@@ -1130,6 +842,72 @@
 						}
 					],
 					"description": "Authenticated users manage their accounts."
+				},
+				{
+					"name": "Role",
+					"item": [
+						{
+							"name": "List user roles",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/user/role",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"user",
+										"role"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "10",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "role.created",
+											"disabled": true
+										},
+										{
+											"key": "dir",
+											"value": "desc",
+											"disabled": true
+										}
+									]
+								},
+								"description": "Admin lists user roles."
+							},
+							"response": []
+						},
+						{
+							"name": "View user role",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/user/role/{{$randomUUID}}",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"user",
+										"role",
+										"{{$randomUUID}}"
+									]
+								},
+								"description": "Admin views user role.\n\nReplace random UUID in URL with a valid user UUID."
+							},
+							"response": []
+						}
+					]
 				},
 				{
 					"name": "Security",
@@ -1182,7 +960,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1199,13 +978,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/security/refresh-token",
+									"raw": "{{APPLICATION_URL}}/security/token",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
 										"security",
-										"refresh-token"
+										"token"
 									]
 								},
 								"description": "Refresh OAuth2 Bearer token for identity with regular user privileges."
@@ -1243,6 +1022,272 @@
 									"}"
 								]
 							}
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "Avatar",
+							"item": [
+								{
+									"name": "Create user avatar",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "avatar",
+													"type": "file",
+													"src": []
+												}
+											]
+										},
+										"url": {
+											"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}/avatar",
+											"host": [
+												"{{APPLICATION_URL}}"
+											],
+											"path": [
+												"user",
+												"{{$randomUUID}}",
+												"avatar"
+											]
+										},
+										"description": "Admin creates avatar for user account.\r\n\r\nReplace random UUID in URL with a valid user UUID."
+									},
+									"response": []
+								},
+								{
+									"name": "Delete user avatar",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}/avatar",
+											"host": [
+												"{{APPLICATION_URL}}"
+											],
+											"path": [
+												"user",
+												"{{$randomUUID}}",
+												"avatar"
+											]
+										},
+										"description": "Admin deletes user avatar.\n\nReplace random UUID in URL with a valid user UUID."
+									},
+									"response": []
+								},
+								{
+									"name": "View user avatar",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}/avatar",
+											"host": [
+												"{{APPLICATION_URL}}"
+											],
+											"path": [
+												"user",
+												"{{$randomUUID}}",
+												"avatar"
+											]
+										},
+										"description": "Admin deletes user avatar.\n\nReplace random UUID in URL with a valid user UUID."
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Activate user",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}/activate",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"user",
+										"{{$randomUUID}}",
+										"activate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create user",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"status\": \"pending\",\r\n    \"detail\": {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    },\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/user",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"user"
+									]
+								},
+								"description": "Admin creates new user account."
+							},
+							"response": []
+						},
+						{
+							"name": "Deactivate user",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}/deactivate",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"user",
+										"{{$randomUUID}}",
+										"deactivate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete user",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"user",
+										"{{$randomUUID}}"
+									]
+								},
+								"description": "Admin anonymizes and marks user account as deleted.\n\nReplace random UUID in URL with a valid user UUID."
+							},
+							"response": []
+						},
+						{
+							"name": "List user",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/user",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"user"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1",
+											"description": "Page number",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "10",
+											"description": "Items per page",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "user.created",
+											"description": "order results by this field",
+											"disabled": true
+										},
+										{
+											"key": "dir",
+											"value": "desc",
+											"description": "order results direction",
+											"disabled": true
+										}
+									]
+								},
+								"description": "Admin lists user accounts."
+							},
+							"response": []
+						},
+						{
+							"name": "Update user",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"status\": \"active\",\r\n    \"detail\": {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    },\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"user",
+										"{{$randomUUID}}"
+									]
+								},
+								"description": "Admin updates user account.\r\n\r\nReplace random UUID in URL with a valid user UUID."
+							},
+							"response": []
+						},
+						{
+							"name": "View user",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{APPLICATION_URL}}/user/{{$randomUUID}}",
+									"host": [
+										"{{APPLICATION_URL}}"
+									],
+									"path": [
+										"user",
+										"{{$randomUUID}}"
+									]
+								},
+								"description": "Admin views user account.\r\n\r\nReplace random UUID in URL with a valid user UUID."
+							},
+							"response": []
 						}
 					]
 				}
