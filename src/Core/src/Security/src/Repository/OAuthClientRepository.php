@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Core\Security\Repository;
 
+use Core\App\Repository\AbstractRepository;
 use Core\Security\Entity\OAuthClient;
-use Doctrine\ORM\EntityRepository;
 use Dot\DependencyInjection\Attribute\Entity;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
@@ -13,11 +13,8 @@ use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use function in_array;
 use function password_verify;
 
-/**
- * @extends EntityRepository<object>
- */
 #[Entity(name: OAuthClient::class)]
-class OAuthClientRepository extends EntityRepository implements ClientRepositoryInterface
+class OAuthClientRepository extends AbstractRepository implements ClientRepositoryInterface
 {
     private const GRANT_TYPE_CLIENT_CREDENTIALS = 'client_credentials';
     private const GRANT_TYPE_AUTHORIZATION_CODE = 'authorization_code';

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace ApiTest\Unit\User\Service;
 
+use Api\User\Service\UserAvatarService;
+use Api\User\Service\UserAvatarServiceInterface;
 use Core\User\Entity\User;
 use Core\User\Entity\UserAvatar;
 use Core\User\Repository\UserAvatarRepository;
-use Core\User\Service\UserAvatarService;
 use Laminas\Diactoros\UploadedFile;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -15,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class UserAvatarServiceTest extends TestCase
 {
-    private UserAvatarService|MockObject $subject;
+    private UserAvatarServiceInterface&MockObject $subject;
     private UploadedFile $uploadedFile;
 
     /**
@@ -49,7 +50,7 @@ class UserAvatarServiceTest extends TestCase
         $this->subject->method('createFileName')->willReturn($fileName);
 
         $user   = $this->getUser();
-        $avatar = $this->subject->createAvatar($user, $this->uploadedFile);
+        $avatar = $this->subject->saveAvatar($user, $this->uploadedFile);
 
         $this->assertSame($fileName, $avatar->getName());
     }
@@ -62,7 +63,7 @@ class UserAvatarServiceTest extends TestCase
         $this->subject->method('createFileName')->willReturn($fileName);
 
         $user   = new User();
-        $avatar = $this->subject->createAvatar($user, $this->uploadedFile);
+        $avatar = $this->subject->saveAvatar($user, $this->uploadedFile);
 
         $this->assertSame($fileName, $avatar->getName());
     }

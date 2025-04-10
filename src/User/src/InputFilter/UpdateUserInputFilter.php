@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace Api\User\InputFilter;
 
-use Api\User\InputFilter\Input\IdentityInput;
-use Api\User\InputFilter\Input\PasswordConfirmInput;
-use Api\User\InputFilter\Input\PasswordInput;
+use Api\App\InputFilter\Input\IdentityInput;
+use Api\App\InputFilter\Input\PasswordConfirmInput;
+use Api\App\InputFilter\Input\PasswordInput;
 use Api\User\InputFilter\Input\StatusInput;
+use Core\App\InputFilter\AbstractInputFilter;
 use Laminas\InputFilter\CollectionInputFilter;
-use Laminas\InputFilter\InputFilter;
 
-/**
- * @extends InputFilter<object>
- */
-class UpdateUserInputFilter extends InputFilter
+class UpdateUserInputFilter extends AbstractInputFilter
 {
     public function __construct()
     {

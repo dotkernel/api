@@ -16,6 +16,10 @@ use Api\Admin\Handler\Admin\PatchAdminResourceHandler;
 use Api\Admin\Handler\Admin\PostAdminResourceHandler;
 use Api\Admin\Handler\Admin\Role\GetAdminRoleCollectionHandler;
 use Api\Admin\Handler\Admin\Role\GetAdminRoleResourceHandler;
+use Api\Admin\Service\AdminRoleService;
+use Api\Admin\Service\AdminRoleServiceInterface;
+use Api\Admin\Service\AdminService;
+use Api\Admin\Service\AdminServiceInterface;
 use Api\App\ConfigProvider as AppConfigProvider;
 use Api\App\Factory\HandlerDelegatorFactory;
 use Core\Admin\Entity\Admin;
@@ -60,6 +64,12 @@ class ConfigProvider
                 PatchAdminAccountResourceHandler::class => AttributedServiceFactory::class,
                 PatchAdminResourceHandler::class        => AttributedServiceFactory::class,
                 PostAdminResourceHandler::class         => AttributedServiceFactory::class,
+                AdminService::class                     => AttributedServiceFactory::class,
+                AdminRoleService::class                 => AttributedServiceFactory::class,
+            ],
+            'aliases'    => [
+                AdminServiceInterface::class     => AdminService::class,
+                AdminRoleServiceInterface::class => AdminRoleService::class,
             ],
         ];
     }

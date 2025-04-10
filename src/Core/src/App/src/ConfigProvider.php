@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Core\App;
 
+use Core\App\Command\RouteListCommand;
+use Core\App\DBAL\Types\SuccessFailureEnumType;
+use Core\App\DBAL\Types\YesNoEnumType;
 use Core\App\Factory\EntityListenerResolverFactory;
 use Core\App\Resolver\EntityListenerResolver;
 use Core\App\Service\MailService;
@@ -27,6 +30,8 @@ use function getcwd;
 
 class ConfigProvider
 {
+    public const REGEXP_UUID = '{uuid:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}';
+
     public function __invoke(): array
     {
         return [
@@ -45,6 +50,7 @@ class ConfigProvider
                 'dot-mail.service.default'            => MailServiceAbstractFactory::class,
                 EntityListenerResolver::class         => EntityListenerResolverFactory::class,
                 MailService::class                    => AttributedServiceFactory::class,
+                RouteListCommand::class               => AttributedServiceFactory::class,
             ],
             'aliases'   => [
                 DotMailService::class         => 'dot-mail.service.default',
@@ -94,6 +100,8 @@ class ConfigProvider
                 ],
             ],
             'driver'        => [
+                // default metadata driver, aggregates all other drivers into a single one.
+                // Override `orm_default` only if you know what you're doing
                 'orm_default' => [
                     'class' => MappingDriverChain::class,
                 ],
@@ -117,6 +125,8 @@ class ConfigProvider
                 UuidType::NAME                  => UuidType::class,
                 UuidBinaryType::NAME            => UuidBinaryType::class,
                 UuidBinaryOrderedTimeType::NAME => UuidBinaryOrderedTimeType::class,
+                SuccessFailureEnumType::NAME    => SuccessFailureEnumType::class,
+                YesNoEnumType::NAME             => YesNoEnumType::class,
             ],
         ];
     }

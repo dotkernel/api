@@ -36,6 +36,7 @@ use Core\User\Entity\UserDetail;
 use Core\User\Entity\UserResetPassword;
 use Core\User\Entity\UserRole;
 use Core\User\Enum\UserResetPasswordStatusEnum;
+use Core\User\Enum\UserRoleEnum;
 use Core\User\Enum\UserStatusEnum;
 use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
@@ -1252,7 +1253,7 @@ use OpenApi\Attributes as OA;
     schema: 'UserRole',
     properties: [
         new OA\Property(property: 'uuid', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
-        new OA\Property(property: 'name', type: 'string', example: UserRole::ROLE_USER),
+        new OA\Property(property: 'name', type: 'string', example: UserRoleEnum::User->value),
         new OA\Property(
             property: '_links',
             properties: [

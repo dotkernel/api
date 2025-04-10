@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Core\User\Entity;
 
+use BackedEnum;
 use Core\App\Entity\AbstractEntity;
 use Core\App\Entity\RoleInterface;
 use Core\App\Entity\TimestampsTrait;
+use Core\User\Enum\UserRoleEnum;
 use Core\User\Repository\UserRoleRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -17,15 +19,14 @@ class UserRole extends AbstractEntity implements RoleInterface
 {
     use TimestampsTrait;
 
-    public const ROLE_GUEST = 'guest';
-    public const ROLE_USER  = 'user';
-    public const ROLES      = [
-        self::ROLE_GUEST,
-        self::ROLE_USER,
-    ];
-
-    #[ORM\Column(name: 'name', type: 'string', length: 20, unique: true)]
-    protected ?string $name = null;
+    #[ORM\Column(
+        name: 'name',
+        type: 'user_role_enum',
+        unique: true,
+        enumType: UserRoleEnum::class,
+        options: ['default' => UserRoleEnum::User]
+    )]
+    protected UserRoleEnum $name = UserRoleEnum::User;
 
     public function __construct()
     {
@@ -34,12 +35,15 @@ class UserRole extends AbstractEntity implements RoleInterface
         $this->created();
     }
 
-    public function getName(): ?string
+    public function getName(): ?UserRoleEnum
     {
         return $this->name;
     }
 
-    public function setName(string $name): RoleInterface
+    /**
+     * @param UserRoleEnum $name
+     */
+    public function setName(BackedEnum $name): RoleInterface
     {
         $this->name = $name;
 
@@ -49,8 +53,10 @@ class UserRole extends AbstractEntity implements RoleInterface
     public function getArrayCopy(): array
     {
         return [
-            'uuid' => $this->getUuid()->toString(),
-            'name' => $this->getName(),
+            'uuid'    => $this->uuid->toString(),
+            'name'    => $this->name->value,
+            'created' => $this->created,
+            'updated' => $this->updated,
         ];
     }
 }

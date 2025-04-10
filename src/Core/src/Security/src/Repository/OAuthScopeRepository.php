@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace Core\Security\Repository;
 
+use Core\App\Repository\AbstractRepository;
 use Core\Security\Entity\OAuthScope;
-use Doctrine\ORM\EntityRepository;
 use Dot\DependencyInjection\Attribute\Entity;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 
-/**
- * @extends EntityRepository<object>
- */
 #[Entity(name: OAuthScope::class)]
-class OAuthScopeRepository extends EntityRepository implements ScopeRepositoryInterface
+class OAuthScopeRepository extends AbstractRepository implements ScopeRepositoryInterface
 {
     /**
      * @param string $identifier

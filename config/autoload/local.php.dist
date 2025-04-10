@@ -7,7 +7,7 @@ $baseUrl = 'http://localhost:8080';
 $databases = [
     'default' => [
         'host'     => 'localhost',
-        'dbname'   => '',
+        'dbname'   => 'dotkernel',
         'user'     => '',
         'password' => '',
         'port'     => 3306,
@@ -15,12 +15,13 @@ $databases = [
         'charset'  => 'utf8mb4',
         'collate'  => 'utf8mb4_general_ci',
     ],
-    // you can add more database connections into this array
+    // you can add more database connections to this array
 ];
 
 return [
     'application'         => [
         'name'       => 'Dotkernel API',
+        'version'    => 6,
         'url'        => $baseUrl,
         'versioning' => [
             'documentation_url' => 'https://docs.dotkernel.org/api-documentation/v5/core-features/versioning',
@@ -28,14 +29,14 @@ return [
     ],
     'authentication'      => [
         'private_key'          => [
-            'key_or_path'           => getcwd() . '/data/oauth/private.key',
+            'key_or_path'           => realpath(__DIR__ . '/../../data/oauth/private.key'),
             'key_permissions_check' => false,
         ],
         'public_key'           => [
-            'key_or_path'           => getcwd() . '/data/oauth/public.key',
+            'key_or_path'           => realpath(__DIR__ . '/../../data/oauth/public.key'),
             'key_permissions_check' => false,
         ],
-        'encryption_key'       => require getcwd() . '/data/oauth/encryption.key',
+        'encryption_key'       => require realpath(__DIR__ . '/../../data/oauth/encryption.key'),
         'access_token_expire'  => 'P1D',
         'refresh_token_expire' => 'P1M',
         'auth_code_expire'     => 'PT10M',

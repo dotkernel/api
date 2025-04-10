@@ -12,8 +12,6 @@ use Core\Security\Repository\OAuthScopeRepository;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Dot\DependencyInjection\Factory\AttributedRepositoryFactory;
 
-use function getcwd;
-
 class ConfigProvider
 {
     public function __invoke(): array
@@ -49,7 +47,7 @@ class ConfigProvider
                 'SecurityEntities' => [
                     'class' => AttributeDriver::class,
                     'cache' => 'array',
-                    'paths' => getcwd() . '/src/Core/src/Security/src/Entity',
+                    'paths' => [__DIR__ . '/Entity'],
                 ],
             ],
         ];

@@ -33,6 +33,14 @@ use Api\User\Handler\User\PatchUserResourceHandler;
 use Api\User\Handler\User\PostUserResourceHandler;
 use Api\User\Handler\User\Role\GetUserRoleCollectionHandler;
 use Api\User\Handler\User\Role\GetUserRoleResourceHandler;
+use Api\User\Service\UserAvatarService;
+use Api\User\Service\UserAvatarServiceInterface;
+use Api\User\Service\UserResetPasswordService;
+use Api\User\Service\UserResetPasswordServiceInterface;
+use Api\User\Service\UserRoleService;
+use Api\User\Service\UserRoleServiceInterface;
+use Api\User\Service\UserService;
+use Api\User\Service\UserServiceInterface;
 use Core\User\Entity\User;
 use Core\User\Entity\UserAvatar;
 use Core\User\Entity\UserRole;
@@ -108,6 +116,16 @@ class ConfigProvider
                 PostUserAccountResourceHandler::class       => AttributedServiceFactory::class,
                 PostUserAvatarResourceHandler::class        => AttributedServiceFactory::class,
                 PostUserResourceHandler::class              => AttributedServiceFactory::class,
+                UserAvatarService::class                    => AttributedServiceFactory::class,
+                UserResetPasswordService::class             => AttributedServiceFactory::class,
+                UserRoleService::class                      => AttributedServiceFactory::class,
+                UserService::class                          => AttributedServiceFactory::class,
+            ],
+            'aliases'    => [
+                UserAvatarServiceInterface::class        => UserAvatarService::class,
+                UserResetPasswordServiceInterface::class => UserResetPasswordService::class,
+                UserRoleServiceInterface::class          => UserRoleService::class,
+                UserServiceInterface::class              => UserService::class,
             ],
         ];
     }

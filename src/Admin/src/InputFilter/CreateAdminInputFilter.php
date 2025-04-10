@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace Api\Admin\InputFilter;
 
-use Api\Admin\InputFilter\Input\FirstNameInput;
-use Api\Admin\InputFilter\Input\IdentityInput;
-use Api\Admin\InputFilter\Input\LastNameInput;
-use Api\Admin\InputFilter\Input\PasswordConfirmInput;
-use Api\Admin\InputFilter\Input\PasswordInput;
 use Api\Admin\InputFilter\Input\StatusInput;
+use Api\App\InputFilter\Input\FirstNameInput;
+use Api\App\InputFilter\Input\IdentityInput;
+use Api\App\InputFilter\Input\LastNameInput;
+use Api\App\InputFilter\Input\PasswordConfirmInput;
+use Api\App\InputFilter\Input\PasswordInput;
+use Core\App\InputFilter\AbstractInputFilter;
 use Laminas\InputFilter\CollectionInputFilter;
-use Laminas\InputFilter\InputFilter;
 
-/**
- * @extends InputFilter<object>
- */
-class CreateAdminInputFilter extends InputFilter
+class CreateAdminInputFilter extends AbstractInputFilter
 {
     public function __construct()
     {
@@ -28,9 +25,9 @@ class CreateAdminInputFilter extends InputFilter
             ->add(new IdentityInput('identity'))
             ->add(new PasswordInput('password'))
             ->add(new PasswordConfirmInput('passwordConfirm'))
-            ->add(new FirstNameInput('firstName'))
-            ->add(new LastNameInput('lastName'))
-            ->add(new StatusInput('status', false))
+            ->add(new FirstNameInput('firstName', false))
+            ->add(new LastNameInput('lastName', false))
+            ->add(new StatusInput('status'))
             ->add($roles, 'roles');
     }
 }

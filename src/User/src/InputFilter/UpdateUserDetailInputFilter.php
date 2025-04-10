@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Api\User\InputFilter;
 
-use Api\User\InputFilter\Input\EmailInput;
-use Api\User\InputFilter\Input\FirstNameInput;
-use Api\User\InputFilter\Input\LastNameInput;
-use Laminas\InputFilter\InputFilter;
+use Api\App\InputFilter\Input\EmailInput;
+use Api\App\InputFilter\Input\FirstNameInput;
+use Api\App\InputFilter\Input\LastNameInput;
+use Core\App\InputFilter\AbstractInputFilter;
 
-/**
- * @extends InputFilter<object>
- */
-class UpdateUserDetailInputFilter extends InputFilter
+class UpdateUserDetailInputFilter extends AbstractInputFilter
 {
     public function __construct()
     {

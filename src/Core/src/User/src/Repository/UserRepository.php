@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace Core\User\Repository;
 
 use Core\Admin\Entity\Admin;
-use Core\App\Exception\BadRequestException;
-use Core\App\Helper\PaginationHelper;
 use Core\App\Message;
+use Core\App\Repository\AbstractRepository;
 use Core\Security\Entity\OAuthClient;
 use Core\User\Entity\User;
 use Core\User\Enum\UserStatusEnum;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Dot\DependencyInjection\Attribute\Entity;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
@@ -19,82 +17,70 @@ use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use Mezzio\Authentication\OAuth2\Entity\UserEntity;
 
-use function in_array;
+use function array_key_exists;
+use function is_string;
 use function password_verify;
-use function sprintf;
+use function strlen;
 
-/**
- * @extends EntityRepository<object>
- */
 #[Entity(name: User::class)]
-class UserRepository extends EntityRepository implements UserRepositoryInterface
+class UserRepository extends AbstractRepository implements UserRepositoryInterface
 {
-    /**
-     * @throws BadRequestException
-     */
-    public function getUsers(array $params = []): QueryBuilder
+    public function getUsers(array $params = [], array $filters = []): QueryBuilder
     {
-        $page = PaginationHelper::getOffsetAndLimit($params);
-
-        $values = [
-            'user.identity',
-            'user.status',
-            'user.created',
-            'user.updated',
-        ];
-
-        $params['order'] = $params['order'] ?? 'user.created';
-        if (! in_array($params['order'], $values)) {
-            throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'order')]);
-        }
-        $params['dir'] = $params['dir'] ?? 'desc';
-        if (! in_array($params['dir'], ['asc', 'desc'])) {
-            throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'dir')]);
-        }
-
-        $qb = $this
-            ->getEntityManager()
-            ->createQueryBuilder()
-            ->select(['user', 'avatar', 'detail', 'roles'])
+        $queryBuilder = $this
+            ->getQueryBuilder()
+            ->select(['user'])
             ->from(User::class, 'user')
-            ->leftJoin('user.avatar', 'avatar')
             ->leftJoin('user.detail', 'detail')
-            ->leftJoin('user.roles', 'roles')
-            ->andWhere('user.status != :status')
-            ->setParameter('status', UserStatusEnum::Deleted)
-            ->orderBy($params['order'], $params['dir'])
-            ->setFirstResult($page['offset'])
-            ->setMaxResults($page['limit']);
-        $qb->getQuery()->useQueryCache(true);
+            ->leftJoin('user.roles', 'role')
+            ->andWhere('user.status != :statusNotDeleted')
+            ->setParameter('statusNotDeleted', UserStatusEnum::Deleted);
 
-        if (! empty($params['status'])) {
-            $qb->andWhere('user.status = :status')->setParameter('status', $params['status']);
+        if (
+            array_key_exists('identity', $filters)
+            && is_string($filters['identity'])
+            && strlen($filters['identity']) > 0
+        ) {
+            $queryBuilder
+                ->andWhere($queryBuilder->expr()->like('user.identity', ':identity'))
+                ->setParameter('identity', '%' . $filters['identity'] . '%');
+        }
+        if (
+            array_key_exists('email', $filters)
+            && is_string($filters['email'])
+            && strlen($filters['email']) > 0
+        ) {
+            $queryBuilder
+                ->andWhere($queryBuilder->expr()->like('detail.email', ':email'))
+                ->setParameter('email', '%' . $filters['email'] . '%');
+        }
+        if (
+            array_key_exists('status', $filters)
+            && is_string($filters['status'])
+            && strlen($filters['status']) > 0
+        ) {
+            $queryBuilder
+                ->andWhere('user.status = :status')
+                ->setParameter('status', $filters['status']);
+        }
+        if (
+            array_key_exists('role', $filters)
+            && is_string($filters['role'])
+            && strlen($filters['role']) > 0
+        ) {
+            $queryBuilder
+                ->andWhere('role.name = :role')
+                ->setParameter('role', $filters['role']);
         }
 
-        if (! empty($params['search'])) {
-            $qb->andWhere(
-                $qb->expr()->orX(
-                    $qb->expr()->like('user.identity', ':search'),
-                    $qb->expr()->like('detail.firstName', ':search'),
-                    $qb->expr()->like('detail.lastName', ':search'),
-                    $qb->expr()->like('detail.email', ':search')
-                )
-            )->setParameter('search', '%' . $params['search'] . '%');
-        }
+        $queryBuilder
+            ->orderBy($params['sort'], $params['dir'])
+            ->setFirstResult($params['offset'])
+            ->setMaxResults($params['limit'])
+            ->groupBy('user.uuid');
+        $queryBuilder->getQuery()->useQueryCache(true);
 
-        if (! empty($params['role'])) {
-            $qb->andWhere('roles.name = :role')->setParameter('role', $params['role']);
-        }
-
-        return $qb;
-    }
-
-    public function saveUser(User $user): User
-    {
-        $this->getEntityManager()->persist($user);
-        $this->getEntityManager()->flush();
-
-        return $user;
+        return $queryBuilder;
     }
 
     /**

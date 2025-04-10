@@ -6,6 +6,7 @@ namespace Core\App\Fixture;
 
 use Core\Admin\Entity\Admin;
 use Core\Admin\Entity\AdminRole;
+use Core\Admin\Enum\AdminRoleEnum;
 use Core\Admin\Enum\AdminStatusEnum;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\DataFixtures\FixtureInterface;
@@ -20,18 +21,18 @@ class AdminLoader implements FixtureInterface, DependentFixtureInterface
         $adminRoleRepository = $manager->getRepository(AdminRole::class);
 
         $adminRole = $adminRoleRepository->findOneBy([
-            'name' => AdminRole::ROLE_ADMIN,
+            'name' => AdminRoleEnum::Admin,
         ]);
         assert($adminRole instanceof AdminRole);
 
         $superUserRole = $adminRoleRepository->findOneBy([
-            'name' => AdminRole::ROLE_SUPERUSER,
+            'name' => AdminRoleEnum::Superuser,
         ]);
         assert($superUserRole instanceof AdminRole);
 
         $admin = (new Admin())
             ->setIdentity('admin')
-            ->usePassword('dotkernel')
+            ->usePassword('dotadmin')
             ->setFirstName('Dotkernel')
             ->setLastName('Admin')
             ->setStatus(AdminStatusEnum::Active)

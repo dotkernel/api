@@ -10,8 +10,6 @@ use Laminas\Filter\StripTags;
 use Laminas\InputFilter\Input;
 use Laminas\Validator\NotEmpty;
 
-use function sprintf;
-
 class MessageInput extends Input
 {
     public function __construct(?string $name = null, bool $isRequired = true)
@@ -26,7 +24,7 @@ class MessageInput extends Input
 
         $this->getValidatorChain()
             ->attachByName(NotEmpty::class, [
-                'message' => sprintf(Message::VALIDATOR_REQUIRED_FIELD_BY_NAME, 'Message'),
+                'message' => Message::VALIDATOR_REQUIRED_FIELD,
             ], true);
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ApiTest\Functional;
 
+use Api\User\Service\UserAvatarService;
+use Api\User\Service\UserAvatarServiceInterface;
 use Core\App\Message;
 use Core\App\Service\MailService;
 use Core\User\Entity\User;
@@ -11,7 +13,6 @@ use Core\User\Entity\UserAvatar;
 use Core\User\Entity\UserResetPassword;
 use Core\User\Enum\UserResetPasswordStatusEnum;
 use Core\User\Enum\UserStatusEnum;
-use Core\User\Service\UserAvatarService;
 use DateInterval;
 use DateTimeImmutable;
 use Laminas\Diactoros\UploadedFile;
@@ -44,8 +45,8 @@ class UserTest extends AbstractFunctionalTest
             'status' => UserStatusEnum::Pending,
         ]);
 
-        $userAvatarService = $this->createMock(UserAvatarService::class);
-        $this->replaceService(UserAvatarService::class, $userAvatarService);
+        $userAvatarService = $this->createMock(UserAvatarServiceInterface::class);
+        $this->replaceService(UserAvatarServiceInterface::class, $userAvatarService);
 
         $response = $this->post('/user/account', $this->getValidUserData(['status' => UserStatusEnum::Pending->value]));
         $this->assertResponseConflict($response);
@@ -70,8 +71,8 @@ class UserTest extends AbstractFunctionalTest
             'status'   => UserStatusEnum::Pending,
         ]);
 
-        $userAvatarService = $this->createMock(UserAvatarService::class);
-        $this->replaceService(UserAvatarService::class, $userAvatarService);
+        $userAvatarService = $this->createMock(UserAvatarServiceInterface::class);
+        $this->replaceService(UserAvatarServiceInterface::class, $userAvatarService);
 
         $response = $this->post('/user/account', $this->getValidUserData(['status' => UserStatusEnum::Pending->value]));
         $this->assertResponseConflict($response);
@@ -91,8 +92,8 @@ class UserTest extends AbstractFunctionalTest
      */
     public function testRegisterAccount(): void
     {
-        $userAvatarService = $this->createMock(UserAvatarService::class);
-        $this->replaceService(UserAvatarService::class, $userAvatarService);
+        $userAvatarService = $this->createMock(UserAvatarServiceInterface::class);
+        $this->replaceService(UserAvatarServiceInterface::class, $userAvatarService);
 
         $mailService = $this->createMock(MailService::class);
         $this->replaceService(MailService::class, $mailService);
@@ -135,7 +136,7 @@ class UserTest extends AbstractFunctionalTest
                 'saveAvatarImage',
             ])
             ->getMock();
-        $this->replaceService(UserAvatarService::class, $userAvatarService);
+        $this->replaceService(UserAvatarServiceInterface::class, $userAvatarService);
 
         $user = $this->createUser();
         $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
@@ -338,8 +339,8 @@ class UserTest extends AbstractFunctionalTest
         $this->replaceService(MailService::class, $mailService);
 
         $response = $this->patch('/user/account/reset-password/' . $resetPassword->getHash(), [
-            'password'        => '654321',
-            'passwordConfirm' => '654321',
+            'password'        => '87654321',
+            'passwordConfirm' => '87654321',
         ]);
         $this->assertResponseGone($response);
 
@@ -347,10 +348,7 @@ class UserTest extends AbstractFunctionalTest
         $this->assertArrayHasKey('error', $data);
         $this->assertArrayHasKey('messages', $data['error']);
         $this->assertNotEmpty($data['error']['messages'][0]);
-        $this->assertSame(
-            sprintf(Message::RESET_PASSWORD_EXPIRED, $resetPassword->getHash()),
-            $data['error']['messages'][0]
-        );
+        $this->assertSame(Message::RESET_PASSWORD_EXPIRED, $data['error']['messages'][0]);
     }
 
     /**
@@ -377,8 +375,8 @@ class UserTest extends AbstractFunctionalTest
         $this->replaceService(MailService::class, $mailService);
 
         $response = $this->patch('/user/account/reset-password/' . $resetPassword->getHash(), [
-            'password'        => '654321',
-            'passwordConfirm' => '654321',
+            'password'        => '87654321',
+            'passwordConfirm' => '87654321',
         ]);
         $this->assertResponseConflict($response);
 
@@ -386,10 +384,7 @@ class UserTest extends AbstractFunctionalTest
         $this->assertArrayHasKey('error', $data);
         $this->assertArrayHasKey('messages', $data['error']);
         $this->assertNotEmpty($data['error']['messages'][0]);
-        $this->assertSame(
-            sprintf(Message::RESET_PASSWORD_USED, $resetPassword->getHash()),
-            $data['error']['messages'][0]
-        );
+        $this->assertSame(Message::RESET_PASSWORD_USED, $data['error']['messages'][0]);
     }
 
     /**
@@ -416,8 +411,8 @@ class UserTest extends AbstractFunctionalTest
         $this->replaceService(MailService::class, $mailService);
 
         $response = $this->patch('/user/account/reset-password/' . $resetPassword->getHash(), [
-            'password'        => '654321',
-            'passwordConfirm' => '654321',
+            'password'        => '87654321',
+            'passwordConfirm' => '87654321',
         ]);
         $this->assertResponseOk($response);
 

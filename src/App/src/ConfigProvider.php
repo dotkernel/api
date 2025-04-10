@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Api\App;
 
-use Api\App\Command\RouteListCommand;
 use Api\App\Command\TokenGenerateCommand;
 use Api\App\Factory\HandlerDelegatorFactory;
 use Api\App\Handler\GetIndexResourceHandler;
@@ -57,7 +56,6 @@ class ConfigProvider
                 GetIndexResourceHandler::class         => AttributedServiceFactory::class,
                 PostErrorReportResourceHandler::class  => AttributedServiceFactory::class,
                 ErrorReportService::class              => AttributedServiceFactory::class,
-                RouteListCommand::class                => AttributedServiceFactory::class,
                 TokenGenerateCommand::class            => AttributedServiceFactory::class,
                 Environment::class                     => TwigEnvironmentFactory::class,
                 TwigExtension::class                   => TwigExtensionFactory::class,

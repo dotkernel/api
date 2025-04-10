@@ -13,17 +13,17 @@ Documentation is available at: https://docs.dotkernel.org/api-documentation/
 ## Badges
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/api)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/5.2.0)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/6.0.0)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/api)](https://github.com/dotkernel/api/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/api)](https://github.com/dotkernel/api/network)
 [![GitHub stars](https://img.shields.io/github/stars/dotkernel/api)](https://github.com/dotkernel/api/stargazers)
-[![GitHub license](https://img.shields.io/github/license/dotkernel/api)](https://github.com/dotkernel/api/blob/5.0/LICENSE.md)
+[![GitHub license](https://img.shields.io/github/license/dotkernel/api)](https://github.com/dotkernel/api/blob/6.0/LICENSE.md)
 
-[![Build Static](https://github.com/dotkernel/api/actions/workflows/continuous-integration.yml/badge.svg?branch=5.0)](https://github.com/dotkernel/api/actions/workflows/continuous-integration.yml)
+[![Build Static](https://github.com/dotkernel/api/actions/workflows/continuous-integration.yml/badge.svg?branch=6.0)](https://github.com/dotkernel/api/actions/workflows/continuous-integration.yml)
 [![codecov](https://codecov.io/gh/dotkernel/api/graph/badge.svg?token=53FN78G5CK)](https://codecov.io/gh/dotkernel/api)
-[![Qodana](https://github.com/dotkernel/api/actions/workflows/qodana_code_quality.yml/badge.svg?branch=5.0)](https://github.com/dotkernel/api/actions/workflows/qodana_code_quality.yml)
-[![PHPStan](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml/badge.svg?branch=5.0)](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml)
+[![Qodana](https://github.com/dotkernel/api/actions/workflows/qodana_code_quality.yml/badge.svg?branch=6.0)](https://github.com/dotkernel/api/actions/workflows/qodana_code_quality.yml)
+[![PHPStan](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml/badge.svg?branch=6.0)](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml)
 
 ## Getting Started
 
@@ -77,7 +77,7 @@ composer development-status
 * run the database migrations by using the following command:
 
 ```shell
-php vendor/bin/doctrine-migrations migrate
+php ./vendor/bin/doctrine-migrations migrate
 ```
 
 This command will prompt you to confirm that you want to run it:
@@ -93,7 +93,7 @@ Hit `Enter` to confirm the operation.
 To list all the fixtures, run:
 
 ```shell
-php bin/doctrine fixtures:list
+php ./bin/doctrine fixtures:list
 ```
 
 This will output all the fixtures in the order of execution.
@@ -101,13 +101,13 @@ This will output all the fixtures in the order of execution.
 To execute all fixtures, run:
 
 ```shell
-php bin/doctrine fixtures:execute
+php ./bin/doctrine fixtures:execute
 ```
 
 To execute a specific fixture, run:
 
 ```shell
-php bin/doctrine fixtures:execute --class=FixtureClassName
+php ./bin/doctrine fixtures:execute --class=FixtureClassName
 ```
 
 More details on how fixtures work can be found here: https://github.com/dotkernel/dot-data-fixtures#creating-fixtures

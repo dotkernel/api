@@ -22,8 +22,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+use function array_map;
 use function assert;
-use function sprintf;
 
 class AuthorizationMiddleware implements MiddlewareInterface
 {
@@ -48,23 +48,17 @@ class AuthorizationMiddleware implements MiddlewareInterface
             case 'admin':
                 $user = $this->adminRepository->findOneBy(['identity' => $defaultUser->getIdentity()]);
                 if (! $user instanceof Admin) {
-                    return $this->unauthorizedResponse(sprintf(
-                        Message::USER_NOT_FOUND_BY_IDENTITY,
-                        $defaultUser->getIdentity()
-                    ));
+                    return $this->unauthorizedResponse(Message::ADMIN_NOT_FOUND);
                 }
                 if (! $user->isActive()) {
-                    return $this->unauthorizedResponse(Message::ADMIN_NOT_ACTIVATED);
+                    return $this->unauthorizedResponse(Message::ADMIN_INACTIVE);
                 }
                 $request = $request->withAttribute(Admin::class, $user);
                 break;
             case 'frontend':
                 $user = $this->userRepository->findOneBy(['identity' => $defaultUser->getIdentity()]);
                 if (! $user instanceof User || $user->isDeleted()) {
-                    return $this->unauthorizedResponse(sprintf(
-                        Message::USER_NOT_FOUND_BY_IDENTITY,
-                        $defaultUser->getIdentity()
-                    ));
+                    return $this->unauthorizedResponse(Message::USER_NOT_FOUND);
                 }
                 if (! $user->isActive()) {
                     return $this->unauthorizedResponse(Message::USER_NOT_ACTIVATED);
@@ -79,9 +73,9 @@ class AuthorizationMiddleware implements MiddlewareInterface
                 return $this->unauthorizedResponse(Message::INVALID_CLIENT_ID);
         }
 
-        $defaultUser->setRoles($user->getRoles()->map(function (RoleInterface $role) {
-            return $role->getName();
-        })->toArray());
+        $defaultUser->setRoles(
+            array_map(fn (RoleInterface $role): string => $role->getName()->value, $user->getRoles())
+        );
 
         $request = $request->withAttribute(UserInterface::class, $defaultUser);
 

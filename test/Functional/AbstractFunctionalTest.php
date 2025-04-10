@@ -8,16 +8,19 @@ use ApiTest\Functional\Traits\AuthenticationTrait;
 use ApiTest\Functional\Traits\DatabaseTrait;
 use Core\Admin\Entity\Admin;
 use Core\Admin\Entity\AdminRole;
+use Core\Admin\Enum\AdminRoleEnum;
 use Core\Admin\Enum\AdminStatusEnum;
 use Core\App\Entity\RoleInterface;
 use Core\User\Entity\User;
 use Core\User\Entity\UserDetail;
 use Core\User\Entity\UserRole;
+use Core\User\Enum\UserRoleEnum;
 use Core\User\Enum\UserStatusEnum;
 use Doctrine\ORM\EntityManagerInterface;
 use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\ServerRequest;
+use Laminas\ServiceManager\ServiceManager;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use PHPUnit\Framework\TestCase;
@@ -358,9 +361,11 @@ class AbstractFunctionalTest extends TestCase
 
     protected function replaceService(string $service, object $mockInstance): void
     {
-        $this->getContainer()->setAllowOverride(true);
-        $this->getContainer()->setService($service, $mockInstance);
-        $this->getContainer()->setAllowOverride(false);
+        /** @var ServiceManager $container */
+        $container = $this->getContainer();
+        $container->setAllowOverride(true);
+        $container->setService($service, $mockInstance);
+        $container->setAllowOverride(false);
     }
 
     /**
@@ -369,7 +374,7 @@ class AbstractFunctionalTest extends TestCase
      */
     protected function getValidUserData(array $data = []): array
     {
-        $userRole = $this->findUserRole(UserRole::ROLE_USER);
+        $userRole = $this->findUserRole(UserRoleEnum::User);
         $this->assertInstanceOf(UserRole::class, $userRole);
 
         return [
@@ -509,7 +514,7 @@ class AbstractFunctionalTest extends TestCase
         $adminRoleRepository = $this->getEntityManager()->getRepository(AdminRole::class);
 
         /** @var RoleInterface $adminRole */
-        $adminRole = $adminRoleRepository->findOneBy(['name' => AdminRole::ROLE_ADMIN]);
+        $adminRole = $adminRoleRepository->findOneBy(['name' => AdminRoleEnum::Admin]);
 
         $data = $this->getValidAdminData();
 
@@ -533,7 +538,7 @@ class AbstractFunctionalTest extends TestCase
      */
     protected function createUser(array $data = []): User
     {
-        $userRole = $this->findUserRole(UserRole::ROLE_USER);
+        $userRole = $this->findUserRole(UserRoleEnum::User);
         $this->assertInstanceOf(UserRole::class, $userRole);
 
         $userData = $this->getValidUserData();
@@ -562,10 +567,10 @@ class AbstractFunctionalTest extends TestCase
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function findUserRole(string $name): ?UserRole
+    public function findUserRole(UserRoleEnum $role): ?UserRole
     {
         $userRoleRepository = $this->getEntityManager()->getRepository(UserRole::class);
 
-        return $userRoleRepository->findOneBy(['name' => $name]);
+        return $userRoleRepository->findOneBy(['name' => $role]);
     }
 }

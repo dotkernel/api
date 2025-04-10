@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace Api\Admin\InputFilter;
 
-use Api\Admin\InputFilter\Input\FirstNameInput;
-use Api\Admin\InputFilter\Input\LastNameInput;
-use Api\Admin\InputFilter\Input\PasswordConfirmInput;
-use Api\Admin\InputFilter\Input\PasswordInput;
 use Api\Admin\InputFilter\Input\StatusInput;
+use Api\App\InputFilter\Input\FirstNameInput;
+use Api\App\InputFilter\Input\LastNameInput;
+use Api\App\InputFilter\Input\PasswordConfirmInput;
+use Api\App\InputFilter\Input\PasswordInput;
+use Core\App\InputFilter\AbstractInputFilter;
 use Laminas\InputFilter\CollectionInputFilter;
-use Laminas\InputFilter\InputFilter;
 
-/**
- * @extends InputFilter<object>
- */
-class UpdateAdminInputFilter extends InputFilter
+class UpdateAdminInputFilter extends AbstractInputFilter
 {
     public function __construct()
     {

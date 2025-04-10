@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Api\Admin\Handler\Account;
 
 use Api\Admin\InputFilter\UpdateAdminInputFilter;
+use Api\Admin\Service\AdminServiceInterface;
 use Api\App\Handler\AbstractHandler;
 use Core\Admin\Entity\Admin;
-use Core\Admin\Service\AdminServiceInterface;
 use Core\App\Exception\BadRequestException;
 use Core\App\Exception\ConflictException;
 use Core\App\Exception\NotFoundException;
@@ -39,9 +39,12 @@ class PatchAdminAccountResourceHandler extends AbstractHandler
             throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
         }
 
-        $admin = $request->getAttribute(Admin::class);
-        $this->adminService->updateAdmin($admin, (array) $this->inputFilter->getValues());
-
-        return $this->createResponse($request, $admin);
+        return $this->createResponse(
+            $request,
+            $this->adminService->saveAdmin(
+                (array) $this->inputFilter->getValues(),
+                $request->getAttribute(Admin::class)
+            )
+        );
     }
 }

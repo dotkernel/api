@@ -3,9 +3,8 @@
 declare(strict_types=1);
 
 use Api\Admin\Command\AdminCreateCommand;
-use Api\App\Command\RouteListCommand;
 use Api\App\Command\TokenGenerateCommand;
-use Dot\Cli\Command\DemoCommand;
+use Core\App\Command\RouteListCommand;
 use Dot\Cli\FileLockerInterface;
 
 return [
@@ -13,7 +12,6 @@ return [
         'version'  => '1.0.0',
         'name'     => 'Dotkernel CLI',
         'commands' => [
-            DemoCommand::getDefaultName()          => DemoCommand::class,
             RouteListCommand::getDefaultName()     => RouteListCommand::class,
             AdminCreateCommand::getDefaultName()   => AdminCreateCommand::class,
             TokenGenerateCommand::getDefaultName() => TokenGenerateCommand::class,

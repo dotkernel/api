@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Api\Admin\Handler\Admin;
 
 use Api\Admin\InputFilter\CreateAdminInputFilter;
+use Api\Admin\Service\AdminServiceInterface;
 use Api\App\Handler\AbstractHandler;
-use Core\Admin\Service\AdminServiceInterface;
 use Core\App\Exception\BadRequestException;
 use Core\App\Exception\ConflictException;
 use Core\App\Exception\NotFoundException;
@@ -40,7 +40,7 @@ class PostAdminResourceHandler extends AbstractHandler
 
         return $this->createdResponse(
             $request,
-            $this->adminService->createAdmin((array) $this->inputFilter->getValues())
+            $this->adminService->saveAdmin((array) $this->inputFilter->getValues())
         );
     }
 }

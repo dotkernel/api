@@ -4,18 +4,13 @@ declare(strict_types=1);
 
 namespace Core\Admin;
 
+use Core\Admin\DBAL\Types\AdminRoleEnumType;
 use Core\Admin\DBAL\Types\AdminStatusEnumType;
+use Core\Admin\Repository\AdminLoginRepository;
 use Core\Admin\Repository\AdminRepository;
 use Core\Admin\Repository\AdminRoleRepository;
-use Core\Admin\Service\AdminRoleService;
-use Core\Admin\Service\AdminRoleServiceInterface;
-use Core\Admin\Service\AdminService;
-use Core\Admin\Service\AdminServiceInterface;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Dot\DependencyInjection\Factory\AttributedRepositoryFactory;
-use Dot\DependencyInjection\Factory\AttributedServiceFactory;
-
-use function getcwd;
 
 class ConfigProvider
 {
@@ -31,14 +26,9 @@ class ConfigProvider
     {
         return [
             'factories' => [
-                AdminService::class        => AttributedServiceFactory::class,
-                AdminRoleService::class    => AttributedServiceFactory::class,
-                AdminRepository::class     => AttributedRepositoryFactory::class,
-                AdminRoleRepository::class => AttributedRepositoryFactory::class,
-            ],
-            'aliases'   => [
-                AdminServiceInterface::class     => AdminService::class,
-                AdminRoleServiceInterface::class => AdminRoleService::class,
+                AdminRepository::class      => AttributedRepositoryFactory::class,
+                AdminLoginRepository::class => AttributedRepositoryFactory::class,
+                AdminRoleRepository::class  => AttributedRepositoryFactory::class,
             ],
         ];
     }
@@ -55,10 +45,11 @@ class ConfigProvider
                 'AdminEntities' => [
                     'class' => AttributeDriver::class,
                     'cache' => 'array',
-                    'paths' => getcwd() . '/src/Core/src/Admin/src/Entity',
+                    'paths' => [__DIR__ . '/Entity'],
                 ],
             ],
             'types'  => [
+                AdminRoleEnumType::NAME   => AdminRoleEnumType::class,
                 AdminStatusEnumType::NAME => AdminStatusEnumType::class,
             ],
         ];

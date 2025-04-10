@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Api\Admin\InputFilter;
 
-use Api\Admin\InputFilter\Input\UuidInput;
-use Laminas\InputFilter\InputFilter;
+use Api\App\InputFilter\Input\UuidInput;
+use Core\App\InputFilter\AbstractInputFilter;
 
-/**
- * @extends InputFilter<object>
- */
-class AdminRoleInputFilter extends InputFilter
+class AdminRoleInputFilter extends AbstractInputFilter
 {
     public function __construct()
     {

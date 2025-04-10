@@ -12,7 +12,7 @@ use DateInterval;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
+use Throwable;
 
 #[ORM\Entity(repositoryClass: UserResetPasswordRepository::class)]
 #[ORM\Table(name: 'user_reset_password')]
@@ -23,16 +23,17 @@ class UserResetPassword extends AbstractEntity
 
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist', 'remove'], inversedBy: 'resetPasswords')]
     #[ORM\JoinColumn(name: 'userUuid', referencedColumnName: 'uuid')]
-    protected User $user;
+    protected ?User $user = null;
 
     #[ORM\Column(name: 'expires', type: 'datetime_immutable')]
-    protected DateTimeImmutable $expires;
+    protected ?DateTimeImmutable $expires = null;
 
-    #[ORM\Column(name: 'hash', type: 'string', length: 64, unique: true)]
-    protected string $hash;
+    #[ORM\Column(name: 'hash', type: 'string', length: 191, unique: true)]
+    protected ?string $hash = null;
 
     #[ORM\Column(
         type: 'user_reset_password_status_enum',
+        enumType: UserResetPasswordStatusEnum::class,
         options: ['default' => UserResetPasswordStatusEnum::Requested],
     )]
     protected UserResetPasswordStatusEnum $status = UserResetPasswordStatusEnum::Requested;
@@ -47,7 +48,7 @@ class UserResetPassword extends AbstractEntity
         );
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
@@ -59,7 +60,7 @@ class UserResetPassword extends AbstractEntity
         return $this;
     }
 
-    public function getExpires(): DateTimeImmutable
+    public function getExpires(): ?DateTimeImmutable
     {
         return $this->expires;
     }
@@ -71,7 +72,7 @@ class UserResetPassword extends AbstractEntity
         return $this;
     }
 
-    public function getHash(): string
+    public function getHash(): ?string
     {
         return $this->hash;
     }
@@ -104,7 +105,7 @@ class UserResetPassword extends AbstractEntity
     {
         try {
             return $this->getExpires() > new DateTimeImmutable();
-        } catch (Exception) {
+        } catch (Throwable) {
             return false;
         }
     }
@@ -119,12 +120,12 @@ class UserResetPassword extends AbstractEntity
     public function getArrayCopy(): array
     {
         return [
-            'uuid'    => $this->getUuid()->toString(),
-            'expires' => $this->getExpires(),
-            'hash'    => $this->getHash(),
-            'status'  => $this->getStatus(),
-            'created' => $this->getCreated(),
-            'updated' => $this->getUpdated(),
+            'uuid'    => $this->uuid->toString(),
+            'expires' => $this->expires,
+            'hash'    => $this->hash,
+            'status'  => $this->status->value,
+            'created' => $this->created,
+            'updated' => $this->updated,
         ];
     }
 }

@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Api\Admin\Command;
 
 use Api\Admin\InputFilter\CreateAdminInputFilter;
+use Api\Admin\Service\AdminRoleServiceInterface;
+use Api\Admin\Service\AdminServiceInterface;
 use Core\Admin\Entity\AdminRole;
-use Core\Admin\Service\AdminRoleServiceInterface;
-use Core\Admin\Service\AdminServiceInterface;
+use Core\Admin\Enum\AdminRoleEnum;
 use Core\App\Exception\BadRequestException;
 use Core\App\Exception\ConflictException;
 use Core\App\Exception\NotFoundException;
@@ -78,7 +79,7 @@ class AdminCreateCommand extends Command
             throw new BadRequestException(implode(PHP_EOL, $messages));
         }
 
-        $this->adminService->createAdmin($inputFilter->getValues());
+        $this->adminService->saveAdmin($inputFilter->getValues());
 
         (new SymfonyStyle($input, $output))->info(Message::ADMIN_CREATED);
 
@@ -90,7 +91,7 @@ class AdminCreateCommand extends Command
      */
     private function getData(InputInterface $input): array
     {
-        $adminRole = $this->adminRoleService->getAdminRoleRepository()->findOneBy(['name' => AdminRole::ROLE_ADMIN]);
+        $adminRole = $this->adminRoleService->getAdminRoleRepository()->findOneBy(['name' => AdminRoleEnum::Admin]);
         if (! $adminRole instanceof AdminRole) {
             throw new NotFoundException(Message::ROLE_NOT_FOUND);
         }

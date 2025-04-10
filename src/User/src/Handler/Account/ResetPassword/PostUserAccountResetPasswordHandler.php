@@ -6,12 +6,12 @@ namespace Api\User\Handler\Account\ResetPassword;
 
 use Api\App\Handler\AbstractHandler;
 use Api\User\InputFilter\ResetPasswordInputFilter;
+use Api\User\Service\UserServiceInterface;
 use Core\App\Exception\BadRequestException;
 use Core\App\Exception\ConflictException;
 use Core\App\Exception\NotFoundException;
 use Core\App\Message;
 use Core\App\Service\MailService;
-use Core\User\Service\UserServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Dot\Mail\Exception\MailException;
 use Fig\Http\Message\StatusCodeInterface;
@@ -53,7 +53,7 @@ class PostUserAccountResetPasswordHandler extends AbstractHandler
             throw new NotFoundException(Message::USER_NOT_FOUND);
         }
 
-        $this->userService->updateUser($user->createResetPassword());
+        $this->userService->saveUser([], $user->createResetPassword());
         $this->mailService->sendResetPasswordRequestedMail($user);
 
         return $this->infoResponse(Message::MAIL_SENT_RESET_PASSWORD, StatusCodeInterface::STATUS_CREATED);

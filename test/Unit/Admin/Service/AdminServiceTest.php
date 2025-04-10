@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace ApiTest\Unit\Admin\Service;
 
+use Api\Admin\Service\AdminService;
+use Api\Admin\Service\AdminServiceInterface;
 use Core\Admin\Entity\Admin;
 use Core\Admin\Entity\AdminRole;
+use Core\Admin\Enum\AdminRoleEnum;
 use Core\Admin\Enum\AdminStatusEnum;
 use Core\Admin\Repository\AdminRepository;
 use Core\Admin\Repository\AdminRoleRepository;
-use Core\Admin\Service\AdminService;
 use Core\App\Exception\ConflictException;
 use Core\App\Message;
 use Exception;
@@ -21,9 +23,9 @@ use function count;
 
 class AdminServiceTest extends TestCase
 {
-    private AdminService $adminService;
-    private AdminRepository|MockObject $adminRepository;
-    private AdminRoleRepository|MockObject $adminRoleRepository;
+    private AdminServiceInterface $adminService;
+    private AdminRepository&MockObject $adminRepository;
+    private AdminRoleRepository&MockObject $adminRoleRepository;
 
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
@@ -48,7 +50,7 @@ class AdminServiceTest extends TestCase
             ->method('findOneBy')
             ->willReturn($this->getAdminEntity(['identity' => $request['identity']]));
 
-        $this->adminService->createAdmin($request);
+        $this->adminService->saveAdmin($request);
     }
 
     /**
@@ -60,24 +62,21 @@ class AdminServiceTest extends TestCase
             'roles' => [
                 [
                     'uuid' => 'uuid',
-                    'name' => AdminRole::ROLE_SUPERUSER,
+                    'name' => AdminRoleEnum::Superuser,
                 ],
             ],
         ]);
 
-        $role = (new AdminRole())->setName(AdminRole::ROLE_SUPERUSER);
+        $role = (new AdminRole())->setName(AdminRoleEnum::Superuser);
 
         $this->adminRoleRepository->method('find')->willReturn($role);
-        $this->adminRepository->method('saveAdmin')->willReturn(
-            $this->getAdminEntity($data)
-        );
 
-        $admin = $this->adminService->createAdmin($data);
+        $admin = $this->adminService->saveAdmin($data);
 
         $this->assertSame($data['identity'], $admin->getIdentity());
-        $this->assertTrue(Admin::verifyPassword($data['password'], $admin->getPassword()));
+        $this->assertTrue($admin->verifyPassword($data['password']));
         $this->assertCount(count($data['roles']), $admin->getRoles());
-        $this->assertSame($role->getName(), ($admin->getRoles()->first())->getName());
+        $this->assertSame($role->getName(), ($admin->getRoles()[0])->getName());
         $this->assertSame(AdminStatusEnum::Active, $admin->getStatus());
     }
 

@@ -5,71 +5,60 @@ declare(strict_types=1);
 namespace Core\Admin\Repository;
 
 use Core\Admin\Entity\Admin;
-use Core\App\Exception\BadRequestException;
-use Core\App\Helper\PaginationHelper;
-use Core\App\Message;
-use Doctrine\ORM\EntityRepository;
+use Core\App\Repository\AbstractRepository;
 use Doctrine\ORM\QueryBuilder;
 use Dot\DependencyInjection\Attribute\Entity;
 
-use function in_array;
-use function sprintf;
+use function array_key_exists;
+use function is_string;
+use function strlen;
 
-/**
- * @extends EntityRepository<object>
- */
 #[Entity(name: Admin::class)]
-class AdminRepository extends EntityRepository
+class AdminRepository extends AbstractRepository
 {
-    public function deleteAdmin(Admin $admin): void
+    public function getAdmins(array $params = [], array $filters = []): QueryBuilder
     {
-        $this->getEntityManager()->remove($admin);
-        $this->getEntityManager()->flush();
-    }
-
-    /**
-     * @throws BadRequestException
-     */
-    public function getAdmins(array $params = []): QueryBuilder
-    {
-        $page = PaginationHelper::getOffsetAndLimit($params);
-
-        $values = [
-            'admin.identity',
-            'admin.firstName',
-            'admin.lastName',
-            'admin.status',
-            'admin.created',
-            'admin.updated',
-        ];
-
-        $params['order'] = $params['order'] ?? 'admin.created';
-        if (! in_array($params['order'], $values)) {
-            throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'order')]);
-        }
-        $params['dir'] = $params['dir'] ?? 'desc';
-        if (! in_array($params['dir'], ['asc', 'desc'])) {
-            throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'dir')]);
-        }
-
         $queryBuilder = $this
-            ->getEntityManager()
-            ->createQueryBuilder()
+            ->getQueryBuilder()
             ->select(['admin'])
             ->from(Admin::class, 'admin')
-            ->orderBy($params['order'], $params['dir'])
-            ->setFirstResult($page['offset'])
-            ->setMaxResults($page['limit']);
+            ->leftJoin('admin.roles', 'role');
+
+        if (
+            array_key_exists('identity', $filters)
+            && is_string($filters['identity'])
+            && strlen($filters['identity']) > 0
+        ) {
+            $queryBuilder
+                ->andWhere($queryBuilder->expr()->like('admin.identity', ':identity'))
+                ->setParameter('identity', '%' . $filters['identity'] . '%');
+        }
+        if (
+            array_key_exists('status', $filters)
+            && is_string($filters['status'])
+            && strlen($filters['status']) > 0
+        ) {
+            $queryBuilder
+                ->andWhere('admin.status = :status')
+                ->setParameter('status', $filters['status']);
+        }
+        if (
+            array_key_exists('role', $filters)
+            && is_string($filters['role'])
+            && strlen($filters['role']) > 0
+        ) {
+            $queryBuilder
+                ->andWhere('role.name = :role')
+                ->setParameter('role', $filters['role']);
+        }
+
+        $queryBuilder
+            ->orderBy($params['sort'], $params['dir'])
+            ->setFirstResult($params['offset'])
+            ->setMaxResults($params['limit'])
+            ->groupBy('admin.uuid');
         $queryBuilder->getQuery()->useQueryCache(true);
 
         return $queryBuilder;
-    }
-
-    public function saveAdmin(Admin $admin): Admin
-    {
-        $this->getEntityManager()->persist($admin);
-        $this->getEntityManager()->flush();
-
-        return $admin;
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     'content-negotiation' => [
-        'default'               => [ // default to any route if not configured above
+        'default'                     => [ // default to any route if not configured above
             'Accept'       => [ // the Accept is what format the server can send back
                 'application/json',
                 'application/hal+json',
@@ -14,11 +14,11 @@ return [
                 'application/hal+json',
             ],
         ],
-        'your.route.name'       => [
+        'your.route.name'             => [
             'Accept'       => [],
             'Content-Type' => [],
         ],
-        'user.avatar.create'    => [
+        'user::create-account-avatar' => [
             'Accept'       => [
                 'application/json',
                 'application/hal+json',
@@ -27,7 +27,7 @@ return [
                 'multipart/form-data',
             ],
         ],
-        'user.my-avatar.create' => [
+        'user::create-user-avatar'    => [
             'Accept'       => [
                 'application/json',
                 'application/hal+json',
