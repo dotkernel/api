@@ -6,11 +6,11 @@ namespace Api\User\Handler\Account;
 
 use Api\App\Handler\AbstractHandler;
 use Api\User\InputFilter\UpdateUserInputFilter;
+use Api\User\Service\UserServiceInterface;
 use Core\App\Exception\BadRequestException;
 use Core\App\Exception\ConflictException;
 use Core\App\Exception\NotFoundException;
 use Core\User\Entity\User;
-use Core\User\Service\UserServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -41,9 +41,12 @@ class PatchUserAccountResourceHandler extends AbstractHandler
             throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
         }
 
-        $user = $request->getAttribute(User::class);
-        $this->userService->updateUser($user, (array) $this->inputFilter->getValues());
-
-        return $this->createResponse($request, $user);
+        return $this->createResponse(
+            $request,
+            $this->userService->saveUser(
+                (array) $this->inputFilter->getValues(),
+                $request->getAttribute(User::class)
+            )
+        );
     }
 }

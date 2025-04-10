@@ -20,10 +20,10 @@ class UserAvatar extends AbstractEntity
 
     #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'avatar')]
     #[ORM\JoinColumn(name: 'userUuid', referencedColumnName: 'uuid')]
-    protected User $user;
+    protected ?User $user = null;
 
     #[ORM\Column(name: 'name', type: 'string', length: 191)]
-    protected string $name;
+    protected ?string $name = null;
 
     protected ?string $url = null;
 
@@ -34,24 +34,24 @@ class UserAvatar extends AbstractEntity
         $this->created();
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(User $user): UserAvatar
+    public function setUser(User $user): self
     {
         $this->user = $user;
 
         return $this;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName(string $name): UserAvatar
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -63,7 +63,7 @@ class UserAvatar extends AbstractEntity
         return $this->url;
     }
 
-    public function setUrl(string $url): UserAvatar
+    public function setUrl(string $url): self
     {
         $this->url = $url;
 
@@ -73,10 +73,10 @@ class UserAvatar extends AbstractEntity
     public function getArrayCopy(): array
     {
         return [
-            'uuid'    => $this->getUuid()->toString(),
-            'url'     => $this->getUrl(),
-            'created' => $this->getCreated(),
-            'updated' => $this->getUpdated(),
+            'uuid'    => $this->uuid->toString(),
+            'url'     => $this->url,
+            'created' => $this->created,
+            'updated' => $this->updated,
         ];
     }
 }

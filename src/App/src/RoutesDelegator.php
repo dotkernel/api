@@ -15,8 +15,6 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class RoutesDelegator
 {
-    public const REGEXP_UUID = '{uuid:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}';
-
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace Api\App\InputFilter;
 
 use Api\App\InputFilter\Input\MessageInput;
-use Laminas\InputFilter\InputFilter;
+use Core\App\InputFilter\AbstractInputFilter;
 
-/**
- * @extends InputFilter<object>
- */
-class ErrorReportInputFilter extends InputFilter
+class ErrorReportInputFilter extends AbstractInputFilter
 {
     public function __construct()
     {

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Core\Admin\Entity\AdminRole;
-use Core\User\Entity\UserRole;
+use Core\Admin\Enum\AdminRoleEnum;
+use Core\User\Enum\UserRoleEnum;
 
 return [
     /**
@@ -19,17 +19,17 @@ return [
      */
     'mezzio-authorization-rbac' => [
         'roles'       => [
-            AdminRole::ROLE_SUPERUSER => [],
-            AdminRole::ROLE_ADMIN     => [
-                AdminRole::ROLE_SUPERUSER,
+            AdminRoleEnum::Superuser->value => [],
+            AdminRoleEnum::Admin->value     => [
+                AdminRoleEnum::Superuser->value,
             ],
-            UserRole::ROLE_GUEST      => [
-                UserRole::ROLE_USER,
+            UserRoleEnum::Guest->value      => [
+                UserRoleEnum::User->value,
             ],
         ],
         'permissions' => [
-            AdminRole::ROLE_SUPERUSER => [],
-            AdminRole::ROLE_ADMIN     => [
+            AdminRoleEnum::Superuser->value => [],
+            AdminRoleEnum::Admin->value     => [
                 'admin::list-admin',
                 'admin::create-admin',
                 'admin::delete-admin',
@@ -54,7 +54,7 @@ return [
                 'app::create-error-report',
                 'app::view-index',
             ],
-            UserRole::ROLE_USER       => [
+            UserRoleEnum::User->value       => [
                 'user::delete-account',
                 'user::view-account',
                 'user::update-account',
@@ -62,7 +62,7 @@ return [
                 'user::view-account-avatar',
                 'user::create-account-avatar',
             ],
-            UserRole::ROLE_GUEST      => [
+            UserRoleEnum::Guest->value      => [
                 'app::create-error-report',
                 'app::view-index',
                 'user::activate-account',

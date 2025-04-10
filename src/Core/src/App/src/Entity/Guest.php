@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Core\App\Entity;
 
 use Core\User\Entity\UserRole;
+use Core\User\Enum\UserRoleEnum;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class Guest
 {
-    protected string $identity = 'guest';
+    protected string $identity = UserRoleEnum::Guest->value;
 
     /** @var ArrayCollection<int, UserRole> */
     protected ArrayCollection $roles;
@@ -19,7 +20,7 @@ class Guest
         $this->roles = new ArrayCollection();
 
         $this->roles->add(
-            (new UserRole())->setName(UserRole::ROLE_GUEST)
+            (new UserRole())->setName(UserRoleEnum::Guest)
         );
     }
 
@@ -35,9 +36,9 @@ class Guest
         return $this;
     }
 
-    public function getRoles(): ArrayCollection
+    public function getRoles(): array
     {
-        return $this->roles;
+        return $this->roles->toArray();
     }
 
     public function setRoles(ArrayCollection $roles): self

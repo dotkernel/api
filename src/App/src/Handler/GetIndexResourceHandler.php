@@ -19,15 +19,17 @@ use function sprintf;
 class GetIndexResourceHandler extends AbstractHandler
 {
     #[Inject(
-        'config.application.name',
+        'config.application',
     )]
     public function __construct(
-        private readonly string $applicationName,
+        private readonly array $config,
     ) {
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->jsonResponse(['message' => sprintf('%s version 5', $this->applicationName)]);
+        return $this->jsonResponse([
+            'message' => sprintf('%s version %s', $this->config['name'], $this->config['version']),
+        ]);
     }
 }

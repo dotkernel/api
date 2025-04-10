@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "aae441d2-e81b-462a-97c1-4541564a9894",
+		"_postman_id": "f837d47b-cc12-4897-8b1a-ecd26b4bbe44",
 		"name": "Dotkernel_API",
 		"description": "Dotkernel API documentation.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "13971428"
+		"_exporter_id": "3494496"
 	},
 	"item": [
 		{
@@ -61,7 +61,7 @@
 							"response": []
 						}
 					],
-					"description": "Admins manager their accounts."
+					"description": "Admins manage their own account."
 				},
 				{
 					"name": "Admin",
@@ -73,7 +73,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
+									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"status\": \"active\",\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -113,7 +113,7 @@
 							"response": []
 						},
 						{
-							"name": "List admin",
+							"name": "List admins",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -137,13 +137,28 @@
 											"disabled": true
 										},
 										{
-											"key": "order",
+											"key": "sort",
 											"value": "admin.created",
 											"disabled": true
 										},
 										{
 											"key": "dir",
 											"value": "desc",
+											"disabled": true
+										},
+										{
+											"key": "filters[identity]",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "filters[status]",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "filters[role]",
+											"value": "",
 											"disabled": true
 										}
 									]
@@ -159,7 +174,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
+									"raw": "{\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ],\r\n    \"status\": \"active\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -167,13 +182,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/admin/{{$randomUUID}}",
+									"raw": "{{APPLICATION_URL}}/admin/abd444ed-cc65-41e7-96c7-2391a9103f15",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
 										"admin",
-										"{{$randomUUID}}"
+										"abd444ed-cc65-41e7-96c7-2391a9103f15"
 									]
 								},
 								"description": "Admin updates admin account.\n\nReplace random UUID in URL with a valid user UUID."
@@ -223,7 +238,8 @@
 							},
 							"response": []
 						}
-					]
+					],
+					"description": "Admins manage other admin accounts."
 				},
 				{
 					"name": "Role",
@@ -254,13 +270,18 @@
 											"disabled": true
 										},
 										{
-											"key": "order",
+											"key": "sort",
 											"value": "role.created",
 											"disabled": true
 										},
 										{
 											"key": "dir",
 											"value": "desc",
+											"disabled": true
+										},
+										{
+											"key": "filters[name]",
+											"value": "",
 											"disabled": true
 										}
 									]
@@ -289,7 +310,8 @@
 							},
 							"response": []
 						}
-					]
+					],
+					"description": "Admins manage admin roles."
 				},
 				{
 					"name": "Security",
@@ -323,7 +345,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"grant_type\": \"password\",\r\n  \"client_id\": \"admin\",\r\n  \"client_secret\": \"admin\",\r\n  \"scope\": \"api\",\r\n  \"username\": \"admin\",\r\n  \"password\": \"dotkernel\"\r\n}",
+									"raw": "{\r\n  \"grant_type\": \"password\",\r\n  \"client_id\": \"admin\",\r\n  \"client_secret\": \"admin\",\r\n  \"scope\": \"api\",\r\n  \"username\": \"admin\",\r\n  \"password\": \"dotadmin\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -395,6 +417,7 @@
 							"response": []
 						}
 					],
+					"description": "Admins re/generate their access token.",
 					"auth": {
 						"type": "noauth"
 					},
@@ -428,6 +451,7 @@
 					]
 				}
 			],
+			"description": "Admin module documentation.",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -528,7 +552,8 @@
 									},
 									"response": []
 								}
-							]
+							],
+							"description": "Users manage their own avatar."
 						},
 						{
 							"name": "Activate my account",
@@ -539,11 +564,12 @@
 								"method": "PATCH",
 								"header": [],
 								"url": {
-									"raw": "{{APPLICATION_URL}}/account/activate/{{RANDOM_HASH}}",
+									"raw": "{{APPLICATION_URL}}/user/account/activate/{{RANDOM_HASH}}",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
+										"user",
 										"account",
 										"activate",
 										"{{RANDOM_HASH}}"
@@ -571,11 +597,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/account/activate",
+									"raw": "{{APPLICATION_URL}}/user/account/activate",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
+										"user",
 										"account",
 										"activate"
 									]
@@ -621,11 +648,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/account/reset-password/{{RANDOM_HASH}}",
+									"raw": "{{APPLICATION_URL}}/user/account/reset-password/{{RANDOM_HASH}}",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
+										"user",
 										"account",
 										"reset-password",
 										"{{RANDOM_HASH}}"
@@ -653,11 +681,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/account/recover",
+									"raw": "{{APPLICATION_URL}}/user/account/recover",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
+										"user",
 										"account",
 										"recover"
 									]
@@ -675,7 +704,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -695,13 +725,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/account/register",
+									"raw": "{{APPLICATION_URL}}/user/account",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
-										"account",
-										"register"
+										"user",
+										"account"
 									]
 								},
 								"description": "Guest registers new user account."
@@ -726,11 +756,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/account/reset-password",
+									"raw": "{{APPLICATION_URL}}/user/account/reset-password",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
+										"user",
 										"account",
 										"reset-password"
 									]
@@ -757,11 +788,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/account/reset-password",
+									"raw": "{{APPLICATION_URL}}/user/account/reset-password",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
+										"user",
 										"account",
 										"reset-password"
 									]
@@ -779,11 +811,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{APPLICATION_URL}}/account/reset-password/{{RANDOM_HASH}}",
+									"raw": "{{APPLICATION_URL}}/user/account/reset-password/{{RANDOM_HASH}}",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
+										"user",
 										"account",
 										"reset-password",
 										"{{RANDOM_HASH}}"
@@ -841,7 +874,7 @@
 							"response": []
 						}
 					],
-					"description": "Authenticated users manage their accounts."
+					"description": "Users manage their own account."
 				},
 				{
 					"name": "Role",
@@ -872,13 +905,18 @@
 											"disabled": true
 										},
 										{
-											"key": "order",
+											"key": "sort",
 											"value": "role.created",
 											"disabled": true
 										},
 										{
 											"key": "dir",
 											"value": "desc",
+											"disabled": true
+										},
+										{
+											"key": "filters[name]",
+											"value": "",
 											"disabled": true
 										}
 									]
@@ -907,7 +945,8 @@
 							},
 							"response": []
 						}
-					]
+					],
+					"description": "Admins manage user roles."
 				},
 				{
 					"name": "Security",
@@ -921,7 +960,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -938,13 +978,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/security/generate-token",
+									"raw": "{{APPLICATION_URL}}/security/token",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
 										"security",
-										"generate-token"
+										"token"
 									]
 								},
 								"description": "Generate OAuth2 Bearer token for identity with regular user privileges."
@@ -992,7 +1032,7 @@
 							"response": []
 						}
 					],
-					"description": "Generate/Refresh OAuth2 Bearer token with regular user privileges.",
+					"description": "Users re/generate their access token.",
 					"auth": {
 						"type": "noauth"
 					},
@@ -1101,7 +1141,8 @@
 									},
 									"response": []
 								}
-							]
+							],
+							"description": "Admins manage user avatars."
 						},
 						{
 							"name": "Activate user",
@@ -1199,7 +1240,7 @@
 							"response": []
 						},
 						{
-							"name": "List user",
+							"name": "List users",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -1225,7 +1266,7 @@
 											"disabled": true
 										},
 										{
-											"key": "order",
+											"key": "sort",
 											"value": "user.created",
 											"description": "order results by this field",
 											"disabled": true
@@ -1234,6 +1275,26 @@
 											"key": "dir",
 											"value": "desc",
 											"description": "order results direction",
+											"disabled": true
+										},
+										{
+											"key": "filters[identity]",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "filters[email]",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "filters[status]",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "filters[role]",
+											"value": "",
 											"disabled": true
 										}
 									]
@@ -1289,9 +1350,11 @@
 							},
 							"response": []
 						}
-					]
+					],
+					"description": "Admins manage user accounts."
 				}
 			],
+			"description": "User module documentation.",
 			"event": [
 				{
 					"listen": "prerequest",

@@ -10,6 +10,15 @@ $cacheConfig = [
 ];
 
 $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
+    // Laminas packages
+    Laminas\Diactoros\ConfigProvider::class,
+    Laminas\InputFilter\ConfigProvider::class,
+    Laminas\Filter\ConfigProvider::class,
+    Laminas\HttpHandlerRunner\ConfigProvider::class,
+    Laminas\Hydrator\ConfigProvider::class,
+    Laminas\Validator\ConfigProvider::class,
+
+    // Mezzio packages
     Mezzio\Authorization\ConfigProvider::class,
     Mezzio\Authorization\Acl\ConfigProvider::class,
     Mezzio\Authorization\Rbac\ConfigProvider::class,
@@ -20,14 +29,6 @@ $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
     Mezzio\ProblemDetails\ConfigProvider::class,
     Mezzio\Router\FastRouteRouter\ConfigProvider::class,
     Mezzio\Twig\ConfigProvider::class,
-    Laminas\Diactoros\ConfigProvider::class,
-    Laminas\InputFilter\ConfigProvider::class,
-    Laminas\Filter\ConfigProvider::class,
-    Laminas\HttpHandlerRunner\ConfigProvider::class,
-    Laminas\Hydrator\ConfigProvider::class,
-    Laminas\Validator\ConfigProvider::class,
-    // Include cache configuration
-    new Laminas\ConfigAggregator\ArrayProvider($cacheConfig),
     Mezzio\Helper\ConfigProvider::class,
     Mezzio\ConfigProvider::class,
     Mezzio\Router\ConfigProvider::class,
@@ -36,6 +37,9 @@ $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
         : function () {
             return [];
         },
+
+    // Include cache configuration
+    new Laminas\ConfigAggregator\ArrayProvider($cacheConfig),
 
     // DK packages
     Dot\Cli\ConfigProvider::class,
@@ -48,15 +52,16 @@ $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
     Dot\Cache\ConfigProvider::class,
     Dot\Router\ConfigProvider::class,
 
-    // Default App module config
-    Core\Admin\ConfigProvider::class,
-    Core\App\ConfigProvider::class,
-    Core\Security\ConfigProvider::class,
-    Core\User\ConfigProvider::class,
+    // Dotkernel modules
     Api\Admin\ConfigProvider::class,
     Api\App\ConfigProvider::class,
     Api\Security\ConfigProvider::class,
     Api\User\ConfigProvider::class,
+    Core\Admin\ConfigProvider::class,
+    Core\App\ConfigProvider::class,
+    Core\Security\ConfigProvider::class,
+    Core\Setting\ConfigProvider::class,
+    Core\User\ConfigProvider::class,
 
     // Load application config in a pre-defined order in such a way that local settings
     // overwrite global settings. (Loaded as first to last):
@@ -64,6 +69,7 @@ $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
     //   - `*.global.php`
     //   - `local.php`
     //   - `*.local.php`
+    //   - `local.test.php`
     new Laminas\ConfigAggregator\PhpFileProvider(
         realpath(__DIR__) . '/autoload/{{,*.}global,{,*.}local,{,*.}test}.php'
     ),

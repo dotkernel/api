@@ -12,9 +12,10 @@ class OAuthScopeLoader implements FixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        $scope = (new OAuthScope())->setScope('api');
+        $manager->persist(
+            (new OAuthScope())->setScope('api')
+        );
 
-        $manager->persist($scope);
         $manager->flush();
     }
 }

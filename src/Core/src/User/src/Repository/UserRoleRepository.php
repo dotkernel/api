@@ -4,55 +4,41 @@ declare(strict_types=1);
 
 namespace Core\User\Repository;
 
-use Core\App\Exception\BadRequestException;
-use Core\App\Helper\PaginationHelper;
-use Core\App\Message;
+use Core\App\Repository\AbstractRepository;
 use Core\User\Entity\UserRole;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Dot\DependencyInjection\Attribute\Entity;
 
-use function in_array;
-use function sprintf;
+use function array_key_exists;
+use function is_string;
+use function strlen;
 
-/**
- * @extends EntityRepository<object>
- */
 #[Entity(name: UserRole::class)]
-class UserRoleRepository extends EntityRepository
+class UserRoleRepository extends AbstractRepository
 {
-    /**
-     * @throws BadRequestException
-     */
-    public function getRoles(array $params = []): Query
+    public function getUserRoles(array $params = [], array $filters = []): QueryBuilder
     {
-        $values = [
-            'role.name',
-            'role.created',
-            'role.updated',
-        ];
-
-        $params['order'] = $params['order'] ?? 'role.created';
-        if (! in_array($params['order'], $values)) {
-            throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'order')]);
-        }
-
-        $params['dir'] = $params['dir'] ?? 'desc';
-        if (! in_array($params['dir'], ['asc', 'desc'])) {
-            throw (new BadRequestException())->setMessages([sprintf(Message::INVALID_VALUE, 'dir')]);
-        }
-
-        $page = PaginationHelper::getOffsetAndLimit($params);
-
-        return $this
-            ->getEntityManager()
-            ->createQueryBuilder()
+        $queryBuilder = $this
+            ->getQueryBuilder()
             ->select(['role'])
-            ->from(UserRole::class, 'role')
-            ->orderBy($params['order'], $params['dir'])
-            ->setFirstResult($page['offset'])
-            ->setMaxResults($page['limit'])
-            ->getQuery()
-            ->useQueryCache(true);
+            ->from(UserRole::class, 'role');
+
+        if (
+            array_key_exists('name', $filters)
+            && is_string($filters['name'])
+            && strlen($filters['name']) > 0
+        ) {
+            $queryBuilder
+                ->andWhere('role.name = :name')
+                ->setParameter('name', $filters['name']);
+        }
+
+        $queryBuilder
+            ->orderBy($params['sort'], $params['dir'])
+            ->setFirstResult($params['offset'])
+            ->setMaxResults($params['limit']);
+        $queryBuilder->getQuery()->useQueryCache(true);
+
+        return $queryBuilder;
     }
 }

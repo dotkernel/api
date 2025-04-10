@@ -13,6 +13,7 @@ use Api\Admin\Handler\Admin\PatchAdminResourceHandler;
 use Api\Admin\Handler\Admin\PostAdminResourceHandler;
 use Api\Admin\Handler\Admin\Role\GetAdminRoleCollectionHandler;
 use Api\Admin\Handler\Admin\Role\GetAdminRoleResourceHandler;
+use Core\App\ConfigProvider;
 use Dot\Router\RouteCollectorInterface;
 use Mezzio\Application;
 use Psr\Container\ContainerExceptionInterface;
@@ -27,7 +28,7 @@ class RoutesDelegator
      */
     public function __invoke(ContainerInterface $container, string $serviceName, callable $callback): Application
     {
-        $uuid = \Api\App\RoutesDelegator::REGEXP_UUID;
+        $uuid = ConfigProvider::REGEXP_UUID;
 
         /** @var RouteCollectorInterface $routeCollector */
         $routeCollector = $container->get(RouteCollectorInterface::class);

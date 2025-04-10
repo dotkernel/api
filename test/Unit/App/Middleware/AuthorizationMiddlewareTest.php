@@ -7,11 +7,13 @@ namespace ApiTest\Unit\App\Middleware;
 use Api\App\Middleware\AuthorizationMiddleware;
 use Core\Admin\Entity\Admin;
 use Core\Admin\Entity\AdminRole;
+use Core\Admin\Enum\AdminRoleEnum;
 use Core\Admin\Enum\AdminStatusEnum;
 use Core\Admin\Repository\AdminRepository;
 use Core\App\Message;
 use Core\User\Entity\User;
 use Core\User\Entity\UserRole;
+use Core\User\Enum\UserRoleEnum;
 use Core\User\Enum\UserStatusEnum;
 use Core\User\Repository\UserRepository;
 use Core\User\UserIdentity;
@@ -27,7 +29,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 use function json_decode;
-use function sprintf;
 
 class AuthorizationMiddlewareTest extends TestCase
 {
@@ -77,7 +78,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $user = (new Admin())
             ->setIdentity('admin@dotkernel.com')
             ->setStatus(AdminStatusEnum::Inactive)
-            ->addRole((new AdminRole())->setName(AdminRole::ROLE_ADMIN));
+            ->addRole((new AdminRole())->setName(AdminRoleEnum::Admin));
         $this->adminRepository->method('findOneBy')->willReturn($user);
 
         $identity      = new UserIdentity('admin@dotkernel.com', ['admin'], ['oauth_client_id' => 'admin']);
@@ -89,7 +90,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertArrayHasKey('error', $data);
         $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertContains(Message::ADMIN_NOT_ACTIVATED, $data['error']['messages']);
+        $this->assertContains(Message::ADMIN_INACTIVE, $data['error']['messages']);
     }
 
     public function testAuthorizationInactiveUser(): void
@@ -123,10 +124,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $data = json_decode($response->getBody()->getContents(), true);
         $this->assertArrayHasKey('error', $data);
         $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertContains(
-            sprintf(Message::USER_NOT_FOUND_BY_IDENTITY, $identity->getIdentity()),
-            $data['error']['messages']
-        );
+        $this->assertContains(Message::USER_NOT_FOUND, $data['error']['messages']);
     }
 
     public function testAuthorizationNotGranted(): void
@@ -134,7 +132,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $user = (new User())
             ->setIdentity('test@dotkernel.com')
             ->activate()
-            ->addRole((new UserRole())->setName(UserRole::ROLE_USER));
+            ->addRole((new UserRole())->setName(UserRoleEnum::User));
         $this->userRepository->method('findOneBy')->willReturn($user);
 
         $identity      = new UserIdentity('test@dotkernel.com', ['user'], ['oauth_client_id' => 'frontend']);
@@ -157,7 +155,7 @@ class AuthorizationMiddlewareTest extends TestCase
         $user = (new User())
             ->setIdentity('test@dotkernel.com')
             ->activate()
-            ->addRole((new UserRole())->setName(UserRole::ROLE_USER));
+            ->addRole((new UserRole())->setName(UserRoleEnum::User));
         $this->userRepository->method('findOneBy')->willReturn($user);
         $this->authorization->method('isGranted')->willReturn(true);
 

@@ -17,6 +17,7 @@ use Api\Admin\Handler\Admin\Role\GetAdminRoleCollectionHandler;
 use Api\Admin\Handler\Admin\Role\GetAdminRoleResourceHandler;
 use Core\Admin\Entity\Admin;
 use Core\Admin\Entity\AdminRole;
+use Core\Admin\Enum\AdminRoleEnum;
 use Core\Admin\Enum\AdminStatusEnum;
 use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
@@ -454,7 +455,7 @@ use OpenApi\Attributes as OA;
             items: new OA\Items(
                 properties: [
                     new OA\Property(property: 'uuid', type: 'string'),
-                    new OA\Property(property: 'name', type: 'string', example: AdminRole::ROLE_ADMIN),
+                    new OA\Property(property: 'name', type: 'string', example: AdminRoleEnum::Admin->value),
                 ],
                 type: 'object',
             ),
@@ -489,7 +490,7 @@ use OpenApi\Attributes as OA;
     schema: 'AdminRole',
     properties: [
         new OA\Property(property: 'uuid', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
-        new OA\Property(property: 'name', type: 'string', example: AdminRole::ROLE_ADMIN),
+        new OA\Property(property: 'name', type: 'string', example: AdminRoleEnum::Admin->value),
         new OA\Property(
             property: '_links',
             properties: [

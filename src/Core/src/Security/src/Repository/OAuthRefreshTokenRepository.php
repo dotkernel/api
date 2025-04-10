@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace Core\Security\Repository;
 
+use Core\App\Repository\AbstractRepository;
 use Core\Security\Entity\OAuthRefreshToken;
-use Doctrine\ORM\EntityRepository;
 use Dot\DependencyInjection\Attribute\Entity;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 
-/**
- * @extends EntityRepository<object>
- */
 #[Entity(name: OAuthRefreshToken::class)]
-class OAuthRefreshTokenRepository extends EntityRepository implements RefreshTokenRepositoryInterface
+class OAuthRefreshTokenRepository extends AbstractRepository implements RefreshTokenRepositoryInterface
 {
     public function getNewRefreshToken(): OAuthRefreshToken
     {

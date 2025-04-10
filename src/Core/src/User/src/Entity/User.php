@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 
+use function array_map;
 use function bin2hex;
 use function md5;
 use function uniqid;
@@ -31,7 +32,7 @@ class User extends AbstractEntity implements UserEntityInterface
     protected ?UserAvatar $avatar = null;
 
     #[ORM\OneToOne(targetEntity: UserDetail::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
-    protected UserDetail $detail;
+    protected ?UserDetail $detail = null;
 
     #[ORM\OneToMany(targetEntity: UserResetPassword::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     protected Collection $resetPasswords;
@@ -43,16 +44,20 @@ class User extends AbstractEntity implements UserEntityInterface
     protected Collection $roles;
 
     #[ORM\Column(name: 'identity', type: 'string', length: 191, unique: true)]
-    protected string $identity;
+    protected ?string $identity = null;
 
     #[ORM\Column(name: 'password', type: 'string', length: 191)]
-    protected string $password;
+    protected ?string $password = null;
 
-    #[ORM\Column(type: 'user_status_enum', options: ['default' => UserStatusEnum::Pending])]
+    #[ORM\Column(
+        type: 'user_status_enum',
+        enumType: UserStatusEnum::class,
+        options: ['default' => UserStatusEnum::Pending]
+    )]
     protected UserStatusEnum $status = UserStatusEnum::Pending;
 
-    #[ORM\Column(name: 'hash', type: 'string', length: 64, unique: true)]
-    protected string $hash;
+    #[ORM\Column(name: 'hash', type: 'string', length: 191, unique: true)]
+    protected ?string $hash = null;
 
     public function __construct()
     {
@@ -65,63 +70,14 @@ class User extends AbstractEntity implements UserEntityInterface
         $this->renewHash();
     }
 
-    public function getIdentity(): string
-    {
-        return $this->identity;
-    }
-
-    public function setIdentity(string $identity): self
-    {
-        $this->identity = $identity;
-        return $this;
-    }
-
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    public function getStatus(): UserStatusEnum
-    {
-        return $this->status;
-    }
-
-    public function setStatus(UserStatusEnum $status): self
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    public function getHash(): string
-    {
-        return $this->hash;
-    }
-
-    public function setHash(string $hash): self
-    {
-        $this->hash = $hash;
-
-        return $this;
-    }
-
     public function getAvatar(): ?UserAvatar
     {
         return $this->avatar;
     }
 
-    public function setAvatar(?UserAvatar $avatar): self
+    public function hasAvatar(): bool
     {
-        $this->avatar = $avatar;
-
-        return $this;
+        return $this->avatar instanceof UserAvatar;
     }
 
     public function removeAvatar(): self
@@ -131,9 +87,11 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this;
     }
 
-    public function hasAvatar(): bool
+    public function setAvatar(?UserAvatar $avatar): self
     {
-        return $this->avatar instanceof UserAvatar;
+        $this->avatar = $avatar;
+
+        return $this;
     }
 
     public function getDetail(): UserDetail
@@ -141,47 +99,14 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this->detail;
     }
 
+    public function hasDetail(): bool
+    {
+        return $this->detail !== null;
+    }
+
     public function setDetail(UserDetail $detail): self
     {
         $this->detail = $detail;
-
-        return $this;
-    }
-
-    public function getIdentifier(): string
-    {
-        return $this->getIdentity();
-    }
-
-    public function addRole(RoleInterface $role): self
-    {
-        $this->roles->add($role);
-
-        return $this;
-    }
-
-    public function getRoles(): Collection
-    {
-        return $this->roles;
-    }
-
-    public function hasRole(RoleInterface $role): bool
-    {
-        return $this->roles->contains($role);
-    }
-
-    public function removeRole(RoleInterface $role): self
-    {
-        $this->roles->removeElement($role);
-
-        return $this;
-    }
-
-    public function setRoles(array $roles): self
-    {
-        foreach ($roles as $role) {
-            $this->roles->add($role);
-        }
 
         return $this;
     }
@@ -228,6 +153,97 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this;
     }
 
+    public function addRole(RoleInterface $role): self
+    {
+        $this->roles->add($role);
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return $this->roles->toArray();
+    }
+
+    public function hasRole(RoleInterface $role): bool
+    {
+        return $this->roles->contains($role);
+    }
+
+    public function removeRole(RoleInterface $role): self
+    {
+        $this->roles->removeElement($role);
+
+        return $this;
+    }
+
+    public function setRoles(array $roles): self
+    {
+        foreach ($roles as $role) {
+            $this->roles->add($role);
+        }
+
+        return $this;
+    }
+
+    public function getIdentity(): ?string
+    {
+        return $this->identity;
+    }
+
+    public function hasIdentity(): bool
+    {
+        return $this->identity !== null;
+    }
+
+    public function setIdentity(string $identity): self
+    {
+        $this->identity = $identity;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function getStatus(): UserStatusEnum
+    {
+        return $this->status;
+    }
+
+    public function setStatus(UserStatusEnum $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getHash(): ?string
+    {
+        return $this->hash;
+    }
+
+    public function setHash(string $hash): self
+    {
+        $this->hash = $hash;
+
+        return $this;
+    }
+
+    public function getIdentifier(): string
+    {
+        return $this->identity;
+    }
+
     public function activate(): self
     {
         return $this->setStatus(UserStatusEnum::Active);
@@ -245,7 +261,7 @@ class User extends AbstractEntity implements UserEntityInterface
 
     public function getName(): string
     {
-        return $this->getDetail()->getFirstName() . ' User.php' . $this->getDetail()->getLastName();
+        return $this->getDetail()->getFirstName() . ' ' . $this->getDetail()->getLastName();
     }
 
     public function isActive(): bool
@@ -282,28 +298,18 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this->roles->count() > 0;
     }
 
-    public function hasEmail(): bool
-    {
-        return ! empty($this->getDetail()->getEmail());
-    }
-
     public function getArrayCopy(): array
     {
         return [
-            'uuid'           => $this->getUuid()->toString(),
-            'hash'           => $this->getHash(),
-            'identity'       => $this->getIdentity(),
-            'status'         => $this->getStatus(),
-            'avatar'         => $this->getAvatar()?->getArrayCopy(),
-            'detail'         => $this->getDetail()->getArrayCopy(),
-            'roles'          => $this->getRoles()->map(function (UserRole $userRole) {
-                return $userRole->getArrayCopy();
-            })->toArray(),
-            'resetPasswords' => $this->getResetPasswords()->map(function (UserResetPassword $resetPassword) {
-                return $resetPassword->getArrayCopy();
-            })->toArray(),
-            'created'        => $this->getCreated(),
-            'updated'        => $this->getUpdated(),
+            'uuid'     => $this->uuid->toString(),
+            'avatar'   => $this->avatar?->getArrayCopy(),
+            'detail'   => $this->detail->getArrayCopy(),
+            'hash'     => $this->hash,
+            'identity' => $this->identity,
+            'status'   => $this->status->value,
+            'roles'    => array_map(fn (UserRole $role): array => $role->getArrayCopy(), $this->roles->toArray()),
+            'created'  => $this->created,
+            'updated'  => $this->updated,
         ];
     }
 }

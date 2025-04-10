@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Api\User\Handler\User;
 
 use Api\App\Handler\AbstractHandler;
+use Api\User\Service\UserServiceInterface;
 use Core\App\Exception\NotFoundException;
-use Core\User\Service\UserServiceInterface;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -28,7 +28,7 @@ class GetUserResourceHandler extends AbstractHandler
     {
         return $this->createResponse(
             $request,
-            $this->userService->find($request->getAttribute('uuid'))
+            $this->userService->findUser($request->getAttribute('uuid'))
         );
     }
 }

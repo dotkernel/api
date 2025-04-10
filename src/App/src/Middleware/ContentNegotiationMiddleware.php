@@ -67,9 +67,10 @@ readonly class ContentNegotiationMiddleware implements MiddlewareInterface
 
     public function formatAcceptRequest(string $accept): array
     {
-        $accept = array_map(function ($item) {
-            return trim((string) strtok($item, ';'));
-        }, explode(',', $accept));
+        $accept = array_map(
+            fn ($item): string => trim((string) strtok($item, ';')),
+            explode(',', $accept)
+        );
 
         return array_filter($accept);
     }
@@ -122,9 +123,7 @@ readonly class ContentNegotiationMiddleware implements MiddlewareInterface
             return false;
         }
 
-        $accept = array_map(function ($item) {
-            return str_contains($item, 'json') ? 'json' : $item;
-        }, $accept);
+        $accept = array_map(fn (string $item): string => str_contains($item, 'json') ? 'json' : $item, $accept);
 
         if (str_contains($contentType, 'json')) {
             $contentType = 'json';

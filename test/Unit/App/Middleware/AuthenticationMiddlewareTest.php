@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ApiTest\Unit\App\Middleware;
 
 use Api\App\Middleware\AuthenticationMiddleware;
-use Core\User\Entity\UserRole;
+use Core\User\Enum\UserRoleEnum;
 use Laminas\Diactoros\ServerRequest;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
@@ -46,8 +46,8 @@ class AuthenticationMiddlewareTest extends TestCase
             ->willReturnCallback(function (ServerRequestInterface $request) {
                 $user = $request->getAttribute(UserInterface::class);
                 $this->assertInstanceOf(UserInterface::class, $user);
-                $this->assertSame(UserRole::ROLE_GUEST, $user->getIdentity());
-                $this->assertSame(['guest'], $user->getRoles());
+                $this->assertSame(UserRoleEnum::Guest->value, $user->getIdentity());
+                $this->assertSame([UserRoleEnum::Guest], $user->getRoles());
                 $this->assertCount(1, $user->getRoles());
                 return $this->response;
             });

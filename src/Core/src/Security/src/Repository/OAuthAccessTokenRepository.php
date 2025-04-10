@@ -5,21 +5,18 @@ declare(strict_types=1);
 namespace Core\Security\Repository;
 
 use Core\Admin\Entity\Admin;
+use Core\App\Repository\AbstractRepository;
 use Core\Security\Entity\OAuthAccessToken;
 use Core\Security\Entity\OAuthClient;
 use Core\User\Entity\User;
-use Doctrine\ORM\EntityRepository;
 use Dot\DependencyInjection\Attribute\Entity;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 
-/**
- * @extends EntityRepository<object>
- */
 #[Entity(name: OAuthAccessToken::class)]
-class OAuthAccessTokenRepository extends EntityRepository implements AccessTokenRepositoryInterface
+class OAuthAccessTokenRepository extends AbstractRepository implements AccessTokenRepositoryInterface
 {
     /**
      * @return OAuthAccessToken[]
@@ -27,8 +24,7 @@ class OAuthAccessTokenRepository extends EntityRepository implements AccessToken
     public function findAccessTokens(string $identifier): array
     {
         return $this
-            ->getEntityManager()
-            ->createQueryBuilder()
+            ->getQueryBuilder()
             ->select(['oauth_access_tokens'])
             ->from(OAuthAccessToken::class, 'oauth_access_tokens')
             ->andWhere('oauth_access_tokens.userId = :identifier')

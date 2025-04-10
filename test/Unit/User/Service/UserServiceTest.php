@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ApiTest\Unit\User\Service;
 
+use Api\User\Service\UserService;
+use Api\User\Service\UserServiceInterface;
 use Core\App\Exception\BadRequestException;
 use Core\App\Exception\ConflictException;
 use Core\App\Exception\NotFoundException;
@@ -12,11 +14,11 @@ use Core\Security\Repository\OAuthRefreshTokenRepository;
 use Core\User\Entity\User;
 use Core\User\Entity\UserDetail;
 use Core\User\Entity\UserRole;
+use Core\User\Enum\UserRoleEnum;
 use Core\User\Enum\UserStatusEnum;
 use Core\User\Repository\UserDetailRepository;
 use Core\User\Repository\UserRepository;
 use Core\User\Repository\UserRoleRepository;
-use Core\User\Service\UserService;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -26,7 +28,7 @@ use function count;
 
 class UserServiceTest extends TestCase
 {
-    private UserService $subject;
+    private UserServiceInterface $subject;
     private UserRepository&MockObject $userRepository;
     private UserDetailRepository&MockObject $userDetailRepository;
     private UserRoleRepository&MockObject $userRoleRepository;
@@ -52,6 +54,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
+     * @throws BadRequestException
      * @throws NotFoundException
      * @throws ConflictException
      */
@@ -64,7 +67,7 @@ class UserServiceTest extends TestCase
 
         $this->expectException(Exception::class);
 
-        $this->subject->createUser($request);
+        $this->subject->saveUser($request);
     }
 
     /**
@@ -76,21 +79,18 @@ class UserServiceTest extends TestCase
             'roles' => [
                 [
                     'uuid' => 'uuid',
-                    'name' => UserRole::ROLE_GUEST,
+                    'name' => UserRoleEnum::Guest,
                 ],
                 [
                     'uuid' => 'uuid',
-                    'name' => UserRole::ROLE_USER,
+                    'name' => UserRoleEnum::User,
                 ],
             ],
         ]);
 
         $this->userRoleRepository->method('find')->willReturn(new UserRole());
-        $this->userRepository->method('saveUser')->willReturn(
-            $this->getUserEntity($data)
-        );
 
-        $user = $this->subject->createUser($data);
+        $user = $this->subject->saveUser($data);
         $this->assertCount(count($data['roles']), $user->getRoles());
     }
 
@@ -103,21 +103,18 @@ class UserServiceTest extends TestCase
             'roles' => [
                 [
                     'uuid' => 'uuid',
-                    'name' => UserRole::ROLE_USER,
+                    'name' => UserRoleEnum::User,
                 ],
             ],
         ]);
 
-        $defaultRole = (new UserRole())->setName(UserRole::ROLE_USER);
+        $defaultRole = (new UserRole())->setName(UserRoleEnum::User);
         $this->userRoleRepository->method('find')->willReturn($defaultRole);
-        $this->userRepository->method('saveUser')->willReturn(
-            $this->getUserEntity($data)
-        );
 
-        $user = $this->subject->createUser($data);
+        $user = $this->subject->saveUser($data);
 
         $this->assertCount(1, $user->getRoles());
-        $this->assertSame($defaultRole->getName(), ($user->getRoles()->first())->getName());
+        $this->assertSame($defaultRole->getName(), ($user->getRoles()[0])->getName());
     }
 
     /**
@@ -126,15 +123,12 @@ class UserServiceTest extends TestCase
     public function testCreateUser(): void
     {
         $this->userRoleRepository->method('find')->willReturn(new UserRole());
-        $this->userRepository->method('saveUser')->willReturn(
-            $this->getUserEntity($this->getUser())
-        );
 
         $data = $this->getUser();
-        $user = $this->subject->createUser($data);
+        $user = $this->subject->saveUser($data);
 
         $this->assertSame($data['identity'], $user->getIdentity());
-        $this->assertTrue(User::verifyPassword($data['password'], $user->getPassword()));
+        $this->assertTrue($user->verifyPassword($data['password']));
         $this->assertSame($data['detail']['firstName'], $user->getDetail()->getFirstName());
         $this->assertSame($data['detail']['lastName'], $user->getDetail()->getLastName());
         $this->assertSame($data['detail']['email'], $user->getDetail()->getEmail());
@@ -153,11 +147,11 @@ class UserServiceTest extends TestCase
 
         $this->expectException(Exception::class);
 
-        $this->subject->updateUser($this->getUserEntity(), [
+        $this->subject->saveUser([
             'detail' => [
                 'email' => 'test@dotkernel.com',
             ],
-        ]);
+        ], $this->getUserEntity());
     }
 
     /**
@@ -166,8 +160,6 @@ class UserServiceTest extends TestCase
     public function testUpdateUser(): void
     {
         $user = $this->getUserEntity($this->getUser());
-
-        $this->userRepository->method('saveUser')->willReturn($user);
 
         $updateData = [
             'identity' => 'test@test.com',
@@ -179,9 +171,9 @@ class UserServiceTest extends TestCase
             ],
         ];
 
-        $updatedUser = $this->subject->updateUser($user, $updateData);
+        $updatedUser = $this->subject->saveUser($updateData, $user);
 
-        $this->assertTrue(User::verifyPassword($updateData['password'], $updatedUser->getPassword()));
+        $this->assertTrue($updatedUser->verifyPassword($updateData['password']));
         $this->assertSame($updateData['detail']['firstName'], $updatedUser->getDetail()->getFirstName());
         $this->assertSame($updateData['detail']['lastName'], $updatedUser->getDetail()->getLastName());
         $this->assertSame($updateData['detail']['email'], $updatedUser->getDetail()->getEmail());
@@ -198,7 +190,7 @@ class UserServiceTest extends TestCase
                 'email'     => 'test@dotkernel2.com',
             ],
             'roles'    => [
-                ['uuid' => 'uuid', 'name' => UserRole::ROLE_USER],
+                ['uuid' => 'uuid', 'name' => UserRoleEnum::User],
             ],
         ];
 

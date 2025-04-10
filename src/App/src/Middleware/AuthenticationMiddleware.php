@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\App\Middleware;
 
-use Core\User\Entity\UserRole;
+use Core\User\Enum\UserRoleEnum;
 use Core\User\UserIdentity;
 use Dot\DependencyInjection\Attribute\Inject;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -29,7 +29,7 @@ class AuthenticationMiddleware extends \Mezzio\Authentication\AuthenticationMidd
         $user = $this->auth->authenticate($request);
         if (! $user instanceof UserIdentity) {
             $user = new UserIdentity('guest', [
-                UserRole::ROLE_GUEST,
+                UserRoleEnum::Guest,
             ], [
                 'oauth_client_id' => 'guest',
             ]);

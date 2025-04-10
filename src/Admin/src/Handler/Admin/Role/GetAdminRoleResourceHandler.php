@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Api\Admin\Handler\Admin\Role;
 
+use Api\Admin\Service\AdminRoleServiceInterface;
 use Api\App\Handler\AbstractHandler;
-use Core\Admin\Service\AdminRoleServiceInterface;
 use Core\App\Exception\NotFoundException;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
@@ -28,7 +28,7 @@ class GetAdminRoleResourceHandler extends AbstractHandler
     {
         return $this->createResponse(
             $request,
-            $this->adminRoleService->find($request->getAttribute('uuid'))
+            $this->adminRoleService->findAdminRole($request->getAttribute('uuid'))
         );
     }
 }

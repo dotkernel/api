@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Core\App\Fixture;
 
 use Core\Admin\Entity\AdminRole;
+use Core\Admin\Enum\AdminRoleEnum;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
@@ -12,11 +13,12 @@ class AdminRoleLoader implements FixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        $adminRole = (new AdminRole())->setName(AdminRole::ROLE_ADMIN);
-        $manager->persist($adminRole);
-
-        $superUserRole = (new AdminRole())->setName(AdminRole::ROLE_SUPERUSER);
-        $manager->persist($superUserRole);
+        $manager->persist(
+            (new AdminRole())->setName(AdminRoleEnum::Superuser)
+        );
+        $manager->persist(
+            (new AdminRole())->setName(AdminRoleEnum::Admin)
+        );
 
         $manager->flush();
     }

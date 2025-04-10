@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Api\User\InputFilter;
 
-use Api\User\InputFilter\Input\EmailInput;
-use Api\User\InputFilter\Input\IdentityInput;
-use Laminas\InputFilter\InputFilter;
+use Api\App\InputFilter\Input\EmailInput;
+use Api\App\InputFilter\Input\IdentityInput;
+use Core\App\InputFilter\AbstractInputFilter;
 
-/**
- * @extends InputFilter<object>
- */
-class ResetPasswordInputFilter extends InputFilter
+class ResetPasswordInputFilter extends AbstractInputFilter
 {
     public function __construct()
     {

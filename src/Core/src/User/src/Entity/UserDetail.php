@@ -18,7 +18,7 @@ class UserDetail extends AbstractEntity
 
     #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'detail')]
     #[ORM\JoinColumn(name: 'userUuid', referencedColumnName: 'uuid')]
-    protected User $user;
+    protected ?User $user = null;
 
     #[ORM\Column(name: 'firstName', type: 'string', length: 191, nullable: true)]
     protected ?string $firstName = null;
@@ -27,7 +27,7 @@ class UserDetail extends AbstractEntity
     protected ?string $lastName = null;
 
     #[ORM\Column(name: 'email', type: 'string', length: 191)]
-    protected string $email;
+    protected ?string $email = null;
 
     public function __construct()
     {
@@ -36,7 +36,7 @@ class UserDetail extends AbstractEntity
         $this->created();
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
@@ -72,9 +72,14 @@ class UserDetail extends AbstractEntity
         return $this;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
+    }
+
+    public function hasEmail(): bool
+    {
+        return $this->email !== null && $this->email !== '';
     }
 
     public function setEmail(string $email): self
@@ -87,12 +92,12 @@ class UserDetail extends AbstractEntity
     public function getArrayCopy(): array
     {
         return [
-            'uuid'      => $this->getUuid()->toString(),
-            'firstName' => $this->getFirstName(),
-            'lastName'  => $this->getLastName(),
-            'email'     => $this->getEmail(),
-            'created'   => $this->getCreated(),
-            'updated'   => $this->getUpdated(),
+            'uuid'      => $this->uuid->toString(),
+            'firstName' => $this->firstName,
+            'lastName'  => $this->lastName,
+            'email'     => $this->email,
+            'created'   => $this->created,
+            'updated'   => $this->updated,
         ];
     }
 }

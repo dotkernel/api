@@ -7,6 +7,7 @@ namespace Core\App\Fixture;
 use Core\User\Entity\User;
 use Core\User\Entity\UserDetail;
 use Core\User\Entity\UserRole;
+use Core\User\Enum\UserRoleEnum;
 use Core\User\Enum\UserStatusEnum;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\DataFixtures\FixtureInterface;
@@ -21,12 +22,12 @@ class UserLoader implements FixtureInterface, DependentFixtureInterface
         $userRoleRepository = $manager->getRepository(UserRole::class);
 
         $guestRole = $userRoleRepository->findOneBy([
-            'name' => UserRole::ROLE_GUEST,
+            'name' => UserRoleEnum::Guest,
         ]);
         assert($guestRole instanceof UserRole);
 
         $userRole = $userRoleRepository->findOneBy([
-            'name' => UserRole::ROLE_USER,
+            'name' => UserRoleEnum::User,
         ]);
         assert($userRole instanceof UserRole);
 

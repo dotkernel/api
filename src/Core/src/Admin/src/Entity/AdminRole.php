@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Core\Admin\Entity;
 
+use BackedEnum;
+use Core\Admin\Enum\AdminRoleEnum;
 use Core\Admin\Repository\AdminRoleRepository;
 use Core\App\Entity\AbstractEntity;
 use Core\App\Entity\RoleInterface;
@@ -11,21 +13,20 @@ use Core\App\Entity\TimestampsTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdminRoleRepository::class)]
-#[ORM\Table('admin_role')]
+#[ORM\Table(name: 'admin_role')]
 #[ORM\HasLifecycleCallbacks]
 class AdminRole extends AbstractEntity implements RoleInterface
 {
     use TimestampsTrait;
 
-    public const ROLE_ADMIN     = 'admin';
-    public const ROLE_SUPERUSER = 'superuser';
-    public const ROLES          = [
-        self::ROLE_ADMIN,
-        self::ROLE_SUPERUSER,
-    ];
-
-    #[ORM\Column(name: 'name', type: 'string', length: 30, unique: true)]
-    protected string $name = '';
+    #[ORM\Column(
+        name: 'name',
+        type: 'admin_role_enum',
+        unique: true,
+        enumType: AdminRoleEnum::class,
+        options: ['default' => AdminRoleEnum::Admin]
+    )]
+    protected AdminRoleEnum $name = AdminRoleEnum::Admin;
 
     public function __construct()
     {
@@ -34,12 +35,15 @@ class AdminRole extends AbstractEntity implements RoleInterface
         $this->created();
     }
 
-    public function getName(): string
+    public function getName(): AdminRoleEnum
     {
         return $this->name;
     }
 
-    public function setName(string $name): RoleInterface
+    /**
+     * @param AdminRoleEnum $name
+     */
+    public function setName(BackedEnum $name): self
     {
         $this->name = $name;
 
@@ -49,8 +53,10 @@ class AdminRole extends AbstractEntity implements RoleInterface
     public function getArrayCopy(): array
     {
         return [
-            'uuid' => $this->getUuid()->toString(),
-            'name' => $this->getName(),
+            'uuid'    => $this->uuid->toString(),
+            'name'    => $this->name->value,
+            'created' => $this->created,
+            'updated' => $this->updated,
         ];
     }
 }

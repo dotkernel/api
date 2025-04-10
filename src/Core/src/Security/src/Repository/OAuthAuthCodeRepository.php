@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace Core\Security\Repository;
 
+use Core\App\Repository\AbstractRepository;
 use Core\Security\Entity\OAuthAuthCode;
-use Doctrine\ORM\EntityRepository;
 use Dot\DependencyInjection\Attribute\Entity;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 
-/**
- * @extends EntityRepository<object>
- */
 #[Entity(name: OAuthAuthCode::class)]
-class OAuthAuthCodeRepository extends EntityRepository implements AuthCodeRepositoryInterface
+class OAuthAuthCodeRepository extends AbstractRepository implements AuthCodeRepositoryInterface
 {
     public function getNewAuthCode(): OAuthAuthCode
     {
