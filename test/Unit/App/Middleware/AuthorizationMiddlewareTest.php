@@ -33,11 +33,11 @@ use function json_decode;
 class AuthorizationMiddlewareTest extends TestCase
 {
     private AuthorizationMiddleware $authorizationMiddleware;
-    private UserRepository|MockObject $userRepository;
-    private AdminRepository|MockObject $adminRepository;
-    private AuthorizationInterface|MockObject $authorization;
+    private UserRepository&MockObject $userRepository;
+    private AdminRepository&MockObject $adminRepository;
+    private AuthorizationInterface&MockObject $authorization;
     private ServerRequestInterface $request;
-    private RequestHandlerInterface|MockObject $handler;
+    private RequestHandlerInterface&MockObject $handler;
     private ResponseInterface $response;
 
     /**

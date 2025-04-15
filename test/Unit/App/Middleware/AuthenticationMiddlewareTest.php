@@ -19,10 +19,10 @@ use Psr\Http\Server\RequestHandlerInterface;
 class AuthenticationMiddlewareTest extends TestCase
 {
     private AuthenticationMiddleware $authenticationMiddleware;
-    private AuthenticationInterface|MockObject $auth;
+    private AuthenticationInterface&MockObject $auth;
     private ServerRequestInterface $request;
-    private RequestHandlerInterface|MockObject $handler;
-    private ResponseInterface|MockObject $response;
+    private RequestHandlerInterface&MockObject $handler;
+    private ResponseInterface&MockObject $response;
 
     /**
      * @throws Exception

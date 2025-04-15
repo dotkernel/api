@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Api\App\Service;
 
-use Core\App\Exception\ForbiddenException;
-use Core\App\Exception\RuntimeException;
-use Core\App\Exception\UnauthorizedException;
+use Api\App\Exception\ForbiddenException;
+use Api\App\Exception\RuntimeException;
+use Api\App\Exception\UnauthorizedException;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 

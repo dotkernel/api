@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
-use Core\App\Exception\NotFoundException;
+use Api\App\Exception\NotFoundException;
 use Core\App\Helper\Paginator;
 use Core\App\Message;
 use Core\User\Entity\UserRole;
@@ -36,7 +36,7 @@ class UserRoleService implements UserRoleServiceInterface
     {
         $userRole = $this->userRoleRepository->find($id);
         if (! $userRole instanceof UserRole) {
-            throw new NotFoundException(Message::ROLE_NOT_FOUND);
+            throw NotFoundException::create(Message::ROLE_NOT_FOUND);
         }
 
         return $userRole;

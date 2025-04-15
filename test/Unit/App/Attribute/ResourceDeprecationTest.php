@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace ApiTest\Unit\App\Attribute;
 
 use Api\App\Attribute\ResourceDeprecation;
+use Api\App\Exception\SunsetException;
 use Api\App\Middleware\DeprecationMiddleware;
-use Core\App\Exception\DeprecationSunsetException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
@@ -24,7 +24,7 @@ class ResourceDeprecationTest extends TestCase
         $reflectionClass = new ReflectionClass($class);
         $attributes      = $reflectionClass->getAttributes(ResourceDeprecation::class);
 
-        $this->expectException(DeprecationSunsetException::class);
+        $this->expectException(SunsetException::class);
 
         $attributes[0]->newInstance();
     }

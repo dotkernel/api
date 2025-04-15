@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Api\App\Middleware;
 
+use Api\App\Exception\ForbiddenException;
+use Api\App\Exception\RuntimeException;
+use Api\App\Exception\UnauthorizedException;
 use Api\App\Service\ErrorReportServiceInterface;
-use Core\App\Exception\ForbiddenException;
-use Core\App\Exception\RuntimeException;
-use Core\App\Exception\UnauthorizedException;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

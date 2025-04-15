@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Api\Admin\Service;
 
+use Api\App\Exception\BadRequestException;
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\NotFoundException;
 use Core\Admin\Entity\Admin;
 use Core\Admin\Entity\AdminRole;
 use Core\Admin\Enum\AdminStatusEnum;
 use Core\Admin\Repository\AdminRepository;
 use Core\Admin\Repository\AdminRoleRepository;
-use Core\App\Exception\BadRequestException;
-use Core\App\Exception\ConflictException;
-use Core\App\Exception\NotFoundException;
 use Core\App\Helper\Paginator;
 use Core\App\Message;
 use Doctrine\ORM\QueryBuilder;
@@ -51,7 +51,7 @@ class AdminService implements AdminServiceInterface
     {
         $admin = $this->adminRepository->find($uuid);
         if (! $admin instanceof Admin) {
-            throw new NotFoundException(Message::ADMIN_NOT_FOUND);
+            throw NotFoundException::create(Message::ADMIN_NOT_FOUND);
         }
 
         return $admin;
@@ -110,7 +110,10 @@ class AdminService implements AdminServiceInterface
                 $status = AdminStatusEnum::tryFrom($status);
             }
             if (! $status instanceof AdminStatusEnum) {
-                throw new BadRequestException(Message::invalidValue('status'));
+                throw BadRequestException::create(
+                    detail: Message::invalidValue('status'),
+                    additional: ['errors' => ['status' => $data['status']]]
+                );
             }
             $admin->setStatus($status);
         }
@@ -122,14 +125,14 @@ class AdminService implements AdminServiceInterface
             foreach ($data['roles'] as $roleData) {
                 $adminRole = $this->adminRoleRepository->find($roleData['uuid']);
                 if (! $adminRole instanceof AdminRole) {
-                    throw new NotFoundException(Message::ROLE_NOT_FOUND);
+                    throw NotFoundException::create(Message::ROLE_NOT_FOUND);
                 }
                 $admin->addRole($adminRole);
             }
         }
 
         if (! $admin->hasRoles()) {
-            throw (new BadRequestException())->setMessages([Message::RESTRICTION_ROLES]);
+            throw BadRequestException::create(Message::RESTRICTION_ROLES);
         }
 
         $this->adminRepository->saveResource($admin);
@@ -145,10 +148,10 @@ class AdminService implements AdminServiceInterface
         $admin = $this->adminRepository->findOneBy(['identity' => $identity]);
         if ($admin instanceof Admin) {
             if ($uuid === null) {
-                throw new ConflictException(Message::DUPLICATE_IDENTITY);
+                throw ConflictException::create(Message::DUPLICATE_IDENTITY);
             }
             if ($admin->getUuid()->toString() !== $uuid->toString()) {
-                throw new ConflictException(Message::DUPLICATE_IDENTITY);
+                throw ConflictException::create(Message::DUPLICATE_IDENTITY);
             }
         }
     }

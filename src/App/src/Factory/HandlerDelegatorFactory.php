@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Api\App\Factory;
 
+use Api\App\Exception\RuntimeException;
 use Api\App\Handler\AbstractHandler;
-use Core\App\Exception\RuntimeException;
 use Core\App\Message;
 use Mezzio\Hal\HalResponseFactory;
 use Mezzio\Hal\ResourceGenerator;
@@ -15,7 +15,6 @@ use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 use function assert;
-use function sprintf;
 
 class HandlerDelegatorFactory
 {
@@ -31,10 +30,10 @@ class HandlerDelegatorFactory
         callable $callback
     ): RequestHandlerInterface {
         if (! $container->has(HalResponseFactory::class)) {
-            throw new RuntimeException(sprintf(Message::SERVICE_NOT_FOUND, HalResponseFactory::class));
+            throw RuntimeException::create(Message::serviceNotFound(HalResponseFactory::class));
         }
         if (! $container->has(ResourceGenerator::class)) {
-            throw new RuntimeException(sprintf(Message::SERVICE_NOT_FOUND, ResourceGenerator::class));
+            throw RuntimeException::create(Message::serviceNotFound(ResourceGenerator::class));
         }
 
         $handler = $callback();

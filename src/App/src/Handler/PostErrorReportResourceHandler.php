@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Api\App\Handler;
 
 use Api\App\Attribute\MethodDeprecation;
+use Api\App\Exception\BadRequestException;
 use Api\App\InputFilter\ErrorReportInputFilter;
 use Api\App\Service\ErrorReportServiceInterface;
-use Core\App\Exception\BadRequestException;
 use Core\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
 use Fig\Http\Message\StatusCodeInterface;
@@ -40,7 +40,10 @@ class PostErrorReportResourceHandler extends AbstractHandler
     {
         $this->inputFilter->setData((array) $request->getParsedBody());
         if (! $this->inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
+            throw BadRequestException::create(
+                detail: Message::VALIDATOR_INVALID_DATA,
+                additional: ['errors' => $this->inputFilter->getMessages()]
+            );
         }
 
         $this->errorReportService->appendMessage($this->inputFilter->getValue('message'));

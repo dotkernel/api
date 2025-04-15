@@ -59,6 +59,7 @@ class Message
     public const USER_NOT_FOUND               = 'User not found.';
     public const USER_UPDATED                 = 'User updated successfully.';
     public const VALIDATOR_INVALID_CHARACTERS = 'The value specified contains invalid characters.';
+    public const VALIDATOR_INVALID_DATA       = 'The submitted request contains invalid data.';
     public const VALIDATOR_INVALID_EMAIL      = 'The value specified must be a valid email address.';
     public const VALIDATOR_LENGTH_MAX         = 'The value specified must have at most %d characters.';
     public const VALIDATOR_LENGTH_MIN         = 'The value specified must have at least %d characters.';

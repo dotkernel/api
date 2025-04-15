@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace ApiTest\Unit\User\Service;
 
+use Api\App\Exception\BadRequestException;
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\NotFoundException;
 use Api\User\Service\UserService;
 use Api\User\Service\UserServiceInterface;
-use Core\App\Exception\BadRequestException;
-use Core\App\Exception\ConflictException;
-use Core\App\Exception\NotFoundException;
 use Core\Security\Repository\OAuthAccessTokenRepository;
 use Core\Security\Repository\OAuthRefreshTokenRepository;
 use Core\User\Entity\User;

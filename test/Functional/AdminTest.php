@@ -160,9 +160,8 @@ class AdminTest extends AbstractFunctionalTest
         $data     = json_decode($response->getBody()->getContents(), true);
 
         $this->assertResponseConflict($response);
-        $this->assertArrayHasKey('error', $data);
-        $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertSame(Message::DUPLICATE_IDENTITY, $data['error']['messages'][0]);
+        $this->assertArrayHasKey('detail', $data);
+        $this->assertSame(Message::DUPLICATE_IDENTITY, $data['detail']);
     }
 
     /**
@@ -357,9 +356,8 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertResponseConflict($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
-        $this->assertArrayHasKey('error', $data);
-        $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertSame(Message::DUPLICATE_EMAIL, $data['error']['messages'][0]);
+        $this->assertArrayHasKey('detail', $data);
+        $this->assertSame(Message::DUPLICATE_EMAIL, $data['detail']);
     }
 
     /**
@@ -499,9 +497,8 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertResponseConflict($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
-        $this->assertArrayHasKey('error', $data);
-        $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertSame(Message::DUPLICATE_EMAIL, $data['error']['messages'][0]);
+        $this->assertArrayHasKey('detail', $data);
+        $this->assertSame(Message::DUPLICATE_EMAIL, $data['detail']);
 
         $userDetailRepository = $this->getEntityManager()->getRepository(UserDetail::class);
         $userDetail           = $userDetailRepository->find($user2->getDetail()->getUuid());

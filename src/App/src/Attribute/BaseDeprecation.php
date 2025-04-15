@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Api\App\Attribute;
 
-use Core\App\Exception\DeprecationSunsetException;
+use Api\App\Exception\SunsetException;
 use Core\App\Message;
 use Laminas\Validator\Date;
-
-use function sprintf;
 
 readonly class BaseDeprecation
 {
@@ -20,7 +18,7 @@ readonly class BaseDeprecation
         public string $type = 'text/html',
     ) {
         if (null !== $sunset && ! (new Date())->isValid($sunset)) {
-            throw new DeprecationSunsetException(sprintf(Message::INVALID_VALUE, 'sunset'));
+            throw new SunsetException(Message::invalidValue('sunset'));
         }
     }
 

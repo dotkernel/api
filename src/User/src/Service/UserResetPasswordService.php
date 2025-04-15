@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
-use Core\App\Exception\NotFoundException;
+use Api\App\Exception\NotFoundException;
 use Core\App\Message;
 use Core\User\Entity\UserResetPassword;
 use Core\User\Repository\UserResetPasswordRepository;
@@ -32,7 +32,7 @@ class UserResetPasswordService implements UserResetPasswordServiceInterface
     {
         $userResetPassword = $this->userResetPasswordRepository->findOneBy($params);
         if (! $userResetPassword instanceof UserResetPassword) {
-            throw new NotFoundException(Message::RESET_PASSWORD_NOT_FOUND);
+            throw NotFoundException::create(Message::RESET_PASSWORD_NOT_FOUND);
         }
 
         return $userResetPassword;

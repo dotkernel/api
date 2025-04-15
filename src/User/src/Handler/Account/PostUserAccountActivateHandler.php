@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Api\User\Handler\Account;
 
+use Api\App\Exception\BadRequestException;
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
 use Api\User\InputFilter\ActivateAccountInputFilter;
 use Api\User\Service\UserServiceInterface;
-use Core\App\Exception\BadRequestException;
-use Core\App\Exception\ConflictException;
-use Core\App\Exception\NotFoundException;
 use Core\App\Message;
 use Core\App\Service\MailService;
 use Dot\DependencyInjection\Attribute\Inject;
@@ -42,12 +42,15 @@ class PostUserAccountActivateHandler extends AbstractHandler
     {
         $this->inputFilter->setData((array) $request->getParsedBody());
         if (! $this->inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
+            throw BadRequestException::create(
+                detail: Message::VALIDATOR_INVALID_DATA,
+                additional: ['errors' => $this->inputFilter->getMessages()]
+            );
         }
 
         $user = $this->userService->findByEmail($this->inputFilter->getValue('email'));
         if ($user->isActive()) {
-            throw new ConflictException(Message::USER_ALREADY_ACTIVATED);
+            throw ConflictException::create(Message::USER_ALREADY_ACTIVATED);
         }
 
         $this->userService->activateUser($user);

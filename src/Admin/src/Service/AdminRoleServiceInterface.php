@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Api\Admin\Service;
 
+use Api\App\Exception\NotFoundException;
 use Core\Admin\Entity\AdminRole;
 use Core\Admin\Repository\AdminRoleRepository;
-use Core\App\Exception\NotFoundException;
 use Doctrine\ORM\QueryBuilder;
 
 interface AdminRoleServiceInterface

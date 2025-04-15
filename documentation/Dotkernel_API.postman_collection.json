@@ -129,21 +129,25 @@
 										{
 											"key": "page",
 											"value": "1",
+											"description": "Page number",
 											"disabled": true
 										},
 										{
 											"key": "limit",
 											"value": "10",
+											"description": "Items per page",
 											"disabled": true
 										},
 										{
 											"key": "sort",
 											"value": "admin.created",
+											"description": "Sort items by this field",
 											"disabled": true
 										},
 										{
 											"key": "dir",
 											"value": "desc",
+											"description": "Sort items in this direction",
 											"disabled": true
 										},
 										{
@@ -182,13 +186,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/admin/abd444ed-cc65-41e7-96c7-2391a9103f15",
+									"raw": "{{APPLICATION_URL}}/admin/{{$randomUUID}}",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
 										"admin",
-										"abd444ed-cc65-41e7-96c7-2391a9103f15"
+										"{{$randomUUID}}"
 									]
 								},
 								"description": "Admin updates admin account.\n\nReplace random UUID in URL with a valid user UUID."
@@ -1268,13 +1272,13 @@
 										{
 											"key": "sort",
 											"value": "user.created",
-											"description": "order results by this field",
+											"description": "Sort items by this field",
 											"disabled": true
 										},
 										{
 											"key": "dir",
 											"value": "desc",
-											"description": "order results direction",
+											"description": "Sort items in this direction",
 											"disabled": true
 										},
 										{

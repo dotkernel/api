@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Api\User\Handler\Account\ResetPassword;
 
+use Api\App\Exception\BadRequestException;
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\ExpiredException;
+use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
 use Api\User\InputFilter\UpdatePasswordInputFilter;
 use Api\User\Service\UserResetPasswordServiceInterface;
 use Api\User\Service\UserServiceInterface;
-use Core\App\Exception\BadRequestException;
-use Core\App\Exception\ConflictException;
-use Core\App\Exception\ExpiredException;
-use Core\App\Exception\NotFoundException;
 use Core\App\Message;
 use Core\App\Service\MailService;
 use Dot\DependencyInjection\Attribute\Inject;
@@ -46,17 +46,20 @@ class PatchUserAccountResetPasswordHandler extends AbstractHandler
     {
         $this->inputFilter->setData((array) $request->getParsedBody());
         if (! $this->inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
+            throw BadRequestException::create(
+                detail: Message::VALIDATOR_INVALID_DATA,
+                additional: ['errors' => $this->inputFilter->getMessages()]
+            );
         }
 
         $hash = $request->getAttribute('hash');
 
         $userResetPassword = $this->userResetPasswordService->findOneBy(['hash' => $hash]);
         if (! $userResetPassword->isValid()) {
-            throw new ExpiredException(Message::RESET_PASSWORD_EXPIRED);
+            throw ExpiredException::create(Message::RESET_PASSWORD_EXPIRED);
         }
         if ($userResetPassword->isCompleted()) {
-            throw new ConflictException(Message::RESET_PASSWORD_USED);
+            throw ConflictException::create(Message::RESET_PASSWORD_USED);
         }
 
         $this->userService->saveUser(

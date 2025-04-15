@@ -6,10 +6,11 @@ namespace Api\Admin\Handler\Admin;
 
 use Api\Admin\InputFilter\CreateAdminInputFilter;
 use Api\Admin\Service\AdminServiceInterface;
+use Api\App\Exception\BadRequestException;
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
-use Core\App\Exception\BadRequestException;
-use Core\App\Exception\ConflictException;
-use Core\App\Exception\NotFoundException;
+use Core\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -35,7 +36,10 @@ class PostAdminResourceHandler extends AbstractHandler
     {
         $this->inputFilter->setData((array) $request->getParsedBody());
         if (! $this->inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
+            throw BadRequestException::create(
+                detail: Message::VALIDATOR_INVALID_DATA,
+                additional: ['errors' => $this->inputFilter->getMessages()]
+            );
         }
 
         return $this->createdResponse(

@@ -53,10 +53,8 @@ class UserTest extends AbstractFunctionalTest
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertArrayHasKey('error', $data);
-        $this->assertNotEmpty($data['error']);
-        $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertContains(Message::DUPLICATE_IDENTITY, $data['error']['messages']);
+        $this->assertArrayHasKey('detail', $data);
+        $this->assertSame(Message::DUPLICATE_IDENTITY, $data['detail']);
     }
 
     /**
@@ -79,10 +77,8 @@ class UserTest extends AbstractFunctionalTest
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertArrayHasKey('error', $data);
-        $this->assertNotEmpty($data['error']);
-        $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertContains(Message::DUPLICATE_EMAIL, $data['error']['messages']);
+        $this->assertArrayHasKey('detail', $data);
+        $this->assertSame(Message::DUPLICATE_EMAIL, $data['detail']);
     }
 
     /**
@@ -345,10 +341,8 @@ class UserTest extends AbstractFunctionalTest
         $this->assertResponseGone($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
-        $this->assertArrayHasKey('error', $data);
-        $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertNotEmpty($data['error']['messages'][0]);
-        $this->assertSame(Message::RESET_PASSWORD_EXPIRED, $data['error']['messages'][0]);
+        $this->assertArrayHasKey('detail', $data);
+        $this->assertSame(Message::RESET_PASSWORD_EXPIRED, $data['detail']);
     }
 
     /**
@@ -381,10 +375,8 @@ class UserTest extends AbstractFunctionalTest
         $this->assertResponseConflict($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
-        $this->assertArrayHasKey('error', $data);
-        $this->assertArrayHasKey('messages', $data['error']);
-        $this->assertNotEmpty($data['error']['messages'][0]);
-        $this->assertSame(Message::RESET_PASSWORD_USED, $data['error']['messages'][0]);
+        $this->assertArrayHasKey('detail', $data);
+        $this->assertSame(Message::RESET_PASSWORD_USED, $data['detail']);
     }
 
     /**
