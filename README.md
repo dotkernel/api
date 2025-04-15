@@ -27,52 +27,58 @@ Documentation is available at: https://docs.dotkernel.org/api-documentation/
 
 ## Getting Started
 
-## Step 1: Clone the project
+### Clone the project
 
-Using your terminal, navigate inside the directory you want to download the project files into. Make sure that the directory is empty before proceeding to the download process. Once there, run the following command:
+Using your terminal, navigate inside the directory you want to download the project files into.
+Make sure that the directory is empty before proceeding to the download process.
+Once there, run the following command:
 
 ```shell
 git clone https://github.com/dotkernel/api.git .
 ```
 
-## Step 2: Install project's dependencies
+### Install the project dependencies
 
 ```shell
 composer install
 ```
 
-## Step 3: Development mode
+### Development mode
 
-If you're installing the project for development, make sure you have development mode enabled, by running:
+> **Do not enable development mode in production!**
+
+If you're installing the project for development, you should **enable** development mode, by running:
 
 ```shell
 composer development-enable
 ```
 
-You can disable development mode by running:
+You can **disable** development mode by running:
 
 ```shell
 composer development-disable
 ```
 
-You can check if you have development mode enabled by running:
+You can **check** development status by running:
 
 ```shell
 composer development-status
 ```
 
-## Step 4: Prepare config files
+### Prepare config files
 
 * duplicate `config/autoload/cors.local.php.dist` as `config/autoload/cors.local.php` <- if your API will be consumed by another application, make sure configure the `allowed_origins`
 * duplicate `config/autoload/local.php.dist` as `config/autoload/local.php`
-* duplicate `config/autoload/mail.local.php.dist` as `config/autoload/mail.local.php` <- if your API will send emails, make sure you fill in SMTP connection params
 * **optional**: in order to run/create tests, duplicate `config/autoload/local.test.php.dist` as `config/autoload/local.test.php` <- this creates a new in-memory database that your tests will run on
 
-## Step 5: Setup database
+### Setup database
 
-## Running migrations
+Use an existing empty one or create a new **MariaDB**/**MySQL** database.
 
-* create a new MySQL database - set collation to `utf8mb4_general_ci`
+> Recommended collation: `utf8mb4_general_ci`.
+
+#### Running migrations
+
 * fill out the database connection params in `config/autoload/local.php` under `$databases['default']`
 * run the database migrations by using the following command:
 
@@ -82,13 +88,13 @@ php ./vendor/bin/doctrine-migrations migrate
 
 This command will prompt you to confirm that you want to run it:
 
-> WARNING! You are about to execute a migration in database "..." that could result in schema changes and data loss. Are you sure you wish to continue? (yes/no) [yes]:
+> WARNING! You are about to execute a migration in database "`<database>`" that could result in schema changes and data loss. Are you sure you wish to continue? (yes/no) [yes]:
 
 Hit `Enter` to confirm the operation.
 
-## Executing fixtures
+#### Executing fixtures
 
-**Fixtures are used to seed the database with initial values and should be executed after migrating the database.**
+Fixtures are used to seed the database with initial values and must be executed after migrating the database.
 
 To list all the fixtures, run:
 
@@ -110,29 +116,26 @@ To execute a specific fixture, run:
 php ./bin/doctrine fixtures:execute --class=FixtureClassName
 ```
 
-More details on how fixtures work can be found here: https://github.com/dotkernel/dot-data-fixtures#creating-fixtures
+More details on how fixtures work can be found in `dotkernel/dot-data-fixtures` [documentation](https://github.com/dotkernel/dot-data-fixtures#creating-fixtures).
 
-## Step 6: Test the installation
+### Mail configuration
+
+If your application will send emails, you must configure an outgoing mail server under `config/autoload/mail.global.php`.
+
+### Test the installation
+
+Run the following command in your project's directory to start PHPs built-in server:
 
 ```shell
 php -S 0.0.0.0:8080 -t public
 ```
 
-Sending a GET request to the [home page](http://0.0.0.0:8080/) should output the following message:
+> Running command `composer serve` will do the same thing, but the server will time out after a couple of minutes.
 
-```text
+Sending a **GET** request to the application's [home page](http://localhost:8080/) should output the following message:
+
+```json
 {
-    "message": "Dotkernel API version 5"
+    "message": "Dotkernel API version 6"
 }
 ```
-
-## Documentation
-
-In order to access Dotkernel API documentation, check the provided [readme file](documentation/README.md).
-
-Additionally, each CLI command available has it's own documentation:
-
-* [Create admin account](documentation/command/admin-create.md)
-* [Generate database migrations](documentation/command/migrations-diff.md)
-* [Display available endpoints](documentation/command/route-list.md)
-* [Generate tokens](documentation/command/token-generate.md)

@@ -10,6 +10,7 @@ use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
 use Laminas\InputFilter\Input;
 use Laminas\Validator\InArray;
+use Laminas\Validator\NotEmpty;
 
 class StatusInput extends Input
 {
@@ -21,12 +22,14 @@ class StatusInput extends Input
 
         $this->getFilterChain()
             ->attachByName(StringTrim::class)
-            ->attachByName(StripTags::class)
-            ->attach(fn($value) => $value === null ? AdminStatusEnum::Active : AdminStatusEnum::from($value));
+            ->attachByName(StripTags::class);
 
         $this->getValidatorChain()
+            ->attachByName(NotEmpty::class, [
+                'message' => Message::VALIDATOR_REQUIRED_FIELD,
+            ], true)
             ->attachByName(InArray::class, [
-                'haystack' => AdminStatusEnum::cases(),
+                'haystack' => AdminStatusEnum::values(),
                 'message'  => Message::invalidValue('status'),
             ], true);
     }

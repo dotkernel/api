@@ -15,6 +15,8 @@ use Mezzio\Cors\Middleware\CorsMiddleware;
 use Mezzio\Helper\BodyParams\BodyParamsMiddleware;
 use Mezzio\Helper\ServerUrlMiddleware;
 use Mezzio\Helper\UrlHelperMiddleware;
+use Mezzio\ProblemDetails\ProblemDetailsMiddleware;
+use Mezzio\ProblemDetails\ProblemDetailsNotFoundHandler;
 use Mezzio\Router\Middleware\DispatchMiddleware;
 use Mezzio\Router\Middleware\ImplicitHeadMiddleware;
 use Mezzio\Router\Middleware\ImplicitOptionsMiddleware;
@@ -25,6 +27,7 @@ return function (Application $app): void {
     // The error handler should be the first (most outer) middleware to catch
     // all Exceptions.
     $app->pipe(ErrorHandlerInterface::class);
+    $app->pipe(ProblemDetailsMiddleware::class);
 
     $app->pipe(BodyParamsMiddleware::class);
     $app->pipe(ServerUrlMiddleware::class);
@@ -87,5 +90,6 @@ return function (Application $app): void {
     // At this point, if no Response is returned by any middleware, the
     // NotFoundHandler kicks in; alternately, you can provide other fallback
     // middleware to execute.
+    $app->pipe(ProblemDetailsNotFoundHandler::class);
     $app->pipe(GetNotFoundViewHandler::class);
 };

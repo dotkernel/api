@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Api\Admin\Handler\Admin\Role;
 
 use Api\Admin\Service\AdminRoleServiceInterface;
+use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
-use Core\App\Exception\NotFoundException;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

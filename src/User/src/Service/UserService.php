@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Api\User\Service;
 
-use Core\App\Exception\BadRequestException;
-use Core\App\Exception\ConflictException;
-use Core\App\Exception\NotFoundException;
+use Api\App\Exception\BadRequestException;
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\NotFoundException;
 use Core\App\Helper\Paginator;
 use Core\App\Message;
 use Core\Security\Repository\OAuthAccessTokenRepository;
@@ -82,12 +82,12 @@ class UserService implements UserServiceInterface
     {
         $userDetail = $this->userDetailRepository->findOneBy(['email' => $email]);
         if (! $userDetail instanceof UserDetail) {
-            throw new NotFoundException(Message::USER_NOT_FOUND);
+            throw NotFoundException::create(Message::USER_NOT_FOUND);
         }
 
         $user = $userDetail->getUser();
         if ($user->isDeleted()) {
-            throw new NotFoundException(Message::USER_NOT_FOUND);
+            throw NotFoundException::create(Message::USER_NOT_FOUND);
         }
 
         return $user;
@@ -108,7 +108,7 @@ class UserService implements UserServiceInterface
     {
         $user = $this->userRepository->findOneBy($params);
         if (! $user instanceof User || $user->isDeleted()) {
-            throw new NotFoundException(Message::USER_NOT_FOUND);
+            throw NotFoundException::create(Message::USER_NOT_FOUND);
         }
 
         return $user;
@@ -121,7 +121,7 @@ class UserService implements UserServiceInterface
     {
         $user = $this->userRepository->find($id);
         if (! $user instanceof User || $user->isDeleted()) {
-            throw new NotFoundException(Message::USER_NOT_FOUND);
+            throw NotFoundException::create(Message::USER_NOT_FOUND);
         }
 
         return $user;
@@ -178,7 +178,10 @@ class UserService implements UserServiceInterface
                 $status = UserStatusEnum::tryFrom($status);
             }
             if (! $status instanceof UserStatusEnum) {
-                throw new BadRequestException(Message::invalidValue('status'));
+                throw BadRequestException::create(
+                    detail: Message::invalidValue('status'),
+                    additional: ['errors' => ['status' => $data['status']]]
+                );
             }
             $user->setStatus($status);
         }
@@ -204,7 +207,7 @@ class UserService implements UserServiceInterface
             foreach ($data['roles'] as $roleData) {
                 $userRole = $this->userRoleRepository->find($roleData['uuid']);
                 if (! $userRole instanceof UserRole) {
-                    throw new NotFoundException(Message::ROLE_NOT_FOUND);
+                    throw NotFoundException::create(Message::ROLE_NOT_FOUND);
                 }
                 $user->addRole($userRole);
             }
@@ -260,20 +263,20 @@ class UserService implements UserServiceInterface
         $user = $this->userRepository->findOneBy(['identity' => $identity]);
         if ($user instanceof User) {
             if ($uuid === null) {
-                throw new ConflictException(Message::DUPLICATE_IDENTITY);
+                throw ConflictException::create(Message::DUPLICATE_IDENTITY);
             }
             if ($user->getUuid()->toString() !== $uuid->toString()) {
-                throw new ConflictException(Message::DUPLICATE_IDENTITY);
+                throw ConflictException::create(Message::DUPLICATE_IDENTITY);
             }
         }
 
         $userDetail = $this->userDetailRepository->findOneBy(['email' => $email]);
         if ($userDetail instanceof UserDetail) {
             if ($uuid === null) {
-                throw new ConflictException(Message::DUPLICATE_EMAIL);
+                throw ConflictException::create(Message::DUPLICATE_EMAIL);
             }
             if ($userDetail->getUser()->getUuid()->toString() !== $uuid->toString()) {
-                throw new ConflictException(Message::DUPLICATE_EMAIL);
+                throw ConflictException::create(Message::DUPLICATE_EMAIL);
             }
         }
     }

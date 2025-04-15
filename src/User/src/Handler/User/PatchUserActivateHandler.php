@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Api\User\Handler\User;
 
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
 use Api\User\Service\UserServiceInterface;
-use Core\App\Exception\ConflictException;
-use Core\App\Exception\NotFoundException;
 use Core\App\Message;
 use Core\App\Service\MailService;
 use Dot\DependencyInjection\Attribute\Inject;
@@ -36,7 +36,7 @@ class PatchUserActivateHandler extends AbstractHandler
     {
         $user = $this->userService->findUser($request->getAttribute('uuid'));
         if ($user->isActive()) {
-            throw new ConflictException(Message::USER_ALREADY_ACTIVATED);
+            throw ConflictException::create(Message::USER_ALREADY_ACTIVATED);
         }
 
         $this->userService->activateUser($user);

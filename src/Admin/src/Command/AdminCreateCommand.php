@@ -7,13 +7,15 @@ namespace Api\Admin\Command;
 use Api\Admin\InputFilter\CreateAdminInputFilter;
 use Api\Admin\Service\AdminRoleServiceInterface;
 use Api\Admin\Service\AdminServiceInterface;
+use Api\App\Exception\BadRequestException;
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\NotFoundException;
 use Core\Admin\Entity\AdminRole;
 use Core\Admin\Enum\AdminRoleEnum;
-use Core\App\Exception\BadRequestException;
-use Core\App\Exception\ConflictException;
-use Core\App\Exception\NotFoundException;
+use Core\Admin\Enum\AdminStatusEnum;
 use Core\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
+use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -63,6 +65,7 @@ class AdminCreateCommand extends Command
     /**
      * @throws BadRequestException
      * @throws ConflictException
+     * @throws Exception
      * @throws NotFoundException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -76,7 +79,7 @@ class AdminCreateCommand extends Command
                 }
             }
 
-            throw new BadRequestException(implode(PHP_EOL, $messages));
+            throw new Exception(implode(PHP_EOL, $messages));
         }
 
         $this->adminService->saveAdmin($inputFilter->getValues());
@@ -87,13 +90,13 @@ class AdminCreateCommand extends Command
     }
 
     /**
-     * @throws NotFoundException
+     * @throws Exception
      */
     private function getData(InputInterface $input): array
     {
         $adminRole = $this->adminRoleService->getAdminRoleRepository()->findOneBy(['name' => AdminRoleEnum::Admin]);
         if (! $adminRole instanceof AdminRole) {
-            throw new NotFoundException(Message::ROLE_NOT_FOUND);
+            throw new Exception(Message::ROLE_NOT_FOUND);
         }
 
         return [
@@ -102,6 +105,7 @@ class AdminCreateCommand extends Command
             'passwordConfirm' => $input->getOption('password'),
             'firstName'       => $input->getOption('firstName'),
             'lastName'        => $input->getOption('lastName'),
+            'status'          => AdminStatusEnum::Active->value,
             'roles'           => [
                 ['uuid' => $adminRole->getUuid()->toString()],
             ],

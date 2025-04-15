@@ -6,14 +6,13 @@ namespace ApiTest\Unit\Admin\Service;
 
 use Api\Admin\Service\AdminService;
 use Api\Admin\Service\AdminServiceInterface;
+use Api\App\Exception\ConflictException;
 use Core\Admin\Entity\Admin;
 use Core\Admin\Entity\AdminRole;
 use Core\Admin\Enum\AdminRoleEnum;
 use Core\Admin\Enum\AdminStatusEnum;
 use Core\Admin\Repository\AdminRepository;
 use Core\Admin\Repository\AdminRoleRepository;
-use Core\App\Exception\ConflictException;
-use Core\App\Message;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -43,7 +42,6 @@ class AdminServiceTest extends TestCase
     public function testCreateAdminThrowsDuplicateIdentity(): void
     {
         $this->expectException(ConflictException::class);
-        $this->expectExceptionMessage(Message::DUPLICATE_IDENTITY);
 
         $request = $this->getAdmin();
         $this->adminRepository

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Api\User\Handler\User\Role;
 
+use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
 use Api\User\Service\UserRoleServiceInterface;
-use Core\App\Exception\NotFoundException;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

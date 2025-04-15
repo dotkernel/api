@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Api\User\Handler\Account\ResetPassword;
 
+use Api\App\Exception\ExpiredException;
+use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
 use Api\User\Service\UserResetPasswordServiceInterface;
-use Core\App\Exception\ExpiredException;
-use Core\App\Exception\NotFoundException;
 use Core\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
@@ -33,10 +33,10 @@ class GetUserAccountResetPasswordHandler extends AbstractHandler
 
         $userResetPassword = $this->userResetPasswordService->findOneBy(['hash' => $hash]);
         if (! $userResetPassword->isValid()) {
-            throw new ExpiredException(Message::RESET_PASSWORD_EXPIRED);
+            throw ExpiredException::create(Message::RESET_PASSWORD_EXPIRED);
         }
         if ($userResetPassword->isCompleted()) {
-            throw new ExpiredException(Message::RESET_PASSWORD_USED);
+            throw ExpiredException::create(Message::RESET_PASSWORD_USED);
         }
 
         return $this->infoResponse(Message::RESET_PASSWORD_VALID);

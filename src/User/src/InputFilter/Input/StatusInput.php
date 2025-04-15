@@ -21,12 +21,11 @@ class StatusInput extends Input
 
         $this->getFilterChain()
             ->attachByName(StringTrim::class)
-            ->attachByName(StripTags::class)
-            ->attach(fn($value) => $value === null ? UserStatusEnum::Active : UserStatusEnum::from($value));
+            ->attachByName(StripTags::class);
 
         $this->getValidatorChain()
             ->attachByName(InArray::class, [
-                'haystack' => UserStatusEnum::cases(),
+                'haystack' => UserStatusEnum::values(),
                 'message'  => Message::invalidValue('status'),
             ], true);
     }

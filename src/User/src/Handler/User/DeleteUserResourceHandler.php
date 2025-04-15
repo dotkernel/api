@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Api\User\Handler\User;
 
+use Api\App\Exception\NotFoundException;
+use Api\App\Exception\RuntimeException;
 use Api\App\Handler\AbstractHandler;
 use Api\User\Service\UserServiceInterface;
-use Core\App\Exception\NotFoundException;
-use Core\App\Exception\RuntimeException;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

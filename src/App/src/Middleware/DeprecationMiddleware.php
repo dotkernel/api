@@ -6,7 +6,8 @@ namespace Api\App\Middleware;
 
 use Api\App\Attribute\MethodDeprecation;
 use Api\App\Attribute\ResourceDeprecation;
-use Core\App\Exception\DeprecationConflictException;
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\RuntimeException;
 use Core\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
 use Dot\Router\Middleware\LazyLoadingMiddleware;
@@ -20,7 +21,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
-use RuntimeException;
 
 use function array_column;
 use function array_filter;
@@ -51,7 +51,9 @@ class DeprecationMiddleware implements MiddlewareInterface
     }
 
     /**
+     * @throws ConflictException
      * @throws ReflectionException
+     * @throws RuntimeException
      */
     public function process(
         ServerRequestInterface $request,
@@ -138,6 +140,7 @@ class DeprecationMiddleware implements MiddlewareInterface
 
     /**
      * @throws ReflectionException
+     * @throws RuntimeException
      */
     private function getHandler(MiddlewareInterface $routeMiddleware): ?ReflectionClass
     {
@@ -162,17 +165,20 @@ class DeprecationMiddleware implements MiddlewareInterface
                 }
             }
         } else {
-            throw new RuntimeException('Invalid route middleware provided.');
+            throw RuntimeException::create('Invalid route middleware provided.');
         }
 
         return $reflectionHandler;
     }
 
+    /**
+     * @throws ConflictException
+     */
     private function validateAttributes(array $attributes): void
     {
         $intersect = array_intersect(self::DEPRECATION_ATTRIBUTES, array_column($attributes, 'deprecationType'));
         if (count($intersect) === count(self::DEPRECATION_ATTRIBUTES)) {
-            throw new DeprecationConflictException(
+            throw ConflictException::create(
                 sprintf(
                     Message::RESTRICTION_DEPRECATION,
                     self::RESOURCE_DEPRECATION_ATTRIBUTE,

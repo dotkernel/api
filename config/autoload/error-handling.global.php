@@ -81,5 +81,10 @@ return [
          * 3. If you want to whitelist only specific IP addresses, add them to ip_whitelist.
          */
         'ip_whitelist' => [],
+
+        /**
+         * Documentation URL for problem details response
+         */
+        'documentation_url' => 'https://docs.dotkernel.org/api-documentation/v5/core-features/error-reporting/',
     ],
 ];

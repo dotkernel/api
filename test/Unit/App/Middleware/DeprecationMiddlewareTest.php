@@ -6,9 +6,8 @@ namespace ApiTest\Unit\App\Middleware;
 
 use Api\App\Attribute\MethodDeprecation;
 use Api\App\Attribute\ResourceDeprecation;
+use Api\App\Exception\ConflictException;
 use Api\App\Middleware\DeprecationMiddleware;
-use Core\App\Exception\DeprecationConflictException;
-use Core\App\Message;
 use Fig\Http\Message\RequestMethodInterface;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Stratigility\MiddlewarePipe;
@@ -32,8 +31,8 @@ use function sprintf;
 class DeprecationMiddlewareTest extends TestCase
 {
     private DeprecationMiddleware $deprecationMiddleware;
-    private ServerRequestInterface|MockObject $request;
-    private RequestHandlerInterface|MockObject $handler;
+    private ServerRequestInterface&MockObject $request;
+    private RequestHandlerInterface&MockObject $handler;
     private ResponseInterface $response;
 
     private const VERSIONING_CONFIG = [
@@ -87,18 +86,14 @@ class DeprecationMiddlewareTest extends TestCase
         $this->request->method('getAttribute')->with(RouteResult::class)->willReturn($routeResult);
         $this->handler->method('handle')->with($this->request)->willReturn($this->response);
 
-        $this->expectException(DeprecationConflictException::class);
-        $this->expectExceptionMessage(sprintf(
-            Message::RESTRICTION_DEPRECATION,
-            DeprecationMiddleware::RESOURCE_DEPRECATION_ATTRIBUTE,
-            DeprecationMiddleware::METHOD_DEPRECATION_ATTRIBUTE
-        ));
+        $this->expectException(ConflictException::class);
 
         $this->deprecationMiddleware->process($this->request, $this->handler);
     }
 
     /**
      * @throws Exception
+     * @throws ConflictException
      * @throws ReflectionException
      */
     public function testLazyLoadingMiddleware(): void

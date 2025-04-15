@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Api\Admin\Service;
 
+use Api\App\Exception\NotFoundException;
 use Core\Admin\Entity\AdminRole;
 use Core\Admin\Repository\AdminRoleRepository;
-use Core\App\Exception\NotFoundException;
 use Core\App\Helper\Paginator;
 use Core\App\Message;
 use Doctrine\ORM\QueryBuilder;
@@ -36,7 +36,7 @@ class AdminRoleService implements AdminRoleServiceInterface
     {
         $adminRole = $this->adminRoleRepository->find($id);
         if (! $adminRole instanceof AdminRole) {
-            throw new NotFoundException(Message::ROLE_NOT_FOUND);
+            throw NotFoundException::create(Message::ROLE_NOT_FOUND);
         }
 
         return $adminRole;

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Api\User\Handler\Account\ResetPassword;
 
+use Api\App\Exception\BadRequestException;
+use Api\App\Exception\ConflictException;
+use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
 use Api\User\InputFilter\ResetPasswordInputFilter;
 use Api\User\Service\UserServiceInterface;
-use Core\App\Exception\BadRequestException;
-use Core\App\Exception\ConflictException;
-use Core\App\Exception\NotFoundException;
 use Core\App\Message;
 use Core\App\Service\MailService;
 use Dot\DependencyInjection\Attribute\Inject;
@@ -42,7 +42,10 @@ class PostUserAccountResetPasswordHandler extends AbstractHandler
     {
         $this->inputFilter->setData((array) $request->getParsedBody());
         if (! $this->inputFilter->isValid()) {
-            throw (new BadRequestException())->setMessages($this->inputFilter->getMessages());
+            throw BadRequestException::create(
+                detail: Message::VALIDATOR_INVALID_DATA,
+                additional: ['errors' => $this->inputFilter->getMessages()]
+            );
         }
 
         if (! empty($this->inputFilter->getValue('email'))) {
@@ -50,7 +53,7 @@ class PostUserAccountResetPasswordHandler extends AbstractHandler
         } elseif (! empty($this->inputFilter->getValue('identity'))) {
             $user = $this->userService->findByIdentity($this->inputFilter->getValue('identity'));
         } else {
-            throw new NotFoundException(Message::USER_NOT_FOUND);
+            throw NotFoundException::create(Message::USER_NOT_FOUND);
         }
 
         $this->userService->saveUser([], $user->createResetPassword());

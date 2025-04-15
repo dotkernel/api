@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Api\App\Command;
 
 use Api\App\Service\ErrorReportServiceInterface;
-use Core\App\Exception\NotFoundException;
 use Dot\DependencyInjection\Attribute\Inject;
+use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -57,16 +57,14 @@ Usage:
     }
 
     /**
-     * @throws NotFoundException
+     * @throws RuntimeException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
-
         $type = $input->getArgument('type');
         match ($type) {
-            $this->typeErrorReporting => $this->generateErrorReportingToken($io),
-            default => throw new NotFoundException(
+            $this->typeErrorReporting => $this->generateErrorReportingToken(new SymfonyStyle($input, $output)),
+            default => throw new RuntimeException(
                 sprintf('Unknown token type: %s', $type)
             )
         };
