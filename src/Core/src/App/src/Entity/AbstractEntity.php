@@ -30,6 +30,14 @@ abstract class AbstractEntity implements ArraySerializableInterface, EntityInter
         return $this->uuid;
     }
 
+    /**
+     * Override this method in soft-deletable entities
+     */
+    public function isDeleted(): bool
+    {
+        return false;
+    }
+
     public function exchangeArray(array $array): void
     {
         foreach ($array as $property => $values) {

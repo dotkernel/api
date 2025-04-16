@@ -8,9 +8,9 @@ use Api\App\ConfigProvider as AppConfigProvider;
 use Api\App\Factory\HandlerDelegatorFactory;
 use Api\User\Collection\UserCollection;
 use Api\User\Collection\UserRoleCollection;
-use Api\User\Handler\Account\Avatar\DeleteUserAccountAvatarHandler;
-use Api\User\Handler\Account\Avatar\GetUserAccountAvatarHandler;
-use Api\User\Handler\Account\Avatar\PostUserAccountAvatarHandler;
+use Api\User\Handler\Account\Avatar\DeleteUserAccountAvatarResourceHandler;
+use Api\User\Handler\Account\Avatar\GetUserAccountAvatarResourceHandler;
+use Api\User\Handler\Account\Avatar\PostUserAccountAvatarResourceHandler;
 use Api\User\Handler\Account\DeleteUserAccountResourceHandler;
 use Api\User\Handler\Account\GetUserAccountResourceHandler;
 use Api\User\Handler\Account\PatchUserAccountActivateHandler;
@@ -18,9 +18,9 @@ use Api\User\Handler\Account\PatchUserAccountResourceHandler;
 use Api\User\Handler\Account\PostUserAccountActivateHandler;
 use Api\User\Handler\Account\PostUserAccountRecoverHandler;
 use Api\User\Handler\Account\PostUserAccountResourceHandler;
-use Api\User\Handler\Account\ResetPassword\GetUserAccountResetPasswordHandler;
-use Api\User\Handler\Account\ResetPassword\PatchUserAccountResetPasswordHandler;
-use Api\User\Handler\Account\ResetPassword\PostUserAccountResetPasswordHandler;
+use Api\User\Handler\Account\ResetPassword\GetUserAccountResetPasswordResourceHandler;
+use Api\User\Handler\Account\ResetPassword\PatchUserAccountResetPasswordResourceHandler;
+use Api\User\Handler\Account\ResetPassword\PostUserAccountResetPasswordResourceHandler;
 use Api\User\Handler\User\Avatar\DeleteUserAvatarResourceHandler;
 use Api\User\Handler\User\Avatar\GetUserAvatarResourceHandler;
 use Api\User\Handler\User\Avatar\PostUserAvatarResourceHandler;
@@ -63,63 +63,63 @@ class ConfigProvider
     {
         return [
             'delegators' => [
-                Application::class                          => [RoutesDelegator::class],
-                DeleteUserAccountAvatarHandler::class       => [HandlerDelegatorFactory::class],
-                DeleteUserAccountResourceHandler::class     => [HandlerDelegatorFactory::class],
-                DeleteUserAvatarResourceHandler::class      => [HandlerDelegatorFactory::class],
-                DeleteUserResourceHandler::class            => [HandlerDelegatorFactory::class],
-                GetUserAccountAvatarHandler::class          => [HandlerDelegatorFactory::class],
-                GetUserAccountResetPasswordHandler::class   => [HandlerDelegatorFactory::class],
-                GetUserAccountResourceHandler::class        => [HandlerDelegatorFactory::class],
-                GetUserAvatarResourceHandler::class         => [HandlerDelegatorFactory::class],
-                GetUserCollectionHandler::class             => [HandlerDelegatorFactory::class],
-                GetUserResourceHandler::class               => [HandlerDelegatorFactory::class],
-                GetUserRoleCollectionHandler::class         => [HandlerDelegatorFactory::class],
-                GetUserRoleResourceHandler::class           => [HandlerDelegatorFactory::class],
-                PatchUserAccountActivateHandler::class      => [HandlerDelegatorFactory::class],
-                PatchUserAccountResetPasswordHandler::class => [HandlerDelegatorFactory::class],
-                PatchUserAccountResourceHandler::class      => [HandlerDelegatorFactory::class],
-                PatchUserActivateHandler::class             => [HandlerDelegatorFactory::class],
-                PatchUserDeactivateHandler::class           => [HandlerDelegatorFactory::class],
-                PatchUserResourceHandler::class             => [HandlerDelegatorFactory::class],
-                PostUserAccountActivateHandler::class       => [HandlerDelegatorFactory::class],
-                PostUserAccountAvatarHandler::class         => [HandlerDelegatorFactory::class],
-                PostUserAccountRecoverHandler::class        => [HandlerDelegatorFactory::class],
-                PostUserAccountResetPasswordHandler::class  => [HandlerDelegatorFactory::class],
-                PostUserAccountResourceHandler::class       => [HandlerDelegatorFactory::class],
-                PostUserAvatarResourceHandler::class        => [HandlerDelegatorFactory::class],
-                PostUserResourceHandler::class              => [HandlerDelegatorFactory::class],
+                Application::class                                  => [RoutesDelegator::class],
+                DeleteUserAccountAvatarResourceHandler::class       => [HandlerDelegatorFactory::class],
+                DeleteUserAccountResourceHandler::class             => [HandlerDelegatorFactory::class],
+                DeleteUserAvatarResourceHandler::class              => [HandlerDelegatorFactory::class],
+                DeleteUserResourceHandler::class                    => [HandlerDelegatorFactory::class],
+                GetUserAccountAvatarResourceHandler::class          => [HandlerDelegatorFactory::class],
+                GetUserAccountResetPasswordResourceHandler::class   => [HandlerDelegatorFactory::class],
+                GetUserAccountResourceHandler::class                => [HandlerDelegatorFactory::class],
+                GetUserAvatarResourceHandler::class                 => [HandlerDelegatorFactory::class],
+                GetUserCollectionHandler::class                     => [HandlerDelegatorFactory::class],
+                GetUserResourceHandler::class                       => [HandlerDelegatorFactory::class],
+                GetUserRoleCollectionHandler::class                 => [HandlerDelegatorFactory::class],
+                GetUserRoleResourceHandler::class                   => [HandlerDelegatorFactory::class],
+                PatchUserAccountActivateHandler::class              => [HandlerDelegatorFactory::class],
+                PatchUserAccountResetPasswordResourceHandler::class => [HandlerDelegatorFactory::class],
+                PatchUserAccountResourceHandler::class              => [HandlerDelegatorFactory::class],
+                PatchUserActivateHandler::class                     => [HandlerDelegatorFactory::class],
+                PatchUserDeactivateHandler::class                   => [HandlerDelegatorFactory::class],
+                PatchUserResourceHandler::class                     => [HandlerDelegatorFactory::class],
+                PostUserAccountActivateHandler::class               => [HandlerDelegatorFactory::class],
+                PostUserAccountAvatarResourceHandler::class         => [HandlerDelegatorFactory::class],
+                PostUserAccountRecoverHandler::class                => [HandlerDelegatorFactory::class],
+                PostUserAccountResetPasswordResourceHandler::class  => [HandlerDelegatorFactory::class],
+                PostUserAccountResourceHandler::class               => [HandlerDelegatorFactory::class],
+                PostUserAvatarResourceHandler::class                => [HandlerDelegatorFactory::class],
+                PostUserResourceHandler::class                      => [HandlerDelegatorFactory::class],
             ],
             'factories'  => [
-                DeleteUserAccountAvatarHandler::class       => AttributedServiceFactory::class,
-                DeleteUserAccountResourceHandler::class     => AttributedServiceFactory::class,
-                DeleteUserAvatarResourceHandler::class      => AttributedServiceFactory::class,
-                DeleteUserResourceHandler::class            => AttributedServiceFactory::class,
-                GetUserAccountAvatarHandler::class          => AttributedServiceFactory::class,
-                GetUserAccountResetPasswordHandler::class   => AttributedServiceFactory::class,
-                GetUserAccountResourceHandler::class        => AttributedServiceFactory::class,
-                GetUserAvatarResourceHandler::class         => AttributedServiceFactory::class,
-                GetUserCollectionHandler::class             => AttributedServiceFactory::class,
-                GetUserResourceHandler::class               => AttributedServiceFactory::class,
-                GetUserRoleCollectionHandler::class         => AttributedServiceFactory::class,
-                GetUserRoleResourceHandler::class           => AttributedServiceFactory::class,
-                PatchUserAccountActivateHandler::class      => AttributedServiceFactory::class,
-                PatchUserAccountResetPasswordHandler::class => AttributedServiceFactory::class,
-                PatchUserAccountResourceHandler::class      => AttributedServiceFactory::class,
-                PatchUserActivateHandler::class             => AttributedServiceFactory::class,
-                PatchUserDeactivateHandler::class           => AttributedServiceFactory::class,
-                PatchUserResourceHandler::class             => AttributedServiceFactory::class,
-                PostUserAccountActivateHandler::class       => AttributedServiceFactory::class,
-                PostUserAccountAvatarHandler::class         => AttributedServiceFactory::class,
-                PostUserAccountRecoverHandler::class        => AttributedServiceFactory::class,
-                PostUserAccountResetPasswordHandler::class  => AttributedServiceFactory::class,
-                PostUserAccountResourceHandler::class       => AttributedServiceFactory::class,
-                PostUserAvatarResourceHandler::class        => AttributedServiceFactory::class,
-                PostUserResourceHandler::class              => AttributedServiceFactory::class,
-                UserAvatarService::class                    => AttributedServiceFactory::class,
-                UserResetPasswordService::class             => AttributedServiceFactory::class,
-                UserRoleService::class                      => AttributedServiceFactory::class,
-                UserService::class                          => AttributedServiceFactory::class,
+                DeleteUserAccountAvatarResourceHandler::class       => AttributedServiceFactory::class,
+                DeleteUserAccountResourceHandler::class             => AttributedServiceFactory::class,
+                DeleteUserAvatarResourceHandler::class              => AttributedServiceFactory::class,
+                DeleteUserResourceHandler::class                    => AttributedServiceFactory::class,
+                GetUserAccountAvatarResourceHandler::class          => AttributedServiceFactory::class,
+                GetUserAccountResetPasswordResourceHandler::class   => AttributedServiceFactory::class,
+                GetUserAccountResourceHandler::class                => AttributedServiceFactory::class,
+                GetUserAvatarResourceHandler::class                 => AttributedServiceFactory::class,
+                GetUserCollectionHandler::class                     => AttributedServiceFactory::class,
+                GetUserResourceHandler::class                       => AttributedServiceFactory::class,
+                GetUserRoleCollectionHandler::class                 => AttributedServiceFactory::class,
+                GetUserRoleResourceHandler::class                   => AttributedServiceFactory::class,
+                PatchUserAccountActivateHandler::class              => AttributedServiceFactory::class,
+                PatchUserAccountResetPasswordResourceHandler::class => AttributedServiceFactory::class,
+                PatchUserAccountResourceHandler::class              => AttributedServiceFactory::class,
+                PatchUserActivateHandler::class                     => AttributedServiceFactory::class,
+                PatchUserDeactivateHandler::class                   => AttributedServiceFactory::class,
+                PatchUserResourceHandler::class                     => AttributedServiceFactory::class,
+                PostUserAccountActivateHandler::class               => AttributedServiceFactory::class,
+                PostUserAccountAvatarResourceHandler::class         => AttributedServiceFactory::class,
+                PostUserAccountRecoverHandler::class                => AttributedServiceFactory::class,
+                PostUserAccountResetPasswordResourceHandler::class  => AttributedServiceFactory::class,
+                PostUserAccountResourceHandler::class               => AttributedServiceFactory::class,
+                PostUserAvatarResourceHandler::class                => AttributedServiceFactory::class,
+                PostUserResourceHandler::class                      => AttributedServiceFactory::class,
+                UserAvatarService::class                            => AttributedServiceFactory::class,
+                UserResetPasswordService::class                     => AttributedServiceFactory::class,
+                UserRoleService::class                              => AttributedServiceFactory::class,
+                UserService::class                                  => AttributedServiceFactory::class,
             ],
             'aliases'    => [
                 UserAvatarServiceInterface::class        => UserAvatarService::class,

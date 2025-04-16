@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-use Api\App\Handler\GetNotFoundViewHandler;
+use Api\App\Handler\GetNotFoundResourceHandler;
 use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
 use Api\App\Middleware\ContentNegotiationMiddleware;
 use Api\App\Middleware\DeprecationMiddleware;
+use Api\App\Middleware\ResourceProviderMiddleware;
 use Api\App\Middleware\ResponseMiddleware;
 use Dot\ErrorHandler\ErrorHandlerInterface;
 use Dot\ResponseHeader\Middleware\ResponseHeaderMiddleware;
@@ -84,6 +85,7 @@ return function (Application $app): void {
     // - etc.
 
     $app->pipe(ResponseMiddleware::class);
+    $app->pipe(ResourceProviderMiddleware::class);
 
     // Register the dispatch middleware in the middleware pipeline
     $app->pipe(DispatchMiddleware::class);
@@ -91,5 +93,5 @@ return function (Application $app): void {
     // NotFoundHandler kicks in; alternately, you can provide other fallback
     // middleware to execute.
     $app->pipe(ProblemDetailsNotFoundHandler::class);
-    $app->pipe(GetNotFoundViewHandler::class);
+    $app->pipe(GetNotFoundResourceHandler::class);
 };

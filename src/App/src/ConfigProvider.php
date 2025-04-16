@@ -13,6 +13,7 @@ use Api\App\Middleware\AuthorizationMiddleware;
 use Api\App\Middleware\ContentNegotiationMiddleware;
 use Api\App\Middleware\DeprecationMiddleware;
 use Api\App\Middleware\ErrorReportPermissionMiddleware;
+use Api\App\Middleware\ResourceProviderMiddleware;
 use Api\App\Middleware\ResponseMiddleware;
 use Api\App\Service\ErrorReportService;
 use Api\App\Service\ErrorReportServiceInterface;
@@ -54,6 +55,7 @@ class ConfigProvider
                 ContentNegotiationMiddleware::class    => AttributedServiceFactory::class,
                 DeprecationMiddleware::class           => AttributedServiceFactory::class,
                 ErrorReportPermissionMiddleware::class => AttributedServiceFactory::class,
+                ResourceProviderMiddleware::class      => AttributedServiceFactory::class,
                 ResponseMiddleware::class              => AttributedServiceFactory::class,
                 GetIndexResourceHandler::class         => AttributedServiceFactory::class,
                 PostErrorReportResourceHandler::class  => AttributedServiceFactory::class,

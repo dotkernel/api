@@ -7,7 +7,7 @@ namespace Api\App\Handler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class GetNotFoundViewHandler extends AbstractHandler
+class GetNotFoundResourceHandler extends AbstractHandler
 {
     public function handle(ServerRequestInterface $request): ResponseInterface
     {

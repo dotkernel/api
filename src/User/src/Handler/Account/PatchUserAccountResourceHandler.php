@@ -8,10 +8,10 @@ use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
+use Api\App\IdentityInterface;
 use Api\User\InputFilter\UpdateUserInputFilter;
 use Api\User\Service\UserServiceInterface;
 use Core\App\Message;
-use Core\User\Entity\User;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -49,7 +49,7 @@ class PatchUserAccountResourceHandler extends AbstractHandler
             $request,
             $this->userService->saveUser(
                 (array) $this->inputFilter->getValues(),
-                $request->getAttribute(User::class)
+                $request->getAttribute(IdentityInterface::class)
             )
         );
     }
