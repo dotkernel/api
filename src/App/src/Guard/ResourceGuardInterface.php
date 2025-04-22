@@ -6,13 +6,13 @@ namespace Api\App\Guard;
 
 use Core\App\Entity\EntityInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use League\OAuth2\Server\Entities\UserEntityInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface ResourceGuardInterface
 {
     public function __invoke(
+        ServerRequestInterface $request,
         EntityManagerInterface $entityManager,
-        UserEntityInterface $currentUser,
         EntityInterface $entity
     ): void;
 }

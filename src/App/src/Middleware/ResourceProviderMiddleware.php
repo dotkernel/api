@@ -7,7 +7,6 @@ namespace Api\App\Middleware;
 use Api\App\Attribute\Resource;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
-use Api\App\IdentityInterface;
 use Api\App\Service\HandlerService;
 use Core\App\Entity\EntityInterface;
 use Core\App\Message;
@@ -81,11 +80,7 @@ readonly class ResourceProviderMiddleware implements MiddlewareInterface
         }
 
         if ($resource->hasGuard()) {
-            (new $resource->guard())(
-                $this->entityManager,
-                $request->getAttribute(IdentityInterface::class),
-                $entity
-            );
+            (new $resource->guard())($request, $this->entityManager, $entity);
         }
 
         if ($request->getAttribute($entity::class) !== null) {
