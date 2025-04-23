@@ -21,10 +21,10 @@ $databases = [
 return [
     'application'         => [
         'name'       => 'Dotkernel API',
-        'version'    => 6,
+        'version'    => 6.0,
         'url'        => $baseUrl,
         'versioning' => [
-            'documentation_url' => 'https://docs.dotkernel.org/api-documentation/v5/core-features/versioning',
+            'documentation_url' => 'https://docs.dotkernel.org/api-documentation/v6/core-features/versioning',
         ],
     ],
     'authentication'      => [
