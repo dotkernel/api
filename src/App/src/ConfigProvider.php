@@ -6,6 +6,7 @@ namespace Api\App;
 
 use Api\App\Command\TokenGenerateCommand;
 use Api\App\Factory\HandlerDelegatorFactory;
+use Api\App\Factory\ProblemDetailsDelegatorFactory;
 use Api\App\Handler\GetIndexResourceHandler;
 use Api\App\Handler\PostErrorReportResourceHandler;
 use Api\App\Middleware\AuthenticationMiddleware;
@@ -13,7 +14,6 @@ use Api\App\Middleware\AuthorizationMiddleware;
 use Api\App\Middleware\ContentNegotiationMiddleware;
 use Api\App\Middleware\DeprecationMiddleware;
 use Api\App\Middleware\ErrorReportPermissionMiddleware;
-use Api\App\Middleware\ResponseMiddleware;
 use Api\App\Service\ErrorReportService;
 use Api\App\Service\ErrorReportServiceInterface;
 use Dot\DependencyInjection\Factory\AttributedServiceFactory;
@@ -23,6 +23,7 @@ use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\OAuth2\OAuth2Adapter;
 use Mezzio\Hal\Metadata\RouteBasedCollectionMetadata;
 use Mezzio\Hal\Metadata\RouteBasedResourceMetadata;
+use Mezzio\ProblemDetails\ProblemDetailsMiddleware;
 use Mezzio\Template\TemplateRendererInterface;
 use Mezzio\Twig\TwigEnvironmentFactory;
 use Mezzio\Twig\TwigExtension;
@@ -47,6 +48,7 @@ class ConfigProvider
                 Application::class                    => [RoutesDelegator::class],
                 GetIndexResourceHandler::class        => [HandlerDelegatorFactory::class],
                 PostErrorReportResourceHandler::class => [HandlerDelegatorFactory::class],
+                ProblemDetailsMiddleware::class       => [ProblemDetailsDelegatorFactory::class],
             ],
             'factories'  => [
                 AuthenticationMiddleware::class        => AttributedServiceFactory::class,
@@ -54,7 +56,6 @@ class ConfigProvider
                 ContentNegotiationMiddleware::class    => AttributedServiceFactory::class,
                 DeprecationMiddleware::class           => AttributedServiceFactory::class,
                 ErrorReportPermissionMiddleware::class => AttributedServiceFactory::class,
-                ResponseMiddleware::class              => AttributedServiceFactory::class,
                 GetIndexResourceHandler::class         => AttributedServiceFactory::class,
                 PostErrorReportResourceHandler::class  => AttributedServiceFactory::class,
                 ErrorReportService::class              => AttributedServiceFactory::class,
