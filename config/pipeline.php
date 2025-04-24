@@ -7,8 +7,6 @@ use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
 use Api\App\Middleware\ContentNegotiationMiddleware;
 use Api\App\Middleware\DeprecationMiddleware;
-use Api\App\Middleware\ResponseMiddleware;
-use Dot\ErrorHandler\ErrorHandlerInterface;
 use Dot\ResponseHeader\Middleware\ResponseHeaderMiddleware;
 use Mezzio\Application;
 use Mezzio\Cors\Middleware\CorsMiddleware;
@@ -24,9 +22,9 @@ use Mezzio\Router\Middleware\MethodNotAllowedMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
 
 return function (Application $app): void {
-    // The error handler should be the first (most outer) middleware to catch
-    // all Exceptions.
-    $app->pipe(ErrorHandlerInterface::class);
+    // This middleware must be the outest layer because - on error occurrence - it will:
+    // - call \Dot\ErrorHandler\ErrorHandlerInterface::class
+    // - return ProblemDetails response
     $app->pipe(ProblemDetailsMiddleware::class);
 
     $app->pipe(BodyParamsMiddleware::class);
@@ -38,15 +36,14 @@ return function (Application $app): void {
     // - pre-conditions
     // - modifications to outgoing responses
     //
-    // Piped Middleware may be either callables or service names. Middleware may
-    // also be passed as an array; each item in the array must resolve to
-    // middleware eventually (i.e., callable or service name).
+    // Piped Middleware may be either callables or service names.
+    // Middleware may also be passed as an array; each item in the array must resolve to middleware eventually
+    // (i.e., callable or service name).
     //
-    // Middleware can be attached to specific paths, allowing you to mix and match
-    // applications under a common domain.  The handlers in each middleware
-    // attached this way will see a URI with the matched path segment removed.
+    // Middleware can be attached to specific paths, allowing you to mix and match applications under a common domain.
+    // The handlers in each middleware attached this way will see a URI with the matched path segment removed.
     //
-    // i.e., path of "/api/member/profile" only passes "/member/profile" to $apiMiddleware
+    // For example, the path of "/api/member/profile" only passes "/member/profile" to $apiMiddleware
     // - $app->pipe('/api', $apiMiddleware);
     // - $app->pipe('/docs', $apiDocMiddleware);
     // - $app->pipe('/files', $filesMiddleware);
@@ -82,8 +79,6 @@ return function (Application $app): void {
     // - route-based authentication
     // - route-based validation
     // - etc.
-
-    $app->pipe(ResponseMiddleware::class);
 
     // Register the dispatch middleware in the middleware pipeline
     $app->pipe(DispatchMiddleware::class);
