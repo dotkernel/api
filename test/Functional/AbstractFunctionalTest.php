@@ -158,7 +158,7 @@ class AbstractFunctionalTest extends TestCase
         string $uri,
         array $queryParams = [],
         array $uploadedFiles = [],
-        array $headers = ['Accept' => 'application/json'],
+        array $headers = ['Accept' => ['application/json, application/hal+json']],
         array $cookies = []
     ): ResponseInterface {
         $request = $this->createRequest(
@@ -179,7 +179,7 @@ class AbstractFunctionalTest extends TestCase
         array $parsedBody = [],
         array $queryParams = [],
         array $uploadedFiles = [],
-        array $headers = ['Accept' => 'application/json'],
+        array $headers = ['Accept' => ['application/json, application/hal+json']],
         array $cookies = []
     ): ResponseInterface {
         $request = $this->createRequest(
@@ -200,7 +200,7 @@ class AbstractFunctionalTest extends TestCase
         array $parsedBody = [],
         array $queryParams = [],
         array $uploadedFiles = [],
-        array $headers = ['Accept' => 'application/json'],
+        array $headers = ['Accept' => ['application/json, application/hal+json']],
         array $cookies = []
     ): ResponseInterface {
         $request = $this->createRequest(
@@ -221,7 +221,7 @@ class AbstractFunctionalTest extends TestCase
         array $parsedBody = [],
         array $queryParams = [],
         array $uploadedFiles = [],
-        array $headers = ['Accept' => 'application/json'],
+        array $headers = ['Accept' => ['application/json, application/hal+json']],
         array $cookies = []
     ): ResponseInterface {
         $request = $this->createRequest(
@@ -240,7 +240,7 @@ class AbstractFunctionalTest extends TestCase
     protected function delete(
         string $uri,
         array $queryParams = [],
-        array $headers = ['Accept' => 'application/json, text/plain'],
+        array $headers = ['Accept' => 'application/json, application/hal+json, text/plain'],
         array $cookies = []
     ): ResponseInterface {
         $request = $this->createRequest(
