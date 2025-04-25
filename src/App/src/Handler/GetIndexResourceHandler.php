@@ -29,7 +29,7 @@ class GetIndexResourceHandler extends AbstractHandler
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return $this->jsonResponse([
-            'message' => sprintf('%s version %s', $this->config['name'], $this->config['version']),
+            'message' => sprintf('%s version %s', $this->config['name'], $this->config['version'] ?? 'X'),
         ]);
     }
 }
