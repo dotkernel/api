@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace ApiTest\Unit\App\Middleware;
 
+use Api\App\Exception\NotAcceptableException;
+use Api\App\Exception\UnsupportedMediaTypeException;
 use Api\App\Middleware\ContentNegotiationMiddleware;
-use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\ServerRequest;
 use Mezzio\Router\Route;
 use Mezzio\Router\RouteResult;
@@ -21,8 +22,6 @@ class ContentNegotiationMiddlewareTest extends TestCase
     private ServerRequestInterface $request;
     private RequestHandlerInterface $handler;
     private RouteResult $routeResult;
-
-    private const ROUTE_NAME = 'test.route';
 
     private const CONFIG
         = [
@@ -58,88 +57,50 @@ class ContentNegotiationMiddlewareTest extends TestCase
         $this->contentNegotiationMiddleware = new ContentNegotiationMiddleware(self::CONFIG);
     }
 
+    /**
+     * @throws UnsupportedMediaTypeException
+     * @throws NotAcceptableException
+     */
     public function testWrongAccept(): void
     {
-        $request = $this->request->withAttribute(
-            RouteResult::class,
-            $this->routeResult
-        );
-        $request = $request->withHeader('Accept', 'text/html');
-        $this->assertSame(
-            StatusCodeInterface::STATUS_NOT_ACCEPTABLE,
-            $this->contentNegotiationMiddleware->process($request, $this->handler)->getStatusCode()
-        );
+        $request = $this->request
+            ->withAttribute(RouteResult::class, $this->routeResult)
+            ->withHeader('Accept', 'text/html');
+
+        $this->expectException(NotAcceptableException::class);
+
+        $this->contentNegotiationMiddleware->process($request, $this->handler);
     }
 
+    /**
+     * @throws NotAcceptableException
+     * @throws UnsupportedMediaTypeException
+     */
     public function testWrongContentType(): void
     {
-        $request = $this->request->withAttribute(
-            RouteResult::class,
-            $this->routeResult
-        );
-        $request = $request->withHeader('Accept', 'application/hal+json');
-        $request = $request->withHeader('Content-Type', 'text/html');
-        $this->assertSame(
-            StatusCodeInterface::STATUS_UNSUPPORTED_MEDIA_TYPE,
-            $this->contentNegotiationMiddleware->process($request, $this->handler)->getStatusCode()
-        );
+        $request = $this->request
+            ->withAttribute(RouteResult::class, $this->routeResult)
+            ->withHeader('Accept', 'application/hal+json')
+            ->withHeader('Content-Type', 'text/html');
+
+        $this->expectException(UnsupportedMediaTypeException::class);
+
+        $this->contentNegotiationMiddleware->process($request, $this->handler);
     }
 
+    /**
+     * @throws NotAcceptableException
+     * @throws UnsupportedMediaTypeException
+     */
     public function testCannotResolveRepresentation(): void
     {
-        $request = $this->request->withAttribute(
-            RouteResult::class,
-            $this->routeResult
-        );
-        $request = $request->withHeader('Accept', 'application/json');
-        $request = $request->withHeader('Content-Type', 'application/json');
-        $this->assertSame(
-            StatusCodeInterface::STATUS_NOT_ACCEPTABLE,
-            $this->contentNegotiationMiddleware->process($request, $this->handler)->getStatusCode()
-        );
-    }
+        $request = $this->request
+            ->withAttribute(RouteResult::class, $this->routeResult)
+            ->withHeader('Accept', 'text/html')
+            ->withHeader('Content-Type', 'application/json');
 
-    public function testFormatAcceptRequest(): void
-    {
-        $accept = $this->contentNegotiationMiddleware->formatAcceptRequest('application/json');
+        $this->expectException(NotAcceptableException::class);
 
-        $this->assertNotEmpty($accept);
-        $this->assertSame(['application/json'], $accept);
-    }
-
-    public function testCheckAccept(): void
-    {
-        $this->assertTrue(
-            $this->contentNegotiationMiddleware->checkAccept(
-                self::ROUTE_NAME,
-                ['*/*']
-            )
-        );
-        $this->assertTrue(
-            $this->contentNegotiationMiddleware->checkAccept(
-                self::ROUTE_NAME,
-                ['application/json']
-            )
-        );
-        $this->assertFalse(
-            $this->contentNegotiationMiddleware->checkAccept(self::ROUTE_NAME, ['text/html'])
-        );
-    }
-
-    public function testCheckContentType(): void
-    {
-        $this->assertTrue(
-            $this->contentNegotiationMiddleware->checkContentType(self::ROUTE_NAME, '')
-        );
-
-        $this->assertTrue(
-            $this->contentNegotiationMiddleware->checkContentType(
-                self::ROUTE_NAME,
-                'application/json'
-            )
-        );
-        $this->assertFalse(
-            $this->contentNegotiationMiddleware->checkContentType(self::ROUTE_NAME, 'text/html')
-        );
+        $this->contentNegotiationMiddleware->process($request, $this->handler);
     }
 }
