@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Api\User\Handler\User\Avatar;
 
+use Api\App\Attribute\Resource;
 use Api\App\Exception\BadRequestException;
-use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
 use Api\User\InputFilter\UpdateAvatarInputFilter;
 use Api\User\Service\UserAvatarServiceInterface;
-use Api\User\Service\UserServiceInterface;
 use Core\App\Message;
+use Core\User\Entity\User;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,12 +18,10 @@ use Psr\Http\Message\ServerRequestInterface;
 class PostUserAvatarResourceHandler extends AbstractHandler
 {
     #[Inject(
-        UserServiceInterface::class,
         UserAvatarServiceInterface::class,
         UpdateAvatarInputFilter::class,
     )]
     public function __construct(
-        protected UserServiceInterface $userService,
         protected UserAvatarServiceInterface $userAvatarService,
         protected UpdateAvatarInputFilter $inputFilter,
     ) {
@@ -31,8 +29,8 @@ class PostUserAvatarResourceHandler extends AbstractHandler
 
     /**
      * @throws BadRequestException
-     * @throws NotFoundException
      */
+    #[Resource(entity: User::class)]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->inputFilter->setData($request->getUploadedFiles());
@@ -46,7 +44,7 @@ class PostUserAvatarResourceHandler extends AbstractHandler
         return $this->createdResponse(
             $request,
             $this->userAvatarService->saveAvatar(
-                $this->userService->findUser($request->getAttribute('uuid')),
+                $request->getAttribute(User::class),
                 $this->inputFilter->getValue('avatar')
             )
         );

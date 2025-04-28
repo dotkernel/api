@@ -296,12 +296,6 @@ class UserTest extends AbstractFunctionalTest
         $this->assertTrue($deletedUser?->isDeleted());
     }
 
-    public function testRequestResetPasswordBadRequest(): void
-    {
-        $response = $this->patch('/user/account/reset-password/invalid_hash');
-        $this->assertResponseBadRequest($response);
-    }
-
     public function testRequestResetPasswordInvalidHash(): void
     {
         $response = $this->patch('/user/account/reset-password/invalid_hash', [

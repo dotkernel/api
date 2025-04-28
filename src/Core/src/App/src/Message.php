@@ -41,7 +41,9 @@ class Message
     public const RESET_PASSWORD_OK            = 'Password successfully modified.';
     public const RESET_PASSWORD_USED          = 'Reset password hash is invalid (used).';
     public const RESET_PASSWORD_VALID         = 'Reset password hash is valid.';
+    public const RESOURCE_ALREADY_REGISTERED  = 'Resource "%s" is already registered.';
     public const RESOURCE_NOT_ALLOWED         = 'You are not allowed to access this resource.';
+    public const RESOURCE_NOT_FOUND           = '%s not found.';
     public const RESTRICTION_DEPRECATION      = 'Cannot use both "%s" and "%s" attributes on the same object.';
     public const RESTRICTION_IMAGE            = 'File must be an image> Accepted mim type(s): %s';
     public const RESTRICTION_ROLES            = 'At least one role is required.';
@@ -103,6 +105,16 @@ class Message
         }
 
         return sprintf('%s Supported types: %s', self::NOT_ACCEPTABLE, implode(', ', $types));
+    }
+
+    public static function resourceAlreadyRegistered(string $resource): string
+    {
+        return sprintf(self::RESOURCE_ALREADY_REGISTERED, $resource);
+    }
+
+    public static function resourceNotFound(string $resource = 'Resource'): string
+    {
+        return sprintf(self::RESOURCE_NOT_FOUND, $resource);
     }
 
     public static function restrictionDeprecation(string $first, string $second): string

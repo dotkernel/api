@@ -8,12 +8,9 @@ use Api\App\Attribute\MethodDeprecation;
 use Api\App\Attribute\ResourceDeprecation;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\RuntimeException;
+use Api\App\Service\HandlerService;
 use Core\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
-use Dot\Router\Middleware\LazyLoadingMiddleware;
-use Laminas\Stratigility\MiddlewarePipe;
-use Mezzio\Middleware\LazyLoadingMiddleware as MezzioLazyLoadingMiddleware;
-use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -59,19 +56,10 @@ class DeprecationMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
-        $response    = $handler->handle($request);
-        $routeResult = $request->getAttribute(RouteResult::class);
-        if (! $routeResult instanceof RouteResult || $routeResult->isFailure()) {
-            return $response;
-        }
+        $response = $handler->handle($request);
 
-        $matchedRoute = $routeResult->getMatchedRoute();
-        if (! $matchedRoute) {
-            return $response;
-        }
-
-        $reflectionHandler = $this->getHandler($matchedRoute->getMiddleware());
-        if (empty($reflectionHandler)) {
+        $reflectionHandler = HandlerService::getReflectionHandler($request);
+        if (! $reflectionHandler instanceof ReflectionClass) {
             return $response;
         }
 
@@ -136,39 +124,6 @@ class DeprecationMiddleware implements MiddlewareInterface
         }
 
         return $attributes;
-    }
-
-    /**
-     * @throws ReflectionException
-     * @throws RuntimeException
-     */
-    private function getHandler(MiddlewareInterface $routeMiddleware): ?ReflectionClass
-    {
-        $reflectionHandler = null;
-        if (
-            $routeMiddleware instanceof MezzioLazyLoadingMiddleware
-            || $routeMiddleware instanceof LazyLoadingMiddleware
-        ) {
-            /** @var class-string $routeMiddlewareName */
-            $routeMiddlewareName       = $routeMiddleware->middlewareName;
-            $reflectionMiddlewareClass = new ReflectionClass($routeMiddlewareName);
-            if ($reflectionMiddlewareClass->implementsInterface(RequestHandlerInterface::class)) {
-                $reflectionHandler = $reflectionMiddlewareClass;
-            }
-        } elseif ($routeMiddleware instanceof MiddlewarePipe) {
-            $reflectionClass    = new ReflectionClass($routeMiddleware);
-            $middlewarePipeline = $reflectionClass->getProperty('pipeline')->getValue($routeMiddleware);
-            for ($middlewarePipeline->rewind(); $middlewarePipeline->valid(); $middlewarePipeline->next()) {
-                $reflectionMiddlewareClass = new ReflectionClass($middlewarePipeline->current()->middlewareName);
-                if ($reflectionMiddlewareClass->implementsInterface(RequestHandlerInterface::class)) {
-                    $reflectionHandler = $reflectionMiddlewareClass;
-                }
-            }
-        } else {
-            throw RuntimeException::create('Invalid route middleware provided.');
-        }
-
-        return $reflectionHandler;
     }
 
     /**

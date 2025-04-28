@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Api\User;
 
-use Api\User\Handler\Account\Avatar\DeleteUserAccountAvatarHandler;
-use Api\User\Handler\Account\Avatar\GetUserAccountAvatarHandler;
-use Api\User\Handler\Account\Avatar\PostUserAccountAvatarHandler;
+use Api\User\Handler\Account\Avatar\DeleteUserAccountAvatarResourceHandler;
+use Api\User\Handler\Account\Avatar\GetUserAccountAvatarResourceHandler;
+use Api\User\Handler\Account\Avatar\PostUserAccountAvatarResourceHandler;
 use Api\User\Handler\Account\DeleteUserAccountResourceHandler;
 use Api\User\Handler\Account\GetUserAccountResourceHandler;
 use Api\User\Handler\Account\PatchUserAccountActivateHandler;
@@ -14,9 +14,9 @@ use Api\User\Handler\Account\PatchUserAccountResourceHandler;
 use Api\User\Handler\Account\PostUserAccountActivateHandler;
 use Api\User\Handler\Account\PostUserAccountRecoverHandler;
 use Api\User\Handler\Account\PostUserAccountResourceHandler;
-use Api\User\Handler\Account\ResetPassword\GetUserAccountResetPasswordHandler;
-use Api\User\Handler\Account\ResetPassword\PatchUserAccountResetPasswordHandler;
-use Api\User\Handler\Account\ResetPassword\PostUserAccountResetPasswordHandler;
+use Api\User\Handler\Account\ResetPassword\GetUserAccountResetPasswordResourceHandler;
+use Api\User\Handler\Account\ResetPassword\PatchUserAccountResetPasswordResourceHandler;
+use Api\User\Handler\Account\ResetPassword\PostUserAccountResetPasswordResourceHandler;
 use Api\User\Handler\User\Avatar\DeleteUserAvatarResourceHandler;
 use Api\User\Handler\User\Avatar\GetUserAvatarResourceHandler;
 use Api\User\Handler\User\Avatar\PostUserAvatarResourceHandler;
@@ -84,14 +84,26 @@ class RoutesDelegator
         $routeCollector->post('/user/account/recover', PostUserAccountRecoverHandler::class, 'user::recover-account');
 
         $routeCollector->group('/user/account/avatar')
-            ->delete('', DeleteUserAccountAvatarHandler::class, 'user::delete-account-avatar')
-            ->get('', GetUserAccountAvatarHandler::class, 'user::view-account-avatar')
-            ->post('', PostUserAccountAvatarHandler::class, 'user::create-account-avatar');
+            ->delete('', DeleteUserAccountAvatarResourceHandler::class, 'user::delete-account-avatar')
+            ->get('', GetUserAccountAvatarResourceHandler::class, 'user::view-account-avatar')
+            ->post('', PostUserAccountAvatarResourceHandler::class, 'user::create-account-avatar');
 
-        $routeCollector->group('/user/account/reset-password')
-            ->get('/{hash}', GetUserAccountResetPasswordHandler::class, 'user::check-account-reset-password')
-            ->patch('/{hash}', PatchUserAccountResetPasswordHandler::class, 'user::update-account-reset-password')
-            ->post('', PostUserAccountResetPasswordHandler::class, 'user::create-account-reset-password');
+        $routeCollector
+            ->get(
+                '/user/account/reset-password/{hash}',
+                GetUserAccountResetPasswordResourceHandler::class,
+                'user::check-account-reset-password'
+            )
+            ->patch(
+                '/user/account/reset-password/{hash}',
+                PatchUserAccountResetPasswordResourceHandler::class,
+                'user::update-account-reset-password'
+            )
+            ->post(
+                '/user/account/reset-password',
+                PostUserAccountResetPasswordResourceHandler::class,
+                'user::create-account-reset-password'
+            );
 
         return $callback();
     }

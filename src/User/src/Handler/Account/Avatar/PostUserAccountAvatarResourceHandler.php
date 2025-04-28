@@ -6,15 +6,15 @@ namespace Api\User\Handler\Account\Avatar;
 
 use Api\App\Exception\BadRequestException;
 use Api\App\Handler\AbstractHandler;
+use Api\App\IdentityInterface;
 use Api\User\InputFilter\UpdateAvatarInputFilter;
 use Api\User\Service\UserAvatarServiceInterface;
 use Core\App\Message;
-use Core\User\Entity\User;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class PostUserAccountAvatarHandler extends AbstractHandler
+class PostUserAccountAvatarResourceHandler extends AbstractHandler
 {
     #[Inject(
         UserAvatarServiceInterface::class,
@@ -42,7 +42,7 @@ class PostUserAccountAvatarHandler extends AbstractHandler
         return $this->createdResponse(
             $request,
             $this->userAvatarService->saveAvatar(
-                $request->getAttribute(User::class),
+                $request->getAttribute(IdentityInterface::class),
                 $this->inputFilter->getValue('avatar')
             )
         );

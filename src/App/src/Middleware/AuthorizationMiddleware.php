@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Api\App\Middleware;
 
+use Api\App\IdentityInterface;
 use Core\Admin\Entity\Admin;
 use Core\Admin\Repository\AdminRepository;
 use Core\App\Entity\Guest;
@@ -53,7 +54,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
                 if (! $user->isActive()) {
                     return $this->unauthorizedResponse(Message::ADMIN_INACTIVE);
                 }
-                $request = $request->withAttribute(Admin::class, $user);
+                $request = $request->withAttribute(IdentityInterface::class, $user);
                 break;
             case 'frontend':
                 $user = $this->userRepository->findOneBy(['identity' => $defaultUser->getIdentity()]);
@@ -63,11 +64,11 @@ class AuthorizationMiddleware implements MiddlewareInterface
                 if (! $user->isActive()) {
                     return $this->unauthorizedResponse(Message::USER_NOT_ACTIVATED);
                 }
-                $request = $request->withAttribute(User::class, $user);
+                $request = $request->withAttribute(IdentityInterface::class, $user);
                 break;
             case 'guest':
                 $user    = new Guest();
-                $request = $request->withAttribute(Guest::class, $user);
+                $request = $request->withAttribute(IdentityInterface::class, $user);
                 break;
             default:
                 return $this->unauthorizedResponse(Message::INVALID_CLIENT_ID);

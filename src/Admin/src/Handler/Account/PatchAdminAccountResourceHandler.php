@@ -10,7 +10,7 @@ use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
-use Core\Admin\Entity\Admin;
+use Api\App\IdentityInterface;
 use Core\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
@@ -47,7 +47,7 @@ class PatchAdminAccountResourceHandler extends AbstractHandler
             $request,
             $this->adminService->saveAdmin(
                 (array) $this->inputFilter->getValues(),
-                $request->getAttribute(Admin::class)
+                $request->getAttribute(IdentityInterface::class)
             )
         );
     }
