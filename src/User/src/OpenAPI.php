@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Api\User;
 
 use Api\User\Collection\UserCollection;
-use Api\User\Handler\Account\Avatar\DeleteUserAccountAvatarHandler;
-use Api\User\Handler\Account\Avatar\GetUserAccountAvatarHandler;
-use Api\User\Handler\Account\Avatar\PostUserAccountAvatarHandler;
+use Api\User\Handler\Account\Avatar\DeleteUserAccountAvatarResourceHandler;
+use Api\User\Handler\Account\Avatar\GetUserAccountAvatarResourceHandler;
+use Api\User\Handler\Account\Avatar\PostUserAccountAvatarResourceHandler;
 use Api\User\Handler\Account\DeleteUserAccountResourceHandler;
 use Api\User\Handler\Account\GetUserAccountResourceHandler;
 use Api\User\Handler\Account\PatchUserAccountActivateHandler;
@@ -15,9 +15,9 @@ use Api\User\Handler\Account\PatchUserAccountResourceHandler;
 use Api\User\Handler\Account\PostUserAccountActivateHandler;
 use Api\User\Handler\Account\PostUserAccountRecoverHandler;
 use Api\User\Handler\Account\PostUserAccountResourceHandler;
-use Api\User\Handler\Account\ResetPassword\GetUserAccountResetPasswordHandler;
-use Api\User\Handler\Account\ResetPassword\PatchUserAccountResetPasswordHandler;
-use Api\User\Handler\Account\ResetPassword\PostUserAccountResetPasswordHandler;
+use Api\User\Handler\Account\ResetPassword\GetUserAccountResetPasswordResourceHandler;
+use Api\User\Handler\Account\ResetPassword\PatchUserAccountResetPasswordResourceHandler;
+use Api\User\Handler\Account\ResetPassword\PostUserAccountResetPasswordResourceHandler;
 use Api\User\Handler\User\Avatar\DeleteUserAvatarResourceHandler;
 use Api\User\Handler\User\Avatar\GetUserAvatarResourceHandler;
 use Api\User\Handler\User\Avatar\PostUserAvatarResourceHandler;
@@ -761,7 +761,7 @@ use OpenApi\Attributes as OA;
 )]
 
 /**
- * @see DeleteUserAccountAvatarHandler::handle()
+ * @see DeleteUserAccountAvatarResourceHandler::handle()
  */
 #[OA\Delete(
     path: '/user/account/avatar',
@@ -782,7 +782,7 @@ use OpenApi\Attributes as OA;
 )]
 
 /**
- * @see GetUserAccountAvatarHandler::handle()
+ * @see GetUserAccountAvatarResourceHandler::handle()
  */
 #[OA\Get(
     path: '/user/account/avatar',
@@ -804,7 +804,7 @@ use OpenApi\Attributes as OA;
 )]
 
 /**
- * @see PostUserAccountAvatarHandler::handle()
+ * @see PostUserAccountAvatarResourceHandler::handle()
  */
 #[OA\Post(
     path: '/user/account/avatar',
@@ -963,7 +963,7 @@ use OpenApi\Attributes as OA;
 )]
 
 /**
- * @see GetUserAccountResetPasswordHandler::handle()
+ * @see GetUserAccountResetPasswordResourceHandler::handle()
  */
 #[OA\Get(
     path: '/user/account/reset-password/{hash}',
@@ -997,7 +997,7 @@ use OpenApi\Attributes as OA;
 )]
 
 /**
- * @see PatchUserAccountResetPasswordHandler::handle()
+ * @see PatchUserAccountResetPasswordResourceHandler::handle()
  */
 #[OA\Patch(
     path: '/user/account/reset-password/{hash}',
@@ -1058,7 +1058,7 @@ use OpenApi\Attributes as OA;
 )]
 
 /**
- * @see PostUserAccountResetPasswordHandler::handle()
+ * @see PostUserAccountResetPasswordResourceHandler::handle()
  */
 #[OA\Post(
     path: '/user/account/reset-password',

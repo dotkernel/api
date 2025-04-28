@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Api\User\Handler\Account;
 
+use Api\App\Attribute\Resource;
 use Api\App\Exception\ConflictException;
-use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
 use Api\User\Service\UserServiceInterface;
 use Core\App\Message;
+use Core\User\Entity\User;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,11 +26,11 @@ class PatchUserAccountActivateHandler extends AbstractHandler
 
     /**
      * @throws ConflictException
-     * @throws NotFoundException
      */
+    #[Resource(entity: User::class, identifier: 'hash', placeholder: 'hash')]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $user = $this->userService->findOneBy(['hash' => $request->getAttribute('hash')]);
+        $user = $request->getAttribute(User::class);
         if ($user->isActive()) {
             throw ConflictException::create(Message::USER_ALREADY_ACTIVATED);
         }

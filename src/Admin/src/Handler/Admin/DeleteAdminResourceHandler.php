@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Api\Admin\Handler\Admin;
 
 use Api\Admin\Service\AdminServiceInterface;
-use Api\App\Exception\NotFoundException;
+use Api\App\Attribute\Resource;
 use Api\App\Handler\AbstractHandler;
+use Core\Admin\Entity\Admin;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,12 +22,12 @@ class DeleteAdminResourceHandler extends AbstractHandler
     ) {
     }
 
-    /**
-     * @throws NotFoundException
-     */
+    #[Resource(entity: Admin::class)]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->adminService->deleteAdmin($this->adminService->findAdmin($request->getAttribute('uuid')));
+        $this->adminService->deleteAdmin(
+            $request->getAttribute(Admin::class)
+        );
 
         return $this->noContentResponse();
     }

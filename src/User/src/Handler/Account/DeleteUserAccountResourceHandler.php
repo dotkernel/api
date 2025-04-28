@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Api\User\Handler\Account;
 
 use Api\App\Handler\AbstractHandler;
+use Api\App\IdentityInterface;
 use Api\User\Service\UserServiceInterface;
-use Core\User\Entity\User;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -23,7 +23,9 @@ class DeleteUserAccountResourceHandler extends AbstractHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->userService->deleteUser($request->getAttribute(User::class));
+        $this->userService->deleteUser(
+            $request->getAttribute(IdentityInterface::class)
+        );
 
         return $this->noContentResponse();
     }

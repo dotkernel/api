@@ -18,7 +18,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class PostUserAccountResetPasswordHandler extends AbstractHandler
+class PostUserAccountResetPasswordResourceHandler extends AbstractHandler
 {
     #[Inject(
         MailService::class,

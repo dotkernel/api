@@ -19,7 +19,7 @@ class ConfigProvider
         ];
     }
 
-    public function getDependencies(): array
+    private function getDependencies(): array
     {
         return [
             'factories' => [
@@ -28,7 +28,7 @@ class ConfigProvider
         ];
     }
 
-    public function getDoctrineConfig(): array
+    private function getDoctrineConfig(): array
     {
         return [
             'driver' => [

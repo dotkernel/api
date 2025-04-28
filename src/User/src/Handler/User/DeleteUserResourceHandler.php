@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Api\User\Handler\User;
 
-use Api\App\Exception\NotFoundException;
-use Api\App\Exception\RuntimeException;
+use Api\App\Attribute\Resource;
 use Api\App\Handler\AbstractHandler;
 use Api\User\Service\UserServiceInterface;
+use Core\User\Entity\User;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -22,14 +22,11 @@ class DeleteUserResourceHandler extends AbstractHandler
     ) {
     }
 
-    /**
-     * @throws NotFoundException
-     * @throws RuntimeException
-     */
+    #[Resource(entity: User::class)]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->userService->deleteUser(
-            $this->userService->findUser($request->getAttribute('uuid'))
+            $request->getAttribute(User::class)
         );
 
         return $this->noContentResponse();
