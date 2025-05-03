@@ -11,17 +11,17 @@ use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class AuthenticationMiddleware extends \Mezzio\Authentication\AuthenticationMiddleware
+class AuthenticationMiddleware implements MiddlewareInterface
 {
     #[Inject(
         AuthenticationInterface::class,
     )]
     public function __construct(
-        AuthenticationInterface $auth,
+        protected AuthenticationInterface $auth,
     ) {
-        parent::__construct($auth);
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
