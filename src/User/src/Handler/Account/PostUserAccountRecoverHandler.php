@@ -7,6 +7,7 @@ namespace Api\User\Handler\Account;
 use Api\App\Exception\BadRequestException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
+use Api\App\Template\RendererInterface;
 use Api\User\InputFilter\RecoverIdentityInputFilter;
 use Api\User\Service\UserServiceInterface;
 use Core\App\Message;
@@ -22,11 +23,13 @@ class PostUserAccountRecoverHandler extends AbstractHandler
         MailService::class,
         UserServiceInterface::class,
         RecoverIdentityInputFilter::class,
+        RendererInterface::class,
     )]
     public function __construct(
         protected MailService $mailService,
         protected UserServiceInterface $userService,
         protected RecoverIdentityInputFilter $inputFilter,
+        protected RendererInterface $renderer,
     ) {
     }
 
@@ -46,7 +49,10 @@ class PostUserAccountRecoverHandler extends AbstractHandler
         }
 
         $user = $this->userService->findByEmail($this->inputFilter->getValue('email'));
-        $this->mailService->sendRecoverIdentityMail($user);
+        $this->mailService->sendRecoverIdentityMail(
+            $user,
+            $this->renderer->render('user::recover-identity-requested', ['user' => $user])
+        );
 
         return $this->infoResponse(Message::MAIL_SENT_RECOVER_IDENTITY);
     }

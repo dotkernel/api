@@ -17,6 +17,10 @@ use Api\App\Middleware\ErrorReportPermissionMiddleware;
 use Api\App\Middleware\ResourceProviderMiddleware;
 use Api\App\Service\ErrorReportService;
 use Api\App\Service\ErrorReportServiceInterface;
+use Api\App\Template\Parser;
+use Api\App\Template\ParserInterface;
+use Api\App\Template\Renderer;
+use Api\App\Template\RendererInterface;
 use Dot\DependencyInjection\Factory\AttributedServiceFactory;
 use Laminas\Hydrator\ArraySerializableHydrator;
 use Mezzio\Application;
@@ -25,13 +29,6 @@ use Mezzio\Authentication\OAuth2\OAuth2Adapter;
 use Mezzio\Hal\Metadata\RouteBasedCollectionMetadata;
 use Mezzio\Hal\Metadata\RouteBasedResourceMetadata;
 use Mezzio\ProblemDetails\ProblemDetailsMiddleware;
-use Mezzio\Template\TemplateRendererInterface;
-use Mezzio\Twig\TwigEnvironmentFactory;
-use Mezzio\Twig\TwigExtension;
-use Mezzio\Twig\TwigExtensionFactory;
-use Mezzio\Twig\TwigRenderer;
-use Mezzio\Twig\TwigRendererFactory;
-use Twig\Environment;
 
 class ConfigProvider
 {
@@ -62,14 +59,14 @@ class ConfigProvider
                 PostErrorReportResourceHandler::class  => AttributedServiceFactory::class,
                 ErrorReportService::class              => AttributedServiceFactory::class,
                 TokenGenerateCommand::class            => AttributedServiceFactory::class,
-                Environment::class                     => TwigEnvironmentFactory::class,
-                TwigExtension::class                   => TwigExtensionFactory::class,
-                TwigRenderer::class                    => TwigRendererFactory::class,
+                Parser::class                          => AttributedServiceFactory::class,
+                Renderer::class                        => AttributedServiceFactory::class,
             ],
             'aliases'    => [
                 AuthenticationInterface::class     => OAuth2Adapter::class,
                 ErrorReportServiceInterface::class => ErrorReportService::class,
-                TemplateRendererInterface::class   => TwigRenderer::class,
+                RendererInterface::class           => Renderer::class,
+                ParserInterface::class             => Parser::class,
             ],
         ];
     }

@@ -8,6 +8,7 @@ use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
+use Api\App\Template\RendererInterface;
 use Api\User\InputFilter\ResetPasswordInputFilter;
 use Api\User\Service\UserServiceInterface;
 use Core\App\Message;
@@ -24,11 +25,13 @@ class PostUserAccountResetPasswordResourceHandler extends AbstractHandler
         MailService::class,
         UserServiceInterface::class,
         ResetPasswordInputFilter::class,
+        RendererInterface::class,
     )]
     public function __construct(
         protected MailService $mailService,
         protected UserServiceInterface $userService,
         protected ResetPasswordInputFilter $inputFilter,
+        protected RendererInterface $renderer,
     ) {
     }
 
@@ -57,7 +60,10 @@ class PostUserAccountResetPasswordResourceHandler extends AbstractHandler
         }
 
         $this->userService->saveUser([], $user->createResetPassword());
-        $this->mailService->sendResetPasswordRequestedMail($user);
+        $this->mailService->sendResetPasswordRequestedMail(
+            $user,
+            $this->renderer->render('user::reset-password-requested', ['user' => $user])
+        );
 
         return $this->infoResponse(Message::MAIL_SENT_RESET_PASSWORD, StatusCodeInterface::STATUS_CREATED);
     }

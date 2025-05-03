@@ -8,6 +8,7 @@ use Api\App\Exception\BadRequestException;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
+use Api\App\Template\RendererInterface;
 use Api\User\InputFilter\ActivateAccountInputFilter;
 use Api\User\Service\UserServiceInterface;
 use Core\App\Message;
@@ -24,11 +25,13 @@ class PostUserAccountActivateHandler extends AbstractHandler
         MailService::class,
         UserServiceInterface::class,
         ActivateAccountInputFilter::class,
+        RendererInterface::class,
     )]
     public function __construct(
         protected MailService $mailService,
         protected UserServiceInterface $userService,
         protected ActivateAccountInputFilter $inputFilter,
+        protected RendererInterface $renderer,
     ) {
     }
 
@@ -54,7 +57,10 @@ class PostUserAccountActivateHandler extends AbstractHandler
         }
 
         $this->userService->activateUser($user);
-        $this->mailService->sendActivationMail($user);
+        $this->mailService->sendActivationMail(
+            $user,
+            $this->renderer->render('user::activate', ['user' => $user])
+        );
 
         return $this->infoResponse(
             Message::mailSentUserActivation($user->getDetail()->getEmail()),

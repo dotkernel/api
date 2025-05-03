@@ -18,6 +18,7 @@ use League\OAuth2\Server\Entities\UserEntityInterface;
 use function array_map;
 use function bin2hex;
 use function md5;
+use function trim;
 use function uniqid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -261,7 +262,7 @@ class User extends AbstractEntity implements UserEntityInterface
 
     public function getName(): string
     {
-        return $this->getDetail()->getFirstName() . ' ' . $this->getDetail()->getLastName();
+        return trim($this->getDetail()->getFirstName() . ' ' . $this->getDetail()->getLastName());
     }
 
     public function isActive(): bool

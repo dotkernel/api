@@ -50,6 +50,7 @@ class Message
     public const ROLE_NOT_FOUND               = 'Role not found.';
     public const SERVICE_NOT_FOUND            = 'Service %s not found in the container.';
     public const SETTING_NOT_FOUND            = 'Setting "%s" not found.';
+    public const TEMPLATE_NOT_FOUND           = 'Template "%s" not found.';
     public const UNSUPPORTED_MEDIA_TYPE       = 'Unsupported Media Type.';
     public const USER_ACTIVATED               = 'User account has been activated.';
     public const USER_ALREADY_ACTIVATED       = 'User account is already active.';
@@ -135,6 +136,11 @@ class Message
     public static function settingNotFound(string $identifier): string
     {
         return sprintf(self::SETTING_NOT_FOUND, $identifier);
+    }
+
+    public static function templateNotFound(string $template): string
+    {
+        return sprintf(self::TEMPLATE_NOT_FOUND, $template);
     }
 
     public static function unsupportedMediaType(array $types = []): string

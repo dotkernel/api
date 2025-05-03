@@ -1,0 +1,28 @@
+<?php
+
+declare(strict_types=1);
+
+use Api\App\Template\ParserInterface;
+use Core\User\Entity\User;
+
+/** @var ParserInterface $this */
+/** @var array $application */
+/** @var User $user */
+?>
+
+<div>
+    <p>Hi <?=$user->getIdentity()?>,</p>
+
+    <p>
+        Someone requested the identity of this account: <?=$user->getDetail()->getEmail()?><br />
+
+        Your account's identity is: <strong><?=$user->getIdentity()?></strong>
+
+        If you did not make this request, just ignore this email; no changes have been made to your account.
+    </p>
+
+    <p>
+        Thanks,<br />
+        The <?=$application['name'] ?? ''?> Team
+    </p>
+</div>
