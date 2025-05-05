@@ -6,6 +6,7 @@ namespace Api\User\Service;
 
 use Api\App\Exception\NotFoundException;
 use Core\App\Message;
+use Core\User\Entity\User;
 use Core\User\Entity\UserResetPassword;
 use Core\User\Repository\UserResetPasswordRepository;
 use Dot\DependencyInjection\Attribute\Inject;
@@ -36,5 +37,17 @@ class UserResetPasswordService implements UserResetPasswordServiceInterface
         }
 
         return $userResetPassword;
+    }
+
+    public function saveResetPassword(User $user): UserResetPassword
+    {
+        $resetPassword = (new UserResetPassword())
+            ->setHash(User::generateHash())
+            ->setUser($user);
+        $user->addResetPassword($resetPassword);
+
+        $this->userResetPasswordRepository->saveResource($resetPassword);
+
+        return $resetPassword;
     }
 }

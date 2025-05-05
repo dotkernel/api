@@ -117,17 +117,6 @@ class User extends AbstractEntity implements UserEntityInterface
         $this->resetPasswords->add($resetPassword);
     }
 
-    public function createResetPassword(): self
-    {
-        $this->resetPasswords->add(
-            (new UserResetPassword())
-                ->setHash(self::generateHash())
-                ->setUser($this)
-        );
-
-        return $this;
-    }
-
     public function getResetPasswords(): Collection
     {
         return $this->resetPasswords;
