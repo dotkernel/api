@@ -28,7 +28,6 @@ $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
     Mezzio\Hal\ConfigProvider::class,
     Mezzio\ProblemDetails\ConfigProvider::class,
     Mezzio\Router\FastRouteRouter\ConfigProvider::class,
-    Mezzio\Twig\ConfigProvider::class,
     Mezzio\Helper\ConfigProvider::class,
     Mezzio\ConfigProvider::class,
     Mezzio\Router\ConfigProvider::class,

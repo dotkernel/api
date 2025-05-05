@@ -8,6 +8,7 @@ use Api\App\Attribute\Resource;
 use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
+use Api\App\Template\RendererInterface;
 use Api\User\Service\UserServiceInterface;
 use Core\App\Message;
 use Core\App\Service\MailService;
@@ -22,10 +23,12 @@ class PatchUserActivateHandler extends AbstractHandler
     #[Inject(
         MailService::class,
         UserServiceInterface::class,
+        RendererInterface::class,
     )]
     public function __construct(
         protected MailService $mailService,
         protected UserServiceInterface $userService,
+        protected RendererInterface $renderer,
     ) {
     }
 
@@ -43,7 +46,10 @@ class PatchUserActivateHandler extends AbstractHandler
         }
 
         $this->userService->activateUser($user);
-        $this->mailService->sendActivationMail($user);
+        $this->mailService->sendActivationMail(
+            $user,
+            $this->renderer->render('user::activate', ['user' => $user])
+        );
 
         return $this->infoResponse(Message::USER_ACTIVATED);
     }

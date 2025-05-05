@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+
+use Api\App\Template\ParserInterface;
+use Core\User\Entity\User;
+
+/** @var ParserInterface $this */
+/** @var array $application */
+/** @var User $user */
+?>
+
+Hi <?=$user->getIdentity()?>,<br /><br />
+
+<a href="<?=$this->absoluteUrl($this->url('app::view-index'))?>" target="_blank">Click here to access your <?=$application['name'] ?? ''?> account.</a>.

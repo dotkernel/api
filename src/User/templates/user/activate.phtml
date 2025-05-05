@@ -1,0 +1,16 @@
+<?php
+
+declare(strict_types=1);
+
+use Api\App\Template\ParserInterface;
+use Core\User\Entity\User;
+
+/** @var ParserInterface $this */
+/** @var array $application */
+/** @var User $user */
+?>
+
+Hi <?=$user->getIdentity()?>,<br /><br />
+
+You can activate your <?=$application['name'] ?? ''?> account by sending a PATCH request to the below endpoint:<br />
+<?=$this->absoluteUrl($this->url('user::activate-account', ['hash' => $user->getHash()]))?>

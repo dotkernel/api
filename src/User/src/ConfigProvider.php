@@ -144,11 +144,7 @@ class ConfigProvider
     private function getTemplates(): array
     {
         return [
-            'paths' => [
-                'user' => [
-                    __DIR__ . '/../templates/user',
-                ],
-            ],
+            'user' => __DIR__ . '/../templates/user',
         ];
     }
 }

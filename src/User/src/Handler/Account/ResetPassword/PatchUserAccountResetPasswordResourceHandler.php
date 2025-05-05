@@ -10,6 +10,7 @@ use Api\App\Exception\ConflictException;
 use Api\App\Exception\ExpiredException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
+use Api\App\Template\RendererInterface;
 use Api\User\InputFilter\UpdatePasswordInputFilter;
 use Api\User\Service\UserServiceInterface;
 use Core\App\Message;
@@ -26,11 +27,13 @@ class PatchUserAccountResetPasswordResourceHandler extends AbstractHandler
         MailService::class,
         UserServiceInterface::class,
         UpdatePasswordInputFilter::class,
+        RendererInterface::class,
     )]
     public function __construct(
         protected MailService $mailService,
         protected UserServiceInterface $userService,
         protected UpdatePasswordInputFilter $inputFilter,
+        protected RendererInterface $renderer,
     ) {
     }
 
@@ -65,7 +68,11 @@ class PatchUserAccountResetPasswordResourceHandler extends AbstractHandler
             $userResetPassword->markAsCompleted()->getUser()
         );
 
-        $this->mailService->sendResetPasswordCompletedMail($userResetPassword->getUser());
+        $user = $userResetPassword->getUser();
+        $this->mailService->sendResetPasswordCompletedMail(
+            $user,
+            $this->renderer->render('user::reset-password-completed', ['user' => $user])
+        );
 
         return $this->infoResponse(Message::RESET_PASSWORD_OK);
     }
