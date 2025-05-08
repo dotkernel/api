@@ -38,6 +38,7 @@ class OAuthAccessToken implements AccessTokenEntityInterface
     #[ORM\Column(name: 'user_id', type: 'string', length: 25, nullable: true)]
     private ?string $userId;
 
+    /** @var non-empty-string $token */
     #[ORM\Column(name: 'token', type: 'string', length: 100)]
     private string $token;
 
@@ -87,11 +88,17 @@ class OAuthAccessToken implements AccessTokenEntityInterface
         return $this->client;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getToken(): string
     {
         return $this->token;
     }
 
+    /**
+     * @param non-empty-string $token
+     */
     public function setToken(string $token): self
     {
         $this->token = $token;
@@ -118,6 +125,9 @@ class OAuthAccessToken implements AccessTokenEntityInterface
         return $this;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getIdentifier(): string
     {
         return $this->getToken();
@@ -202,12 +212,13 @@ class OAuthAccessToken implements AccessTokenEntityInterface
             throw new RuntimeException('Unable to init JWT without private key');
         }
 
+        /** @var non-empty-string $keyContents */
+        $keyContents = $this->privateKey->getKeyContents();
+        $passphrase  = (string) $this->privateKey->getPassPhrase();
+
         $this->jwtConfiguration = Configuration::forAsymmetricSigner(
             new Sha256(),
-            InMemory::plainText(
-                $this->privateKey->getKeyContents(),
-                $this->privateKey->getPassPhrase() ?? ''
-            ),
+            InMemory::plainText($keyContents, $passphrase),
             InMemory::plainText('/')
         );
 

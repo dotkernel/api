@@ -25,8 +25,9 @@ class OAuthClient implements ClientEntityInterface
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'uuid', nullable: true)]
     private ?User $user = null;
 
+    /** @var non-empty-string $name */
     #[ORM\Column(name: 'name', type: 'string', length: 40)]
-    private string $name = '';
+    private string $name;
 
     #[ORM\Column(name: 'secret', type: 'string', length: 100, nullable: true)]
     private ?string $secret = null;
@@ -69,11 +70,17 @@ class OAuthClient implements ClientEntityInterface
         return $this->getName();
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getIdentifier(): string
     {
         return $this->getName();
     }
 
+    /**
+     * @param non-empty-string $name
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -81,6 +88,9 @@ class OAuthClient implements ClientEntityInterface
         return $this;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getName(): string
     {
         return $this->name;
