@@ -28,8 +28,22 @@ use Dot\DependencyInjection\Factory\AttributedServiceFactory;
 use Mezzio\Application;
 use Mezzio\Hal\Metadata\MetadataMap;
 
+/**
+ * @phpstan-import-type MetadataType from AppConfigProvider
+ * @phpstan-type DependenciesType array{
+ *     delegators: array<class-string, class-string[]>,
+ *     factories: array<class-string, class-string>,
+ *     aliases: array<class-string, class-string>,
+ * }
+ */
 class ConfigProvider
 {
+    /**
+     * @return array{
+     *     dependencies: DependenciesType,
+     *     "Mezzio\Hal\Metadata\MetadataMap": MetadataType[],
+     * }
+     */
     public function __invoke(): array
     {
         return [
@@ -38,6 +52,9 @@ class ConfigProvider
         ];
     }
 
+    /**
+     * @return DependenciesType
+     */
     private function getDependencies(): array
     {
         return [
@@ -74,6 +91,9 @@ class ConfigProvider
         ];
     }
 
+    /**
+     * @return MetadataType[]
+     */
     private function getHalConfig(): array
     {
         return [

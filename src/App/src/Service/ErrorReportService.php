@@ -32,6 +32,9 @@ class ErrorReportService implements ErrorReportServiceInterface
     private Filesystem $fileSystem;
     private ?string $token = null;
 
+    /**
+     * @param array<non-empty-string, mixed> $config
+     */
     #[Inject(
         'config',
     )]

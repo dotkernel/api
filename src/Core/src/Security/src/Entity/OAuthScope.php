@@ -9,6 +9,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
+use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\Traits\ScopeTrait;
 
@@ -26,9 +28,11 @@ class OAuthScope implements ScopeEntityInterface
     #[ORM\Column(name: 'scope', type: 'string', length: 191)]
     private string $scope = '';
 
+    /** @var Collection<int, AccessTokenEntityInterface> */
     #[ORM\ManyToMany(targetEntity: OAuthAccessToken::class, mappedBy: 'scopes')]
     protected Collection $accessTokens;
 
+    /** @var Collection<int, AuthCodeEntityInterface> */
     #[ORM\ManyToMany(targetEntity: OAuthAuthCode::class, mappedBy: 'scopes')]
     protected Collection $authCodes;
 
@@ -67,7 +71,7 @@ class OAuthScope implements ScopeEntityInterface
         return $this->scope;
     }
 
-    public function addAccessToken(OAuthAccessToken $accessToken): self
+    public function addAccessToken(AccessTokenEntityInterface $accessToken): self
     {
         if (! $this->accessTokens->contains($accessToken)) {
             $this->accessTokens->add($accessToken);
@@ -76,7 +80,7 @@ class OAuthScope implements ScopeEntityInterface
         return $this;
     }
 
-    public function removeAccessToken(OAuthAccessToken $accessToken): self
+    public function removeAccessToken(AccessTokenEntityInterface $accessToken): self
     {
         if ($this->accessTokens->contains($accessToken)) {
             $this->accessTokens->removeElement($accessToken);
@@ -85,6 +89,9 @@ class OAuthScope implements ScopeEntityInterface
         return $this;
     }
 
+    /**
+     * @return Collection<int, AccessTokenEntityInterface>
+     */
     public function getAccessTokens(?Criteria $criteria = null): Collection
     {
         if ($criteria === null) {
@@ -94,7 +101,7 @@ class OAuthScope implements ScopeEntityInterface
         return $this->accessTokens->matching($criteria);
     }
 
-    public function addAuthCode(OAuthAuthCode $authCode): self
+    public function addAuthCode(AuthCodeEntityInterface $authCode): self
     {
         if (! $this->authCodes->contains($authCode)) {
             $this->authCodes->add($authCode);
@@ -103,7 +110,7 @@ class OAuthScope implements ScopeEntityInterface
         return $this;
     }
 
-    public function removeAuthCode(OAuthAuthCode $authCode): self
+    public function removeAuthCode(AuthCodeEntityInterface $authCode): self
     {
         if ($this->authCodes->contains($authCode)) {
             $this->authCodes->removeElement($authCode);
@@ -112,6 +119,9 @@ class OAuthScope implements ScopeEntityInterface
         return $this;
     }
 
+    /**
+     * @return Collection<int, AuthCodeEntityInterface>
+     */
     public function getAuthCodes(?Criteria $criteria = null): Collection
     {
         if ($criteria === null) {

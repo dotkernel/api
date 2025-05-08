@@ -11,6 +11,7 @@ use Core\App\Entity\PasswordTrait;
 use Core\App\Entity\RoleInterface;
 use Core\App\Entity\TimestampsTrait;
 use Core\Setting\Entity\Setting;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,6 +19,9 @@ use League\OAuth2\Server\Entities\UserEntityInterface;
 
 use function array_map;
 
+/**
+ * @phpstan-import-type RoleType from RoleInterface
+ */
 #[ORM\Entity(repositoryClass: AdminRepository::class)]
 #[ORM\Table(name: 'admin')]
 #[ORM\HasLifecycleCallbacks]
@@ -26,6 +30,7 @@ class Admin extends AbstractEntity implements UserEntityInterface
     use PasswordTrait;
     use TimestampsTrait;
 
+    /** @var non-empty-string|null $identity */
     #[ORM\Column(name: 'identity', type: 'string', length: 191, unique: true)]
     protected ?string $identity = null;
 
@@ -45,12 +50,14 @@ class Admin extends AbstractEntity implements UserEntityInterface
     )]
     protected AdminStatusEnum $status = AdminStatusEnum::Active;
 
+    /** @var Collection<int, RoleInterface> $roles */
     #[ORM\ManyToMany(targetEntity: AdminRole::class)]
     #[ORM\JoinTable(name: 'admin_roles')]
     #[ORM\JoinColumn(name: 'userUuid', referencedColumnName: 'uuid')]
     #[ORM\InverseJoinColumn(name: 'roleUuid', referencedColumnName: 'uuid')]
     protected Collection $roles;
 
+    /** @var Collection<int, Setting> $settings */
     #[ORM\OneToMany(targetEntity: Setting::class, mappedBy: 'admin')]
     protected Collection $settings;
 
@@ -73,6 +80,9 @@ class Admin extends AbstractEntity implements UserEntityInterface
         return $this->identity !== null;
     }
 
+    /**
+     * @param non-empty-string $identity
+     */
     public function setIdentity(string $identity): self
     {
         $this->identity = $identity;
@@ -128,14 +138,22 @@ class Admin extends AbstractEntity implements UserEntityInterface
         return $this;
     }
 
+    /**
+     * @return RoleInterface[]
+     */
     public function getRoles(): array
     {
         return $this->roles->toArray();
     }
 
-    public function setRoles(ArrayCollection $roles): self
+    /**
+     * @param RoleInterface[] $roles
+     */
+    public function setRoles(array $roles): self
     {
-        $this->roles = $roles;
+        foreach ($roles as $role) {
+            $this->roles->add($role);
+        }
 
         return $this;
     }
@@ -196,9 +214,21 @@ class Admin extends AbstractEntity implements UserEntityInterface
 
     public function getIdentifier(): string
     {
-        return $this->identity;
+        return (string) $this->identity;
     }
 
+    /**
+     * @return array{
+     *      uuid: non-empty-string,
+     *      identity: non-empty-string|null,
+     *      firstName: string|null,
+     *      lastName: string|null,
+     *      status: non-empty-string,
+     *      roles: iterable<RoleType>,
+     *      created: DateTimeImmutable,
+     *      updated: DateTimeImmutable|null,
+     * }
+     */
     public function getArrayCopy(): array
     {
         return [
@@ -207,7 +237,7 @@ class Admin extends AbstractEntity implements UserEntityInterface
             'firstName' => $this->firstName,
             'lastName'  => $this->lastName,
             'status'    => $this->status->value,
-            'roles'     => array_map(fn (AdminRole $role): array => $role->getArrayCopy(), $this->roles->toArray()),
+            'roles'     => array_map(fn (RoleInterface $role): array => $role->getArrayCopy(), $this->roles->toArray()),
             'created'   => $this->created,
             'updated'   => $this->updated,
         ];

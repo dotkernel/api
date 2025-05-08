@@ -16,12 +16,22 @@ use function min;
 use function range;
 use function strlen;
 
+/**
+ * @template T
+ */
 class Paginator
 {
     /**
-     * @param array<string, mixed> $params
+     * @param array<non-empty-string, mixed> $params
      * @param non-empty-string $sort
-     * @return array{offset: int, limit: int, page: int, sort: string, dir: string}
+     * @param non-empty-string $dir
+     * @return array{
+     *     offset: int,
+     *     limit: int,
+     *     page: int,
+     *     sort: non-empty-string,
+     *     dir: non-empty-string
+     * }
      */
     public static function getParams(array $params, string $sort, string $dir = 'desc'): array
     {
@@ -70,6 +80,12 @@ class Paginator
         ];
     }
 
+    /**
+     * @param DoctrinePaginator<T> $paginator
+     * @param array<non-empty-string, mixed> $params
+     * @param array<non-empty-string, mixed> $filters
+     * @return array<non-empty-string, mixed>
+     */
     public static function wrapper(DoctrinePaginator $paginator, array $params = [], array $filters = []): array
     {
         $params['count']   = $paginator->count();

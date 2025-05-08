@@ -17,6 +17,9 @@ use function strlen;
 #[Entity(AdminLogin::class)]
 class AdminLoginRepository extends AbstractRepository
 {
+    /**
+     * @return non-empty-string[]
+     */
     public function getAdminLoginIdentities(): array
     {
         $results = $this->getQueryBuilder()
@@ -28,6 +31,10 @@ class AdminLoginRepository extends AbstractRepository
         return array_column($results, 'identity');
     }
 
+    /**
+     * @param array<non-empty-string, mixed> $params
+     * @param array<non-empty-string, mixed> $filters
+     */
     public function getAdminLogins(array $params = [], array $filters = []): QueryBuilder
     {
         $queryBuilder = $this

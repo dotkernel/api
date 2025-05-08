@@ -8,8 +8,17 @@ use Core\App\Entity\AbstractEntity;
 use Core\App\Entity\TimestampsTrait;
 use Core\User\EventListener\UserAvatarEventListener;
 use Core\User\Repository\UserAvatarRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @phpstan-type UserAvatarType array{
+ *      uuid: non-empty-string,
+ *      url: non-empty-string|null,
+ *      created: DateTimeImmutable,
+ *      updated: DateTimeImmutable|null
+ *  }
+ */
 #[ORM\Entity(repositoryClass: UserAvatarRepository::class)]
 #[ORM\Table(name: 'user_avatar')]
 #[ORM\HasLifecycleCallbacks]
@@ -25,6 +34,7 @@ class UserAvatar extends AbstractEntity
     #[ORM\Column(name: 'name', type: 'string', length: 191)]
     protected ?string $name = null;
 
+    /** @var non-empty-string|null $url */
     protected ?string $url = null;
 
     public function __construct()
@@ -63,6 +73,9 @@ class UserAvatar extends AbstractEntity
         return $this->url;
     }
 
+    /**
+     * @param non-empty-string $url
+     */
     public function setUrl(string $url): self
     {
         $this->url = $url;
@@ -70,6 +83,9 @@ class UserAvatar extends AbstractEntity
         return $this;
     }
 
+    /**
+     * @return UserAvatarType
+     */
     public function getArrayCopy(): array
     {
         return [

@@ -38,6 +38,9 @@ abstract class AbstractEntity implements ArraySerializableInterface, EntityInter
         return false;
     }
 
+    /**
+     * @param array<non-empty-string, mixed> $array
+     */
     public function exchangeArray(array $array): void
     {
         foreach ($array as $property => $values) {

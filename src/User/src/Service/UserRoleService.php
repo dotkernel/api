@@ -43,7 +43,7 @@ class UserRoleService implements UserRoleServiceInterface
     }
 
     /**
-     * @param array<string, mixed> $params
+     * @param array<non-empty-string, mixed> $params
      */
     public function getUserRoles(array $params): QueryBuilder
     {

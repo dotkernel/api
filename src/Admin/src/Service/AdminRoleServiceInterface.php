@@ -19,7 +19,7 @@ interface AdminRoleServiceInterface
     public function findAdminRole(string $id): AdminRole;
 
     /**
-     * @param array<string, mixed> $params
+     * @param array<non-empty-string, mixed> $params
      */
     public function getAdminRoles(array $params): QueryBuilder;
 }

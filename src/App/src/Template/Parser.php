@@ -8,12 +8,17 @@ use Dot\DependencyInjection\Attribute\Inject;
 use Mezzio\Helper\UrlHelperInterface;
 
 use function array_key_exists;
+use function assert;
 use function sprintf;
 
 class Parser implements ParserInterface
 {
+    /** @var array<non-empty-string, mixed> $globals */
     protected array $globals = [];
 
+    /**
+     * @param array<non-empty-string, mixed> $config
+     */
     #[Inject(
         UrlHelperInterface::class,
         'config',
@@ -43,7 +48,10 @@ class Parser implements ParserInterface
             $baseUrl = $this->globals['application']['url'] ?? '';
         }
 
-        return sprintf('%s%s', $baseUrl, $path);
+        $absoluteUrl = sprintf('%s%s', $baseUrl, $path);
+        assert($absoluteUrl !== '');
+
+        return $absoluteUrl;
     }
 
     public function url(
@@ -53,14 +61,24 @@ class Parser implements ParserInterface
         ?string $fragmentIdentifier = null,
         array $options = []
     ): string {
-        return $this->urlHelper->generate($routeName, $routeParams, $queryParams, $fragmentIdentifier, $options);
+        $url = $this->urlHelper->generate($routeName, $routeParams, $queryParams, $fragmentIdentifier, $options);
+        assert($url !== '');
+
+        return $url;
     }
 
+    /**
+     * @return array<non-empty-string, mixed>
+     */
     public function getGlobals(): array
     {
         return $this->globals;
     }
 
+    /**
+     * @param array<non-empty-string, mixed> $config
+     * @return array<non-empty-string, mixed>
+     */
     public function prepareGlobals(array $config = []): array
     {
         $globals = $config[RendererInterface::class]['globals'] ?? [];

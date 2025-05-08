@@ -75,7 +75,7 @@ class AuthorizationMiddleware implements MiddlewareInterface
         }
 
         $defaultUser->setRoles(
-            array_map(fn (RoleInterface $role): string => $role->getName()->value, $user->getRoles())
+            array_map(fn (RoleInterface $role): string => (string) $role->getName()->value, $user->getRoles())
         );
 
         $request = $request->withAttribute(UserInterface::class, $defaultUser);

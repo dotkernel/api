@@ -12,6 +12,7 @@ use Core\Setting\Repository\SettingRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 use function array_unique;
+use function assert;
 use function json_decode;
 use function json_encode;
 
@@ -27,11 +28,14 @@ class Setting extends AbstractEntity
     protected ?Admin $admin = null;
 
     #[ORM\Column(type: 'setting_enum', enumType: SettingIdentifierEnum::class)]
-    protected ?SettingIdentifierEnum $identifier = null;
+    protected SettingIdentifierEnum $identifier;
 
     #[ORM\Column(name: 'value', type: 'text')]
     protected ?string $value = null;
 
+    /**
+     * @param non-empty-string[] $value
+     */
     public function __construct(Admin $admin, SettingIdentifierEnum $identifier, array $value)
     {
         parent::__construct();
@@ -67,16 +71,28 @@ class Setting extends AbstractEntity
 
     public function getValue(): mixed
     {
-        return json_decode($this->value, true);
+        return json_decode((string) $this->value, true);
     }
 
+    /**
+     * @param non-empty-string[] $value
+     */
     public function setValue(array $value): self
     {
-        $this->value = json_encode(array_unique($value));
+        $value = json_encode(array_unique($value));
+        assert($value !== false);
+
+        $this->value = $value;
 
         return $this;
     }
 
+    /**
+     * @return array{
+     *     identifier: non-empty-string,
+     *     value: non-empty-string[],
+     * }
+     */
     public function getArrayCopy(): array
     {
         return [

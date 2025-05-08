@@ -10,6 +10,9 @@ use Laminas\Validator\Date;
 
 readonly class BaseDeprecation
 {
+    /**
+     * @throws SunsetException
+     */
     public function __construct(
         public ?string $sunset = null,
         public ?string $link = null,
@@ -18,10 +21,20 @@ readonly class BaseDeprecation
         public string $type = 'text/html',
     ) {
         if (null !== $sunset && ! (new Date())->isValid($sunset)) {
-            throw new SunsetException(Message::invalidValue('sunset'));
+            throw SunsetException::create(Message::invalidValue('sunset'));
         }
     }
 
+    /**
+     * @return array{
+     *     sunset: string|null,
+     *     link: string|null,
+     *     rel: string,
+     *     type: string,
+     *     deprecationReason: string|null,
+     *     deprecationType: class-string,
+     * }
+     */
     public function toArray(): array
     {
         return [

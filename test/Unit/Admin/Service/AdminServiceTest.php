@@ -78,6 +78,10 @@ class AdminServiceTest extends TestCase
         $this->assertSame(AdminStatusEnum::Active, $admin->getStatus());
     }
 
+    /**
+     * @param array<non-empty-string, mixed> $data
+     * @return non-empty-array<non-empty-string, mixed>
+     */
     private function getAdmin(array $data = []): array
     {
         $admin = [
@@ -90,6 +94,9 @@ class AdminServiceTest extends TestCase
         return array_merge($admin, $data);
     }
 
+    /**
+     * @param array<non-empty-string, mixed> $data
+     */
     private function getAdminEntity(array $data = []): Admin
     {
         $admin = (new Admin())

@@ -10,6 +10,7 @@ use Core\App\Message;
 use Core\App\Service\MailService;
 use Core\User\Entity\User;
 use Core\User\Entity\UserAvatar;
+use Core\User\Entity\UserDetail;
 use Core\User\Entity\UserResetPassword;
 use Core\User\Enum\UserResetPasswordStatusEnum;
 use Core\User\Enum\UserStatusEnum;
@@ -21,6 +22,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\UploadedFileInterface;
 
+use function assert;
 use function imagecolorallocate;
 use function imagecreatetruecolor;
 use function imagefilledrectangle;
@@ -134,8 +136,9 @@ class UserTest extends AbstractFunctionalTest
             ->getMock();
         $this->replaceService(UserAvatarServiceInterface::class, $userAvatarService);
 
-        $user = $this->createUser();
-        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
+        /** @var non-empty-string $identity */
+        $identity = $this->createUser()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD);
 
         $uploadedFile = $this->createUploadedFile();
 
@@ -152,8 +155,9 @@ class UserTest extends AbstractFunctionalTest
      */
     public function testViewMyAvatarNotFound(): void
     {
-        $user = $this->createUser();
-        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
+        /** @var non-empty-string $identity */
+        $identity = $this->createUser()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD);
 
         $response = $this->get('/user/account/avatar');
         $this->assertResponseNotFound($response);
@@ -174,7 +178,9 @@ class UserTest extends AbstractFunctionalTest
         $this->getEntityManager()->persist($userAvatar);
         $this->getEntityManager()->flush();
 
-        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
+        /** @var non-empty-string $identity */
+        $identity = $user->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD);
 
         $response = $this->get('/user/account/avatar');
         $this->assertResponseOk($response);
@@ -186,8 +192,9 @@ class UserTest extends AbstractFunctionalTest
      */
     public function testDeleteMyAvatarNotFound(): void
     {
-        $user = $this->createUser();
-        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
+        /** @var non-empty-string $identity */
+        $identity = $this->createUser()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD);
 
         $response = $this->delete('/user/account/avatar');
         $this->assertResponseNotFound($response);
@@ -208,7 +215,9 @@ class UserTest extends AbstractFunctionalTest
         $this->getEntityManager()->persist($userAvatar);
         $this->getEntityManager()->flush();
 
-        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
+        /** @var non-empty-string $identity */
+        $identity = $user->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD);
 
         $response = $this->delete('/user/account/avatar');
         $this->assertResponseNoContent($response);
@@ -248,7 +257,9 @@ class UserTest extends AbstractFunctionalTest
 
         $userRepository = $this->getEntityManager()->getRepository(User::class);
         $user           = $userRepository->find($user->getUuid()->toString());
-        $this->assertTrue($user?->isActive());
+        assert($user instanceof User);
+
+        $this->assertTrue($user->isActive());
     }
 
     /**
@@ -261,6 +272,7 @@ class UserTest extends AbstractFunctionalTest
         $user = $this->createUser([
             'status' => UserStatusEnum::Pending,
         ]);
+        $this->assertInstanceOf(UserDetail::class, $user->getDetail());
 
         $mailService = $this->createMock(MailService::class);
         $this->replaceService(MailService::class, $mailService);
@@ -286,14 +298,19 @@ class UserTest extends AbstractFunctionalTest
     public function testDeleteMyAccount(): void
     {
         $user = $this->createUser();
-        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
+
+        /** @var non-empty-string $identity */
+        $identity = $user->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD);
 
         $response = $this->delete('/user/account');
         $this->assertResponseNoContent($response);
 
         $userRepository = $this->getEntityManager()->getRepository(User::class);
         $deletedUser    = $userRepository->find($user->getUuid()->toString());
-        $this->assertTrue($deletedUser?->isDeleted());
+        assert($deletedUser instanceof User);
+
+        $this->assertTrue($deletedUser->isDeleted());
     }
 
     public function testRequestResetPasswordInvalidHash(): void
@@ -420,6 +437,7 @@ class UserTest extends AbstractFunctionalTest
         $this->replaceService(MailService::class, $mailService);
 
         $user = $this->createUser();
+        $this->assertInstanceOf(UserDetail::class, $user->getDetail());
 
         $response = $this->post('/user/account/reset-password', [
             'email' => $user->getDetail()->getEmail(),
@@ -434,9 +452,9 @@ class UserTest extends AbstractFunctionalTest
      */
     public function testViewMyAccount(): void
     {
-        $user = $this->createUser();
-
-        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
+        /** @var non-empty-string $identity */
+        $identity = $this->createUser()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD);
 
         $response = $this->get('/user/account');
         $this->assertResponseOk($response);
@@ -448,9 +466,9 @@ class UserTest extends AbstractFunctionalTest
      */
     public function testUpdateMyAccount(): void
     {
-        $user = $this->createUser();
-
-        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
+        /** @var non-empty-string $identity */
+        $identity = $this->createUser()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD);
 
         $updateData = [
             'detail' => [
@@ -475,6 +493,7 @@ class UserTest extends AbstractFunctionalTest
     public function testRecoverAccountByIdentity(): void
     {
         $user = $this->createUser();
+        $this->assertInstanceOf(UserDetail::class, $user->getDetail());
 
         $mailService = $this->createMock(MailService::class);
         $this->replaceService(MailService::class, $mailService);
@@ -495,7 +514,7 @@ class UserTest extends AbstractFunctionalTest
     {
         $img = imagecreatetruecolor(120, 20);
         $bg  = imagecolorallocate($img, 255, 255, 255);
-        imagefilledrectangle($img, 0, 0, 120, 20, $bg);
+        imagefilledrectangle($img, 0, 0, 120, 20, (int) $bg);
         $path = __DIR__ . DIRECTORY_SEPARATOR . 'test.jpg';
         imagejpeg($img, $path, 100);
 

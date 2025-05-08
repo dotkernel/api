@@ -15,6 +15,13 @@ use const FILTER_VALIDATE_IP;
 
 class IpService
 {
+    /**
+     * @phpstan-param array{
+     *     HTTP_X_FORWARDED_FOR?: string,
+     *     HTTP_CLIENT_IP?: string,
+     *     REMOTE_ADDR?: string,
+     * } $server
+     */
     public static function getUserIp(array $server): mixed
     {
         if (! empty($server)) {
@@ -29,10 +36,10 @@ class IpService
             }
         } else {
             // check if HTTP_X_FORWARDED_FOR is public network IP
-            if (getenv('HTTP_X_FORWARDED_FOR') && self::isPublicIp(getenv('HTTP_X_FORWARDED_FOR'))) {
+            if (getenv('HTTP_X_FORWARDED_FOR') && self::isPublicIp((string) getenv('HTTP_X_FORWARDED_FOR'))) {
                 $realIp = getenv('HTTP_X_FORWARDED_FOR');
             // check if HTTP_CLIENT_IP is public network IP
-            } elseif (getenv('HTTP_CLIENT_IP') && self::isPublicIp(getenv('HTTP_CLIENT_IP'))) {
+            } elseif (getenv('HTTP_CLIENT_IP') && self::isPublicIp((string) getenv('HTTP_CLIENT_IP'))) {
                 $realIp = getenv('HTTP_CLIENT_IP');
             } else {
                 $realIp = getenv('REMOTE_ADDR');

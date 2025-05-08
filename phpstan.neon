@@ -2,7 +2,7 @@ includes:
     - vendor/phpstan/phpstan-doctrine/extension.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon
 parameters:
-    level: 5
+    level: 8
     paths:
         - bin
         - config

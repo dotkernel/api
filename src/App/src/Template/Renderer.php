@@ -19,9 +19,13 @@ use function sprintf;
 
 class Renderer implements RendererInterface
 {
+    /** @var array<non-empty-string, non-empty-string> $templates */
     protected array $templates = [];
     protected string $extension;
 
+    /**
+     * @param array<non-empty-string, mixed> $config
+     */
     #[Inject(
         ParserInterface::class,
         'config',
@@ -34,11 +38,11 @@ class Renderer implements RendererInterface
         $this->extension = $config[RendererInterface::class]['extension'] ?? 'phtml';
     }
 
-    public function render(string $template, array $params = []): false|string
+    public function render(string $template, array $params = []): string
     {
         ob_start();
         ($this->parser)($this->getPath($template), $params);
-        return ob_get_clean();
+        return (string) ob_get_clean();
     }
 
     public function getExtension(): string
@@ -47,6 +51,7 @@ class Renderer implements RendererInterface
     }
 
     /**
+     * @return non-empty-string
      * @throws RuntimeException
      */
     public function getPath(string $template): string
@@ -64,6 +69,9 @@ class Renderer implements RendererInterface
         return $path;
     }
 
+    /**
+     * @return array<non-empty-string, non-empty-string>
+     */
     public function getTemplates(): array
     {
         return $this->templates;

@@ -9,6 +9,7 @@ use Core\App\Entity\AbstractEntity;
 use Core\App\Entity\TimestampsTrait;
 use Core\App\Enum\SuccessFailureEnum;
 use Core\App\Enum\YesNoEnum;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdminLoginRepository::class)]
@@ -43,7 +44,7 @@ class AdminLogin extends AbstractEntity
     protected ?string $deviceModel = null;
 
     #[ORM\Column(type: 'yes_no_enum', nullable: true, enumType: YesNoEnum::class)]
-    protected ?YesNoEnum $isMobile = null;
+    protected YesNoEnum $isMobile = YesNoEnum::No;
 
     #[ORM\Column(name: 'osName', type: 'string', length: 191, nullable: true)]
     protected ?string $osName = null;
@@ -67,7 +68,14 @@ class AdminLogin extends AbstractEntity
     protected ?string $clientVersion = null;
 
     #[ORM\Column(type: 'success_failure_enum', nullable: true, enumType: SuccessFailureEnum::class)]
-    protected ?SuccessFailureEnum $loginStatus = null;
+    protected SuccessFailureEnum $loginStatus = SuccessFailureEnum::Fail;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->created();
+    }
 
     public function getIdentity(): ?string
     {
@@ -170,7 +178,7 @@ class AdminLogin extends AbstractEntity
         return $this->isMobile;
     }
 
-    public function setIsMobile(?YesNoEnum $isMobile): self
+    public function setIsMobile(YesNoEnum $isMobile): self
     {
         $this->isMobile = $isMobile;
 
@@ -266,13 +274,37 @@ class AdminLogin extends AbstractEntity
         return $this->loginStatus;
     }
 
-    public function setLoginStatus(?SuccessFailureEnum $loginStatus): self
+    public function setLoginStatus(SuccessFailureEnum $loginStatus): self
     {
         $this->loginStatus = $loginStatus;
 
         return $this;
     }
 
+    /**
+     * @return array{
+     *     uuid: non-empty-string,
+     *     identity: string|null,
+     *     adminIp: string|null,
+     *     country: string|null,
+     *     continent: string|null,
+     *     organization: string|null,
+     *     deviceType: string|null,
+     *     deviceBrand: string|null,
+     *     deviceModel: string|null,
+     *     isMobile: string,
+     *     osName: string|null,
+     *     osVersion: string|null,
+     *     osPlatform: string|null,
+     *     clientType: string|null,
+     *     clientName: string|null,
+     *     clientEngine: string|null,
+     *     clientVersion: string|null,
+     *     loginStatus: string,
+     *     created: DateTimeImmutable,
+     *     updated: DateTimeImmutable|null,
+     * }
+     */
     public function getArrayCopy(): array
     {
         return [

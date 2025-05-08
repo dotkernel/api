@@ -25,6 +25,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 use function implode;
 use function sprintf;
+use function trim;
 
 use const PHP_EOL;
 
@@ -75,6 +76,7 @@ class AdminCreateCommand extends Command
             $messages = [];
             foreach ($inputFilter->getMessages() as $field => $errors) {
                 foreach ($errors as $error) {
+                    /** @var scalar $error */
                     $messages[] = sprintf('%s: %s', $field, $error);
                 }
             }
@@ -90,6 +92,15 @@ class AdminCreateCommand extends Command
     }
 
     /**
+     * @return array{
+     *     identity: string,
+     *     password: string,
+     *     passwordConfirm: string,
+     *     firstName: string,
+     *     lastName: string,
+     *     status: 'active',
+     *     roles: array{uuid: non-empty-string}[],
+     * }
      * @throws Exception
      */
     private function getData(InputInterface $input): array
@@ -100,11 +111,11 @@ class AdminCreateCommand extends Command
         }
 
         return [
-            'identity'        => $input->getOption('identity'),
-            'password'        => $input->getOption('password'),
-            'passwordConfirm' => $input->getOption('password'),
-            'firstName'       => $input->getOption('firstName'),
-            'lastName'        => $input->getOption('lastName'),
+            'identity'        => trim($input->getOption('identity')),
+            'password'        => trim($input->getOption('password')),
+            'passwordConfirm' => trim($input->getOption('password')),
+            'firstName'       => trim($input->getOption('firstName')),
+            'lastName'        => trim($input->getOption('lastName')),
             'status'          => AdminStatusEnum::Active->value,
             'roles'           => [
                 ['uuid' => $adminRole->getUuid()->toString()],

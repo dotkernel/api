@@ -129,6 +129,7 @@ class UserServiceTest extends TestCase
 
         $this->assertSame($data['identity'], $user->getIdentity());
         $this->assertTrue($user->verifyPassword($data['password']));
+        $this->assertInstanceOf(UserDetail::class, $user->getDetail());
         $this->assertSame($data['detail']['firstName'], $user->getDetail()->getFirstName());
         $this->assertSame($data['detail']['lastName'], $user->getDetail()->getLastName());
         $this->assertSame($data['detail']['email'], $user->getDetail()->getEmail());
@@ -173,12 +174,17 @@ class UserServiceTest extends TestCase
 
         $updatedUser = $this->subject->saveUser($updateData, $user);
 
+        $this->assertInstanceOf(UserDetail::class, $updatedUser->getDetail());
         $this->assertTrue($updatedUser->verifyPassword($updateData['password']));
         $this->assertSame($updateData['detail']['firstName'], $updatedUser->getDetail()->getFirstName());
         $this->assertSame($updateData['detail']['lastName'], $updatedUser->getDetail()->getLastName());
         $this->assertSame($updateData['detail']['email'], $updatedUser->getDetail()->getEmail());
     }
 
+    /**
+     * @param array<non-empty-string, mixed> $data
+     * @return non-empty-array<non-empty-string, mixed>
+     */
     private function getUser(array $data = []): array
     {
         $user = [
@@ -197,6 +203,9 @@ class UserServiceTest extends TestCase
         return array_merge($user, $data);
     }
 
+    /**
+     * @param array<non-empty-string, mixed> $data
+     */
     private function getUserEntity(array $data = []): User
     {
         $user = new User();

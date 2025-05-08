@@ -29,8 +29,10 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use RuntimeException;
 
+use function array_key_exists;
 use function array_merge;
 use function getenv;
 use function putenv;
@@ -154,6 +156,13 @@ class AbstractFunctionalTest extends TestCase
         }
     }
 
+    /**
+     * @param non-empty-string $uri
+     * @param array<non-empty-string, mixed> $queryParams
+     * @param array<non-empty-string, UploadedFileInterface> $uploadedFiles
+     * @param array<non-empty-string, mixed> $headers
+     * @param array<non-empty-string, mixed> $cookies
+     */
     protected function get(
         string $uri,
         array $queryParams = [],
@@ -174,6 +183,14 @@ class AbstractFunctionalTest extends TestCase
         return $this->getResponse($request);
     }
 
+    /**
+     * @param non-empty-string $uri
+     * @param array<non-empty-string, mixed> $parsedBody
+     * @param array<non-empty-string, mixed> $queryParams
+     * @param array<non-empty-string, UploadedFileInterface> $uploadedFiles
+     * @param array<non-empty-string, mixed> $headers
+     * @param array<non-empty-string, mixed> $cookies
+     */
     protected function post(
         string $uri,
         array $parsedBody = [],
@@ -195,6 +212,14 @@ class AbstractFunctionalTest extends TestCase
         return $this->getResponse($request);
     }
 
+    /**
+     * @param non-empty-string $uri
+     * @param array<non-empty-string, mixed> $parsedBody
+     * @param array<non-empty-string, mixed> $queryParams
+     * @param array<non-empty-string, UploadedFileInterface> $uploadedFiles
+     * @param array<non-empty-string, mixed> $headers
+     * @param array<non-empty-string, mixed> $cookies
+     */
     protected function patch(
         string $uri,
         array $parsedBody = [],
@@ -216,6 +241,14 @@ class AbstractFunctionalTest extends TestCase
         return $this->getResponse($request);
     }
 
+    /**
+     * @param non-empty-string $uri
+     * @param array<non-empty-string, mixed> $parsedBody
+     * @param array<non-empty-string, mixed> $queryParams
+     * @param array<non-empty-string, UploadedFileInterface> $uploadedFiles
+     * @param array<non-empty-string, mixed> $headers
+     * @param array<non-empty-string, mixed> $cookies
+     */
     protected function put(
         string $uri,
         array $parsedBody = [],
@@ -237,6 +270,12 @@ class AbstractFunctionalTest extends TestCase
         return $this->getResponse($request);
     }
 
+    /**
+     * @param non-empty-string $uri
+     * @param array<non-empty-string, mixed> $queryParams
+     * @param array<non-empty-string, mixed> $headers
+     * @param array<non-empty-string, mixed> $cookies
+     */
     protected function delete(
         string $uri,
         array $queryParams = [],
@@ -256,6 +295,18 @@ class AbstractFunctionalTest extends TestCase
         return $this->getResponse($request);
     }
 
+    /**
+     * @param non-empty-string $uri
+     * @param non-empty-string $method
+     * @param array<non-empty-string, mixed> $parsedBody
+     * @param array<non-empty-string, mixed> $queryParams
+     * @param array<non-empty-string, UploadedFileInterface> $uploadedFiles
+     * @param array<non-empty-string, mixed> $headers
+     * @param array<non-empty-string, mixed> $cookies
+     * @param array<non-empty-string, mixed> $serverParams
+     * @param non-empty-string $body
+     * @param non-empty-string $protocol
+     */
     private function createRequest(
         string $uri,
         string $method,
@@ -369,13 +420,44 @@ class AbstractFunctionalTest extends TestCase
     }
 
     /**
+     * @phpstan-param array{
+     *     detail?: array{
+     *          firstName: non-empty-string,
+     *          lastName: non-empty-string,
+     *          email: non-empty-string,
+     *     },
+     *     identity?: non-empty-string,
+     *     password?: non-empty-string,
+     *     passwordConfirm?: non-empty-string,
+     *     status?: non-empty-string,
+     * } $data
+     * @return array{
+     *     detail: array{
+     *          firstName: non-empty-string,
+     *          lastName: non-empty-string,
+     *          email: non-empty-string,
+     *     },
+     *     identity: non-empty-string,
+     *     password: non-empty-string,
+     *     passwordConfirm: non-empty-string,
+     *     status: \Core\User\Enum\UserStatusEnum,
+     *     roles: array{uuid: non-empty-string}[]
+     * }
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected function getValidUserData(array $data = []): array
+    protected function getValidUserData(array $data): array
     {
         $userRole = $this->findUserRole(UserRoleEnum::User);
         $this->assertInstanceOf(UserRole::class, $userRole);
+
+        $status = null;
+        if (array_key_exists('status', $data)) {
+            $status = UserStatusEnum::tryFrom($data['status']);
+        }
+        if ($status === null) {
+            $status = UserStatusEnum::Active;
+        }
 
         return [
             'detail'          => [
@@ -386,13 +468,25 @@ class AbstractFunctionalTest extends TestCase
             'identity'        => $data['identity'] ?? 'user@dotkernel.com',
             'password'        => $data['password'] ?? self::DEFAULT_PASSWORD,
             'passwordConfirm' => $data['password'] ?? self::DEFAULT_PASSWORD,
-            'status'          => $data['status'] ?? UserStatusEnum::Active,
+            'status'          => $status,
             'roles'           => [
                 ['uuid' => $userRole->getUuid()->toString()],
             ],
         ];
     }
 
+    /**
+     * @return array{
+     *     detail: array{
+     *          firstName: non-empty-string,
+     *          lastName: non-empty-string,
+     *          email: non-empty-string,
+     *     },
+     *     identity: non-empty-string,
+     *     password: non-empty-string,
+     *     status: UserStatusEnum::Pending,
+     * }
+     */
     protected function getInvalidUserData(): array
     {
         return [
@@ -407,6 +501,15 @@ class AbstractFunctionalTest extends TestCase
         ];
     }
 
+    /**
+     * @return array{
+     *     firstName: non-empty-string,
+     *     identity: non-empty-string,
+     *     lastName: non-empty-string,
+     *     password: non-empty-string,
+     *     status: AdminStatusEnum::Active,
+     * }
+     */
     protected function getValidAdminData(): array
     {
         return [
@@ -418,6 +521,15 @@ class AbstractFunctionalTest extends TestCase
         ];
     }
 
+    /**
+     * @return array{
+     *     firstName: non-empty-string,
+     *     identity: non-empty-string,
+     *     lastName: non-empty-string,
+     *     password: non-empty-string,
+     *     status: AdminStatusEnum::Inactive,
+     * }
+     */
     protected function getInvalidAdminData(): array
     {
         return [
@@ -430,12 +542,21 @@ class AbstractFunctionalTest extends TestCase
     }
 
     /**
+     * @param array<non-empty-string, mixed> $data
+     * @return array{
+     *     client_id: non-empty-string,
+     *     client_secret: non-empty-string,
+     *     grant_type: non-empty-string,
+     *     password: non-empty-string,
+     *     scope: non-empty-string,
+     *     username: non-empty-string,
+     * }
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     protected function getValidFrontendAccessTokenCredentials(array $data = []): array
     {
-        $userData = $this->getValidUserData();
+        $userData = $this->getValidUserData([]);
         return [
             'client_id'     => 'frontend',
             'client_secret' => 'frontend',
@@ -446,6 +567,16 @@ class AbstractFunctionalTest extends TestCase
         ];
     }
 
+    /**
+     * @return array{
+     *     client_id: non-empty-string,
+     *     client_secret: non-empty-string,
+     *     grant_type: non-empty-string,
+     *     password: non-empty-string,
+     *     scope: non-empty-string,
+     *     username: non-empty-string,
+     * }
+     */
     protected function getInvalidFrontendAccessTokenCredentials(): array
     {
         return [
@@ -458,6 +589,15 @@ class AbstractFunctionalTest extends TestCase
         ];
     }
 
+    /**
+     * @return array{
+     *     grant_type: non-empty-string,
+     *     client_id: non-empty-string,
+     *     client_secret: non-empty-string,
+     *     scope: non-empty-string,
+     *     refresh_token: string|null,
+     * }
+     */
     protected function getValidFrontendRefreshTokenCredentials(): array
     {
         return [
@@ -469,6 +609,15 @@ class AbstractFunctionalTest extends TestCase
         ];
     }
 
+    /**
+     * @return array{
+     *     grant_type: non-empty-string,
+     *     client_id: non-empty-string,
+     *     client_secret: non-empty-string,
+     *     scope: non-empty-string,
+     *     refresh_token: non-empty-string,
+     * }
+     */
     protected function getInvalidFrontendRefreshTokenCredentials(): array
     {
         return [
@@ -480,6 +629,17 @@ class AbstractFunctionalTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<non-empty-string, mixed> $data
+     * @return array{
+     *     client_id: non-empty-string,
+     *     client_secret: non-empty-string,
+     *     grant_type: non-empty-string,
+     *     password: non-empty-string,
+     *     scope: non-empty-string,
+     *     username: non-empty-string,
+     * }
+     */
     protected function getValidAdminAccessTokenCredentials(array $data = []): array
     {
         $adminData = $this->getValidAdminData();
@@ -493,6 +653,16 @@ class AbstractFunctionalTest extends TestCase
         ];
     }
 
+    /**
+     * @return array{
+     *     client_id: non-empty-string,
+     *     client_secret: non-empty-string,
+     *     grant_type: non-empty-string,
+     *     password: non-empty-string,
+     *     scope: non-empty-string,
+     *     username: non-empty-string,
+     * }
+     */
     protected function getInvalidAdminAccessTokenCredentials(): array
     {
         return [
@@ -533,6 +703,7 @@ class AbstractFunctionalTest extends TestCase
     }
 
     /**
+     * @param array<non-empty-string, mixed> $data
      * @throws NotFoundExceptionInterface
      * @throws ContainerExceptionInterface
      */
@@ -541,7 +712,7 @@ class AbstractFunctionalTest extends TestCase
         $userRole = $this->findUserRole(UserRoleEnum::User);
         $this->assertInstanceOf(UserRole::class, $userRole);
 
-        $userData = $this->getValidUserData();
+        $userData = $this->getValidUserData([]);
 
         $user       = new User();
         $userDetail = (new UserDetail())
@@ -569,8 +740,11 @@ class AbstractFunctionalTest extends TestCase
      */
     public function findUserRole(UserRoleEnum $role): ?UserRole
     {
-        $userRoleRepository = $this->getEntityManager()->getRepository(UserRole::class);
+        $userRole = $this->getEntityManager()->getRepository(UserRole::class)->findOneBy(['name' => $role]);
+        if ($userRole instanceof UserRole) {
+            return $userRole;
+        }
 
-        return $userRoleRepository->findOneBy(['name' => $role]);
+        return null;
     }
 }

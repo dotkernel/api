@@ -26,10 +26,11 @@ class UserResetPassword extends AbstractEntity
     protected ?User $user = null;
 
     #[ORM\Column(name: 'expires', type: 'datetime_immutable')]
-    protected ?DateTimeImmutable $expires = null;
+    protected DateTimeImmutable $expires;
 
+    /** @var non-empty-string $hash */
     #[ORM\Column(name: 'hash', type: 'string', length: 191, unique: true)]
-    protected ?string $hash = null;
+    protected string $hash;
 
     #[ORM\Column(
         type: 'user_reset_password_status_enum',
@@ -46,6 +47,7 @@ class UserResetPassword extends AbstractEntity
         $this->expires = DateTimeImmutable::createFromMutable(
             (new DateTime())->add(new DateInterval('P1D'))
         );
+        $this->hash    = User::generateHash();
     }
 
     public function getUser(): ?User
@@ -60,7 +62,7 @@ class UserResetPassword extends AbstractEntity
         return $this;
     }
 
-    public function getExpires(): ?DateTimeImmutable
+    public function getExpires(): DateTimeImmutable
     {
         return $this->expires;
     }
@@ -72,11 +74,14 @@ class UserResetPassword extends AbstractEntity
         return $this;
     }
 
-    public function getHash(): ?string
+    public function getHash(): string
     {
         return $this->hash;
     }
 
+    /**
+     * @param non-empty-string $hash
+     */
     public function setHash(string $hash): self
     {
         $this->hash = $hash;
@@ -117,6 +122,16 @@ class UserResetPassword extends AbstractEntity
         return $this;
     }
 
+    /**
+     * @return array{
+     *     uuid: non-empty-string,
+     *     expires: DateTimeImmutable,
+     *     hash: non-empty-string,
+     *     status: 'completed'|'requested',
+     *     created: DateTimeImmutable,
+     *     updated: DateTimeImmutable|null
+     * }
+     */
     public function getArrayCopy(): array
     {
         return [

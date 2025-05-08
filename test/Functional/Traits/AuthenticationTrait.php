@@ -115,6 +115,16 @@ trait AuthenticationTrait
             ->setRefreshToken($body['refresh_token']);
     }
 
+    /**
+     * @phpstan-param array{
+     *      grant_type: string,
+     *      client_id: string,
+     *      client_secret: string,
+     *      scope: string,
+     *      username: string,
+     *      password: string,
+     * } $bodyParams
+     */
     private function createLoginRequest(array $bodyParams): ServerRequest
     {
         return new ServerRequest(
@@ -131,6 +141,9 @@ trait AuthenticationTrait
         );
     }
 
+    /**
+     * @return array{Authorization: non-empty-string}
+     */
     public function getAuthorizationHeader(): array
     {
         return [

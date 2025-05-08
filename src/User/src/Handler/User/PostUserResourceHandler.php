@@ -50,7 +50,10 @@ class PostUserResourceHandler extends AbstractHandler
             );
         }
 
-        $user = $this->userService->saveUser((array) $this->inputFilter->getValues());
+        /** @var non-empty-array<non-empty-string, mixed> $data */
+        $data = (array) $this->inputFilter->getValues();
+
+        $user = $this->userService->saveUser($data);
         if ($user->isPending()) {
             $this->mailService->sendActivationMail(
                 $user,

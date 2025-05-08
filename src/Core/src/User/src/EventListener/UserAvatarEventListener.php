@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace Core\User\EventListener;
 
+use Core\User\Entity\User;
 use Core\User\Entity\UserAvatar;
 use Dot\DependencyInjection\Attribute\Inject;
 
+use function assert;
 use function rtrim;
 use function sprintf;
 
 class UserAvatarEventListener
 {
+    /**
+     * @param array<non-empty-string, mixed> $config
+     */
     #[Inject(
         'config',
     )]
@@ -37,6 +42,8 @@ class UserAvatarEventListener
 
     private function setAvatarUrl(UserAvatar $avatar): void
     {
+        assert($avatar->getUser() instanceof User);
+
         $avatar->setUrl(
             sprintf(
                 '%s/%s/%s',

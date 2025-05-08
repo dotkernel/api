@@ -9,12 +9,16 @@ use Mezzio\Authentication\UserInterface;
 
 class AdminIdentity implements UserInterface
 {
+    /**
+     * @param non-empty-string[] $roles
+     * @param array<non-empty-string, non-empty-string> $details
+     */
     public function __construct(
         public string $uuid,
         public string $identity,
         public AdminStatusEnum $status,
         public array $roles = [],
-        public array $details = []
+        public array $details = [],
     ) {
     }
 

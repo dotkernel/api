@@ -18,6 +18,9 @@ use function sprintf;
 )]
 class GetIndexResourceHandler extends AbstractHandler
 {
+    /**
+     * @param array<non-empty-string, mixed> $config
+     */
     #[Inject(
         'config.application',
     )]

@@ -8,11 +8,18 @@ use Mezzio\Authentication\UserInterface;
 
 class UserIdentity implements UserInterface
 {
+    /** @var non-empty-string $identity */
     protected string $identity;
-    /** @var array<int|string, string> $roles */
+    /** @var array<int, mixed> $roles */
     protected array $roles;
+    /** @var array<non-empty-string, mixed> $details */
     protected array $details;
 
+    /**
+     * @param non-empty-string $identity
+     * @param array<int, mixed> $roles
+     * @param array<non-empty-string, mixed> $details
+     */
     public function __construct(string $identity, array $roles = [], array $details = [])
     {
         $this->identity = $identity;
@@ -43,6 +50,9 @@ class UserIdentity implements UserInterface
         return $this->details;
     }
 
+    /**
+     * @param array<int, mixed> $roles
+     */
     public function setRoles(array $roles): void
     {
         $this->roles = $roles;

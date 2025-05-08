@@ -30,6 +30,9 @@ class UserAvatarService implements UserAvatarServiceInterface
         'image/png'  => 'png',
     ];
 
+    /**
+     * @param array<non-empty-string, mixed> $config
+     */
     #[Inject(
         UserAvatarRepository::class,
         'config',

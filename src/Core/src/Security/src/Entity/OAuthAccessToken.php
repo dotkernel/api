@@ -20,6 +20,8 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use RuntimeException;
 
+use function is_int;
+
 #[ORM\Entity(repositoryClass: OAuthAccessTokenRepository::class)]
 #[ORM\Table(name: 'oauth_access_tokens')]
 class OAuthAccessToken implements AccessTokenEntityInterface
@@ -42,6 +44,7 @@ class OAuthAccessToken implements AccessTokenEntityInterface
     #[ORM\Column(name: 'revoked', type: 'boolean', options: ['default' => false])]
     private bool $isRevoked = false;
 
+    /** @var Collection<int, ScopeEntityInterface> */
     #[ORM\ManyToMany(targetEntity: OAuthScope::class, inversedBy: 'accessTokens', indexBy: 'id')]
     #[ORM\JoinTable(name: 'oauth_access_token_scopes')]
     #[ORM\JoinColumn(name: 'access_token_id', referencedColumnName: 'id')]
@@ -133,6 +136,10 @@ class OAuthAccessToken implements AccessTokenEntityInterface
      */
     public function setUserIdentifier($identifier): self
     {
+        if (is_int($identifier)) {
+            $identifier = (string) $identifier;
+        }
+
         $this->userId = $identifier;
 
         return $this;
@@ -221,7 +228,7 @@ class OAuthAccessToken implements AccessTokenEntityInterface
             ->issuedAt(new DateTimeImmutable())
             ->canOnlyBeUsedAfter(new DateTimeImmutable())
             ->expiresAt($this->getExpiryDateTime())
-            ->relatedTo($this->getUserIdentifier())
+            ->relatedTo((string) $this->getUserIdentifier())
             ->withClaim('scopes', $this->getScopes())
             ->getToken($this->jwtConfiguration->signer(), $this->jwtConfiguration->signingKey());
     }

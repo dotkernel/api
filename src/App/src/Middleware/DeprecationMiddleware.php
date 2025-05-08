@@ -39,6 +39,9 @@ class DeprecationMiddleware implements MiddlewareInterface
         self::METHOD_DEPRECATION_ATTRIBUTE,
     ];
 
+    /**
+     * @param array<non-empty-string, mixed> $config
+     */
     #[Inject(
         'config.application.versioning',
     )]
@@ -78,6 +81,7 @@ class DeprecationMiddleware implements MiddlewareInterface
             $response = $response->withHeader('sunset', $attribute['sunset']);
         }
 
+        /** @var non-empty-string $baseUrl */
         $baseUrl = $attribute['link'] ?? $this->config['documentation_url'] ?? null;
         if (is_string($baseUrl)) {
             $response = $response->withHeader('link', $this->formatLink($baseUrl, $attribute));
@@ -86,6 +90,10 @@ class DeprecationMiddleware implements MiddlewareInterface
         return $response;
     }
 
+    /**
+     * @param array<int, mixed> $attributes
+     * @return array<non-empty-string, mixed>|null
+     */
     private function getAttribute(array $attributes): ?array
     {
         $attribute = array_values(
@@ -107,6 +115,10 @@ class DeprecationMiddleware implements MiddlewareInterface
         return $attribute;
     }
 
+    /**
+     * @param ReflectionClass<RequestHandlerInterface> $reflectionObject
+     * @return array<int, mixed>
+     */
     private function getReflectionAttributes(ReflectionClass $reflectionObject): array
     {
         $attributes = [];
@@ -127,6 +139,7 @@ class DeprecationMiddleware implements MiddlewareInterface
     }
 
     /**
+     * @param array<int, mixed> $attributes
      * @throws ConflictException
      */
     private function validateAttributes(array $attributes): void
@@ -143,6 +156,11 @@ class DeprecationMiddleware implements MiddlewareInterface
         }
     }
 
+    /**
+     * @param non-empty-string $baseLink
+     * @param array<non-empty-string, mixed> $attribute
+     * @return non-empty-string
+     */
     private function formatLink(string $baseLink, array $attribute): string
     {
         $parts = [

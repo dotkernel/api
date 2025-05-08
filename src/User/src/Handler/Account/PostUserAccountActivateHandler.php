@@ -63,7 +63,7 @@ class PostUserAccountActivateHandler extends AbstractHandler
         );
 
         return $this->infoResponse(
-            Message::mailSentUserActivation($user->getDetail()->getEmail()),
+            Message::mailSentUserActivation($user->getEmail()),
             StatusCodeInterface::STATUS_CREATED
         );
     }

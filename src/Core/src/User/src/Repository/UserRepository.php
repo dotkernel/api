@@ -25,6 +25,10 @@ use function strlen;
 #[Entity(name: User::class)]
 class UserRepository extends AbstractRepository implements UserRepositoryInterface
 {
+    /**
+     * @param array<non-empty-string, mixed> $params
+     * @param array<non-empty-string, mixed> $filters
+     */
     public function getUsers(array $params = [], array $filters = []): QueryBuilder
     {
         $queryBuilder = $this

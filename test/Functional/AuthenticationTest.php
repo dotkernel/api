@@ -95,9 +95,9 @@ class AuthenticationTest extends AbstractFunctionalTest
      */
     public function testRefreshToken(): void
     {
-        $user = $this->createUser();
-
-        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
+        /** @var non-empty-string $identity */
+        $identity = $this->createUser()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD);
 
         $response = $this->post('/security/token', $this->getValidFrontendRefreshTokenCredentials());
         $this->assertResponseOk($response);
@@ -162,6 +162,7 @@ class AuthenticationTest extends AbstractFunctionalTest
     }
 
     /**
+     * @param array<non-empty-string, non-empty-string> $credentials
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

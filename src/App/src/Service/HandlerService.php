@@ -18,6 +18,7 @@ use ReflectionException;
 class HandlerService
 {
     /**
+     * @return ReflectionClass<RequestHandlerInterface>|null
      * @throws ReflectionException
      * @throws RuntimeException
      */
@@ -38,7 +39,7 @@ class HandlerService
             $routeMiddleware instanceof MezzioLazyLoadingMiddleware
             || $routeMiddleware instanceof LazyLoadingMiddleware
         ) {
-            /** @var class-string $routeMiddlewareName */
+            /** @var class-string<RequestHandlerInterface> $routeMiddlewareName */
             $routeMiddlewareName       = $routeMiddleware->middlewareName;
             $reflectionMiddlewareClass = new ReflectionClass($routeMiddlewareName);
             if ($reflectionMiddlewareClass->implementsInterface(RequestHandlerInterface::class)) {
@@ -48,6 +49,7 @@ class HandlerService
             $reflectionClass    = new ReflectionClass($routeMiddleware);
             $middlewarePipeline = $reflectionClass->getProperty('pipeline')->getValue($routeMiddleware);
             for ($middlewarePipeline->rewind(); $middlewarePipeline->valid(); $middlewarePipeline->next()) {
+                /** @var ReflectionClass<RequestHandlerInterface> $reflectionMiddlewareClass */
                 $reflectionMiddlewareClass = new ReflectionClass($middlewarePipeline->current()->middlewareName);
                 if ($reflectionMiddlewareClass->implementsInterface(RequestHandlerInterface::class)) {
                     return $reflectionMiddlewareClass;

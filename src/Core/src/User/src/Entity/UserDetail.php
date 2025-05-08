@@ -7,8 +7,19 @@ namespace Core\User\Entity;
 use Core\App\Entity\AbstractEntity;
 use Core\App\Entity\TimestampsTrait;
 use Core\User\Repository\UserDetailRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @phpstan-type UserDetailType array{
+ *      uuid: non-empty-string,
+ *      firstName: non-empty-string|null,
+ *      lastName: non-empty-string|null,
+ *      email: non-empty-string|null,
+ *      created: DateTimeImmutable,
+ *      updated: DateTimeImmutable|null,
+ *  }
+ */
 #[ORM\Entity(repositoryClass: UserDetailRepository::class)]
 #[ORM\Table(name: 'user_detail')]
 #[ORM\HasLifecycleCallbacks]
@@ -20,12 +31,15 @@ class UserDetail extends AbstractEntity
     #[ORM\JoinColumn(name: 'userUuid', referencedColumnName: 'uuid')]
     protected ?User $user = null;
 
+    /** @var non-empty-string|null $firstName */
     #[ORM\Column(name: 'firstName', type: 'string', length: 191, nullable: true)]
     protected ?string $firstName = null;
 
+    /** @var non-empty-string|null $lastName */
     #[ORM\Column(name: 'lastName', type: 'string', length: 191, nullable: true)]
     protected ?string $lastName = null;
 
+    /** @var non-empty-string|null $email */
     #[ORM\Column(name: 'email', type: 'string', length: 191)]
     protected ?string $email = null;
 
@@ -53,6 +67,9 @@ class UserDetail extends AbstractEntity
         return $this->firstName;
     }
 
+    /**
+     * @param non-empty-string|null $firstName
+     */
     public function setFirstName(?string $firstName): self
     {
         $this->firstName = $firstName;
@@ -65,6 +82,9 @@ class UserDetail extends AbstractEntity
         return $this->lastName;
     }
 
+    /**
+     * @param non-empty-string|null $lastName
+     */
     public function setLastName(?string $lastName): self
     {
         $this->lastName = $lastName;
@@ -82,6 +102,9 @@ class UserDetail extends AbstractEntity
         return $this->email !== null && $this->email !== '';
     }
 
+    /**
+     * @param non-empty-string $email
+     */
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -89,6 +112,9 @@ class UserDetail extends AbstractEntity
         return $this;
     }
 
+    /**
+     * @return UserDetailType
+     */
     public function getArrayCopy(): array
     {
         return [
