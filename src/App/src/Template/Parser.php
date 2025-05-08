@@ -8,7 +8,6 @@ use Dot\DependencyInjection\Attribute\Inject;
 use Mezzio\Helper\UrlHelperInterface;
 
 use function array_key_exists;
-use function assert;
 use function sprintf;
 
 class Parser implements ParserInterface
@@ -48,10 +47,7 @@ class Parser implements ParserInterface
             $baseUrl = $this->globals['application']['url'] ?? '';
         }
 
-        $absoluteUrl = sprintf('%s%s', $baseUrl, $path);
-        assert($absoluteUrl !== '');
-
-        return $absoluteUrl;
+        return sprintf('%s%s', $baseUrl, $path);
     }
 
     public function url(
@@ -61,10 +57,7 @@ class Parser implements ParserInterface
         ?string $fragmentIdentifier = null,
         array $options = []
     ): string {
-        $url = $this->urlHelper->generate($routeName, $routeParams, $queryParams, $fragmentIdentifier, $options);
-        assert($url !== '');
-
-        return $url;
+        return $this->urlHelper->generate($routeName, $routeParams, $queryParams, $fragmentIdentifier, $options);
     }
 
     /**

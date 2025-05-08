@@ -15,7 +15,6 @@ interface ParserInterface
     /**
      * @param non-empty-string $path
      * @param non-empty-string|null $baseUrl
-     * @return non-empty-string
      */
     public function absoluteUrl(string $path, ?string $baseUrl = null): string;
 
@@ -25,7 +24,6 @@ interface ParserInterface
      * @param array<non-empty-string, mixed> $queryParams
      * @param non-empty-string|null $fragmentIdentifier
      * @param array<non-empty-string, mixed> $options
-     * @return non-empty-string
      */
     public function url(
         ?string $routeName = null,
