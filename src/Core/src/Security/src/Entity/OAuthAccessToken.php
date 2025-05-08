@@ -233,13 +233,17 @@ class OAuthAccessToken implements AccessTokenEntityInterface
             throw new RuntimeException('Unable to convert to JWT without config');
         }
 
+        /** @var non-empty-string $audiences */
+        $audiences = $this->getClient()->getIdentifier();
+        /** @var non-empty-string $subject */
+        $subject = (string) $this->getUserIdentifier();
         return $this->jwtConfiguration->builder()
-            ->permittedFor($this->getClient()->getIdentifier())
+            ->permittedFor($audiences)
             ->identifiedBy($this->getIdentifier())
             ->issuedAt(new DateTimeImmutable())
             ->canOnlyBeUsedAfter(new DateTimeImmutable())
             ->expiresAt($this->getExpiryDateTime())
-            ->relatedTo((string) $this->getUserIdentifier())
+            ->relatedTo($subject)
             ->withClaim('scopes', $this->getScopes())
             ->getToken($this->jwtConfiguration->signer(), $this->jwtConfiguration->signingKey());
     }
