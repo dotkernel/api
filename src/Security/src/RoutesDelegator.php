@@ -24,7 +24,8 @@ class RoutesDelegator
         $routeCollector = $container->get(RouteCollectorInterface::class);
 
         $routeCollector->group('/security', ErrorResponseMiddleware::class)
-            ->post('/token', TokenEndpointHandler::class, 'security::token');
+            ->post('/generate-token', TokenEndpointHandler::class, 'security::generate-token')
+            ->post('/refresh-token', TokenEndpointHandler::class, 'security::refresh-token');
 
         return $callback();
     }
