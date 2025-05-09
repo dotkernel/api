@@ -344,7 +344,7 @@ class User extends AbstractEntity implements UserEntityInterface
      *     roles: RoleType[],
      *     created: DateTimeImmutable,
      *     updated: DateTimeImmutable|null,
-     }
+     * }
      */
     public function getArrayCopy(): array
     {
