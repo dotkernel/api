@@ -19,6 +19,7 @@ use PHPUnit\Framework\MockObject\Exception;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+use function assert;
 use function json_decode;
 use function sprintf;
 
@@ -30,8 +31,9 @@ class AdminTest extends AbstractFunctionalTest
      */
     public function testUserCannotListAdminAccounts(): void
     {
-        $user = $this->createUser();
-        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
+        /** @var non-empty-string $identity */
+        $identity = $this->createUser()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD);
 
         $response = $this->get('/admin/account');
 
@@ -44,10 +46,11 @@ class AdminTest extends AbstractFunctionalTest
      */
     public function testUserCannotViewAdminAccount(): void
     {
-        $user  = $this->createUser();
         $admin = $this->createAdmin();
 
-        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
+        /** @var non-empty-string $identity */
+        $identity = $this->createUser()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD);
 
         $response = $this->get('/admin/' . $admin->getUuid()->toString());
 
@@ -60,8 +63,9 @@ class AdminTest extends AbstractFunctionalTest
      */
     public function testUserCannotCreateAdminAccount(): void
     {
-        $user = $this->createUser();
-        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
+        /** @var non-empty-string $identity */
+        $identity = $this->createUser()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD);
 
         $response = $this->post('/admin');
 
@@ -74,10 +78,11 @@ class AdminTest extends AbstractFunctionalTest
      */
     public function testUserCannotUpdateAdminAccount(): void
     {
-        $user  = $this->createUser();
         $admin = $this->createAdmin();
 
-        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
+        /** @var non-empty-string $identity */
+        $identity = $this->createUser()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD);
 
         $response = $this->patch('/admin/' . $admin->getUuid()->toString());
         $this->assertResponseForbidden($response);
@@ -89,10 +94,11 @@ class AdminTest extends AbstractFunctionalTest
      */
     public function testUserCannotDeleteAdminAccount(): void
     {
-        $user  = $this->createUser();
         $admin = $this->createAdmin();
 
-        $this->loginAs($user->getIdentity(), self::DEFAULT_PASSWORD);
+        /** @var non-empty-string $identity */
+        $identity = $this->createUser()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD);
 
         $response = $this->delete('/admin/' . $admin->getUuid()->toString());
         $this->assertResponseForbidden($response);
@@ -104,8 +110,9 @@ class AdminTest extends AbstractFunctionalTest
      */
     public function testAdminCanListAdminAccounts(): void
     {
-        $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+        /** @var non-empty-string $identity */
+        $identity = $this->createAdmin()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->get('/admin/account');
 
@@ -119,7 +126,10 @@ class AdminTest extends AbstractFunctionalTest
     public function testAdminCanViewAdminAccount(): void
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+
+        /** @var non-empty-string $identity */
+        $identity = $admin->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->get('/admin/' . $admin->getUuid()->toString());
         $data     = json_decode($response->getBody()->getContents(), true);
@@ -135,7 +145,10 @@ class AdminTest extends AbstractFunctionalTest
     public function testCannotCreateDuplicateAdminAccount(): void
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+
+        /** @var non-empty-string $identity */
+        $identity = $admin->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $adminRoleRepository = $this->getEntityManager()->getRepository(AdminRole::class);
 
@@ -171,7 +184,10 @@ class AdminTest extends AbstractFunctionalTest
     public function testAdminCanCreateAdminAccount(): void
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+
+        /** @var non-empty-string $identity */
+        $identity = $admin->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $adminRoleRepository = $this->getEntityManager()->getRepository(AdminRole::class);
         $adminRepository     = $this->getEntityManager()->getRepository(Admin::class);
@@ -215,7 +231,10 @@ class AdminTest extends AbstractFunctionalTest
     public function testAdminCanUpdateAdminAccount(): void
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+
+        /** @var non-empty-string $identity */
+        $identity = $admin->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $updateData = [
             'firstName' => 'Test',
@@ -237,7 +256,10 @@ class AdminTest extends AbstractFunctionalTest
     public function testAdminCanDeleteAdminAccount(): void
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+
+        /** @var non-empty-string $identity */
+        $identity = $admin->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->delete('/admin/' . $admin->getUuid()->toString());
 
@@ -256,7 +278,10 @@ class AdminTest extends AbstractFunctionalTest
     public function testAdminCanViewPersonalAccount(): void
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+
+        /** @var non-empty-string $identity */
+        $identity = $admin->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->get('/admin/account');
         $data     = json_decode($response->getBody()->getContents(), true);
@@ -274,8 +299,9 @@ class AdminTest extends AbstractFunctionalTest
      */
     public function testAdminCanUpdatePersonalAccount(): void
     {
-        $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+        /** @var non-empty-string $identity */
+        $identity = $this->createAdmin()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $updateData = [
             'firstName' => 'test',
@@ -296,8 +322,9 @@ class AdminTest extends AbstractFunctionalTest
      */
     public function testAdminCanListAdminRoles(): void
     {
-        $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+        /** @var non-empty-string $identity */
+        $identity = $this->createAdmin()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->get('/admin/role');
 
@@ -311,7 +338,10 @@ class AdminTest extends AbstractFunctionalTest
     public function testAdminCanViewAdminRole(): void
     {
         $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+
+        /** @var non-empty-string $identity */
+        $identity = $admin->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $adminRole = $admin->getRoles()[0];
 
@@ -329,10 +359,11 @@ class AdminTest extends AbstractFunctionalTest
      */
     public function testAdminCreateUserAccountDuplicateEmail(): void
     {
-        $admin = $this->createAdmin();
         $this->createUser(['detail' => ['email' => 'user1@test.com']]);
 
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+        /** @var non-empty-string $identity */
+        $identity = $this->createAdmin()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $userRole = $this->findUserRole(UserRoleEnum::User);
         $this->assertInstanceOf(UserRole::class, $userRole);
@@ -367,8 +398,9 @@ class AdminTest extends AbstractFunctionalTest
      */
     public function testAdminCanCreateUserAccount(): void
     {
-        $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+        /** @var non-empty-string $identity */
+        $identity = $this->createAdmin()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $userRoleRepository = $this->getEntityManager()->getRepository(UserRole::class);
         $userRole           = $userRoleRepository->findOneBy(['name' => UserRoleEnum::User]);
@@ -425,11 +457,13 @@ class AdminTest extends AbstractFunctionalTest
      */
     public function testAdminCanActiveUserAccount(): void
     {
-        $admin = $this->createAdmin();
-        $user  = $this->createUser([
+        $user = $this->createUser([
             'status' => UserStatusEnum::Pending,
         ]);
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+
+        /** @var non-empty-string $identity */
+        $identity = $this->createAdmin()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $this->assertFalse($user->isActive());
         $response = $this->patch(sprintf('/user/%s/activate', $user->getUuid()->toString()));
@@ -438,8 +472,9 @@ class AdminTest extends AbstractFunctionalTest
 
         $userRepository = $this->getEntityManager()->getRepository(User::class);
         $user           = $userRepository->find($user->getUuid()->toString());
+        assert($user instanceof User);
 
-        $this->assertTrue($user?->isActive());
+        $this->assertTrue($user->isActive());
     }
 
     /**
@@ -448,9 +483,11 @@ class AdminTest extends AbstractFunctionalTest
      */
     public function testAdminCanDeleteUserAccount(): void
     {
-        $admin = $this->createAdmin();
-        $user  = $this->createUser();
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+        $user = $this->createUser();
+
+        /** @var non-empty-string $identity */
+        $identity = $this->createAdmin()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->delete('/user/' . $user->getUuid()->toString());
 
@@ -458,8 +495,9 @@ class AdminTest extends AbstractFunctionalTest
 
         $userRepository = $this->getEntityManager()->getRepository(User::class);
         $user           = $userRepository->find($user->getUuid()->toString());
+        assert($user instanceof User);
 
-        $this->assertTrue($user?->isDeleted());
+        $this->assertTrue($user->isDeleted());
     }
 
     /**
@@ -468,8 +506,9 @@ class AdminTest extends AbstractFunctionalTest
      */
     public function testAdminCanListUserAccounts(): void
     {
-        $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+        /** @var non-empty-string $identity */
+        $identity = $this->createAdmin()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->get('/user');
 
@@ -482,11 +521,14 @@ class AdminTest extends AbstractFunctionalTest
      */
     public function testAdminUpdateUserAccountDuplicateEmail(): void
     {
-        $admin = $this->createAdmin();
         $user1 = $this->createUser(['identity' => 'user1@test.com', 'detail' => ['email' => 'user1@test.com']]);
         $user2 = $this->createUser(['identity' => 'user2@test.com', 'detail' => ['email' => 'user2@test.com']]);
+        $this->assertInstanceOf(UserDetail::class, $user1->getDetail());
+        $this->assertInstanceOf(UserDetail::class, $user2->getDetail());
 
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+        /** @var non-empty-string $identity */
+        $identity = $this->createAdmin()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->patch('/user/' . $user2->getUuid()->toString(), [
             'detail' => [
@@ -502,7 +544,9 @@ class AdminTest extends AbstractFunctionalTest
 
         $userDetailRepository = $this->getEntityManager()->getRepository(UserDetail::class);
         $userDetail           = $userDetailRepository->find($user2->getDetail()->getUuid());
-        $this->assertSame($user2->getDetail()->getEmail(), $userDetail?->getEmail());
+        assert($userDetail instanceof UserDetail);
+
+        $this->assertSame($user2->getDetail()->getEmail(), $userDetail->getEmail());
     }
 
     /**
@@ -512,10 +556,13 @@ class AdminTest extends AbstractFunctionalTest
     public function testAdminCanUpdateUserAccount(): void
     {
         $userRole = $this->findUserRole(UserRoleEnum::User);
+        $this->assertInstanceOf(UserRole::class, $userRole);
 
-        $user  = $this->createUser();
-        $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+        $user = $this->createUser();
+
+        /** @var non-empty-string $identity */
+        $identity = $this->createAdmin()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $updateData = [
             'detail' => [
@@ -550,9 +597,11 @@ class AdminTest extends AbstractFunctionalTest
      */
     public function testAdminCanViewUserAccount(): void
     {
-        $user  = $this->createUser();
-        $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+        $user = $this->createUser();
+
+        /** @var non-empty-string $identity */
+        $identity = $this->createAdmin()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $response = $this->get('/user/' . $user->getUuid()->toString());
 
@@ -568,11 +617,11 @@ class AdminTest extends AbstractFunctionalTest
      */
     public function testAdminViewNotFoundUserAccount(): void
     {
-        $user  = new User();
-        $admin = $this->createAdmin();
-        $this->loginAs($admin->getIdentity(), self::DEFAULT_PASSWORD, 'admin', 'admin');
+        /** @var non-empty-string $identity */
+        $identity = $this->createAdmin()->getIdentity();
+        $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
-        $response = $this->get('/user/' . $user->getUuid()->toString());
+        $response = $this->get('/user/' . (new User())->getUuid()->toString());
 
         $this->assertResponseNotFound($response);
     }

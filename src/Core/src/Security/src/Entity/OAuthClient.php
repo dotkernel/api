@@ -26,7 +26,7 @@ class OAuthClient implements ClientEntityInterface
     private ?User $user = null;
 
     #[ORM\Column(name: 'name', type: 'string', length: 40)]
-    private string $name = '';
+    private string $name;
 
     #[ORM\Column(name: 'secret', type: 'string', length: 100, nullable: true)]
     private ?string $secret = null;

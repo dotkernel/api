@@ -64,6 +64,9 @@ abstract class AbstractHandler implements RequestHandlerInterface
         return new EmptyResponse($status, ['Content-Type' => 'text/plain']);
     }
 
+    /**
+     * @param non-empty-string[]|non-empty-string $messages
+     */
     public function infoResponse(
         array|string $messages = [],
         int $status = StatusCodeInterface::STATUS_OK
@@ -75,8 +78,11 @@ abstract class AbstractHandler implements RequestHandlerInterface
         ], $status);
     }
 
+    /**
+     * @param non-empty-string|non-empty-array<int|non-empty-string, mixed> $messages
+     */
     public function jsonResponse(
-        array|string $messages = [],
+        array|string $messages,
         int $status = StatusCodeInterface::STATUS_OK
     ): ResponseInterface {
         return new JsonResponse($messages, $status);

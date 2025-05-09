@@ -25,7 +25,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 use ReflectionException;
 
 use function implode;
-use function rtrim;
 use function sprintf;
 
 class DeprecationMiddlewareTest extends TestCase
@@ -137,8 +136,9 @@ class DeprecationMiddlewareTest extends TestCase
     }
 
     /**
-     * @throws ReflectionException
+     * @throws ConflictException
      * @throws Exception
+     * @throws ReflectionException
      */
     public function testMiddlewarePipeline(): void
     {
@@ -200,8 +200,9 @@ class DeprecationMiddlewareTest extends TestCase
     }
 
     /**
-     * @throws ReflectionException
+     * @throws ConflictException
      * @throws Exception
+     * @throws ReflectionException
      */
     public function testDefaultLink(): void
     {
@@ -238,8 +239,9 @@ class DeprecationMiddlewareTest extends TestCase
     }
 
     /**
-     * @throws ReflectionException
+     * @throws ConflictException
      * @throws Exception
+     * @throws ReflectionException
      */
     public function testDynamicLink(): void
     {
@@ -278,6 +280,7 @@ class DeprecationMiddlewareTest extends TestCase
     /**
      * @throws ReflectionException
      * @throws Exception
+     * @throws ConflictException
      */
     public function testSunset(): void
     {
@@ -310,6 +313,11 @@ class DeprecationMiddlewareTest extends TestCase
         $this->assertSame('2038-01-01', $response->getHeader('sunset')[0]);
     }
 
+    /**
+     * @param non-empty-string $baseLink
+     * @param array<non-empty-string, mixed> $attribute
+     * @return non-empty-string
+     */
     private function formatLink(string $baseLink, array $attribute): string
     {
         $parts = [
@@ -322,6 +330,6 @@ class DeprecationMiddlewareTest extends TestCase
             $parts[] = sprintf('type="%s"', $attribute['type']);
         }
 
-        return rtrim(implode(';', $parts), ';');
+        return implode(';', $parts);
     }
 }

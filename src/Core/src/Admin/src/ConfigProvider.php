@@ -10,10 +10,35 @@ use Core\Admin\Repository\AdminLoginRepository;
 use Core\Admin\Repository\AdminRepository;
 use Core\Admin\Repository\AdminRoleRepository;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Dot\DependencyInjection\Factory\AttributedRepositoryFactory;
 
+/**
+ * @phpstan-type DoctrineConfigType array{
+ *      driver: array{
+ *          orm_default: array{
+ *              drivers: array<non-empty-string, non-empty-string>,
+ *          },
+ *          AdminEntities: array{
+ *              class: class-string<MappingDriver>,
+ *              cache: non-empty-string,
+ *              paths: non-empty-string[],
+ *          },
+ *      },
+ *      types: array<non-empty-string, class-string>,
+ * }
+ * @phpstan-type DependenciesType array{
+ *       factories: array<class-string, class-string>,
+ * }
+ */
 class ConfigProvider
 {
+    /**
+     * @return array{
+     *     dependencies: DependenciesType,
+     *     doctrine: DoctrineConfigType,
+     * }
+     */
     public function __invoke(): array
     {
         return [
@@ -22,6 +47,9 @@ class ConfigProvider
         ];
     }
 
+    /**
+     * @return DependenciesType
+     */
     private function getDependencies(): array
     {
         return [
@@ -33,6 +61,9 @@ class ConfigProvider
         ];
     }
 
+    /**
+     * @return DoctrineConfigType
+     */
     private function getDoctrineConfig(): array
     {
         return [

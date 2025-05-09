@@ -42,9 +42,9 @@ class PostAdminResourceHandler extends AbstractHandler
             );
         }
 
-        return $this->createdResponse(
-            $request,
-            $this->adminService->saveAdmin((array) $this->inputFilter->getValues())
-        );
+        /** @var non-empty-array<non-empty-string, mixed> $data */
+        $data = (array) $this->inputFilter->getValues();
+
+        return $this->createdResponse($request, $this->adminService->saveAdmin($data));
     }
 }

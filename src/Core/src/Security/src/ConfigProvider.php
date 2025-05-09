@@ -10,10 +10,34 @@ use Core\Security\Repository\OAuthClientRepository;
 use Core\Security\Repository\OAuthRefreshTokenRepository;
 use Core\Security\Repository\OAuthScopeRepository;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Dot\DependencyInjection\Factory\AttributedRepositoryFactory;
 
+/**
+ * @phpstan-type DoctrineConfigType array{
+ *      driver: array{
+ *          orm_default: array{
+ *              drivers: array<string, string>,
+ *          },
+ *          SecurityEntities: array{
+ *              class: class-string<MappingDriver>,
+ *              cache: string,
+ *              paths: array<string>,
+ *          },
+ *      }
+ * }
+ * @phpstan-type DependenciesType array{
+ *       factories: array<class-string, class-string>,
+ * }
+ */
 class ConfigProvider
 {
+    /**
+     * @return array{
+     *     dependencies: DependenciesType,
+     *     doctrine: DoctrineConfigType,
+     * }
+     */
     public function __invoke(): array
     {
         return [
@@ -22,6 +46,9 @@ class ConfigProvider
         ];
     }
 
+    /**
+     * @return DependenciesType
+     */
     private function getDependencies(): array
     {
         return [
@@ -35,6 +62,9 @@ class ConfigProvider
         ];
     }
 
+    /**
+     * @return DoctrineConfigType
+     */
     private function getDoctrineConfig(): array
     {
         return [

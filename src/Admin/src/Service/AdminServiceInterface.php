@@ -23,11 +23,12 @@ interface AdminServiceInterface
     public function findAdmin(string $uuid): Admin;
 
     /**
-     * @param array<string, mixed> $params
+     * @param array<non-empty-string, mixed> $params
      */
     public function getAdmins(array $params): QueryBuilder;
 
     /**
+     * @param non-empty-array<non-empty-string, mixed> $data
      * @throws BadRequestException
      * @throws ConflictException
      * @throws NotFoundException

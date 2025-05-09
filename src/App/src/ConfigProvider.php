@@ -30,8 +30,35 @@ use Mezzio\Hal\Metadata\RouteBasedCollectionMetadata;
 use Mezzio\Hal\Metadata\RouteBasedResourceMetadata;
 use Mezzio\ProblemDetails\ProblemDetailsMiddleware;
 
+/**
+ * @phpstan-type CollectionType array{
+ *      __class__: class-string,
+ *      collection_class: class-string,
+ *      collection_relation: non-empty-string,
+ *      route: non-empty-string,
+ *  }
+ * @phpstan-type ResourceType array{
+ *      __class__: class-string,
+ *      resource_class: class-string,
+ *      route: non-empty-string,
+ *      extractor: class-string,
+ *      resource_identifier: non-empty-string,
+ *      route_identifier_placeholder: non-empty-string,
+ *  }
+ * @phpstan-type MetadataType CollectionType|ResourceType
+ * @phpstan-type DependenciesType array{
+ *      delegators: array<class-string, class-string[]>,
+ *      factories: array<class-string, class-string>,
+ *      aliases: array<class-string, class-string>,
+ *  }
+ */
 class ConfigProvider
 {
+    /**
+     * @return array{
+     *     dependencies: DependenciesType,
+     * }
+     */
     public function __invoke(): array
     {
         return [
@@ -39,6 +66,9 @@ class ConfigProvider
         ];
     }
 
+    /**
+     * @return DependenciesType
+     */
     private function getDependencies(): array
     {
         return [
@@ -73,6 +103,9 @@ class ConfigProvider
 
     /**
      * @param class-string $collectionClass
+     * @param non-empty-string $route
+     * @param non-empty-string $collectionRelation
+     * @return CollectionType
      */
     public static function getCollection(string $collectionClass, string $route, string $collectionRelation): array
     {
@@ -86,6 +119,10 @@ class ConfigProvider
 
     /**
      * @param class-string $resourceClass
+     * @param non-empty-string $route
+     * @param non-empty-string $resourceIdentifier
+     * @param non-empty-string $resourceIdentifierPlaceholder
+     * @return ResourceType
      */
     public static function getResource(
         string $resourceClass,

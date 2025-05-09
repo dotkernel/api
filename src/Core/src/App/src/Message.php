@@ -74,31 +74,50 @@ class Message
     public const VALIDATOR_REQUIRED_FIELD     = 'This field is required and cannot be empty.';
     public const VALIDATOR_REQUIRED_UPLOAD    = 'A file must be uploaded first.';
 
+    /**
+     * @return non-empty-string
+     */
     public static function invalidConfig(string $config): string
     {
         return sprintf(self::INVALID_CONFIG, $config);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function invalidValue(string $value): string
     {
         return sprintf(self::INVALID_VALUE, $value);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function missingConfig(string $config): string
     {
         return sprintf(self::MISSING_CONFIG, $config);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function mailNotSentTo(string $email): string
     {
         return sprintf(self::MAIL_NOT_SENT_TO, $email);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function mailSentUserActivation(string $email): string
     {
         return sprintf(self::MAIL_SENT_USER_ACTIVATION, $email);
     }
 
+    /**
+     * @param string[] $types
+     * @return non-empty-string
+     */
     public static function notAcceptable(array $types = []): string
     {
         if (count($types) === 0) {
@@ -108,41 +127,67 @@ class Message
         return sprintf('%s Supported types: %s', self::NOT_ACCEPTABLE, implode(', ', $types));
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function resourceAlreadyRegistered(string $resource): string
     {
         return sprintf(self::RESOURCE_ALREADY_REGISTERED, $resource);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function resourceNotFound(string $resource = 'Resource'): string
     {
         return sprintf(self::RESOURCE_NOT_FOUND, $resource);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function restrictionDeprecation(string $first, string $second): string
     {
         return sprintf(self::RESTRICTION_DEPRECATION, $first, $second);
     }
 
+    /**
+     * @param string[] $mimeTypes
+     * @return non-empty-string
+     */
     public static function restrictionImage(array $mimeTypes): string
     {
         return sprintf(self::RESTRICTION_IMAGE, implode(',', $mimeTypes));
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function serviceNotFound(string $service): string
     {
         return sprintf(self::SERVICE_NOT_FOUND, $service);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function settingNotFound(string $identifier): string
     {
         return sprintf(self::SETTING_NOT_FOUND, $identifier);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function templateNotFound(string $template): string
     {
         return sprintf(self::TEMPLATE_NOT_FOUND, $template);
     }
 
+    /**
+     * @param string[] $types
+     * @return non-empty-string
+     */
     public static function unsupportedMediaType(array $types = []): string
     {
         if (count($types) === 0) {
@@ -152,21 +197,33 @@ class Message
         return sprintf('%s Supported types: %s', self::UNSUPPORTED_MEDIA_TYPE, implode(', ', $types));
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function validatorLengthMax(int $max): string
     {
         return sprintf(self::VALIDATOR_LENGTH_MAX, $max);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function validatorLengthMin(int $min): string
     {
         return sprintf(self::VALIDATOR_LENGTH_MIN, $min);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function validatorLengthMinMax(int $min, int $max): string
     {
         return sprintf(self::VALIDATOR_LENGTH_MIN_MAX, $min, $max);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function validatorMismatch(string $first, string $second): string
     {
         return sprintf(self::VALIDATOR_MISMATCH, $first, $second);

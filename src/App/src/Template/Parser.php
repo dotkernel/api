@@ -12,8 +12,12 @@ use function sprintf;
 
 class Parser implements ParserInterface
 {
+    /** @var array<non-empty-string, mixed> $globals */
     protected array $globals = [];
 
+    /**
+     * @param array<non-empty-string, mixed> $config
+     */
     #[Inject(
         UrlHelperInterface::class,
         'config',
@@ -56,11 +60,18 @@ class Parser implements ParserInterface
         return $this->urlHelper->generate($routeName, $routeParams, $queryParams, $fragmentIdentifier, $options);
     }
 
+    /**
+     * @return array<non-empty-string, mixed>
+     */
     public function getGlobals(): array
     {
         return $this->globals;
     }
 
+    /**
+     * @param array<non-empty-string, mixed> $config
+     * @return array<non-empty-string, mixed>
+     */
     public function prepareGlobals(array $config = []): array
     {
         $globals = $config[RendererInterface::class]['globals'] ?? [];

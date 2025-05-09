@@ -12,6 +12,9 @@ use Core\User\Enum\UserRoleEnum;
 use Core\User\Repository\UserRoleRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @phpstan-import-type RoleType from RoleInterface
+ */
 #[ORM\Entity(repositoryClass: UserRoleRepository::class)]
 #[ORM\Table(name: 'user_role')]
 #[ORM\HasLifecycleCallbacks]
@@ -35,7 +38,7 @@ class UserRole extends AbstractEntity implements RoleInterface
         $this->created();
     }
 
-    public function getName(): ?UserRoleEnum
+    public function getName(): UserRoleEnum
     {
         return $this->name;
     }
@@ -50,6 +53,9 @@ class UserRole extends AbstractEntity implements RoleInterface
         return $this;
     }
 
+    /**
+     * @return RoleType
+     */
     public function getArrayCopy(): array
     {
         return [

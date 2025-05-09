@@ -12,6 +12,8 @@ use Core\App\Resolver\EntityListenerResolver;
 use Core\App\Service\MailService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\EntityListenerResolver as EntityListenerResolverInterface;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Dot\Cache\Adapter\ArrayAdapter;
 use Dot\Cache\Adapter\FilesystemAdapter;
@@ -25,13 +27,80 @@ use Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType;
 use Ramsey\Uuid\Doctrine\UuidBinaryType;
 use Ramsey\Uuid\Doctrine\UuidType;
 use Roave\PsrContainerDoctrine\EntityManagerFactory;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 
 use function getcwd;
 
+/**
+ * @phpstan-type DoctrineConfigType array{
+ *      cache: array{
+ *          array: array{
+ *              class: class-string<AdapterInterface>,
+ *          },
+ *          filesystem: array{
+ *              class: class-string<AdapterInterface>,
+ *              directory: non-empty-string,
+ *              namespace: non-empty-string,
+ *          },
+ *      },
+ *      configuration: array{
+ *          orm_default: array{
+ *              entity_listener_resolver: class-string<EntityListenerResolverInterface>,
+ *              result_cache: non-empty-string,
+ *              metadata_cache: non-empty-string,
+ *              query_cache: non-empty-string,
+ *              hydration_cache: non-empty-string,
+ *              typed_field_mapper: non-empty-string|null,
+ *              second_level_cache: array{
+ *                  enabled: bool,
+ *                  default_lifetime: int,
+ *                  default_lock_lifetime: int,
+ *                  file_lock_region_directory: string,
+ *                  regions: non-empty-string[],
+ *               },
+ *          },
+ *      },
+ *      connection: array{
+ *          orm_default: array{
+ *              doctrine_mapping_types: array<non-empty-string, non-empty-string>,
+ *          },
+ *      },
+ *      driver: array{
+ *          orm_default: array{
+ *              class: class-string<MappingDriver>,
+ *          },
+ *      },
+ *      fixtures: non-empty-string,
+ *      migrations: array{
+ *          table_storage: array{
+ *              table_name: non-empty-string,
+ *              version_column_name: non-empty-string,
+ *              version_column_length: int,
+ *              executed_at_column_name: non-empty-string,
+ *              execution_time_column_name: non-empty-string,
+ *          },
+ *          migrations_paths: array<non-empty-string, non-empty-string>,
+ *          all_or_nothing: bool,
+ *          check_database_platform: bool,
+ *      },
+ *      types: array<non-empty-string, class-string>,
+ * }
+ * @phpstan-type DependenciesType array{
+ *       factories: array<class-string|non-empty-string, class-string|non-empty-string>,
+ *       aliases: array<class-string|non-empty-string, class-string|non-empty-string>,
+ * }
+ */
 class ConfigProvider
 {
     public const REGEXP_UUID = '{uuid:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}';
 
+    /**
+     * @return array{
+     *     dependencies: DependenciesType,
+     *     doctrine: DoctrineConfigType,
+     *     resultCacheLifetime: int,
+     * }
+     */
     public function __invoke(): array
     {
         return [
@@ -41,6 +110,9 @@ class ConfigProvider
         ];
     }
 
+    /**
+     * @return DependenciesType
+     */
     private function getDependencies(): array
     {
         return [
@@ -61,6 +133,9 @@ class ConfigProvider
         ];
     }
 
+    /**
+     * @return DoctrineConfigType
+     */
     private function getDoctrineConfig(): array
     {
         return [
@@ -100,8 +175,8 @@ class ConfigProvider
                 ],
             ],
             'driver'        => [
-                // default metadata driver, aggregates all other drivers into a single one.
-                // Override `orm_default` only if you know what you're doing
+                // The default metadata driver aggregates all other drivers into a single one.
+                // Override `orm_default` only if you know what you're doing.
                 'orm_default' => [
                     'class' => MappingDriverChain::class,
                 ],

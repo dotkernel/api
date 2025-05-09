@@ -9,6 +9,9 @@ const ENVIRONMENT_PRODUCTION  = 'production';
 
 // phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
 
+/**
+ * @param array{source: string, destination: string, environment: array<string>} $file
+ */
 function copyFile(array $file): void
 {
     if (! in_array(getEnvironment(), $file['environment'])) {
@@ -33,8 +36,11 @@ function getEnvironment(): string
     return getenv('COMPOSER_DEV_MODE') === '1' ? ENVIRONMENT_DEVELOPMENT : ENVIRONMENT_PRODUCTION;
 }
 
-// when adding files to the below array the `source` and `destination` paths must be relative to the project root folder
-// the `environment` key will indicate on what environments the file will be copied,
+/**
+ * When adding files to the below array:
+ * - `source` and `destination` paths must be relative to the project root folder
+ * - `environment` key will indicate on what environments the file will be copied
+ */
 $files = [
     [
         'source'      => 'config/autoload/local.php.dist',

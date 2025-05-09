@@ -16,6 +16,10 @@ use function strlen;
 #[Entity(name: Admin::class)]
 class AdminRepository extends AbstractRepository
 {
+    /**
+     * @param array<non-empty-string, mixed> $params
+     * @param array<non-empty-string, mixed> $filters
+     */
     public function getAdmins(array $params = [], array $filters = []): QueryBuilder
     {
         $queryBuilder = $this

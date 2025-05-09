@@ -17,6 +17,9 @@ use function json_encode;
 
 class ErrorResponseMiddleware implements MiddlewareInterface
 {
+    /**
+     * @param array<non-empty-string, mixed> $config
+     */
     #[Inject(
         'config.authentication',
     )]
@@ -36,7 +39,7 @@ class ErrorResponseMiddleware implements MiddlewareInterface
                 $body->message           = $this->config['invalid_credentials']['message'];
 
                 $stream = new Stream('php://temp', 'wb+');
-                $stream->write(json_encode($body));
+                $stream->write((string) json_encode($body));
 
                 return $response->withBody($stream);
             }

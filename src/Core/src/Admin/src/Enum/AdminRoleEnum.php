@@ -11,6 +11,9 @@ enum AdminRoleEnum: string
     case Admin     = 'admin';
     case Superuser = 'superuser';
 
+    /**
+     * @return non-empty-string[]
+     */
     public static function values(): array
     {
         return array_column(self::cases(), 'value');

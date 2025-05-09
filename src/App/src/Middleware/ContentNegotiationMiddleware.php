@@ -33,6 +33,9 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
 {
     public const DEFAULT_HEADERS = 'default';
 
+    /**
+     * @param array<non-empty-string, mixed> $config
+     */
     #[Inject(
         'config.content-negotiation',
     )]
@@ -54,6 +57,7 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
+        /** @var non-empty-string $routeName */
         $routeName = (string) $routeResult->getMatchedRouteName();
 
         // Parse Accept header including quality values
@@ -85,6 +89,9 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         return $response;
     }
 
+    /**
+     * @return non-empty-array<int, non-empty-array<non-empty-string, mixed>>|array{}
+     */
     private function parseAcceptHeader(string $header): array
     {
         if (empty($header)) {
@@ -126,6 +133,10 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         return $types;
     }
 
+    /**
+     * @param non-empty-string $header
+     * @return non-empty-array<non-empty-string, mixed>|array{}
+     */
     private function parseContentTypeHeader(string $header): array
     {
         if (empty($header)) {
@@ -148,6 +159,11 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         ];
     }
 
+    /**
+     * @param non-empty-string $routeName
+     * @param non-empty-string $headerType
+     * @return non-empty-string[]|array{}
+     */
     private function getConfiguredTypes(string $routeName, string $headerType): array
     {
         $types = $this->config[self::DEFAULT_HEADERS][$headerType] ?? [];
@@ -158,6 +174,10 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         return is_array($types) ? $types : [$types];
     }
 
+    /**
+     * @param non-empty-array<int, non-empty-array<non-empty-string, mixed>>|array{} $acceptedTypes
+     * @param non-empty-string[]|array{} $supportedTypes
+     */
     private function isAcceptable(array $acceptedTypes, array $supportedTypes): bool
     {
         foreach ($acceptedTypes as $accept) {
@@ -168,7 +188,7 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
 
             // Type a wildcard like image/*
             if (str_ends_with($accept['mediaType'], '/*')) {
-                $prefix = substr($accept['mediaType'], 0, strpos($accept['mediaType'], '/*'));
+                $prefix = substr($accept['mediaType'], 0, (int) strpos($accept['mediaType'], '/*'));
                 foreach ($supportedTypes as $supported) {
                     if (str_starts_with($supported, $prefix . '/')) {
                         return true;
@@ -185,6 +205,10 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         return false;
     }
 
+    /**
+     * @param non-empty-array<non-empty-string, mixed>|array{} $contentType
+     * @param non-empty-string[]|array{} $supportedTypes
+     */
     private function isContentTypeSupported(array $contentType, array $supportedTypes): bool
     {
         if (empty($contentType)) {
@@ -194,7 +218,10 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         return in_array($contentType['mediaType'], $supportedTypes, true);
     }
 
-    private function isResponseContentTypeValid(?string $responseType, array $acceptedTypes): bool
+    /**
+     * @param non-empty-array<int, non-empty-array<non-empty-string, mixed>>|array{} $acceptedTypes
+     */
+    private function isResponseContentTypeValid(string $responseType, array $acceptedTypes): bool
     {
         if (empty($responseType)) {
             return true;
@@ -212,7 +239,7 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
 
             // Type a wildcard like image/*
             if (str_ends_with($accept['mediaType'], '/*')) {
-                $prefix = substr($accept['mediaType'], 0, strpos($accept['mediaType'], '/*'));
+                $prefix = substr($accept['mediaType'], 0, (int) strpos($accept['mediaType'], '/*'));
                 if (str_starts_with($mediaType, $prefix . '/')) {
                     return true;
                 }

@@ -7,13 +7,14 @@ namespace Core\App\Entity;
 use Core\User\Entity\UserRole;
 use Core\User\Enum\UserRoleEnum;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 class Guest
 {
     protected string $identity = UserRoleEnum::Guest->value;
 
-    /** @var ArrayCollection<int, UserRole> */
-    protected ArrayCollection $roles;
+    /** @var Collection<int, RoleInterface> */
+    protected Collection $roles;
 
     public function __construct()
     {
@@ -36,14 +37,22 @@ class Guest
         return $this;
     }
 
+    /**
+     * @return RoleInterface[]
+     */
     public function getRoles(): array
     {
         return $this->roles->toArray();
     }
 
-    public function setRoles(ArrayCollection $roles): self
+    /**
+     * @param RoleInterface[] $roles
+     */
+    public function setRoles(array $roles): self
     {
-        $this->roles = $roles;
+        foreach ($roles as $role) {
+            $this->roles->add($role);
+        }
 
         return $this;
     }

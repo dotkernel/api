@@ -7,14 +7,18 @@ namespace ApiTest\Unit\App\Attribute;
 use Api\App\Attribute\MethodDeprecation;
 use Api\App\Exception\SunsetException;
 use Api\App\Middleware\DeprecationMiddleware;
+use Laminas\Diactoros\Response\JsonResponse;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use ReflectionClass;
 
 class MethodDeprecationTest extends TestCase
 {
     public function testInvalidDateThrowsException(): void
     {
-        $class = new class {
+        $class = new class implements RequestHandlerInterface{
             #[MethodDeprecation(
                 sunset: 'invalid-01-01',
                 link: 'test-link',
@@ -22,6 +26,11 @@ class MethodDeprecationTest extends TestCase
             )]
             public function test(): void
             {
+            }
+
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                return new JsonResponse('test');
             }
         };
 
@@ -35,7 +44,7 @@ class MethodDeprecationTest extends TestCase
 
     public function testValidDatePassesValidation(): void
     {
-        $class = new class {
+        $class = new class implements RequestHandlerInterface{
             #[MethodDeprecation(
                 sunset: '2038-01-01',
                 link: 'test-link',
@@ -43,6 +52,11 @@ class MethodDeprecationTest extends TestCase
             )]
             public function test(): void
             {
+            }
+
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                return new JsonResponse('test');
             }
         };
 
@@ -58,7 +72,7 @@ class MethodDeprecationTest extends TestCase
 
     public function testToArray(): void
     {
-        $class = new class {
+        $class = new class implements RequestHandlerInterface{
             #[MethodDeprecation(
                 sunset: '2038-01-01',
                 link: 'test-link',
@@ -68,6 +82,11 @@ class MethodDeprecationTest extends TestCase
             )]
             public function test(): void
             {
+            }
+
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                return new JsonResponse('test');
             }
         };
 
@@ -96,6 +115,10 @@ class MethodDeprecationTest extends TestCase
         $this->assertSame(DeprecationMiddleware::METHOD_DEPRECATION_ATTRIBUTE, $array['deprecationType']);
     }
 
+    /**
+     * @param ReflectionClass<RequestHandlerInterface> $reflectionClass
+     * @return array<int, mixed>
+     */
     private function getAttributes(ReflectionClass $reflectionClass): array
     {
         $methods = $reflectionClass->getMethods();

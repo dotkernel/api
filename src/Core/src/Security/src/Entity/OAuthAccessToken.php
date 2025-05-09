@@ -20,6 +20,8 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use RuntimeException;
 
+use function is_int;
+
 #[ORM\Entity(repositoryClass: OAuthAccessTokenRepository::class)]
 #[ORM\Table(name: 'oauth_access_tokens')]
 class OAuthAccessToken implements AccessTokenEntityInterface
@@ -36,12 +38,14 @@ class OAuthAccessToken implements AccessTokenEntityInterface
     #[ORM\Column(name: 'user_id', type: 'string', length: 25, nullable: true)]
     private ?string $userId;
 
+    /** @var non-empty-string $token */
     #[ORM\Column(name: 'token', type: 'string', length: 100)]
     private string $token;
 
     #[ORM\Column(name: 'revoked', type: 'boolean', options: ['default' => false])]
     private bool $isRevoked = false;
 
+    /** @var Collection<int, ScopeEntityInterface> */
     #[ORM\ManyToMany(targetEntity: OAuthScope::class, inversedBy: 'accessTokens', indexBy: 'id')]
     #[ORM\JoinTable(name: 'oauth_access_token_scopes')]
     #[ORM\JoinColumn(name: 'access_token_id', referencedColumnName: 'id')]
@@ -84,11 +88,17 @@ class OAuthAccessToken implements AccessTokenEntityInterface
         return $this->client;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getToken(): string
     {
         return $this->token;
     }
 
+    /**
+     * @param non-empty-string $token
+     */
     public function setToken(string $token): self
     {
         $this->token = $token;
@@ -115,6 +125,9 @@ class OAuthAccessToken implements AccessTokenEntityInterface
         return $this;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getIdentifier(): string
     {
         return $this->getToken();
@@ -133,6 +146,10 @@ class OAuthAccessToken implements AccessTokenEntityInterface
      */
     public function setUserIdentifier($identifier): self
     {
+        if (is_int($identifier)) {
+            $identifier = (string) $identifier;
+        }
+
         $this->userId = $identifier;
 
         return $this;
@@ -195,12 +212,13 @@ class OAuthAccessToken implements AccessTokenEntityInterface
             throw new RuntimeException('Unable to init JWT without private key');
         }
 
+        /** @var non-empty-string $keyContents */
+        $keyContents = $this->privateKey->getKeyContents();
+        $passphrase  = (string) $this->privateKey->getPassPhrase();
+
         $this->jwtConfiguration = Configuration::forAsymmetricSigner(
             new Sha256(),
-            InMemory::plainText(
-                $this->privateKey->getKeyContents(),
-                $this->privateKey->getPassPhrase() ?? ''
-            ),
+            InMemory::plainText($keyContents, $passphrase),
             InMemory::plainText('/')
         );
 
@@ -215,13 +233,17 @@ class OAuthAccessToken implements AccessTokenEntityInterface
             throw new RuntimeException('Unable to convert to JWT without config');
         }
 
+        /** @var non-empty-string $audiences */
+        $audiences = $this->getClient()->getIdentifier();
+        /** @var non-empty-string $subject */
+        $subject = (string) $this->getUserIdentifier();
         return $this->jwtConfiguration->builder()
-            ->permittedFor($this->getClient()->getIdentifier())
+            ->permittedFor($audiences)
             ->identifiedBy($this->getIdentifier())
             ->issuedAt(new DateTimeImmutable())
             ->canOnlyBeUsedAfter(new DateTimeImmutable())
             ->expiresAt($this->getExpiryDateTime())
-            ->relatedTo($this->getUserIdentifier())
+            ->relatedTo($subject)
             ->withClaim('scopes', $this->getScopes())
             ->getToken($this->jwtConfiguration->signer(), $this->jwtConfiguration->signingKey());
     }

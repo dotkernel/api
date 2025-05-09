@@ -6,5 +6,9 @@ namespace Api\App\Template;
 
 interface RendererInterface
 {
-    public function render(string $template, array $params = []): false|string;
+    /**
+     * @param non-empty-string $template
+     * @param array<non-empty-string, mixed> $params
+     */
+    public function render(string $template, array $params = []): string;
 }

@@ -8,8 +8,19 @@ use Api\Security\Middleware\ErrorResponseMiddleware;
 use Dot\DependencyInjection\Factory\AttributedServiceFactory;
 use Mezzio\Application;
 
+/**
+ * @phpstan-type DependenciesType array{
+ *      delegators: array<class-string, class-string[]>,
+ *      factories: array<class-string, class-string>,
+ * }
+ */
 class ConfigProvider
 {
+    /**
+     * @return array{
+     *     dependencies: DependenciesType,
+     * }
+     */
     public function __invoke(): array
     {
         return [
@@ -17,6 +28,9 @@ class ConfigProvider
         ];
     }
 
+    /**
+     * @return DependenciesType
+     */
     private function getDependencies(): array
     {
         return [

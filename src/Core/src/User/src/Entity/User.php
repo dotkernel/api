@@ -10,6 +10,7 @@ use Core\App\Entity\RoleInterface;
 use Core\App\Entity\TimestampsTrait;
 use Core\User\Enum\UserStatusEnum;
 use Core\User\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,6 +22,11 @@ use function md5;
 use function trim;
 use function uniqid;
 
+/**
+ * @phpstan-import-type UserAvatarType from UserAvatar
+ * @phpstan-import-type UserDetailType from UserDetail
+ * @phpstan-import-type RoleType from RoleInterface
+ */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'user')]
 #[ORM\HasLifecycleCallbacks]
@@ -35,15 +41,18 @@ class User extends AbstractEntity implements UserEntityInterface
     #[ORM\OneToOne(targetEntity: UserDetail::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     protected ?UserDetail $detail = null;
 
+    /** @var Collection<int, UserResetPassword> */
     #[ORM\OneToMany(targetEntity: UserResetPassword::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     protected Collection $resetPasswords;
 
+    /** @var Collection<int, RoleInterface> */
     #[ORM\ManyToMany(targetEntity: UserRole::class)]
     #[ORM\JoinTable(name: 'user_roles')]
     #[ORM\JoinColumn(name: 'userUuid', referencedColumnName: 'uuid')]
     #[ORM\InverseJoinColumn(name: 'roleUuid', referencedColumnName: 'uuid')]
     protected Collection $roles;
 
+    /** @var non-empty-string|null $identity */
     #[ORM\Column(name: 'identity', type: 'string', length: 191, unique: true)]
     protected ?string $identity = null;
 
@@ -57,13 +66,15 @@ class User extends AbstractEntity implements UserEntityInterface
     )]
     protected UserStatusEnum $status = UserStatusEnum::Pending;
 
+    /** @var non-empty-string $hash */
     #[ORM\Column(name: 'hash', type: 'string', length: 191, unique: true)]
-    protected ?string $hash = null;
+    protected string $hash;
 
     public function __construct()
     {
         parent::__construct();
 
+        $this->hash           = self::generateHash();
         $this->roles          = new ArrayCollection();
         $this->resetPasswords = new ArrayCollection();
 
@@ -95,7 +106,7 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this;
     }
 
-    public function getDetail(): UserDetail
+    public function getDetail(): ?UserDetail
     {
         return $this->detail;
     }
@@ -117,6 +128,9 @@ class User extends AbstractEntity implements UserEntityInterface
         $this->resetPasswords->add($resetPassword);
     }
 
+    /**
+     * @return Collection<int, UserResetPassword>
+     */
     public function getResetPasswords(): Collection
     {
         return $this->resetPasswords;
@@ -134,6 +148,9 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this;
     }
 
+    /**
+     * @param array<int, UserResetPassword> $resetPasswords
+     */
     public function setResetPasswords(array $resetPasswords): self
     {
         foreach ($resetPasswords as $resetPassword) {
@@ -150,6 +167,9 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this;
     }
 
+    /**
+     * @return RoleInterface[]
+     */
     public function getRoles(): array
     {
         return $this->roles->toArray();
@@ -167,6 +187,9 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this;
     }
 
+    /**
+     * @param RoleInterface[] $roles
+     */
     public function setRoles(array $roles): self
     {
         foreach ($roles as $role) {
@@ -186,6 +209,9 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this->identity !== null;
     }
 
+    /**
+     * @param non-empty-string $identity
+     */
     public function setIdentity(string $identity): self
     {
         $this->identity = $identity;
@@ -222,6 +248,9 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this->hash;
     }
 
+    /**
+     * @param non-empty-string $hash
+     */
     public function setHash(string $hash): self
     {
         $this->hash = $hash;
@@ -231,7 +260,7 @@ class User extends AbstractEntity implements UserEntityInterface
 
     public function getIdentifier(): string
     {
-        return $this->identity;
+        return (string) $this->identity;
     }
 
     public function activate(): self
@@ -244,13 +273,29 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this->setStatus(UserStatusEnum::Pending);
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function generateHash(): string
     {
         return bin2hex(md5(uniqid()));
     }
 
+    public function getEmail(): string
+    {
+        if (! $this->getDetail() instanceof UserDetail) {
+            return '';
+        }
+
+        return trim((string) $this->getDetail()->getEmail());
+    }
+
     public function getName(): string
     {
+        if (! $this->getDetail() instanceof UserDetail) {
+            return '';
+        }
+
         return trim($this->getDetail()->getFirstName() . ' ' . $this->getDetail()->getLastName());
     }
 
@@ -288,16 +333,29 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this->roles->count() > 0;
     }
 
+    /**
+     * @return array{
+     *     uuid: non-empty-string,
+     *     avatar: UserAvatarType|null,
+     *     detail: UserDetailType|null,
+     *     hash: non-empty-string,
+     *     identity: non-empty-string|null,
+     *     status: non-empty-string,
+     *     roles: RoleType[],
+     *     created: DateTimeImmutable,
+     *     updated: DateTimeImmutable|null,
+     }
+     */
     public function getArrayCopy(): array
     {
         return [
             'uuid'     => $this->uuid->toString(),
             'avatar'   => $this->avatar?->getArrayCopy(),
-            'detail'   => $this->detail->getArrayCopy(),
+            'detail'   => $this->detail?->getArrayCopy(),
             'hash'     => $this->hash,
             'identity' => $this->identity,
             'status'   => $this->status->value,
-            'roles'    => array_map(fn (UserRole $role): array => $role->getArrayCopy(), $this->roles->toArray()),
+            'roles'    => array_map(fn (RoleInterface $role): array => $role->getArrayCopy(), $this->roles->toArray()),
             'created'  => $this->created,
             'updated'  => $this->updated,
         ];

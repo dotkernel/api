@@ -27,6 +27,7 @@ class UserResetPasswordService implements UserResetPasswordServiceInterface
     }
 
     /**
+     * @param array<string, mixed> $params
      * @throws NotFoundException
      */
     public function findOneBy(array $params): UserResetPassword
@@ -41,9 +42,7 @@ class UserResetPasswordService implements UserResetPasswordServiceInterface
 
     public function saveResetPassword(User $user): UserResetPassword
     {
-        $resetPassword = (new UserResetPassword())
-            ->setHash(User::generateHash())
-            ->setUser($user);
+        $resetPassword = (new UserResetPassword())->setUser($user);
         $user->addResetPassword($resetPassword);
 
         $this->userResetPasswordRepository->saveResource($resetPassword);

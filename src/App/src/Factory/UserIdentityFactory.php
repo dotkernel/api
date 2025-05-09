@@ -13,6 +13,7 @@ class UserIdentityFactory
     public function __invoke(ContainerInterface $container): callable
     {
         return function (string $identity, array $roles = [], array $details = []): UserInterface {
+            /** @var non-empty-string $identity */
             return new UserIdentity($identity, $roles, $details);
         };
     }

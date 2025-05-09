@@ -14,11 +14,36 @@ use Core\User\Repository\UserRepository;
 use Core\User\Repository\UserResetPasswordRepository;
 use Core\User\Repository\UserRoleRepository;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Dot\DependencyInjection\Factory\AttributedRepositoryFactory;
 use Dot\DependencyInjection\Factory\AttributedServiceFactory;
 
+/**
+ * @phpstan-type DoctrineConfigType array{
+ *      driver: array{
+ *          orm_default: array{
+ *              drivers: array<non-empty-string, non-empty-string>,
+ *          },
+ *          UserEntities: array{
+ *              class: class-string<MappingDriver>,
+ *              cache: non-empty-string,
+ *              paths: non-empty-string[],
+ *          },
+ *      },
+ *      types: array<non-empty-string, class-string>,
+ * }
+ * @phpstan-type DependenciesType array{
+ *       factories: array<class-string, class-string>,
+ * }
+ */
 class ConfigProvider
 {
+    /**
+     * @return array{
+     *     dependencies: DependenciesType,
+     *     doctrine: DoctrineConfigType,
+     * }
+     */
     public function __invoke(): array
     {
         return [
@@ -27,6 +52,9 @@ class ConfigProvider
         ];
     }
 
+    /**
+     * @return DependenciesType
+     */
     private function getDependencies(): array
     {
         return [
@@ -41,6 +69,9 @@ class ConfigProvider
         ];
     }
 
+    /**
+     * @return DoctrineConfigType
+     */
     private function getDoctrineConfig(): array
     {
         return [

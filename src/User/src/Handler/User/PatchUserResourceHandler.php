@@ -45,12 +45,12 @@ class PatchUserResourceHandler extends AbstractHandler
             );
         }
 
+        /** @var non-empty-array<non-empty-string, mixed> $data */
+        $data = (array) $this->inputFilter->getValues();
+
         return $this->createResponse(
             $request,
-            $this->userService->saveUser(
-                (array) $this->inputFilter->getValues(),
-                $request->getAttribute(User::class)
-            )
+            $this->userService->saveUser($data, $request->getAttribute(User::class))
         );
     }
 }

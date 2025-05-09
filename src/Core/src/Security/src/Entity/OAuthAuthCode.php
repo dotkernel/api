@@ -35,6 +35,7 @@ class OAuthAuthCode implements AuthCodeEntityInterface
     #[ORM\Column(name: 'revoked', type: 'boolean', options: ['default' => false])]
     private bool $isRevoked = false;
 
+    /** @var Collection<int, ScopeEntityInterface> */
     #[ORM\ManyToMany(targetEntity: OAuthScope::class, inversedBy: 'authCodes', indexBy: 'id')]
     #[ORM\JoinTable(name: 'oauth_auth_code_scopes')]
     #[ORM\JoinColumn(name: 'auth_code_id', referencedColumnName: 'id')]
@@ -137,7 +138,7 @@ class OAuthAuthCode implements AuthCodeEntityInterface
         return $this;
     }
 
-    public function removeScope(OAuthScope $scope): self
+    public function removeScope(ScopeEntityInterface $scope): self
     {
         $this->scopes->removeElement($scope);
 

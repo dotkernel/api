@@ -12,6 +12,9 @@ use Core\App\Entity\RoleInterface;
 use Core\App\Entity\TimestampsTrait;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @phpstan-import-type RoleType from RoleInterface
+ */
 #[ORM\Entity(repositoryClass: AdminRoleRepository::class)]
 #[ORM\Table(name: 'admin_role')]
 #[ORM\HasLifecycleCallbacks]
@@ -50,6 +53,9 @@ class AdminRole extends AbstractEntity implements RoleInterface
         return $this;
     }
 
+    /**
+     * @return RoleType
+     */
     public function getArrayCopy(): array
     {
         return [

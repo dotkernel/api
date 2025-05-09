@@ -58,7 +58,7 @@ class AdminService implements AdminServiceInterface
     }
 
     /**
-     * @param array<string, mixed> $params
+     * @param array<non-empty-string, mixed> $params
      */
     public function getAdmins(array $params): QueryBuilder
     {
@@ -82,6 +82,7 @@ class AdminService implements AdminServiceInterface
     }
 
     /**
+     * @param non-empty-array<non-empty-string, mixed> $data
      * @throws BadRequestException
      * @throws ConflictException
      * @throws NotFoundException
@@ -118,7 +119,7 @@ class AdminService implements AdminServiceInterface
             $admin->setStatus($status);
         }
 
-        $this->validateUniqueAdmin($admin->getIdentity(), $admin->getUuid());
+        $this->validateUniqueAdmin((string) $admin->getIdentity(), $admin->getUuid());
 
         if (array_key_exists('roles', $data) && count($data['roles']) > 0) {
             $admin->resetRoles();

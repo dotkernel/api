@@ -26,9 +26,10 @@ interface UserServiceInterface
      */
     public function findByEmail(string $email): User;
 
-    public function findByIdentity(string $identity): ?User;
+    public function findByIdentity(string $identity): User;
 
     /**
+     * @param array<string, string> $params
      * @throws NotFoundException
      */
     public function findOneBy(array $params): User;
@@ -39,11 +40,12 @@ interface UserServiceInterface
     public function findUser(string $id): User;
 
     /**
-     * @param array<string, mixed> $params
+     * @param array<non-empty-string, mixed> $params
      */
     public function getUsers(array $params): QueryBuilder;
 
     /**
+     * @param non-empty-array<non-empty-string, mixed> $data
      * @throws BadRequestException
      * @throws ConflictException
      * @throws NotFoundException

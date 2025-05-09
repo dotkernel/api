@@ -43,12 +43,12 @@ class PatchAdminAccountResourceHandler extends AbstractHandler
             );
         }
 
+        /** @var non-empty-array<non-empty-string, mixed> $data */
+        $data = (array) $this->inputFilter->getValues();
+
         return $this->createResponse(
             $request,
-            $this->adminService->saveAdmin(
-                (array) $this->inputFilter->getValues(),
-                $request->getAttribute(IdentityInterface::class)
-            )
+            $this->adminService->saveAdmin($data, $request->getAttribute(IdentityInterface::class))
         );
     }
 }

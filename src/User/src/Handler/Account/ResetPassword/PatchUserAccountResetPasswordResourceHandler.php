@@ -63,10 +63,10 @@ class PatchUserAccountResetPasswordResourceHandler extends AbstractHandler
             throw ConflictException::create(Message::RESET_PASSWORD_USED);
         }
 
-        $this->userService->saveUser(
-            (array) $this->inputFilter->getValues(),
-            $userResetPassword->markAsCompleted()->getUser()
-        );
+        /** @var non-empty-array<non-empty-string, mixed> $data */
+        $data = (array) $this->inputFilter->getValues();
+
+        $this->userService->saveUser($data, $userResetPassword->markAsCompleted()->getUser());
 
         $user = $userResetPassword->getUser();
         $this->mailService->sendResetPasswordCompletedMail(
