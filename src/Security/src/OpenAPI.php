@@ -12,7 +12,7 @@ use OpenApi\Attributes as OA;
  * @see TokenEndpointHandler::handle()
  */
 #[OA\Post(
-    path: '/security/token',
+    path: '/security/generate-token',
     description: 'Client generates access token using username and password',
     summary: 'Generate access token',
     requestBody: new OA\RequestBody(
@@ -49,7 +49,7 @@ use OpenApi\Attributes as OA;
  * @see TokenEndpointHandler::handle()
  */
 #[OA\Post(
-    path: '/security/token',
+    path: '/security/refresh-token',
     description: 'Client refreshes access token using refresh token',
     summary: 'Refresh access token',
     requestBody: new OA\RequestBody(

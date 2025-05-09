@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f837d47b-cc12-4897-8b1a-ecd26b4bbe44",
+		"_postman_id": "f9da948e-3325-4595-a55b-ca31958433d0",
 		"name": "Dotkernel_API",
 		"description": "Dotkernel API documentation.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -357,13 +357,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/security/token",
+									"raw": "{{APPLICATION_URL}}/security/generate-token",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
 										"security",
-										"token"
+										"generate-token"
 									]
 								},
 								"description": "Generate OAuth2 Bearer token for identity with admin privileges."
@@ -407,13 +407,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/security/token",
+									"raw": "{{APPLICATION_URL}}/security/refresh-token",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
 										"security",
-										"token"
+										"refresh-token"
 									]
 								},
 								"description": "Refresh OAuth2 Bearer token for identity with admin privileges."
@@ -982,13 +982,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/security/token",
+									"raw": "{{APPLICATION_URL}}/security/generate-token",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
 										"security",
-										"token"
+										"generate-token"
 									]
 								},
 								"description": "Generate OAuth2 Bearer token for identity with regular user privileges."
@@ -1022,13 +1022,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{APPLICATION_URL}}/security/token",
+									"raw": "{{APPLICATION_URL}}/security/refresh-token",
 									"host": [
 										"{{APPLICATION_URL}}"
 									],
 									"path": [
 										"security",
-										"token"
+										"refresh-token"
 									]
 								},
 								"description": "Refresh OAuth2 Bearer token for identity with regular user privileges."

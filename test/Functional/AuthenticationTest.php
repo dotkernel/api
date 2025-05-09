@@ -37,7 +37,7 @@ class AuthenticationTest extends AbstractFunctionalTest
     {
         $this->createAdmin();
 
-        $response = $this->post('/security/token', $this->getValidAdminAccessTokenCredentials());
+        $response = $this->post('/security/generate-token', $this->getValidAdminAccessTokenCredentials());
 
         $data = json_decode($response->getBody()->getContents(), true);
 
@@ -59,7 +59,7 @@ class AuthenticationTest extends AbstractFunctionalTest
     {
         $this->createUser();
 
-        $response = $this->post('/security/token', $this->getValidFrontendAccessTokenCredentials());
+        $response = $this->post('/security/generate-token', $this->getValidFrontendAccessTokenCredentials());
 
         $data = json_decode($response->getBody()->getContents(), true);
 
@@ -76,7 +76,7 @@ class AuthenticationTest extends AbstractFunctionalTest
 
     public function testInvalidRefreshToken(): void
     {
-        $response = $this->post('/security/token', $this->getInvalidFrontendRefreshTokenCredentials());
+        $response = $this->post('/security/refresh-token', $this->getInvalidFrontendRefreshTokenCredentials());
 
         $data = json_decode($response->getBody()->getContents(), true);
 
@@ -99,7 +99,7 @@ class AuthenticationTest extends AbstractFunctionalTest
         $identity = $this->createUser()->getIdentity();
         $this->loginAs($identity, self::DEFAULT_PASSWORD);
 
-        $response = $this->post('/security/token', $this->getValidFrontendRefreshTokenCredentials());
+        $response = $this->post('/security/refresh-token', $this->getValidFrontendRefreshTokenCredentials());
         $this->assertResponseOk($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
@@ -122,7 +122,7 @@ class AuthenticationTest extends AbstractFunctionalTest
         $admin         = $this->createAdmin();
         $errorMessages = $this->getContainer()->get('config')['authentication']['invalid_credentials'];
 
-        $response = $this->post('/security/token', $this->getValidFrontendAccessTokenCredentials([
+        $response = $this->post('/security/generate-token', $this->getValidFrontendAccessTokenCredentials([
             'username' => $admin->getIdentity(),
         ]));
 
@@ -146,7 +146,7 @@ class AuthenticationTest extends AbstractFunctionalTest
         $errorMessages = $this->getContainer()->get('config')['authentication']['invalid_credentials'];
 
         $user     = $this->createUser();
-        $response = $this->post('/security/token', $this->getValidAdminAccessTokenCredentials([
+        $response = $this->post('/security/generate-token', $this->getValidAdminAccessTokenCredentials([
             'username' => $user->getIdentity(),
         ]));
 
@@ -170,7 +170,7 @@ class AuthenticationTest extends AbstractFunctionalTest
     {
         $errorMessages = $this->getContainer()->get('config')['authentication']['invalid_credentials'];
 
-        $response = $this->post('/security/token', $credentials);
+        $response = $this->post('/security/generate-token', $credentials);
         $this->assertResponseBadRequest($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
