@@ -32,6 +32,11 @@ use Symfony\Component\Cache\Adapter\AdapterInterface;
 use function getcwd;
 
 /**
+ * @phpstan-type ConfigType array{
+ *      dependencies: DependenciesType,
+ *      doctrine: DoctrineConfigType,
+ *      resultCacheLifetime: int,
+ * }
  * @phpstan-type DoctrineConfigType array{
  *      cache: array{
  *          array: array{
@@ -95,11 +100,7 @@ class ConfigProvider
     public const REGEXP_UUID = '{uuid:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}';
 
     /**
-     * @return array{
-     *     dependencies: DependenciesType,
-     *     doctrine: DoctrineConfigType,
-     *     resultCacheLifetime: int,
-     * }
+     * @return ConfigType
      */
     public function __invoke(): array
     {

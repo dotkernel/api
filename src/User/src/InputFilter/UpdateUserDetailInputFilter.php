@@ -9,6 +9,14 @@ use Api\App\InputFilter\Input\FirstNameInput;
 use Api\App\InputFilter\Input\LastNameInput;
 use Core\App\InputFilter\AbstractInputFilter;
 
+/**
+ * @phpstan-type UpdateUserDetailDataType array{
+ *     firstName?: non-empty-string,
+ *     lastName?: non-empty-string,
+ *     email?: non-empty-string,
+ * }
+ * @extends AbstractInputFilter<UpdateUserDetailDataType>
+ */
 class UpdateUserDetailInputFilter extends AbstractInputFilter
 {
     public function __construct()

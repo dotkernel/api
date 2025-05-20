@@ -11,6 +11,10 @@ use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Dot\DependencyInjection\Factory\AttributedRepositoryFactory;
 
 /**
+ * @phpstan-type ConfigType array{
+ *      dependencies: DependenciesType,
+ *      doctrine: DoctrineConfigType,
+ * }
  * @phpstan-type DoctrineConfigType array{
  *      driver: array{
  *          orm_default: array{
@@ -31,10 +35,7 @@ use Dot\DependencyInjection\Factory\AttributedRepositoryFactory;
 class ConfigProvider
 {
     /**
-     * @return array{
-     *     dependencies: DependenciesType,
-     *     doctrine: DoctrineConfigType,
-     * }
+     * @return ConfigType
      */
     public function __invoke(): array
     {

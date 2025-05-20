@@ -13,6 +13,19 @@ use Api\App\InputFilter\Input\PasswordInput;
 use Core\App\InputFilter\AbstractInputFilter;
 use Laminas\InputFilter\CollectionInputFilter;
 
+/**
+ * @phpstan-import-type AdminRoleDataType from AdminRoleInputFilter
+ * @phpstan-type CreateAdminDataType array{
+ *     identity: non-empty-string,
+ *     password: non-empty-string,
+ *     passwordConfirm: non-empty-string,
+ *     firstName?: non-empty-string,
+ *     lastName?: non-empty-string,
+ *     status: non-empty-string,
+ *     roles: AdminRoleDataType[],
+ * }
+ * @extends AbstractInputFilter<CreateAdminDataType>
+ */
 class CreateAdminInputFilter extends AbstractInputFilter
 {
     public function __construct()
