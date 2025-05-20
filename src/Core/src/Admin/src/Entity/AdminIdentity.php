@@ -11,7 +11,7 @@ class AdminIdentity implements UserInterface
 {
     /**
      * @param non-empty-string[] $roles
-     * @param array<non-empty-string, non-empty-string> $details
+     * @param array<non-empty-string, string> $details
      */
     public function __construct(
         public string $uuid,

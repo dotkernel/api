@@ -7,7 +7,8 @@ namespace Core\App\InputFilter;
 use Laminas\InputFilter\InputFilter;
 
 /**
- * @extends InputFilter<object>
+ * @template TFilteredValues
+ * @extends InputFilter<TFilteredValues>
  */
 abstract class AbstractInputFilter extends InputFilter
 {

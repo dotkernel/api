@@ -290,6 +290,11 @@ class User extends AbstractEntity implements UserEntityInterface
         return trim((string) $this->getDetail()->getEmail());
     }
 
+    public function hasEmail(): bool
+    {
+        return $this->getEmail() !== '';
+    }
+
     public function getName(): string
     {
         if (! $this->getDetail() instanceof UserDetail) {

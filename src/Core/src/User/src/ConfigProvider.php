@@ -19,6 +19,10 @@ use Dot\DependencyInjection\Factory\AttributedRepositoryFactory;
 use Dot\DependencyInjection\Factory\AttributedServiceFactory;
 
 /**
+ * @phpstan-type ConfigType array{
+ *      dependencies: DependenciesType,
+ *      doctrine: DoctrineConfigType,
+ * }
  * @phpstan-type DoctrineConfigType array{
  *      driver: array{
  *          orm_default: array{
@@ -39,10 +43,7 @@ use Dot\DependencyInjection\Factory\AttributedServiceFactory;
 class ConfigProvider
 {
     /**
-     * @return array{
-     *     dependencies: DependenciesType,
-     *     doctrine: DoctrineConfigType,
-     * }
+     * @return ConfigType
      */
     public function __invoke(): array
     {

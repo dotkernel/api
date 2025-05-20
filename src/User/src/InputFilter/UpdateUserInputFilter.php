@@ -11,6 +11,19 @@ use Api\User\InputFilter\Input\StatusInput;
 use Core\App\InputFilter\AbstractInputFilter;
 use Laminas\InputFilter\CollectionInputFilter;
 
+/**
+ * @phpstan-import-type UpdateUserDetailDataType from UpdateUserDetailInputFilter
+ * @phpstan-import-type UserRoleDataType from UserRoleInputFilter
+ * @phpstan-type CreateAdminDataType array{
+ *     identity: non-empty-string,
+ *     password: non-empty-string,
+ *     passwordConfirm: non-empty-string,
+ *     status: non-empty-string,
+ *     detail: UpdateUserDetailDataType,
+ *     roles: UserRoleDataType[],
+ * }
+ * @extends AbstractInputFilter<CreateAdminDataType>
+ */
 class UpdateUserInputFilter extends AbstractInputFilter
 {
     public function __construct()
