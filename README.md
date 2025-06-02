@@ -2,7 +2,7 @@
 
 Dotkernel API is a PHP skeleton app for building REST APIs using [Laminas](https://github.com/laminas) and [Mezzio](https://github.com/mezzio) components and implements standards like PSR-3, PSR-4, PSR-7, PSR-11 and PSR-15.
 
-Dotkernel API is an alternative for legacy Laminas API Tools (formerly Apigility) applications, and is based on Enrico Zimuel's [Zend Expressive API - Skeleton example](https://github.com/ezimuel/zend-expressive-api).
+Dotkernel API is an alternative for legacy Laminas API Tools (formerly Apigility) applications and is based on Enrico Zimuel's [Zend Expressive API - Skeleton example](https://github.com/ezimuel/zend-expressive-api).
 
 > Live [demo](https://api.dotkernel.net/).
 
@@ -47,7 +47,7 @@ composer install
 
 > **Do not enable development mode in production!**
 
-If you're installing the project for development, you should **enable** development mode, by running:
+If you're installing the project for development, you should **enable** development mode by running:
 
 ```shell
 composer development-enable
@@ -59,7 +59,7 @@ You can **disable** development mode by running:
 composer development-disable
 ```
 
-You can **check** development status by running:
+You can **check** the development status by running:
 
 ```shell
 composer development-status
@@ -67,9 +67,9 @@ composer development-status
 
 ### Prepare config files
 
-* duplicate `config/autoload/cors.local.php.dist` as `config/autoload/cors.local.php` <- if your API will be consumed by another application, make sure configure the `allowed_origins`
+* duplicate `config/autoload/cors.local.php.dist` as `config/autoload/cors.local.php` <- if your API is consumed by another application, make sure configure the `allowed_origins`
 * duplicate `config/autoload/local.php.dist` as `config/autoload/local.php`
-* **optional**: in order to run/create tests, duplicate `config/autoload/local.test.php.dist` as `config/autoload/local.test.php` <- this creates a new in-memory database that your tests will run on
+* **optional**: to run/create tests, duplicate `config/autoload/local.test.php.dist` as `config/autoload/local.test.php` <- this creates a new in-memory database that your tests will run on
 
 ### Setup database
 
@@ -120,7 +120,7 @@ More details on how fixtures work can be found in `dotkernel/dot-data-fixtures` 
 
 ### Mail configuration
 
-If your application will send emails, you must configure an outgoing mail server under `config/autoload/mail.global.php`.
+If your application sends emails, you must configure an outgoing mail server under `config/autoload/mail.global.php`.
 
 ### Test the installation
 
