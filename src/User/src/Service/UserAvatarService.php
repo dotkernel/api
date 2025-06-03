@@ -94,7 +94,7 @@ class UserAvatarService implements UserAvatarServiceInterface
     {
         return sprintf(
             'avatar-%s.%s',
-            Uuid::uuid4()->toString(),
+            Uuid::uuid7()->toString(),
             self::EXTENSIONS[$fileType]
         );
     }

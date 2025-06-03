@@ -22,7 +22,7 @@ abstract class AbstractEntity implements ArraySerializableInterface, EntityInter
 
     public function __construct()
     {
-        $this->uuid = Uuid::uuid4();
+        $this->uuid = Uuid::uuid7();
     }
 
     public function getUuid(): UuidInterface
