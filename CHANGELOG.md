@@ -1,5 +1,48 @@
 # Changelog
 
+## 6.0.0 - 2025-06-05
+
+### Changed
+
+* Issue [#330](https://github.com/dotkernel/api/issues/330): Move common logic to `Core` module by [@alexmerlin](https://github.com/alexmerlin) in [#358](https://github.com/dotkernel/api/pull/358)
+* Issue [#384](https://github.com/dotkernel/api/issues/384): Refactored handlers by [@alexmerlin](https://github.com/alexmerlin) in [#385](https://github.com/dotkernel/api/pull/385)
+* Issue [#388](https://github.com/dotkernel/api/issues/388): Inject `InputFilter`s in handlers by [@alexmerlin](https://github.com/alexmerlin) in [#389](https://github.com/dotkernel/api/pull/389)
+* Issue [#394](https://github.com/dotkernel/api/issues/394): Service refactoring by [@alexmerlin](https://github.com/alexmerlin) in [#396](https://github.com/dotkernel/api/pull/396)
+* Issue [#392](https://github.com/dotkernel/api/issues/392): Refresh Postman documentation by [@Howriq](https://github.com/Howriq) in [#400](https://github.com/dotkernel/api/pull/400)
+* Issue [#397](https://github.com/dotkernel/api/issues/397): Autogenerate `OAuth2` keys when cloning the project by [@alexmerlin](https://github.com/alexmerlin) in [#398](https://github.com/dotkernel/api/pull/398)
+* Issue [#399](https://github.com/dotkernel/api/issues/399): Merge `Admin.Core` into `API.Core` by [@alexmerlin](https://github.com/alexmerlin) in [#401](https://github.com/dotkernel/api/pull/401)
+* Issue [#411](https://github.com/dotkernel/api/issues/411): Updated logic in `ContentNegotiationMiddleware` by [@alexmerlin](https://github.com/alexmerlin) in [#413](https://github.com/dotkernel/api/pull/413)
+* Issue [#414](https://github.com/dotkernel/api/issues/414): Replaced `Twig` with custom templating solution by [@alexmerlin](https://github.com/alexmerlin) in [#419](https://github.com/dotkernel/api/pull/419)
+* Issue [#415](https://github.com/dotkernel/api/issues/415): Increased `PHPStan` level to `8` by [@alexmerlin](https://github.com/alexmerlin) in [#421](https://github.com/dotkernel/api/pull/421)
+* Issue [#426](https://github.com/dotkernel/api/issues/426): Switch from `UUID4` to `UUID7` by [@alexmerlin](https://github.com/alexmerlin) in [#427](https://github.com/dotkernel/api/pull/427)
+* Update pre-run.sh by [@alexmerlin](https://github.com/alexmerlin) in [#404](https://github.com/dotkernel/api/pull/404)
+* Update `GetIndexResourceHandler.php` by [@alexmerlin](https://github.com/alexmerlin) in [#408](https://github.com/dotkernel/api/pull/408)
+* Update local.php.dist by [@arhimede](https://github.com/arhimede) in [#409](https://github.com/dotkernel/api/pull/409)
+* Update qodana_code_quality.yml by [@arhimede](https://github.com/arhimede) in [#416](https://github.com/dotkernel/api/pull/416)
+
+### Added
+
+* Issue [#292](https://github.com/dotkernel/api/issues/292): GHA for database validation by [@MarioRadu](https://github.com/MarioRadu) in [#380](https://github.com/dotkernel/api/pull/380)
+* Issue [#314](https://github.com/dotkernel/api/issues/314): Implemented `mezzio/mezzio-problem-details` by [@alexmerlin](https://github.com/alexmerlin) in [#402](https://github.com/dotkernel/api/pull/402)
+* Issue [#383](https://github.com/dotkernel/api/issues/383): Implemented route grouping by [@alexmerlin](https://github.com/alexmerlin) in [#391](https://github.com/dotkernel/api/pull/391)
+* Issue [#390](https://github.com/dotkernel/api/issues/390): Implemented `ResourceProviderMiddleware` and added `ResourceGuardInterface` by [@alexmerlin](https://github.com/alexmerlin) in [#403](https://github.com/dotkernel/api/pull/403)
+* Add documentation links by [@arhimede](https://github.com/arhimede) in [#382](https://github.com/dotkernel/api/pull/382)
+
+### Deprecated
+
+* Nothing
+
+### Removed
+
+* Issue [#414](https://github.com/dotkernel/api/issues/414): Removed `Twig` integration by [@alexmerlin](https://github.com/alexmerlin) in [#419](https://github.com/dotkernel/api/pull/419)
+* Issue [#417](https://github.com/dotkernel/api/issues/417): `AuthenticationMiddleware` no longer extends `AuthenticationMiddleware` from `mezzio/mezzio-authentication` by [@alexmerlin](https://github.com/alexmerlin) in [#418](https://github.com/dotkernel/api/pull/418)
+
+### Fixed
+
+* Issue [#410](https://github.com/dotkernel/api/issues/410): Fixed error handling by [@alexmerlin](https://github.com/alexmerlin) in [#412](https://github.com/dotkernel/api/pull/412)
+* Issue [#422](https://github.com/dotkernel/api/issues/422): Split the `/security/token` endpoint into two separate endpoints by [@alexmerlin](https://github.com/alexmerlin) in [#423](https://github.com/dotkernel/api/pull/423)
+* Core sync by [@alexmerlin](https://github.com/alexmerlin) in [#425](https://github.com/dotkernel/api/pull/425)
+
 ## 5.3.0 - 2025-01-08
 
 ### Changed
@@ -127,16 +170,12 @@
 
 ### Changed
 
-* Issue [#311](https://github.com/dotkernel/api/issues/311): Upgraded `dot-errorhandler` to `4.x` by
-  [@alexmerlin](https://github.com/alexmerlin) in [#312](https://github.com/dotkernel/api/pull/312)
+* Issue [#311](https://github.com/dotkernel/api/issues/311): Upgraded `dot-errorhandler` to `4.x` by [@alexmerlin](https://github.com/alexmerlin) in [#312](https://github.com/dotkernel/api/pull/312)
 
 ### Added
 
-* Issue [#168](https://github.com/dotkernel/api/issues/168): OpenAPI documentation by
-  [@alexmerlin](https://github.com/alexmerlin) in [#306](https://github.com/dotkernel/api/pull/306)
-* Issue [#309](https://github.com/dotkernel/api/issues/309): psr-container-doctrine 5.2.1 support and refactoring
-  modules configuration by [@cPintiuta](https://github.com/cPintiuta) in
-  [#309](https://github.com/dotkernel/api/pull/309)
+* Issue [#168](https://github.com/dotkernel/api/issues/168): OpenAPI documentation by [@alexmerlin](https://github.com/alexmerlin) in [#306](https://github.com/dotkernel/api/pull/306)
+* Issue [#309](https://github.com/dotkernel/api/issues/309): psr-container-doctrine 5.2.1 support and refactoring modules configuration by [@cPintiuta](https://github.com/cPintiuta) in [#309](https://github.com/dotkernel/api/pull/309)
 
 ### Deprecated
 
@@ -144,42 +183,30 @@
 
 ### Removed
 
-* Issue [#313](https://github.com/dotkernel/api/issues/313): Remove `config` dependency from handlers. by
-  [@alexmerlin](https://github.com/alexmerlin) in [#315](https://github.com/dotkernel/api/pull/315)
+* Issue [#313](https://github.com/dotkernel/api/issues/313): Remove `config` dependency from handlers. by [@alexmerlin](https://github.com/alexmerlin) in [#315](https://github.com/dotkernel/api/pull/315)
 
 ### Fixed
 
-* Issue [#303](https://github.com/dotkernel/api/issues/303): fix content type, special case for multipart/form-data by
-  [@cPintiuta](https://github.com/cPintiuta) in [#304](https://github.com/dotkernel/api/pull/304)
+* Issue [#303](https://github.com/dotkernel/api/issues/303): fix content type, special case for multipart/form-data by [@cPintiuta](https://github.com/cPintiuta) in [#304](https://github.com/dotkernel/api/pull/304)
 
 ## 5.0.0 - 2024-07-01
 
 ### Changed
 
-* Refactor: Transfer responsibility from handlers to services. by [@alexmerlin](https://github.com/alexmerlin) in
-  [#272](https://github.com/dotkernel/api/pull/272)
-* Issue [#169](https://github.com/dotkernel/api/issues/169): API deprecation refactoring by
-  [@MarioRadu](https://github.com/MarioRadu) in [#291](https://github.com/dotkernel/api/pull/291)
-* Issue [#264](https://github.com/dotkernel/api/issues/264): Bump for doctrine orm 2 -> 3, dbal 3 -> 4 through roave
-  psr container by [@cPintiuta](https://github.com/cPintiuta) in [#283](https://github.com/dotkernel/api/pull/283)
-* Issue [#266](https://github.com/dotkernel/api/issues/266): Replaced annotation-based dependency injection with
-  attribute-based dependency injection by [@alexmerlin](https://github.com/alexmerlin) in
-  [#280](https://github.com/dotkernel/api/pull/280)
-* Issue [#295](https://github.com/dotkernel/api/issues/295): ContentNegotiationMiddleware: Make `$config` readonly by
-  [@alexmerlin](https://github.com/alexmerlin) in [#296](https://github.com/dotkernel/api/pull/296)
+* Refactor: Transfer responsibility from handlers to services. by [@alexmerlin](https://github.com/alexmerlin) in [#272](https://github.com/dotkernel/api/pull/272)
+* Issue [#169](https://github.com/dotkernel/api/issues/169): API deprecation refactoring by [@MarioRadu](https://github.com/MarioRadu) in [#291](https://github.com/dotkernel/api/pull/291)
+* Issue [#264](https://github.com/dotkernel/api/issues/264): Bump for doctrine orm 2 -> 3, dbal 3 -> 4 through roave psr container by [@cPintiuta](https://github.com/cPintiuta) in [#283](https://github.com/dotkernel/api/pull/283)
+* Issue [#266](https://github.com/dotkernel/api/issues/266): Replaced annotation-based dependency injection with attribute-based dependency injection by [@alexmerlin](https://github.com/alexmerlin) in [#280](https://github.com/dotkernel/api/pull/280)
+* Issue [#295](https://github.com/dotkernel/api/issues/295): ContentNegotiationMiddleware: Make `$config` readonly by [@alexmerlin](https://github.com/alexmerlin) in [#296](https://github.com/dotkernel/api/pull/296)
 * Updated license file by [@arhimede](https://github.com/arhimede) in [#282](https://github.com/dotkernel/api/pull/282)
 * Update README.md by [@arhimede](https://github.com/arhimede) in [#290](https://github.com/dotkernel/api/pull/290)
-* Update qodana_code_quality.yml by [@arhimede](https://github.com/arhimede) in
-  [#294](https://github.com/dotkernel/api/pull/294)
+* Update qodana_code_quality.yml by [@arhimede](https://github.com/arhimede) in [#294](https://github.com/dotkernel/api/pull/294)
 
 ### Added
 
-* Issue [#169](https://github.com/dotkernel/api/issues/169): Implemented API evolution pattern by
-  [@MarioRadu](https://github.com/MarioRadu) in [#285](https://github.com/dotkernel/api/pull/285)
-* Added missing factory spec for ErrorReportHandler. local.php.dist: removed an unnecessary use statement by
-  [@alexmerlin](https://github.com/alexmerlin) in [#284](https://github.com/dotkernel/api/pull/284)
-* Added version in home handler by [@arhimede](https://github.com/arhimede) in
-  [#287](https://github.com/dotkernel/api/pull/287)
+* Issue [#169](https://github.com/dotkernel/api/issues/169): Implemented API evolution pattern by [@MarioRadu](https://github.com/MarioRadu) in [#285](https://github.com/dotkernel/api/pull/285)
+* Added missing factory spec for ErrorReportHandler. local.php.dist: removed an unnecessary use statement by [@alexmerlin](https://github.com/alexmerlin) in [#284](https://github.com/dotkernel/api/pull/284)
+* Added version in home handler by [@arhimede](https://github.com/arhimede) in [#287](https://github.com/dotkernel/api/pull/287)
 
 ### Deprecated
 
@@ -191,5 +218,4 @@
 
 ### Fixed
 
-* Issue [#277](https://github.com/dotkernel/api/issues/277): Sorted routes by name by
-  [@alexmerlin](https://github.com/alexmerlin) in [#278](https://github.com/dotkernel/api/pull/278)
+* Issue [#277](https://github.com/dotkernel/api/issues/277): Sorted routes by name by [@alexmerlin](https://github.com/alexmerlin) in [#278](https://github.com/dotkernel/api/pull/278)
