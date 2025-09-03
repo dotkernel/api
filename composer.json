@@ -30,7 +30,8 @@
             "laminas/laminas-component-installer": true,
             "composer/package-versions-deprecated": true,
             "dealerdirect/phpcodesniffer-composer-installer": true
-        }
+        },
+        "process-timeout": 0
     },
     "extra": {
         "laminas": {
@@ -81,6 +82,7 @@
         "zircote/swagger-php": "^5.0.7"
     },
     "require-dev": {
+        "dotkernel/dot-maker": "^1.0.2",
         "laminas/laminas-coding-standard": "^3.0.1",
         "laminas/laminas-development-mode": "^3.13.0",
         "mezzio/mezzio-tooling": "^2.10.1",
@@ -119,6 +121,7 @@
         "clear-config-cache": "php bin/clear-config-cache.php",
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
+        "make": "dot-maker",
         "development-disable": "laminas-development-mode disable",
         "development-enable": "laminas-development-mode enable",
         "development-status": "laminas-development-mode status",
