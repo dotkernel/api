@@ -62,6 +62,7 @@ class OAuthAccessToken implements AccessTokenEntityInterface
     public function __construct()
     {
         $this->scopes = new ArrayCollection();
+        $this->userId = null;
     }
 
     public function setId(int $id): self
