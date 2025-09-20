@@ -36,7 +36,7 @@ class OAuthAccessToken implements AccessTokenEntityInterface
     private ClientEntityInterface $client;
 
     #[ORM\Column(name: 'user_id', type: 'string', length: 25, nullable: true)]
-    private ?string $userId;
+    private ?string $userId = null;
 
     /** @var non-empty-string $token */
     #[ORM\Column(name: 'token', type: 'string', length: 100)]
