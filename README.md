@@ -1,6 +1,6 @@
 # Dotkernel API
 
-Dotkernel API is a PHP skeleton app for building REST APIs using [Laminas](https://github.com/laminas) and [Mezzio](https://github.com/mezzio) components and implements standards like PSR-3, PSR-4, PSR-7, PSR-11 and PSR-15.
+Dotkernel API is a PHP skeleton app for building REST APIs based on  [Mezzio microframework](https://github.com/mezzio) and [Laminas](https://github.com/laminas) components which implements standards like PSR-3, PSR-4, PSR-7, PSR-11 and PSR-15.
 
 Dotkernel API is an alternative for legacy Laminas API Tools (formerly Apigility) applications and is based on Enrico Zimuel's [Zend Expressive API - Skeleton example](https://github.com/ezimuel/zend-expressive-api).
 
@@ -13,7 +13,7 @@ Documentation is available at: https://docs.dotkernel.org/api-documentation/
 ## Badges
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/api)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/6.0.0)
+![PHP from Packagist (specify version)](https://img.shields.io/packagist/dependency-v/dotkernel/api/php)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/api)](https://github.com/dotkernel/api/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/api)](https://github.com/dotkernel/api/network)
