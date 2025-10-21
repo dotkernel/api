@@ -13,7 +13,7 @@ Documentation is available at: https://docs.dotkernel.org/api-documentation/
 ## Badges
 
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/api)
-![PHP from Packagist (specify version)](https://img.shields.io/packagist/dependency-v/dotkernel/api/php)
+![Packagist Dependency Version](https://img.shields.io/packagist/dependency-v/dotkernel/api/php)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/api)](https://github.com/dotkernel/api/issues)
 [![GitHub forks](https://img.shields.io/github/forks/dotkernel/api)](https://github.com/dotkernel/api/network)
