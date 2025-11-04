@@ -14,7 +14,7 @@ $databases = [
         'driver'       => 'pdo_mysql',
         'charset'      => 'utf8mb4',
         'collate'      => 'utf8mb4_general_ci',
-        'table_prefix' => 'dk_',
+        'table_prefix' => '',
     ],
     // you can add more database connections to this array
 ];
