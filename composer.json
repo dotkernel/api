@@ -85,7 +85,6 @@
         "dotkernel/dot-maker": "^1.0.2",
         "laminas/laminas-coding-standard": "^3.0.1",
         "laminas/laminas-development-mode": "^3.13.0",
-        "mezzio/mezzio-tooling": "^2.10.1",
         "phpstan/phpstan": "^2.1.11",
         "phpstan/phpstan-doctrine": "^2.0.2",
         "phpstan/phpstan-phpunit": "^2.0.6",
