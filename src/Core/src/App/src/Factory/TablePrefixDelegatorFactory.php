@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Api\App\Factory;
+namespace Core\App\Factory;
 
 use Core\App\Event\TablePrefixEventListener;
 use Doctrine\ORM\EntityManagerInterface;

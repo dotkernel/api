@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Core\App;
 
-use Api\App\Factory\TablePrefixDelegatorFactory;
 use Core\App\Command\RouteListCommand;
 use Core\App\DBAL\Types\SuccessFailureEnumType;
 use Core\App\DBAL\Types\YesNoEnumType;
 use Core\App\Event\TablePrefixEventListener;
 use Core\App\Factory\EntityListenerResolverFactory;
+use Core\App\Factory\TablePrefixDelegatorFactory;
 use Core\App\Resolver\EntityListenerResolver;
 use Core\App\Service\MailService;
 use Doctrine\ORM\EntityManager;
