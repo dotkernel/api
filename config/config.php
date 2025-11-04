@@ -31,11 +31,6 @@ $aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
     Mezzio\Helper\ConfigProvider::class,
     Mezzio\ConfigProvider::class,
     Mezzio\Router\ConfigProvider::class,
-    class_exists(Mezzio\Tooling\ConfigProvider::class)
-        ? Mezzio\Tooling\ConfigProvider::class
-        : function () {
-            return [];
-        },
 
     // Include cache configuration
     new Laminas\ConfigAggregator\ArrayProvider($cacheConfig),

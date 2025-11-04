@@ -3,6 +3,8 @@
 
 declare(strict_types=1);
 
+use Core\App\Event\TablePrefixEventListener;
+use Doctrine\ORM\Events;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
 use Dot\DataFixtures\Command\ExecuteFixturesCommand;
@@ -14,6 +16,8 @@ require_once 'vendor/autoload.php';
 $container = require 'config/container.php' ;
 
 $entityManager = $container->get(EntityManager::class);
+$entityManager->getEventManager()
+    ->addEventListener(Events::loadClassMetadata, $container->get(TablePrefixEventListener::class));
 
 $commands = [
      $container->get(ExecuteFixturesCommand::class),

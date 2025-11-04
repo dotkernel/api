@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Core\App;
 
+use Api\App\Factory\TablePrefixDelegatorFactory;
 use Core\App\Command\RouteListCommand;
 use Core\App\DBAL\Types\SuccessFailureEnumType;
 use Core\App\DBAL\Types\YesNoEnumType;
+use Core\App\Event\TablePrefixEventListener;
 use Core\App\Factory\EntityListenerResolverFactory;
 use Core\App\Resolver\EntityListenerResolver;
 use Core\App\Service\MailService;
@@ -23,6 +25,7 @@ use Dot\ErrorHandler\LogErrorHandler;
 use Dot\Mail\Factory\MailOptionsAbstractFactory;
 use Dot\Mail\Factory\MailServiceAbstractFactory;
 use Dot\Mail\Service\MailService as DotMailService;
+use Mezzio\Application;
 use Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType;
 use Ramsey\Uuid\Doctrine\UuidBinaryType;
 use Ramsey\Uuid\Doctrine\UuidType;
@@ -117,15 +120,19 @@ class ConfigProvider
     private function getDependencies(): array
     {
         return [
-            'factories' => [
+            'delegators' => [
+                Application::class => [TablePrefixDelegatorFactory::class],
+            ],
+            'factories'  => [
                 'doctrine.entity_manager.orm_default' => EntityManagerFactory::class,
                 'dot-mail.options.default'            => MailOptionsAbstractFactory::class,
                 'dot-mail.service.default'            => MailServiceAbstractFactory::class,
                 EntityListenerResolver::class         => EntityListenerResolverFactory::class,
                 MailService::class                    => AttributedServiceFactory::class,
                 RouteListCommand::class               => AttributedServiceFactory::class,
+                TablePrefixEventListener::class       => AttributedServiceFactory::class,
             ],
-            'aliases'   => [
+            'aliases'    => [
                 DotMailService::class         => 'dot-mail.service.default',
                 EntityManager::class          => 'doctrine.entity_manager.orm_default',
                 EntityManagerInterface::class => 'doctrine.entity_manager.orm_default',

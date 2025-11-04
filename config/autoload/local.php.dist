@@ -6,14 +6,15 @@ $baseUrl = 'http://localhost:8080';
 
 $databases = [
     'default' => [
-        'host'     => 'localhost',
-        'dbname'   => 'dotkernel',
-        'user'     => '',
-        'password' => '',
-        'port'     => 3306,
-        'driver'   => 'pdo_mysql',
-        'charset'  => 'utf8mb4',
-        'collate'  => 'utf8mb4_general_ci',
+        'host'         => 'localhost',
+        'dbname'       => 'dotkernel',
+        'user'         => '',
+        'password'     => '',
+        'port'         => 3306,
+        'driver'       => 'pdo_mysql',
+        'charset'      => 'utf8mb4',
+        'collate'      => 'utf8mb4_general_ci',
+        'table_prefix' => 'dk_',
     ],
     // you can add more database connections to this array
 ];
