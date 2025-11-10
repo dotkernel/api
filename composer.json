@@ -49,7 +49,7 @@
         }
     },
     "require": {
-        "php": "~8.2.0 || ~8.3.0",
+        "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
         "ext-gd": "*",
         "ext-json": "*",
         "dotkernel/dot-cache": "^4.3",
@@ -77,7 +77,7 @@
         "mezzio/mezzio-problem-details": "^1.15.0",
         "ramsey/uuid": "^4.5.0",
         "ramsey/uuid-doctrine": "^2.1.0",
-        "roave/psr-container-doctrine": "^5.2.2",
+        "roave/psr-container-doctrine": "^5.2.2 || ^6.0.0",
         "symfony/filesystem": "^7.2.0",
         "zircote/swagger-php": "^5.0.7"
     },

@@ -12,9 +12,9 @@ return [
         'version'  => '1.0.0',
         'name'     => 'Dotkernel CLI',
         'commands' => [
-            RouteListCommand::getDefaultName()     => RouteListCommand::class,
-            AdminCreateCommand::getDefaultName()   => AdminCreateCommand::class,
-            TokenGenerateCommand::getDefaultName() => TokenGenerateCommand::class,
+            RouteListCommand::$defaultName     => RouteListCommand::class,
+            AdminCreateCommand::$defaultName   => AdminCreateCommand::class,
+            TokenGenerateCommand::$defaultName => TokenGenerateCommand::class,
         ],
     ],
     FileLockerInterface::class => [

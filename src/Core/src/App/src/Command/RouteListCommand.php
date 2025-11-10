@@ -31,7 +31,7 @@ use const STR_PAD_LEFT;
 class RouteListCommand extends Command
 {
     /** @var string $defaultName */
-    protected static $defaultName = 'route:list';
+    public static $defaultName = 'route:list';
 
     #[Inject(
         Application::class,

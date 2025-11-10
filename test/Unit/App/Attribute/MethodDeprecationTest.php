@@ -116,7 +116,8 @@ class MethodDeprecationTest extends TestCase
     }
 
     /**
-     * @param ReflectionClass<RequestHandlerInterface> $reflectionClass
+     * @template T of RequestHandlerInterface
+     * @param ReflectionClass<T> $reflectionClass
      * @return array<int, mixed>
      */
     private function getAttributes(ReflectionClass $reflectionClass): array
