@@ -36,7 +36,7 @@ use const PHP_EOL;
 class AdminCreateCommand extends Command
 {
     /** @var string $defaultName */
-    protected static $defaultName = 'admin:create';
+    public static $defaultName = 'admin:create';
 
     #[Inject(
         AdminServiceInterface::class,

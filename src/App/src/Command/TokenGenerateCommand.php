@@ -25,7 +25,7 @@ use const PHP_EOL;
 class TokenGenerateCommand extends Command
 {
     /** @var string $defaultName */
-    protected static $defaultName      = 'token:generate';
+    public static $defaultName         = 'token:generate';
     private string $typeErrorReporting = 'error-reporting';
 
     #[Inject(
