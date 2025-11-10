@@ -1,5 +1,31 @@
 # Changelog
 
+## 6.1.0 - 2025-11-10
+
+### Changed
+
+* Update README for clarity and badge links by [@arhimede](https://github.com/arhimede) in [#447](https://github.com/dotkernel/api/pull/447)
+
+### Added
+
+* Issue [#435](https://github.com/dotkernel/api/issues/435): Implement `dotkernel/dot-maker` in dev mode by [@alexmerlin](https://github.com/alexmerlin) in [#436](https://github.com/dotkernel/api/pull/436)
+* Issue [#445](https://github.com/dotkernel/api/issues/445): Added `.laminas-ci.json` by [@alexmerlin](https://github.com/alexmerlin) in [#446](https://github.com/dotkernel/api/pull/446)
+* Issue [#449](https://github.com/dotkernel/api/issues/449): Implemented Doctrine table prefixes by [@alexmerlin](https://github.com/alexmerlin) in [#452](https://github.com/dotkernel/api/pull/452)
+* Issue [#450](https://github.com/dotkernel/api/issues/450): Add PHP 8.4 & 8.5 support by [@alexmerlin](https://github.com/alexmerlin) in [#454](https://github.com/dotkernel/api/pull/454)
+
+### Deprecated
+
+* Nothing
+
+### Removed
+
+* Issue [#438](https://github.com/dotkernel/api/issues/438): Removed migration file by [@alexmerlin](https://github.com/alexmerlin) in [#439](https://github.com/dotkernel/api/pull/439)
+* Issue [#445](https://github.com/dotkernel/api/issues/445): Removed `.laminas-ci/pre-run.sh` by [@alexmerlin](https://github.com/alexmerlin) in [#446](https://github.com/dotkernel/api/pull/446)
+
+### Fixed
+
+* fix(entity): explicitly set userId to null in OAuthAccessToken constructor by [@dq042000](https://github.com/dq042000) in [#437](https://github.com/dotkernel/api/pull/437)
+
 ## 6.0.0 - 2025-06-05
 
 ### Changed
