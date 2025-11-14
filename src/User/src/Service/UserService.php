@@ -209,12 +209,12 @@ class UserService implements UserServiceInterface
             }
         }
 
-        $this->validateUniqueUser((string) $user->getIdentity(), $user->getEmail(), $user->getUuid());
+        $this->validateUniqueUser((string) $user->getIdentity(), $user->getEmail(), $user->getId());
 
         if (array_key_exists('roles', $data) && count($data['roles']) > 0) {
             $user->resetRoles();
             foreach ($data['roles'] as $roleData) {
-                $userRole = $this->userRoleRepository->find($roleData['uuid']);
+                $userRole = $this->userRoleRepository->find($roleData['id']);
                 if (! $userRole instanceof UserRole) {
                     throw NotFoundException::create(Message::ROLE_NOT_FOUND);
                 }
@@ -277,27 +277,27 @@ class UserService implements UserServiceInterface
      * @throws ConflictException
      * @throws NotFoundException
      */
-    private function validateUniqueUser(string $identity, string $email, ?UuidInterface $uuid = null): void
+    private function validateUniqueUser(string $identity, string $email, ?UuidInterface $id = null): void
     {
         $user = $this->userRepository->findOneBy(['identity' => $identity]);
         if ($user instanceof User) {
-            if ($uuid === null) {
+            if ($id === null) {
                 throw ConflictException::create(Message::DUPLICATE_IDENTITY);
             }
-            if ($user->getUuid()->toString() !== $uuid->toString()) {
+            if (! $user->getId()->equals($id)) {
                 throw ConflictException::create(Message::DUPLICATE_IDENTITY);
             }
         }
 
         $userDetail = $this->userDetailRepository->findOneBy(['email' => $email]);
         if ($userDetail instanceof UserDetail) {
-            if ($uuid === null) {
+            if ($id === null) {
                 throw ConflictException::create(Message::DUPLICATE_EMAIL);
             }
             if (! $userDetail->getUser() instanceof User) {
                 throw NotFoundException::create(Message::USER_NOT_FOUND);
             }
-            if ($userDetail->getUser()->getUuid()->toString() !== $uuid->toString()) {
+            if (! $userDetail->getUser()->getId()->equals($id)) {
                 throw ConflictException::create(Message::DUPLICATE_EMAIL);
             }
         }

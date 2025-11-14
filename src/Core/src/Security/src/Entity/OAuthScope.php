@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Security\Entity;
 
+use Core\App\Entity\NumericIdentifierTrait;
 use Core\Security\Repository\OAuthScopeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -18,12 +19,8 @@ use League\OAuth2\Server\Entities\Traits\ScopeTrait;
 #[ORM\Table(name: 'oauth_scopes')]
 class OAuthScope implements ScopeEntityInterface
 {
+    use NumericIdentifierTrait;
     use ScopeTrait;
-
-    #[ORM\Id]
-    #[ORM\Column(name: 'id', type: 'integer', options: ['unsigned' => true])]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private int $id;
 
     #[ORM\Column(name: 'scope', type: 'string', length: 191)]
     private string $scope = '';
@@ -40,18 +37,6 @@ class OAuthScope implements ScopeEntityInterface
     {
         $this->accessTokens = new ArrayCollection();
         $this->authCodes    = new ArrayCollection();
-    }
-
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getIdentifier(): string

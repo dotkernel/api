@@ -143,9 +143,9 @@ use OpenApi\Attributes as OA;
                     property: 'roles',
                     type: 'array',
                     items: new OA\Items(
-                        required: ['uuid'],
+                        required: ['id'],
                         properties: [
-                            new OA\Property(property: 'uuid', type: 'string'),
+                            new OA\Property(property: 'id', type: 'string'),
                         ],
                     ),
                 ),
@@ -187,15 +187,15 @@ use OpenApi\Attributes as OA;
  * @see DeleteUserResourceHandler::handle()
  */
 #[OA\Delete(
-    path: '/user/{uuid}',
-    description: 'Authenticated (super)admin deletes (anonymizes) a user account identified by its UUID',
+    path: '/user/{id}',
+    description: 'Authenticated (super)admin deletes (anonymizes) a user account identified by its id',
     summary: 'Admin deletes (anonymizes) user account',
     security: [['AuthToken' => []]],
     tags: ['User'],
     parameters: [
         new OA\Parameter(
-            name: 'uuid',
-            description: 'User UUID',
+            name: 'id',
+            description: 'User id',
             in: 'path',
             required: true,
             schema: new OA\Schema(type: 'string'),
@@ -217,15 +217,15 @@ use OpenApi\Attributes as OA;
  * @see GetUserResourceHandler::handle()
  */
 #[OA\Get(
-    path: '/user/{uuid}',
-    description: 'Authenticated (super)admin fetches a user account identified by its UUID',
+    path: '/user/{id}',
+    description: 'Authenticated (super)admin fetches a user account identified by its id',
     summary: 'Admin views user account',
     security: [['AuthToken' => []]],
     tags: ['User'],
     parameters: [
         new OA\Parameter(
-            name: 'uuid',
-            description: 'User UUID',
+            name: 'id',
+            description: 'User id',
             in: 'path',
             required: true,
             schema: new OA\Schema(type: 'string'),
@@ -248,7 +248,7 @@ use OpenApi\Attributes as OA;
  * @see PatchUserResourceHandler::handle()
  */
 #[OA\Patch(
-    path: '/user/{uuid}',
+    path: '/user/{id}',
     description: 'Authenticated (super)admin updates an existing user account',
     summary: 'Admin updates user account',
     security: [['AuthToken' => []]],
@@ -274,9 +274,9 @@ use OpenApi\Attributes as OA;
                     property: 'roles',
                     type: 'array',
                     items: new OA\Items(
-                        required: ['uuid'],
+                        required: ['id'],
                         properties: [
-                            new OA\Property(property: 'uuid', type: 'string'),
+                            new OA\Property(property: 'id', type: 'string'),
                         ],
                     ),
                 ),
@@ -287,8 +287,8 @@ use OpenApi\Attributes as OA;
     tags: ['User'],
     parameters: [
         new OA\Parameter(
-            name: 'uuid',
-            description: 'User UUID',
+            name: 'id',
+            description: 'User id',
             in: 'path',
             required: true,
             schema: new OA\Schema(type: 'string'),
@@ -322,15 +322,15 @@ use OpenApi\Attributes as OA;
  * @see DeleteUserAvatarResourceHandler::handle()
  */
 #[OA\Delete(
-    path: '/user/{uuid}/avatar',
-    description: 'Authenticated (super)admin deletes a user avatar identified by user UUID',
+    path: '/user/{id}/avatar',
+    description: 'Authenticated (super)admin deletes a user avatar identified by user id',
     summary: 'Admin deletes user avatar',
     security: [['AuthToken' => []]],
     tags: ['UserAvatar'],
     parameters: [
         new OA\Parameter(
-            name: 'uuid',
-            description: 'User UUID',
+            name: 'id',
+            description: 'User id',
             in: 'path',
             required: true,
             schema: new OA\Schema(type: 'string'),
@@ -352,15 +352,15 @@ use OpenApi\Attributes as OA;
  * @see GetUserAvatarResourceHandler::handle()
  */
 #[OA\Get(
-    path: '/user/{uuid}/avatar',
-    description: 'Authenticated (super)admin fetches a user avatar identified by user UUID',
+    path: '/user/{id}/avatar',
+    description: 'Authenticated (super)admin fetches a user avatar identified by user id',
     summary: 'Admin views user avatar',
     security: [['AuthToken' => []]],
     tags: ['UserAvatar'],
     parameters: [
         new OA\Parameter(
-            name: 'uuid',
-            description: 'User UUID',
+            name: 'id',
+            description: 'User id',
             in: 'path',
             required: true,
             schema: new OA\Schema(type: 'string'),
@@ -383,8 +383,8 @@ use OpenApi\Attributes as OA;
  * @see PostUserAvatarResourceHandler::handle()
  */
 #[OA\Post(
-    path: '/user/{uuid}/avatar',
-    description: 'Authenticated (super)admin creates user avatar for user identified by user UUID',
+    path: '/user/{id}/avatar',
+    description: 'Authenticated (super)admin creates user avatar for user identified by user id',
     summary: 'Admin creates user avatar',
     security: [['AuthToken' => []]],
     requestBody: new OA\RequestBody(
@@ -404,8 +404,8 @@ use OpenApi\Attributes as OA;
     tags: ['UserAvatar'],
     parameters: [
         new OA\Parameter(
-            name: 'uuid',
-            description: 'User UUID',
+            name: 'id',
+            description: 'User id',
             in: 'path',
             required: true,
             schema: new OA\Schema(type: 'string'),
@@ -502,15 +502,15 @@ use OpenApi\Attributes as OA;
  * @see GetUserRoleResourceHandler::handle()
  */
 #[OA\Get(
-    path: '/user/role/{uuid}',
-    description: 'Authenticated (super)admin fetches a user role identified by its UUID',
+    path: '/user/role/{id}',
+    description: 'Authenticated (super)admin fetches a user role identified by its id',
     summary: 'Admin views user role',
     security: [['AuthToken' => []]],
     tags: ['UserRole'],
     parameters: [
         new OA\Parameter(
-            name: 'uuid',
-            description: 'UserRole UUID',
+            name: 'id',
+            description: 'UserRole id',
             in: 'path',
             required: true,
             schema: new OA\Schema(type: 'string'),
@@ -533,15 +533,15 @@ use OpenApi\Attributes as OA;
  * @see PatchUserActivateHandler::handle()
  */
 #[OA\Patch(
-    path: '/user/{uuid}/activate',
+    path: '/user/{id}/activate',
     description: 'Authenticated (super)admin activates an existing user account',
     summary: 'Admin activates user account',
     security: [['AuthToken' => []]],
     tags: ['User'],
     parameters: [
         new OA\Parameter(
-            name: 'uuid',
-            description: 'User UUID',
+            name: 'id',
+            description: 'User id',
             in: 'path',
             required: true,
             schema: new OA\Schema(type: 'string'),
@@ -575,15 +575,15 @@ use OpenApi\Attributes as OA;
  * @see PatchUserDeactivateHandler::handle()
  */
 #[OA\Patch(
-    path: '/user/{uuid}/deactivate',
+    path: '/user/{id}/deactivate',
     description: 'Authenticated (super)admin deactivates an existing user account',
     summary: 'Admin deactivates user account',
     security: [['AuthToken' => []]],
     tags: ['User'],
     parameters: [
         new OA\Parameter(
-            name: 'uuid',
-            description: 'User UUID',
+            name: 'id',
+            description: 'User id',
             in: 'path',
             required: true,
             schema: new OA\Schema(type: 'string'),
@@ -1118,7 +1118,7 @@ use OpenApi\Attributes as OA;
 #[OA\Schema(
     schema: 'User',
     properties: [
-        new OA\Property(property: 'uuid', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
+        new OA\Property(property: 'id', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
         new OA\Property(property: 'hash', type: 'string'),
         new OA\Property(property: 'identity', type: 'string'),
         new OA\Property(property: 'status', type: 'string', example: UserStatusEnum::Active),
@@ -1167,7 +1167,7 @@ use OpenApi\Attributes as OA;
 #[OA\Schema(
     schema: 'UserAvatar',
     properties: [
-        new OA\Property(property: 'uuid', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
+        new OA\Property(property: 'id', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
         new OA\Property(
             property: 'url',
             type: 'string',
@@ -1203,7 +1203,7 @@ use OpenApi\Attributes as OA;
 #[OA\Schema(
     schema: 'UserDetail',
     properties: [
-        new OA\Property(property: 'uuid', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
+        new OA\Property(property: 'id', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
         new OA\Property(property: 'firstName', type: 'string'),
         new OA\Property(property: 'lastName', type: 'string'),
         new OA\Property(property: 'email', type: 'string'),
@@ -1219,7 +1219,7 @@ use OpenApi\Attributes as OA;
 #[OA\Schema(
     schema: 'UserResetPassword',
     properties: [
-        new OA\Property(property: 'uuid', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
+        new OA\Property(property: 'id', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
         new OA\Property(property: 'expires', type: 'object', example: new DateTimeImmutable()),
         new OA\Property(property: 'hash', type: 'string'),
         new OA\Property(property: 'status', type: 'string', example: UserResetPasswordStatusEnum::Requested),
@@ -1252,7 +1252,7 @@ use OpenApi\Attributes as OA;
 #[OA\Schema(
     schema: 'UserRole',
     properties: [
-        new OA\Property(property: 'uuid', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
+        new OA\Property(property: 'id', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
         new OA\Property(property: 'name', type: 'string', example: UserRoleEnum::User->value),
         new OA\Property(
             property: '_links',

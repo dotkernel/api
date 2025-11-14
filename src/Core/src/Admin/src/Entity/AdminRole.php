@@ -10,6 +10,7 @@ use Core\Admin\Repository\AdminRoleRepository;
 use Core\App\Entity\AbstractEntity;
 use Core\App\Entity\RoleInterface;
 use Core\App\Entity\TimestampsTrait;
+use Core\App\Entity\UuidIdentifierTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,6 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 class AdminRole extends AbstractEntity implements RoleInterface
 {
     use TimestampsTrait;
+    use UuidIdentifierTrait;
 
     #[ORM\Column(
         name: 'name',
@@ -30,13 +32,6 @@ class AdminRole extends AbstractEntity implements RoleInterface
         options: ['default' => AdminRoleEnum::Admin]
     )]
     protected AdminRoleEnum $name = AdminRoleEnum::Admin;
-
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->created();
-    }
 
     public function getName(): AdminRoleEnum
     {
@@ -59,7 +54,7 @@ class AdminRole extends AbstractEntity implements RoleInterface
     public function getArrayCopy(): array
     {
         return [
-            'uuid'    => $this->uuid->toString(),
+            'id'      => $this->id->toString(),
             'name'    => $this->name->value,
             'created' => $this->created,
             'updated' => $this->updated,

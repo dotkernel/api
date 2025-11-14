@@ -118,7 +118,7 @@ class UserAvatarService implements UserAvatarServiceInterface
         return sprintf(
             '%s/%s/',
             rtrim($this->config['uploads']['user']['path'], '/'),
-            $user->getUuid()->toString()
+            $user->getId()->toString()
         );
     }
 

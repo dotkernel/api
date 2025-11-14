@@ -8,6 +8,7 @@ use Core\App\Entity\AbstractEntity;
 use Core\App\Entity\PasswordTrait;
 use Core\App\Entity\RoleInterface;
 use Core\App\Entity\TimestampsTrait;
+use Core\App\Entity\UuidIdentifierTrait;
 use Core\User\Enum\UserStatusEnum;
 use Core\User\Repository\UserRepository;
 use DateTimeImmutable;
@@ -28,12 +29,13 @@ use function uniqid;
  * @phpstan-import-type RoleType from RoleInterface
  */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: 'user')]
+#[ORM\Table(name: '`user`')]
 #[ORM\HasLifecycleCallbacks]
 class User extends AbstractEntity implements UserEntityInterface
 {
     use PasswordTrait;
     use TimestampsTrait;
+    use UuidIdentifierTrait;
 
     #[ORM\OneToOne(targetEntity: UserAvatar::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     protected ?UserAvatar $avatar = null;
@@ -48,8 +50,8 @@ class User extends AbstractEntity implements UserEntityInterface
     /** @var Collection<int, RoleInterface> */
     #[ORM\ManyToMany(targetEntity: UserRole::class)]
     #[ORM\JoinTable(name: 'user_roles')]
-    #[ORM\JoinColumn(name: 'userUuid', referencedColumnName: 'uuid')]
-    #[ORM\InverseJoinColumn(name: 'roleUuid', referencedColumnName: 'uuid')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'role_id', referencedColumnName: 'id')]
     protected Collection $roles;
 
     /** @var non-empty-string|null $identity */
@@ -78,7 +80,6 @@ class User extends AbstractEntity implements UserEntityInterface
         $this->roles          = new ArrayCollection();
         $this->resetPasswords = new ArrayCollection();
 
-        $this->created();
         $this->renewHash();
     }
 
@@ -340,7 +341,7 @@ class User extends AbstractEntity implements UserEntityInterface
 
     /**
      * @return array{
-     *     uuid: non-empty-string,
+     *     id: non-empty-string,
      *     avatar: UserAvatarType|null,
      *     detail: UserDetailType|null,
      *     hash: non-empty-string,
@@ -354,7 +355,7 @@ class User extends AbstractEntity implements UserEntityInterface
     public function getArrayCopy(): array
     {
         return [
-            'uuid'     => $this->uuid->toString(),
+            'id'       => $this->id->toString(),
             'avatar'   => $this->avatar?->getArrayCopy(),
             'detail'   => $this->detail?->getArrayCopy(),
             'hash'     => $this->hash,

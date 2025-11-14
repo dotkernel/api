@@ -52,7 +52,7 @@ class AdminTest extends AbstractFunctionalTest
         $identity = $this->createUser()->getIdentity();
         $this->loginAs($identity, self::DEFAULT_PASSWORD);
 
-        $response = $this->get('/admin/' . $admin->getUuid()->toString());
+        $response = $this->get('/admin/' . $admin->getId()->toString());
 
         $this->assertResponseForbidden($response);
     }
@@ -84,7 +84,7 @@ class AdminTest extends AbstractFunctionalTest
         $identity = $this->createUser()->getIdentity();
         $this->loginAs($identity, self::DEFAULT_PASSWORD);
 
-        $response = $this->patch('/admin/' . $admin->getUuid()->toString());
+        $response = $this->patch('/admin/' . $admin->getId()->toString());
         $this->assertResponseForbidden($response);
     }
 
@@ -100,7 +100,7 @@ class AdminTest extends AbstractFunctionalTest
         $identity = $this->createUser()->getIdentity();
         $this->loginAs($identity, self::DEFAULT_PASSWORD);
 
-        $response = $this->delete('/admin/' . $admin->getUuid()->toString());
+        $response = $this->delete('/admin/' . $admin->getId()->toString());
         $this->assertResponseForbidden($response);
     }
 
@@ -131,11 +131,11 @@ class AdminTest extends AbstractFunctionalTest
         $identity = $admin->getIdentity();
         $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
-        $response = $this->get('/admin/' . $admin->getUuid()->toString());
+        $response = $this->get('/admin/' . $admin->getId()->toString());
         $data     = json_decode($response->getBody()->getContents(), true);
 
         $this->assertResponseOk($response);
-        $this->assertSame($admin->getUuid()->toString(), $data['uuid']);
+        $this->assertSame($admin->getId()->toString(), $data['id']);
     }
 
     /**
@@ -164,7 +164,7 @@ class AdminTest extends AbstractFunctionalTest
             'status'          => $admin->getStatus()->value,
             'roles'           => [
                 [
-                    'uuid' => $adminRole->getUuid()->toString(),
+                    'id' => $adminRole->getId()->toString(),
                 ],
             ],
         ];
@@ -204,7 +204,7 @@ class AdminTest extends AbstractFunctionalTest
             'status'          => $admin->getStatus()->value,
             'roles'           => [
                 [
-                    'uuid' => $adminRole->getUuid()->toString(),
+                    'id' => $adminRole->getId()->toString(),
                 ],
             ],
         ];
@@ -241,7 +241,7 @@ class AdminTest extends AbstractFunctionalTest
             'lastName'  => 'Admin',
         ];
 
-        $response = $this->patch('/admin/' . $admin->getUuid()->toString(), $updateData);
+        $response = $this->patch('/admin/' . $admin->getId()->toString(), $updateData);
         $data     = json_decode($response->getBody()->getContents(), true);
 
         $this->assertResponseOk($response);
@@ -261,12 +261,12 @@ class AdminTest extends AbstractFunctionalTest
         $identity = $admin->getIdentity();
         $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
-        $response = $this->delete('/admin/' . $admin->getUuid()->toString());
+        $response = $this->delete('/admin/' . $admin->getId()->toString());
 
         $this->assertResponseNoContent($response);
 
         $adminRepository = $this->getEntityManager()->getRepository(Admin::class);
-        $admin           = $adminRepository->find($admin->getUuid()->toString());
+        $admin           = $adminRepository->find($admin->getId()->toString());
 
         $this->assertEmpty($admin);
     }
@@ -287,7 +287,7 @@ class AdminTest extends AbstractFunctionalTest
         $data     = json_decode($response->getBody()->getContents(), true);
 
         $this->assertResponseOk($response);
-        $this->assertSame($admin->getUuid()->toString(), $data['uuid']);
+        $this->assertSame($admin->getId()->toString(), $data['id']);
         $this->assertSame($admin->getIdentity(), $data['identity']);
         $this->assertSame($admin->getFirstName(), $data['firstName']);
         $this->assertSame($admin->getLastName(), $data['lastName']);
@@ -345,11 +345,11 @@ class AdminTest extends AbstractFunctionalTest
 
         $adminRole = $admin->getRoles()[0];
 
-        $response = $this->get('/admin/role/' . $adminRole->getUuid()->toString());
+        $response = $this->get('/admin/role/' . $adminRole->getId()->toString());
         $data     = json_decode($response->getBody()->getContents(), true);
 
         $this->assertResponseOk($response);
-        $this->assertSame($adminRole->getUuid()->toString(), $data['uuid']);
+        $this->assertSame($adminRole->getId()->toString(), $data['id']);
         $this->assertSame($adminRole->getName()->value, $data['name']);
     }
 
@@ -379,7 +379,7 @@ class AdminTest extends AbstractFunctionalTest
                 'email'     => 'user1@test.com',
             ],
             'roles'           => [
-                ['uuid' => $userRole->getUuid()->toString()],
+                ['id' => $userRole->getId()->toString()],
             ],
         ];
 
@@ -420,7 +420,7 @@ class AdminTest extends AbstractFunctionalTest
                 'email'     => 'test@user.com',
             ],
             'roles'           => [
-                ['uuid' => $userRole->getUuid()->toString()],
+                ['id' => $userRole->getId()->toString()],
             ],
         ];
 
@@ -428,14 +428,14 @@ class AdminTest extends AbstractFunctionalTest
         $data     = json_decode($response->getBody()->getContents(), true);
 
         $this->assertResponseCreated($response);
-        $this->assertArrayHasKey('uuid', $data);
+        $this->assertArrayHasKey('id', $data);
         $this->assertArrayHasKey('hash', $data);
         $this->assertArrayHasKey('identity', $data);
         $this->assertArrayHasKey('status', $data);
         $this->assertArrayHasKey('avatar', $data);
         $this->assertArrayHasKey('detail', $data);
         $this->assertArrayHasKey('roles', $data);
-        $this->assertNotEmpty($data['uuid']);
+        $this->assertNotEmpty($data['id']);
         $this->assertNotEmpty($data['hash']);
         $this->assertSame($userData['identity'], $data['identity']);
         $this->assertSame(UserStatusEnum::Pending->value, $data['status']);
@@ -447,7 +447,7 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertSame($userData['detail']['lastName'], $data['detail']['lastName']);
         $this->assertSame($userData['detail']['email'], $data['detail']['email']);
         $this->assertNotEmpty($data['roles']);
-        $this->assertSame($userRole->getUuid()->toString(), $data['roles'][0]['uuid']);
+        $this->assertSame($userRole->getId()->toString(), $data['roles'][0]['id']);
         $this->assertSame($userRole->getName()->value, $data['roles'][0]['name']);
     }
 
@@ -466,12 +466,12 @@ class AdminTest extends AbstractFunctionalTest
         $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
         $this->assertFalse($user->isActive());
-        $response = $this->patch(sprintf('/user/%s/activate', $user->getUuid()->toString()));
+        $response = $this->patch(sprintf('/user/%s/activate', $user->getId()->toString()));
 
         $this->assertResponseOk($response);
 
         $userRepository = $this->getEntityManager()->getRepository(User::class);
-        $user           = $userRepository->find($user->getUuid()->toString());
+        $user           = $userRepository->find($user->getId()->toString());
         assert($user instanceof User);
 
         $this->assertTrue($user->isActive());
@@ -489,12 +489,12 @@ class AdminTest extends AbstractFunctionalTest
         $identity = $this->createAdmin()->getIdentity();
         $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
-        $response = $this->delete('/user/' . $user->getUuid()->toString());
+        $response = $this->delete('/user/' . $user->getId()->toString());
 
         $this->assertResponseNoContent($response);
 
         $userRepository = $this->getEntityManager()->getRepository(User::class);
-        $user           = $userRepository->find($user->getUuid()->toString());
+        $user           = $userRepository->find($user->getId()->toString());
         assert($user instanceof User);
 
         $this->assertTrue($user->isDeleted());
@@ -530,7 +530,7 @@ class AdminTest extends AbstractFunctionalTest
         $identity = $this->createAdmin()->getIdentity();
         $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
-        $response = $this->patch('/user/' . $user2->getUuid()->toString(), [
+        $response = $this->patch('/user/' . $user2->getId()->toString(), [
             'detail' => [
                 'email' => $user1->getDetail()->getEmail(),
             ],
@@ -543,7 +543,7 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertSame(Message::DUPLICATE_EMAIL, $data['detail']);
 
         $userDetailRepository = $this->getEntityManager()->getRepository(UserDetail::class);
-        $userDetail           = $userDetailRepository->find($user2->getDetail()->getUuid());
+        $userDetail           = $userDetailRepository->find($user2->getDetail()->getId());
         assert($userDetail instanceof UserDetail);
 
         $this->assertSame($user2->getDetail()->getEmail(), $userDetail->getEmail());
@@ -573,12 +573,12 @@ class AdminTest extends AbstractFunctionalTest
             'status' => UserStatusEnum::Active->value,
             'roles'  => [
                 [
-                    'uuid' => $userRole->getUuid()->toString(),
+                    'id' => $userRole->getId()->toString(),
                 ],
             ],
         ];
 
-        $response = $this->patch('/user/' . $user->getUuid()->toString(), $updateData);
+        $response = $this->patch('/user/' . $user->getId()->toString(), $updateData);
 
         $this->assertResponseOk($response);
 
@@ -588,7 +588,7 @@ class AdminTest extends AbstractFunctionalTest
         $this->assertInstanceOf(BackedEnum::class, $status);
         $this->assertSame($updateData['detail']['firstName'], $data['detail']['firstName']);
         $this->assertSame($updateData['detail']['lastName'], $data['detail']['lastName']);
-        $this->assertSame($updateData['roles'][0]['uuid'], $data['roles'][0]['uuid']);
+        $this->assertSame($updateData['roles'][0]['id'], $data['roles'][0]['id']);
     }
 
     /**
@@ -603,12 +603,12 @@ class AdminTest extends AbstractFunctionalTest
         $identity = $this->createAdmin()->getIdentity();
         $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
-        $response = $this->get('/user/' . $user->getUuid()->toString());
+        $response = $this->get('/user/' . $user->getId()->toString());
 
         $this->assertResponseOk($response);
 
         $data = json_decode($response->getBody()->getContents(), true);
-        $this->assertSame($user->getUuid()->toString(), $data['uuid']);
+        $this->assertSame($user->getId()->toString(), $data['id']);
     }
 
     /**
@@ -621,7 +621,7 @@ class AdminTest extends AbstractFunctionalTest
         $identity = $this->createAdmin()->getIdentity();
         $this->loginAs($identity, self::DEFAULT_PASSWORD, 'admin', 'admin');
 
-        $response = $this->get('/user/' . (new User())->getUuid()->toString());
+        $response = $this->get('/user/' . (new User())->getId()->toString());
 
         $this->assertResponseNotFound($response);
     }

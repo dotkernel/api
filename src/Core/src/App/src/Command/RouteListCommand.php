@@ -101,7 +101,7 @@ class RouteListCommand extends Command
                 str_pad((string) $index++, 4, ' ', STR_PAD_LEFT),
                 $route['method'],
                 $route['name'],
-                str_replace(ConfigProvider::REGEXP_UUID, '{uuid}', $route['path']),
+                str_replace(ConfigProvider::REGEXP_UUID, '{id}', $route['path']),
             ]);
         }
         $table->render();

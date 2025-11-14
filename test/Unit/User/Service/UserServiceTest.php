@@ -78,11 +78,11 @@ class UserServiceTest extends TestCase
         $data = $this->getUser([
             'roles' => [
                 [
-                    'uuid' => 'uuid',
+                    'id'   => 'id',
                     'name' => UserRoleEnum::Guest,
                 ],
                 [
-                    'uuid' => 'uuid',
+                    'id'   => 'id',
                     'name' => UserRoleEnum::User,
                 ],
             ],
@@ -102,7 +102,7 @@ class UserServiceTest extends TestCase
         $data = $this->getUser([
             'roles' => [
                 [
-                    'uuid' => 'uuid',
+                    'id'   => 'id',
                     'name' => UserRoleEnum::User,
                 ],
             ],
@@ -196,7 +196,10 @@ class UserServiceTest extends TestCase
                 'email'     => 'test@dotkernel2.com',
             ],
             'roles'    => [
-                ['uuid' => 'uuid', 'name' => UserRoleEnum::User],
+                [
+                    'id'   => 'id',
+                    'name' => UserRoleEnum::User,
+                ],
             ],
         ];
 

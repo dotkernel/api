@@ -441,7 +441,7 @@ class AbstractFunctionalTest extends TestCase
      *     password: non-empty-string,
      *     passwordConfirm: non-empty-string,
      *     status: \Core\User\Enum\UserStatusEnum,
-     *     roles: array{uuid: non-empty-string}[]
+     *     roles: array{id: non-empty-string}[]
      * }
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -470,7 +470,7 @@ class AbstractFunctionalTest extends TestCase
             'passwordConfirm' => $data['password'] ?? self::DEFAULT_PASSWORD,
             'status'          => $status,
             'roles'           => [
-                ['uuid' => $userRole->getUuid()->toString()],
+                ['id' => $userRole->getId()->toString()],
             ],
         ];
     }

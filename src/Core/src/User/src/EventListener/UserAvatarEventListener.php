@@ -48,7 +48,7 @@ class UserAvatarEventListener
             sprintf(
                 '%s/%s/%s',
                 rtrim($this->config['uploads']['user']['url'], '/'),
-                $avatar->getUser()->getUuid()->toString(),
+                $avatar->getUser()->getId()->toString(),
                 $avatar->getName()
             )
         );

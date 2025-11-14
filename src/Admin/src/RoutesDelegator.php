@@ -28,7 +28,7 @@ class RoutesDelegator
      */
     public function __invoke(ContainerInterface $container, string $serviceName, callable $callback): Application
     {
-        $uuid = ConfigProvider::REGEXP_UUID;
+        $id = ConfigProvider::REGEXP_UUID;
 
         /** @var RouteCollectorInterface $routeCollector */
         $routeCollector = $container->get(RouteCollectorInterface::class);
@@ -37,14 +37,14 @@ class RoutesDelegator
             ->get('', GetAdminCollectionHandler::class, 'admin::list-admin')
             ->post('', PostAdminResourceHandler::class, 'admin::create-admin');
 
-        $routeCollector->group('/admin/' . $uuid)
+        $routeCollector->group('/admin/' . $id)
             ->delete('', DeleteAdminResourceHandler::class, 'admin::delete-admin')
             ->get('', GetAdminResourceHandler::class, 'admin::view-admin')
             ->patch('', PatchAdminResourceHandler::class, 'admin::update-admin');
 
         $routeCollector->group('/admin/role')
             ->get('', GetAdminRoleCollectionHandler::class, 'admin::list-role')
-            ->get('/' . $uuid, GetAdminRoleResourceHandler::class, 'admin::view-role');
+            ->get('/' . $id, GetAdminRoleResourceHandler::class, 'admin::view-role');
 
         $routeCollector->group('/admin/account')
             ->get('', GetAdminAccountResourceHandler::class, 'admin::view-account')
