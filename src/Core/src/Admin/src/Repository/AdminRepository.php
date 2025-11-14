@@ -60,7 +60,7 @@ class AdminRepository extends AbstractRepository
             ->orderBy($params['sort'], $params['dir'])
             ->setFirstResult($params['offset'])
             ->setMaxResults($params['limit'])
-            ->groupBy('admin.uuid');
+            ->groupBy('admin.id');
         $queryBuilder->getQuery()->useQueryCache(true);
 
         return $queryBuilder;

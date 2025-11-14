@@ -99,7 +99,7 @@ class AdminCreateCommand extends Command
      *     firstName: string,
      *     lastName: string,
      *     status: 'active',
-     *     roles: array{uuid: non-empty-string}[],
+     *     roles: array{id: non-empty-string}[],
      * }
      * @throws Exception
      */
@@ -118,7 +118,7 @@ class AdminCreateCommand extends Command
             'lastName'        => trim($input->getOption('lastName')),
             'status'          => AdminStatusEnum::Active->value,
             'roles'           => [
-                ['uuid' => $adminRole->getUuid()->toString()],
+                ['id' => $adminRole->getId()->toString()],
             ],
         ];
     }

@@ -256,7 +256,7 @@ class UserTest extends AbstractFunctionalTest
         $this->assertResponseOk($response);
 
         $userRepository = $this->getEntityManager()->getRepository(User::class);
-        $user           = $userRepository->find($user->getUuid()->toString());
+        $user           = $userRepository->find($user->getId()->toString());
         assert($user instanceof User);
 
         $this->assertTrue($user->isActive());
@@ -307,7 +307,7 @@ class UserTest extends AbstractFunctionalTest
         $this->assertResponseNoContent($response);
 
         $userRepository = $this->getEntityManager()->getRepository(User::class);
-        $deletedUser    = $userRepository->find($user->getUuid()->toString());
+        $deletedUser    = $userRepository->find($user->getId()->toString());
         assert($deletedUser instanceof User);
 
         $this->assertTrue($deletedUser->isDeleted());

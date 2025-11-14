@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Security\Entity;
 
+use Core\App\Entity\NumericIdentifierTrait;
 use Core\Security\Repository\OAuthAccessTokenRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -26,10 +27,7 @@ use function is_int;
 #[ORM\Table(name: 'oauth_access_tokens')]
 class OAuthAccessToken implements AccessTokenEntityInterface
 {
-    #[ORM\Id]
-    #[ORM\Column(name: 'id', type: 'integer', options: ['unsigned' => true])]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private int $id;
+    use NumericIdentifierTrait;
 
     #[ORM\ManyToOne(targetEntity: OAuthClient::class)]
     #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id')]
@@ -62,18 +60,6 @@ class OAuthAccessToken implements AccessTokenEntityInterface
     public function __construct()
     {
         $this->scopes = new ArrayCollection();
-    }
-
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function setClient(ClientEntityInterface $client): self

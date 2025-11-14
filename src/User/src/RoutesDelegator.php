@@ -44,7 +44,7 @@ class RoutesDelegator
      */
     public function __invoke(ContainerInterface $container, string $serviceName, callable $callback): Application
     {
-        $uuid = ConfigProvider::REGEXP_UUID;
+        $id = ConfigProvider::REGEXP_UUID;
 
         /** @var RouteCollectorInterface $routeCollector */
         $routeCollector = $container->get(RouteCollectorInterface::class);
@@ -54,22 +54,22 @@ class RoutesDelegator
             ->post('', PostUserResourceHandler::class, 'user::create-user');
 
         $routeCollector
-            ->patch('/user/' . $uuid . '/activate', PatchUserActivateHandler::class, 'user::activate-user')
-            ->patch('/user/' . $uuid . '/deactivate', PatchUserDeactivateHandler::class, 'user::deactivate-user');
+            ->patch('/user/' . $id . '/activate', PatchUserActivateHandler::class, 'user::activate-user')
+            ->patch('/user/' . $id . '/deactivate', PatchUserDeactivateHandler::class, 'user::deactivate-user');
 
-        $routeCollector->group('/user/' . $uuid)
+        $routeCollector->group('/user/' . $id)
             ->delete('', DeleteUserResourceHandler::class, 'user::delete-user')
             ->get('', GetUserResourceHandler::class, 'user::view-user')
             ->patch('', PatchUserResourceHandler::class, 'user::update-user');
 
-        $routeCollector->group('/user/' . $uuid . '/avatar')
+        $routeCollector->group('/user/' . $id . '/avatar')
             ->delete('', DeleteUserAvatarResourceHandler::class, 'user::delete-user-avatar')
             ->get('', GetUserAvatarResourceHandler::class, 'user::view-user-avatar')
             ->post('', PostUserAvatarResourceHandler::class, 'user::create-user-avatar');
 
         $routeCollector->group('/user/role')
             ->get('', GetUserRoleCollectionHandler::class, 'user::list-role')
-            ->get('/' . $uuid, GetUserRoleResourceHandler::class, 'user::view-role');
+            ->get('/' . $id, GetUserRoleResourceHandler::class, 'user::view-role');
 
         $routeCollector->group('/user/account')
             ->delete('', DeleteUserAccountResourceHandler::class, 'user::delete-account')

@@ -59,7 +59,7 @@ class AdminServiceTest extends TestCase
         $data = $this->getAdmin([
             'roles' => [
                 [
-                    'uuid' => 'uuid',
+                    'id'   => 'id',
                     'name' => AdminRoleEnum::Superuser,
                 ],
             ],

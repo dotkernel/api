@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Security\Entity;
 
+use Core\App\Entity\NumericIdentifierTrait;
 use Core\Security\Repository\OAuthClientRepository;
 use Core\User\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,16 +14,13 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 #[ORM\Table(name: 'oauth_clients')]
 class OAuthClient implements ClientEntityInterface
 {
+    use NumericIdentifierTrait;
+
     public const NAME_ADMIN    = 'admin';
     public const NAME_FRONTEND = 'frontend';
 
-    #[ORM\Id]
-    #[ORM\Column(name: 'id', type: 'integer', options: ['unsigned' => true])]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private int $id;
-
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'uuid', nullable: true)]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true)]
     private ?User $user = null;
 
     #[ORM\Column(name: 'name', type: 'string', length: 40)]
@@ -39,18 +37,6 @@ class OAuthClient implements ClientEntityInterface
 
     #[ORM\Column(name: 'isConfidential', type: 'boolean', options: ['default' => false])]
     private bool $isConfidential = false;
-
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function setUser(?User $user = null): self
     {

@@ -18,8 +18,8 @@ readonly class Resource implements ResourceInterface
      */
     public function __construct(
         public string $entity,
-        public string $identifier = 'uuid',
-        public string $placeholder = 'uuid',
+        public string $identifier = 'id',
+        public string $placeholder = 'id',
         public ?string $guard = null,
     ) {
     }

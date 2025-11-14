@@ -127,8 +127,8 @@ class ConfigProvider
     public static function getResource(
         string $resourceClass,
         string $route,
-        string $resourceIdentifier = 'uuid',
-        string $resourceIdentifierPlaceholder = 'uuid'
+        string $resourceIdentifier = 'id',
+        string $resourceIdentifierPlaceholder = 'id'
     ): array {
         return [
             '__class__'                    => RouteBasedResourceMetadata::class,

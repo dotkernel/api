@@ -7,6 +7,7 @@ namespace Core\Admin\Entity;
 use Core\Admin\Repository\AdminLoginRepository;
 use Core\App\Entity\AbstractEntity;
 use Core\App\Entity\TimestampsTrait;
+use Core\App\Entity\UuidIdentifierTrait;
 use Core\App\Enum\SuccessFailureEnum;
 use Core\App\Enum\YesNoEnum;
 use DateTimeImmutable;
@@ -18,6 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 class AdminLogin extends AbstractEntity
 {
     use TimestampsTrait;
+    use UuidIdentifierTrait;
 
     #[ORM\Column(name: 'identity', type: 'string', length: 191, nullable: true)]
     protected ?string $identity = null;
@@ -69,13 +71,6 @@ class AdminLogin extends AbstractEntity
 
     #[ORM\Column(type: 'success_failure_enum', nullable: true, enumType: SuccessFailureEnum::class)]
     protected SuccessFailureEnum $loginStatus = SuccessFailureEnum::Fail;
-
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->created();
-    }
 
     public function getIdentity(): ?string
     {
@@ -283,7 +278,7 @@ class AdminLogin extends AbstractEntity
 
     /**
      * @return array{
-     *     uuid: non-empty-string,
+     *     id: non-empty-string,
      *     identity: string|null,
      *     adminIp: string|null,
      *     country: string|null,
@@ -308,7 +303,7 @@ class AdminLogin extends AbstractEntity
     public function getArrayCopy(): array
     {
         return [
-            'uuid'          => $this->uuid->toString(),
+            'id'            => $this->id->toString(),
             'identity'      => $this->identity,
             'adminIp'       => $this->adminIp,
             'country'       => $this->country,

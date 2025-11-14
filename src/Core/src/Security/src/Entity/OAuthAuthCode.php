@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Security\Entity;
 
+use Core\App\Entity\NumericIdentifierTrait;
 use Core\Security\Repository\OAuthAuthCodeRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,11 +23,7 @@ use function assert;
 class OAuthAuthCode implements AuthCodeEntityInterface
 {
     use AuthCodeTrait;
-
-    #[ORM\Id]
-    #[ORM\Column(name: 'id', type: 'integer', options: ['unsigned' => true])]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private int $id;
+    use NumericIdentifierTrait;
 
     #[ORM\ManyToOne(targetEntity: OAuthClient::class)]
     #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id')]
@@ -49,18 +46,6 @@ class OAuthAuthCode implements AuthCodeEntityInterface
     {
         $this->expiresDatetime = new DateTimeImmutable();
         $this->scopes          = new ArrayCollection();
-    }
-
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
     }
 
     public function setClient(ClientEntityInterface $client): self

@@ -118,9 +118,9 @@ use OpenApi\Attributes as OA;
                     property: 'roles',
                     type: 'array',
                     items: new OA\Items(
-                        required: ['uuid'],
+                        required: ['id'],
                         properties: [
-                            new OA\Property(property: 'uuid', type: 'string'),
+                            new OA\Property(property: 'id', type: 'string'),
                         ],
                     ),
                 ),
@@ -157,15 +157,15 @@ use OpenApi\Attributes as OA;
  * @see DeleteAdminResourceHandler::handle()
  */
 #[OA\Delete(
-    path: '/admin/{uuid}',
-    description: 'Authenticated (super)admin deletes an admin account identified by its UUID',
+    path: '/admin/{id}',
+    description: 'Authenticated (super)admin deletes an admin account identified by its id',
     summary: 'Admin deletes an admin account',
     security: [['AuthToken' => []]],
     tags: ['Admin'],
     parameters: [
         new OA\Parameter(
-            name: 'uuid',
-            description: 'Admin UUID',
+            name: 'id',
+            description: 'Admin id',
             in: 'path',
             required: true,
             schema: new OA\Schema(type: 'string'),
@@ -187,15 +187,15 @@ use OpenApi\Attributes as OA;
  * @see GetAdminResourceHandler::handle()
  */
 #[OA\Get(
-    path: '/admin/{uuid}',
-    description: 'Authenticated (super)admin fetches an admin account identified by its UUID',
+    path: '/admin/{id}',
+    description: 'Authenticated (super)admin fetches an admin account identified by its id',
     summary: 'Admin fetches an admin account',
     security: [['AuthToken' => []]],
     tags: ['Admin'],
     parameters: [
         new OA\Parameter(
-            name: 'uuid',
-            description: 'Admin UUID',
+            name: 'id',
+            description: 'Admin id',
             in: 'path',
             required: true,
             schema: new OA\Schema(type: 'string'),
@@ -218,7 +218,7 @@ use OpenApi\Attributes as OA;
  * @see PatchAdminResourceHandler::handle()
  */
 #[OA\Patch(
-    path: '/admin/{uuid}',
+    path: '/admin/{id}',
     description: 'Authenticated (super)admin updates an existing admin account',
     summary: 'Admin updates an admin account',
     security: [['AuthToken' => []]],
@@ -236,9 +236,9 @@ use OpenApi\Attributes as OA;
                     property: 'roles',
                     type: 'array',
                     items: new OA\Items(
-                        required: ['uuid'],
+                        required: ['id'],
                         properties: [
-                            new OA\Property(property: 'uuid', type: 'string'),
+                            new OA\Property(property: 'id', type: 'string'),
                         ],
                     ),
                 ),
@@ -249,8 +249,8 @@ use OpenApi\Attributes as OA;
     tags: ['Admin'],
     parameters: [
         new OA\Parameter(
-            name: 'uuid',
-            description: 'Admin UUID',
+            name: 'id',
+            description: 'Admin id',
             in: 'path',
             required: true,
             schema: new OA\Schema(type: 'string'),
@@ -352,15 +352,15 @@ use OpenApi\Attributes as OA;
  * @see GetAdminRoleResourceHandler::handle()
  */
 #[OA\Get(
-    path: '/admin/role/{uuid}',
-    description: 'Authenticated (super)admin fetches an admin role identified by its UUID',
+    path: '/admin/role/{id}',
+    description: 'Authenticated (super)admin fetches an admin role identified by its id',
     summary: 'Admin fetches an admin role',
     security: [['AuthToken' => []]],
     tags: ['AdminRole'],
     parameters: [
         new OA\Parameter(
-            name: 'uuid',
-            description: 'Admin role UUID',
+            name: 'id',
+            description: 'Admin role id',
             in: 'path',
             required: true,
             schema: new OA\Schema(type: 'string'),
@@ -418,9 +418,9 @@ use OpenApi\Attributes as OA;
                     property: 'roles',
                     type: 'array',
                     items: new OA\Items(
-                        required: ['uuid'],
+                        required: ['id'],
                         properties: [
-                            new OA\Property(property: 'uuid', type: 'string'),
+                            new OA\Property(property: 'id', type: 'string'),
                         ],
                     ),
                 ),
@@ -444,7 +444,7 @@ use OpenApi\Attributes as OA;
 #[OA\Schema(
     schema: 'Admin',
     properties: [
-        new OA\Property(property: 'uuid', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
+        new OA\Property(property: 'id', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
         new OA\Property(property: 'identity', type: 'string'),
         new OA\Property(property: 'firstName', type: 'string'),
         new OA\Property(property: 'lastName', type: 'string'),
@@ -454,7 +454,7 @@ use OpenApi\Attributes as OA;
             type: 'array',
             items: new OA\Items(
                 properties: [
-                    new OA\Property(property: 'uuid', type: 'string'),
+                    new OA\Property(property: 'id', type: 'string'),
                     new OA\Property(property: 'name', type: 'string', example: AdminRoleEnum::Admin->value),
                 ],
                 type: 'object',
@@ -489,7 +489,7 @@ use OpenApi\Attributes as OA;
 #[OA\Schema(
     schema: 'AdminRole',
     properties: [
-        new OA\Property(property: 'uuid', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
+        new OA\Property(property: 'id', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
         new OA\Property(property: 'name', type: 'string', example: AdminRoleEnum::Admin->value),
         new OA\Property(
             property: '_links',

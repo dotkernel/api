@@ -9,7 +9,7 @@ use Ramsey\Uuid\UuidInterface;
 
 interface EntityInterface
 {
-    public function getUuid(): UuidInterface;
+    public function getId(): UuidInterface;
 
     public function getCreated(): ?DateTimeImmutable;
 

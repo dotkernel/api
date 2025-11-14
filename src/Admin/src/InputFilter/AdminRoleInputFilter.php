@@ -9,7 +9,7 @@ use Core\App\InputFilter\AbstractInputFilter;
 
 /**
  * @phpstan-type AdminRoleDataType array{
- *     uuid: non-empty-string,
+ *     id: non-empty-string,
  * }
  * @extends AbstractInputFilter<AdminRoleDataType>
  */
@@ -17,6 +17,6 @@ class AdminRoleInputFilter extends AbstractInputFilter
 {
     public function __construct()
     {
-        $this->add(new UuidInput('uuid'));
+        $this->add(new UuidInput('id'));
     }
 }

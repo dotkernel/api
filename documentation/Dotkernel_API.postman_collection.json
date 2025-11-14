@@ -73,7 +73,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"status\": \"active\",\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
+									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"status\": \"active\",\r\n    \"roles\": [\r\n        {\r\n            \"id\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -178,7 +178,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ],\r\n    \"status\": \"active\"\r\n}",
+									"raw": "{\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"roles\": [\r\n        {\r\n            \"id\": \"{{$randomUUID}}\"\r\n        }\r\n    ],\r\n    \"status\": \"active\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -209,7 +209,8 @@
 											""
 										],
 										"type": "text/javascript",
-										"packages": {}
+										"packages": {},
+										"requests": {}
 									}
 								}
 							],
@@ -1176,7 +1177,9 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
 									}
 								}
 							],
@@ -1185,7 +1188,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"status\": \"pending\",\r\n    \"detail\": {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    },\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
+									"raw": "{\r\n    \"identity\": \"{{$randomUserName}}\",\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"status\": \"pending\",\r\n    \"detail\": {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    },\r\n    \"roles\": [\r\n        {\r\n            \"id\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1314,7 +1317,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"status\": \"active\",\r\n    \"detail\": {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    },\r\n    \"roles\": [\r\n        {\r\n            \"uuid\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
+									"raw": "{\r\n    \"password\": \"dotkernel\",\r\n    \"passwordConfirm\": \"dotkernel\",\r\n    \"status\": \"active\",\r\n    \"detail\": {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"email\": \"{{$randomExampleEmail}}\"\r\n    },\r\n    \"roles\": [\r\n        {\r\n            \"id\": \"{{$randomUUID}}\"\r\n        }\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"

@@ -6,6 +6,7 @@ namespace Core\App;
 
 use Core\App\Command\RouteListCommand;
 use Core\App\DBAL\Types\SuccessFailureEnumType;
+use Core\App\DBAL\Types\UuidType;
 use Core\App\DBAL\Types\YesNoEnumType;
 use Core\App\Event\TablePrefixEventListener;
 use Core\App\Factory\EntityListenerResolverFactory;
@@ -26,9 +27,6 @@ use Dot\Mail\Factory\MailOptionsAbstractFactory;
 use Dot\Mail\Factory\MailServiceAbstractFactory;
 use Dot\Mail\Service\MailService as DotMailService;
 use Mezzio\Application;
-use Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType;
-use Ramsey\Uuid\Doctrine\UuidBinaryType;
-use Ramsey\Uuid\Doctrine\UuidType;
 use Roave\PsrContainerDoctrine\EntityManagerFactory;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 
@@ -68,11 +66,6 @@ use function getcwd;
  *               },
  *          },
  *      },
- *      connection: array{
- *          orm_default: array{
- *              doctrine_mapping_types: array<non-empty-string, non-empty-string>,
- *          },
- *      },
  *      driver: array{
  *          orm_default: array{
  *              class: class-string<MappingDriver>,
@@ -100,7 +93,7 @@ use function getcwd;
  */
 class ConfigProvider
 {
-    public const REGEXP_UUID = '{uuid:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}';
+    public const REGEXP_UUID = '{id:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}';
 
     /**
      * @return ConfigType
@@ -174,14 +167,6 @@ class ConfigProvider
                     ],
                 ],
             ],
-            'connection'    => [
-                'orm_default' => [
-                    'doctrine_mapping_types' => [
-                        UuidBinaryType::NAME            => 'binary',
-                        UuidBinaryOrderedTimeType::NAME => 'binary',
-                    ],
-                ],
-            ],
             'driver'        => [
                 // The default metadata driver aggregates all other drivers into a single one.
                 // Override `orm_default` only if you know what you're doing.
@@ -205,11 +190,9 @@ class ConfigProvider
                 'check_database_platform' => true,
             ],
             'types'         => [
-                UuidType::NAME                  => UuidType::class,
-                UuidBinaryType::NAME            => UuidBinaryType::class,
-                UuidBinaryOrderedTimeType::NAME => UuidBinaryOrderedTimeType::class,
-                SuccessFailureEnumType::NAME    => SuccessFailureEnumType::class,
-                YesNoEnumType::NAME             => YesNoEnumType::class,
+                UuidType::NAME               => UuidType::class,
+                SuccessFailureEnumType::NAME => SuccessFailureEnumType::class,
+                YesNoEnumType::NAME          => YesNoEnumType::class,
             ],
         ];
     }
