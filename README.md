@@ -2,6 +2,17 @@
 
 DotKernel's PSR-15 API built around the Mezzio API skeleton based on [Enrico Zimuel's Zend Expressive API skeleton example](https://github.com/ezimuel/zend-expressive-api).
 
+## Version History
+
+| Branch | Release  | PSR-11 | OSS Lifecycle                                                                                                                        | PHP Version                                                                                         |
+|--------|----------|--------|--------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
+| 6.0    | `>= 6.0` | 1      | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fapi%2Fblob%2F6.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/6.1.0) |
+| 5.0    | `< 6.0`  | 1      | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fapi%2Fblob%2F5.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/5.3.0) |
+| 4.0    | `< 5.0`  | 1      | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fapi%2Fblob%2F4.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/4.5.0) |
+| 3.0    | `< 4.0`  | 1      | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fapi%2Fblob%2F3.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/3.0.4) |
+
+## Badges
+
 ![OSS Lifecycle](https://img.shields.io/osslifecycle/dotkernel/api)
 
 [![GitHub issues](https://img.shields.io/github/issues/dotkernel/api)](https://github.com/dotkernel/api/issues)
