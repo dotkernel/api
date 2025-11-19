@@ -11,7 +11,7 @@ class AdminStatusEnumType extends AbstractEnumType
 {
     public const NAME = 'admin_status_enum';
 
-    protected function getEnumClass(): string
+    public function getEnumClass(): string
     {
         return AdminStatusEnum::class;
     }

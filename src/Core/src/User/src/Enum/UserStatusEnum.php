@@ -19,6 +19,14 @@ enum UserStatusEnum: string
      */
     public static function values(): array
     {
+        return array_column(self::cases(), 'value');
+    }
+
+    /**
+     * @return non-empty-string[]
+     */
+    public static function validValues(): array
+    {
         return array_column(self::validCases(), 'value');
     }
 
