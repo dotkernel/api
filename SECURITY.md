@@ -2,13 +2,13 @@
 
 ## Supported Versions
 
-| Version | Supported                     |
-|---------|-------------------------------|
-| 6.x     | :white_check_mark:            |
-| 5.x     | :white_check_mark:            |
-| 4.x     | :warning: (security-fix only) |
-| 3.x     | :x:                           |
-| <= 2.0  | :x:                           |
+| Version | Supported                                                                                                                            | PHP Version                                                                                         |
+|---------|--------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
+| 7.0     | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fapi%2Fblob%2F7.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/7.0.0) |
+| 6.0     | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fapi%2Fblob%2F6.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/6.1.0) |
+| 5.0     | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fapi%2Fblob%2F5.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/5.3.0) |
+| 4.0     | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fapi%2Fblob%2F4.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/4.5.0) |
+| 3.0     | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fapi%2Fblob%2F3.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/3.0.4) |
 
 ## Reporting Potential Security Issues
 
