@@ -87,7 +87,7 @@ use OpenApi\Attributes as OA;
 #[OA\Schema(
     schema: 'HomeMessage',
     properties: [
-        new OA\Property(property: 'message', type: 'string', default: 'Dotkernel API version 5'),
+        new OA\Property(property: 'message', type: 'string', default: 'Dotkernel API version 6'),
     ],
     type: 'object',
 )]
