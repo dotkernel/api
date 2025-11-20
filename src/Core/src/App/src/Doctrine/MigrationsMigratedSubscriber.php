@@ -170,8 +170,9 @@ class MigrationsMigratedSubscriber implements EventSubscriber
      */
     private function createDatabaseType(string $type, array $values): void
     {
-        $sql = sprintf("CREATE TYPE %s AS ENUM ('%s');", $type, implode("', '", $values));
-        $this->connection->executeQuery($sql);
+        $this->connection->executeQuery(
+            sprintf("CREATE TYPE %s AS ENUM ('%s');", $type, implode("', '", $values))
+        );
     }
 
     /**
@@ -179,8 +180,9 @@ class MigrationsMigratedSubscriber implements EventSubscriber
      */
     private function deleteDatabaseType(string $type): void
     {
-        $sql = sprintf('DROP TYPE %s;', $type);
-        $this->connection->executeQuery($sql);
+        $this->connection->executeQuery(
+            sprintf('DROP TYPE %s;', $type)
+        );
     }
 
     /**
