@@ -6,6 +6,7 @@ namespace Api\App\Middleware;
 
 use Api\App\UserIdentity;
 use Api\User\Entity\UserRole;
+use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,6 +19,7 @@ class AuthenticationMiddleware implements MiddlewareInterface
         protected AuthenticationInterface $auth,
     ) {
     }
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $user = $this->auth->authenticate($request);
