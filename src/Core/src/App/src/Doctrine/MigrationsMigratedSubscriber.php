@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Core\App\Doctrine;
 
-use BackedEnum;
 use Core\App\DBAL\Types\AbstractEnumType;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\DBAL\Connection;
@@ -124,10 +123,10 @@ class MigrationsMigratedSubscriber implements EventSubscriber
      * @param list<non-empty-string> $dbEnumTypes
      * @param array<non-empty-string, AbstractEnumType> $fsEnumTypes
      * @return array{
-     *     create: array<non-empty-string, list<BackedEnum>>,
-     *     delete: array<non-empty-string, list<non-empty-string>>,
-     *     skip: array<non-empty-string, list<BackedEnum>>,
-     *     update: array<non-empty-string, list<BackedEnum>>
+     *      create: array<non-empty-string, list<non-empty-string>>,
+     *      delete: array<non-empty-string, list<non-empty-string>>,
+     *      skip: array<non-empty-string, list<non-empty-string>>,
+     *      update: array<non-empty-string, list<non-empty-string>>
      * }
      * @throws Exception
      */

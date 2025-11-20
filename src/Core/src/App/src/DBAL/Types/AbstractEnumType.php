@@ -19,7 +19,7 @@ abstract class AbstractEnumType extends Type
     public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
         if ($platform instanceof PostgreSQLPlatform) {
-            return static::NAME;
+            return $this->getName();
         }
 
         if ($platform instanceof SQLitePlatform) {
@@ -60,7 +60,7 @@ abstract class AbstractEnumType extends Type
     }
 
     /**
-     * @return list<BackedEnum>
+     * @return list<non-empty-string>
      */
     public function getEnumValues(): array
     {
