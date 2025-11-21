@@ -10,7 +10,7 @@ class YesNoEnumType extends AbstractEnumType
 {
     public const NAME = 'yes_no_enum';
 
-    protected function getEnumClass(): string
+    public function getEnumClass(): string
     {
         return YesNoEnum::class;
     }

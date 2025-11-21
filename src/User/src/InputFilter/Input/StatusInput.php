@@ -25,7 +25,7 @@ class StatusInput extends Input
 
         $this->getValidatorChain()
             ->attachByName(InArray::class, [
-                'haystack' => UserStatusEnum::values(),
+                'haystack' => UserStatusEnum::validValues(),
                 'message'  => Message::invalidValue('status'),
             ], true);
     }

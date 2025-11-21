@@ -5,15 +5,24 @@ declare(strict_types=1);
 $baseUrl = 'http://localhost:8080';
 
 $databases = [
-    'default' => [
+    'mariadb'    => [
         'host'         => 'localhost',
         'dbname'       => 'dotkernel',
         'user'         => '',
         'password'     => '',
         'port'         => 3306,
         'driver'       => 'pdo_mysql',
-        'charset'      => 'utf8mb4',
-        'collate'      => 'utf8mb4_general_ci',
+        'collation'    => 'utf8mb4_general_ci',
+        'table_prefix' => '',
+    ],
+    'postgresql' => [
+        'host'         => 'localhost',
+        'dbname'       => 'dotkernel',
+        'user'         => '',
+        'password'     => '',
+        'port'         => 5432,
+        'driver'       => 'pdo_pgsql',
+        'collation'    => 'utf8mb4_general_ci',
         'table_prefix' => '',
     ],
     // you can add more database connections to this array
@@ -22,10 +31,10 @@ $databases = [
 return [
     'application'         => [
         'name'       => 'Dotkernel API',
-        'version'    => 6.0,
+        'version'    => 7.0,
         'url'        => $baseUrl,
         'versioning' => [
-            'documentation_url' => 'https://docs.dotkernel.org/api-documentation/v6/core-features/versioning',
+            'documentation_url' => 'https://docs.dotkernel.org/api-documentation/v7/tutorials/api-evolution/',
         ],
     ],
     'authentication'      => [
@@ -51,7 +60,7 @@ return [
     'doctrine'            => [
         'connection' => [
             'orm_default' => [
-                'params' => $databases['default'],
+                'params' => $databases['mariadb'],
             ],
         ],
     ],
