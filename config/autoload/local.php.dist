@@ -25,7 +25,7 @@ return [
         'version'    => 6.0,
         'url'        => $baseUrl,
         'versioning' => [
-            'documentation_url' => 'https://docs.dotkernel.org/api-documentation/v6/core-features/versioning',
+            'documentation_url' => 'https://docs.dotkernel.org/api-documentation/v6/tutorials/api-evolution/',
         ],
     ],
     'authentication'      => [
