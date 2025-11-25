@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ApiTest\Unit\App\Middleware;
 
-use Api\App\Attribute\MethodDeprecation;
 use Api\App\Attribute\ResourceDeprecation;
 use Api\App\Exception\ConflictException;
 use Api\App\Middleware\DeprecationMiddleware;
@@ -48,46 +47,6 @@ class DeprecationMiddlewareTest extends TestCase
         $this->response = new EmptyResponse();
 
         $this->deprecationMiddleware = new DeprecationMiddleware(self::VERSIONING_CONFIG);
-    }
-
-    /**
-     * @throws ReflectionException
-     * @throws Exception
-     */
-    public function testThrowsDeprecationConflictException(): void
-    {
-        $handler = new #[ResourceDeprecation(
-            sunset: '2038-01-01',
-            link: 'test-link',
-            deprecationReason: 'test-deprecation-reason',
-        )] class implements RequestHandlerInterface {
-            #[MethodDeprecation(
-                sunset: '2038-01-01',
-                link: 'test-link',
-                deprecationReason: 'test-deprecation-reason',
-            )]
-            public function handle(ServerRequestInterface $request): ResponseInterface
-            {
-                return new EmptyResponse();
-            }
-        };
-
-        $routeResult           = $this->createMock(RouteResult::class);
-        $route                 = $this->createMock(Route::class);
-        $lazyLoadingMiddleware = new LazyLoadingMiddleware(
-            $this->createMock(MiddlewareContainer::class),
-            $handler::class,
-        );
-
-        $route->method('getMiddleware')->willReturn($lazyLoadingMiddleware);
-        $routeResult->method('isFailure')->willReturn(false);
-        $routeResult->method('getMatchedRoute')->willReturn($route);
-        $this->request->method('getAttribute')->with(RouteResult::class)->willReturn($routeResult);
-        $this->handler->method('handle')->with($this->request)->willReturn($this->response);
-
-        $this->expectException(ConflictException::class);
-
-        $this->deprecationMiddleware->process($this->request, $this->handler);
     }
 
     /**

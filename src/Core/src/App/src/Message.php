@@ -44,7 +44,6 @@ class Message
     public const RESOURCE_ALREADY_REGISTERED  = 'Resource "%s" is already registered.';
     public const RESOURCE_NOT_ALLOWED         = 'You are not allowed to access this resource.';
     public const RESOURCE_NOT_FOUND           = '%s not found.';
-    public const RESTRICTION_DEPRECATION      = 'Cannot use both "%s" and "%s" attributes on the same object.';
     public const RESTRICTION_IMAGE            = 'File must be an image> Accepted mim type(s): %s';
     public const RESTRICTION_ROLES            = 'At least one role is required.';
     public const ROLE_NOT_FOUND               = 'Role not found.';
@@ -141,14 +140,6 @@ class Message
     public static function resourceNotFound(string $resource = 'Resource'): string
     {
         return sprintf(self::RESOURCE_NOT_FOUND, $resource);
-    }
-
-    /**
-     * @return non-empty-string
-     */
-    public static function restrictionDeprecation(string $first, string $second): string
-    {
-        return sprintf(self::RESTRICTION_DEPRECATION, $first, $second);
     }
 
     /**
