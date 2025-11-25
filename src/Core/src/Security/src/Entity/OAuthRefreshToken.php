@@ -48,8 +48,6 @@ class OAuthRefreshToken implements RefreshTokenEntityInterface
 
     public function setIdentifier(mixed $identifier): self
     {
-        $this->setId((int) $identifier);
-
         return $this;
     }
 
