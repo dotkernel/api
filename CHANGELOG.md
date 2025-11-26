@@ -1,5 +1,29 @@
 # Changelog
 
+## 7.0.0 - 2025-11-26
+
+### Changed
+
+* Issue [#471](https://github.com/dotkernel/api/issues/471): Clarify instructions regarding multiple connections in `config/autoload/local.php.dist` by [@alexmerlin](https://github.com/alexmerlin) in [#472](https://github.com/dotkernel/api/pull/472)
+* updated readme, oss by [@bidi47](https://github.com/bidi47) in [#461](https://github.com/dotkernel/api/pull/461)
+
+### Added
+
+* Issue [#453](https://github.com/dotkernel/api/issues/453): Use native UUIDs in database via ramsey/uuid by [@alexmerlin](https://github.com/alexmerlin) in [#456](https://github.com/dotkernel/api/pull/456)
+* Issue [#430](https://github.com/dotkernel/api/issues/430): PostgreSQL implementation by [@alexmerlin](https://github.com/alexmerlin) in [#462](https://github.com/dotkernel/api/pull/462)
+
+### Deprecated
+
+* Nothing
+
+### Removed
+
+* Issue [#468](https://github.com/dotkernel/api/issues/468): Remove `MethodDeprecation` implementation by [@alexmerlin](https://github.com/alexmerlin) in [#470](https://github.com/dotkernel/api/pull/470)
+
+### Fixed
+
+* Nothing
+
 ## 6.1.0 - 2025-11-10
 
 ### Changed
