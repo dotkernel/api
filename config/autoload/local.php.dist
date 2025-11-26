@@ -5,6 +5,12 @@ declare(strict_types=1);
 $baseUrl = 'http://localhost:8080';
 
 $databases = [
+    /**
+     * You can add more database connections to this array.
+     * Only one active connection is allowed at a time.
+     * By default, the application uses the 'mariadb' connection.
+     * You can switch to another connection by activating it under doctrine->connection->orm_default-->params.
+     */
     'mariadb'    => [
         'host'         => 'localhost',
         'dbname'       => 'dotkernel',
@@ -25,7 +31,6 @@ $databases = [
         'collation'    => 'utf8mb4_general_ci',
         'table_prefix' => '',
     ],
-    // you can add more database connections to this array
 ];
 
 return [
@@ -61,6 +66,7 @@ return [
         'connection' => [
             'orm_default' => [
                 'params' => $databases['mariadb'],
+//                'params' => $databases['postgresql'],
             ],
         ],
     ],
