@@ -157,6 +157,6 @@ Sending a **GET** request to the application's [home page](http://localhost:8080
 
 ```json
 {
-    "message": "Dotkernel API version 6"
+    "message": "Dotkernel API version 7"
 }
 ```
