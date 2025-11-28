@@ -7,6 +7,7 @@ use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
 use Api\App\Middleware\ContentNegotiationMiddleware;
 use Api\App\Middleware\DeprecationMiddleware;
+use Api\App\Middleware\MalformedRequestBodyMiddleware;
 use Api\App\Middleware\ResourceProviderMiddleware;
 use Dot\ResponseHeader\Middleware\ResponseHeaderMiddleware;
 use Mezzio\Application;
@@ -28,6 +29,7 @@ return function (Application $app): void {
     // - return ProblemDetails response
     $app->pipe(ProblemDetailsMiddleware::class);
 
+    $app->pipe(MalformedRequestBodyMiddleware::class);
     $app->pipe(BodyParamsMiddleware::class);
     $app->pipe(ServerUrlMiddleware::class);
     $app->pipe(CorsMiddleware::class);
