@@ -7,7 +7,6 @@ namespace Api\App;
 use Api\App\Command\RouteListCommand;
 use Api\App\Command\TokenGenerateCommand;
 use Api\App\Entity\EntityListenerResolver;
-use Api\App\Factory\AuthenticationMiddlewareFactory;
 use Api\App\Factory\EntityListenerResolverFactory;
 use Api\App\Factory\RouteListCommandFactory;
 use Api\App\Factory\TokenGenerateCommandFactory;
