@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @phpstan-type UserAvatarType array{
  *      id: non-empty-string,
  *      url: non-empty-string|null,
- *      created: DateTimeImmutable,
+ *      created: DateTimeImmutable|null,
  *      updated: DateTimeImmutable|null
  *  }
  */

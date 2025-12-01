@@ -348,7 +348,7 @@ class User extends AbstractEntity implements UserEntityInterface
      *     identity: non-empty-string|null,
      *     status: non-empty-string,
      *     roles: RoleType[],
-     *     created: DateTimeImmutable,
+     *     created: DateTimeImmutable|null,
      *     updated: DateTimeImmutable|null,
      * }
      */

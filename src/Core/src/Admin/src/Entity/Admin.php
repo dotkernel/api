@@ -226,7 +226,7 @@ class Admin extends AbstractEntity implements UserEntityInterface
      *      lastName: string|null,
      *      status: non-empty-string,
      *      roles: iterable<RoleType>,
-     *      created: DateTimeImmutable,
+     *      created: DateTimeImmutable|null,
      *      updated: DateTimeImmutable|null,
      * }
      */

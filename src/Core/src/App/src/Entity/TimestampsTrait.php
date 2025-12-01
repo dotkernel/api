@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait TimestampsTrait
 {
     #[ORM\Column(name: 'created', type: 'datetime_immutable')]
-    protected DateTimeImmutable $created;
+    protected ?DateTimeImmutable $created = null;
 
     #[ORM\Column(name: 'updated', type: 'datetime_immutable', nullable: true)]
     protected ?DateTimeImmutable $updated = null;
@@ -20,9 +20,9 @@ trait TimestampsTrait
         return $this->created;
     }
 
-    public function getCreatedFormatted(string $dateFormat = 'Y-m-d H:i:s'): string
+    public function getCreatedFormatted(string $dateFormat = 'Y-m-d H:i:s'): ?string
     {
-        return $this->created->format($dateFormat);
+        return $this->created?->format($dateFormat);
     }
 
     public function getUpdated(): ?DateTimeImmutable
@@ -32,11 +32,7 @@ trait TimestampsTrait
 
     public function getUpdatedFormatted(string $dateFormat = 'Y-m-d H:i:s'): ?string
     {
-        if ($this->updated instanceof DateTimeImmutable) {
-            return $this->updated->format($dateFormat);
-        }
-
-        return null;
+        return $this->updated?->format($dateFormat);
     }
 
     #[ORM\PrePersist]
