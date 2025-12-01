@@ -75,6 +75,7 @@
         "ramsey/uuid-doctrine": "^2.1.0",
         "roave/psr-container-doctrine": "^5.2.1",
         "symfony/filesystem": "^7.0.3",
+        "symfony/var-exporter": "^6.4 || ^7.4",
         "zircote/swagger-php": "^4.10"
     },
     "require-dev": {
