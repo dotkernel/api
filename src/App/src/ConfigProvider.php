@@ -7,7 +7,6 @@ namespace Api\App;
 use Api\App\Command\RouteListCommand;
 use Api\App\Command\TokenGenerateCommand;
 use Api\App\Entity\EntityListenerResolver;
-use Api\App\Factory\AuthenticationMiddlewareFactory;
 use Api\App\Factory\EntityListenerResolverFactory;
 use Api\App\Factory\RouteListCommandFactory;
 use Api\App\Factory\TokenGenerateCommandFactory;
@@ -63,7 +62,7 @@ class ConfigProvider
                 'doctrine.entity_manager.orm_default' => EntityManagerFactory::class,
                 'dot-mail.options.default'            => MailOptionsAbstractFactory::class,
                 'dot-mail.service.default'            => MailServiceAbstractFactory::class,
-                AuthenticationMiddleware::class       => AuthenticationMiddlewareFactory::class,
+                AuthenticationMiddleware::class       => AnnotatedServiceFactory::class,
                 AuthorizationMiddleware::class        => AnnotatedServiceFactory::class,
                 ContentNegotiationMiddleware::class   => AnnotatedServiceFactory::class,
                 Environment::class                    => TwigEnvironmentFactory::class,
