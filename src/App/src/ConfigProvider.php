@@ -63,7 +63,7 @@ class ConfigProvider
                 'doctrine.entity_manager.orm_default' => EntityManagerFactory::class,
                 'dot-mail.options.default'            => MailOptionsAbstractFactory::class,
                 'dot-mail.service.default'            => MailServiceAbstractFactory::class,
-                AuthenticationMiddleware::class       => AuthenticationMiddlewareFactory::class,
+                AuthenticationMiddleware::class       => AnnotatedServiceFactory::class,
                 AuthorizationMiddleware::class        => AnnotatedServiceFactory::class,
                 ContentNegotiationMiddleware::class   => AnnotatedServiceFactory::class,
                 Environment::class                    => TwigEnvironmentFactory::class,
