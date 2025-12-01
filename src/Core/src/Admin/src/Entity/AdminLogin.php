@@ -296,7 +296,7 @@ class AdminLogin extends AbstractEntity
      *     clientEngine: string|null,
      *     clientVersion: string|null,
      *     loginStatus: string,
-     *     created: DateTimeImmutable,
+     *     created: DateTimeImmutable|null,
      *     updated: DateTimeImmutable|null,
      * }
      */

@@ -129,7 +129,7 @@ class UserResetPassword extends AbstractEntity
      *     expires: DateTimeImmutable,
      *     hash: non-empty-string,
      *     status: 'completed'|'requested',
-     *     created: DateTimeImmutable,
+     *     created: DateTimeImmutable|null,
      *     updated: DateTimeImmutable|null
      * }
      */

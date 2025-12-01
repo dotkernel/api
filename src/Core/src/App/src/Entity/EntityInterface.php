@@ -13,7 +13,7 @@ interface EntityInterface
 
     public function getCreated(): ?DateTimeImmutable;
 
-    public function getCreatedFormatted(string $dateFormat = 'Y-m-d H:i:s'): string;
+    public function getCreatedFormatted(string $dateFormat = 'Y-m-d H:i:s'): ?string;
 
     public function getUpdated(): ?DateTimeImmutable;
 
