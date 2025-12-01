@@ -49,8 +49,8 @@
     },
     "require": {
         "php": "~8.2.0 || ~8.3.0",
-        "ext-json": "*",
         "ext-gd": "*",
+        "ext-json": "*",
         "dotkernel/dot-annotated-services": "^4.1.7",
         "dotkernel/dot-cache": "^4.0",
         "dotkernel/dot-cli": "^3.5.0",
@@ -78,7 +78,8 @@
         "mezzio/mezzio-twigrenderer": "^2.15.0",
         "ramsey/uuid-doctrine": "^2.0.0",
         "roave/psr-container-doctrine": "^4.1.0",
-        "symfony/filesystem": "^7.0.3"
+        "symfony/filesystem": "^7.0.3",
+        "symfony/var-exporter": "^6.4 || ^7.4"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "^2.5",
