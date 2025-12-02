@@ -8,8 +8,16 @@ return [
          * Global headers - applied to all routes
          */
         '*' => [
-            'permissions-policy' => [
+            'permissions-policy'     => [
                 'value'     => 'interest-cohort=()',
+                'overwrite' => true,
+            ],
+            'X-Content-Type-Options' => [
+                'value'     => 'nosniff',
+                'overwrite' => true,
+            ],
+            'Referrer-Policy'        => [
+                'value'     => 'no-referrer',
                 'overwrite' => true,
             ],
         ],
@@ -17,11 +25,25 @@ return [
         /**
          * Route-specific headers
          */
-//        'route-name' => [
-//            'header-name' => [
-//                'value' => 'header-value',
-//                'overwrite' => true,
-//            ]
-//        ],
+        'security::generate-token' => [
+            'Cache-Control' => [
+                'value'     => 'no-store',
+                'overwrite' => true,
+            ],
+            'Pragma'        => [
+                'value'     => 'no-cache',
+                'overwrite' => true,
+            ],
+        ],
+        'security::refresh-token'  => [
+            'Cache-Control' => [
+                'value'     => 'no-store',
+                'overwrite' => true,
+            ],
+            'Pragma'        => [
+                'value'     => 'no-cache',
+                'overwrite' => true,
+            ],
+        ],
     ],
 ];
