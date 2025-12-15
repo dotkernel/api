@@ -83,7 +83,7 @@
         "zircote/swagger-php": "^5.0.7"
     },
     "require-dev": {
-        "dotkernel/dot-maker": "^1.0.2",
+        "dotkernel/dot-maker": "^2.0.0",
         "laminas/laminas-coding-standard": "^3.0.1",
         "laminas/laminas-development-mode": "^3.13.0",
         "phpstan/phpstan": "^2.1.11",
@@ -111,6 +111,9 @@
             "ApiTest\\Functional\\": "test/Functional/",
             "ApiTest\\Unit\\": "test/Unit/"
         }
+    },
+    "conflict": {
+        "dotkernel/dot-maker": "<2.0"
     },
     "scripts": {
         "check": [
