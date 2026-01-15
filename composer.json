@@ -129,7 +129,7 @@
         "development-enable": "laminas-development-mode enable",
         "development-status": "laminas-development-mode status",
         "post-update-cmd": [
-            "php ./vendor/bin/generate-oauth2-keys",
+            "php ./bin/generate-oauth2-keys.php",
             "php ./bin/composer-post-install-script.php"
         ],
         "serve": "php -S 0.0.0.0:8080 -t public/",
