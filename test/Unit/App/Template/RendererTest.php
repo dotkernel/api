@@ -23,7 +23,7 @@ class RendererTest extends TestCase
     public function testWillInitiate(): void
     {
         $renderer = new Renderer(
-            $this->createMock(ParserInterface::class),
+            $this->createStub(ParserInterface::class),
             []
         );
 
@@ -40,7 +40,7 @@ class RendererTest extends TestCase
         ];
 
         $renderer = new Renderer(
-            $this->createMock(ParserInterface::class),
+            $this->createStub(ParserInterface::class),
             [
                 'templates'              => $templates,
                 RendererInterface::class => [
@@ -62,7 +62,7 @@ class RendererTest extends TestCase
         ];
 
         $renderer = new Renderer(
-            $this->createMock(ParserInterface::class),
+            $this->createStub(ParserInterface::class),
             [
                 'templates'              => $templates,
                 RendererInterface::class => [
@@ -86,7 +86,7 @@ class RendererTest extends TestCase
         ];
 
         $renderer = new Renderer(
-            $this->createMock(ParserInterface::class),
+            $this->createStub(ParserInterface::class),
             [
                 'templates'              => $templates,
                 RendererInterface::class => [
@@ -116,7 +116,7 @@ class RendererTest extends TestCase
 
         $renderer = new Renderer(
             new Parser(
-                $this->createMock(UrlHelperInterface::class),
+                $this->createStub(UrlHelperInterface::class),
                 $config
             ),
             $config,

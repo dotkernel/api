@@ -20,7 +20,7 @@ use Core\User\Repository\UserDetailRepository;
 use Core\User\Repository\UserRepository;
 use Core\User\Repository\UserRoleRepository;
 use Exception;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 use function array_merge;
@@ -29,20 +29,20 @@ use function count;
 class UserServiceTest extends TestCase
 {
     private UserServiceInterface $subject;
-    private UserRepository&MockObject $userRepository;
-    private UserDetailRepository&MockObject $userDetailRepository;
-    private UserRoleRepository&MockObject $userRoleRepository;
+    private UserRepository&Stub $userRepository;
+    private UserDetailRepository&Stub $userDetailRepository;
+    private UserRoleRepository&Stub $userRoleRepository;
 
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function setUp(): void
     {
-        $oAuthAccessTokenRepository  = $this->createMock(OAuthAccessTokenRepository::class);
-        $oAuthRefreshTokenRepository = $this->createMock(OAuthRefreshTokenRepository::class);
-        $this->userRepository        = $this->createMock(UserRepository::class);
-        $this->userDetailRepository  = $this->createMock(UserDetailRepository::class);
-        $this->userRoleRepository    = $this->createMock(UserRoleRepository::class);
+        $oAuthAccessTokenRepository  = $this->createStub(OAuthAccessTokenRepository::class);
+        $oAuthRefreshTokenRepository = $this->createStub(OAuthRefreshTokenRepository::class);
+        $this->userRepository        = $this->createStub(UserRepository::class);
+        $this->userDetailRepository  = $this->createStub(UserDetailRepository::class);
+        $this->userRoleRepository    = $this->createStub(UserRoleRepository::class);
         $this->subject               = new UserService(
             $oAuthAccessTokenRepository,
             $oAuthRefreshTokenRepository,

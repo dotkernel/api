@@ -14,7 +14,7 @@ Documentation is available at: https://docs.dotkernel.org/api-documentation/
 
 | Branch | Release  | PSR-11 | OSS Lifecycle                                                                                                                        | PHP Version                                                                                         |
 |--------|----------|--------|--------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
-| 7.0    | `>= 7.0` | 1      | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fapi%2Fblob%2F7.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/7.0.0) |
+| 7.0    | `>= 7.0` | 1      | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fapi%2Fblob%2F7.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/7.1.0) |
 | 6.0    | `< 7.0`  | 1      | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fapi%2Fblob%2F6.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/6.1.0) |
 | 5.0    | `< 6.0`  | 1      | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fapi%2Fblob%2F5.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/5.3.0) |
 | 4.0    | `< 5.0`  | 1      | ![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fdotkernel%2Fapi%2Fblob%2F4.0%2FOSSMETADATA) | ![PHP from Packagist (specify version)](https://img.shields.io/packagist/php-v/dotkernel/api/4.5.0) |
@@ -30,10 +30,10 @@ Documentation is available at: https://docs.dotkernel.org/api-documentation/
 [![GitHub stars](https://img.shields.io/github/stars/dotkernel/api)](https://github.com/dotkernel/api/stargazers)
 [![GitHub license](https://img.shields.io/github/license/dotkernel/api)](https://github.com/dotkernel/api/blob/6.0/LICENSE.md)
 
-[![Build Static](https://github.com/dotkernel/api/actions/workflows/continuous-integration.yml/badge.svg?branch=6.0)](https://github.com/dotkernel/api/actions/workflows/continuous-integration.yml)
+[![Build Static](https://github.com/dotkernel/api/actions/workflows/continuous-integration.yml/badge.svg?branch=7.0)](https://github.com/dotkernel/api/actions/workflows/continuous-integration.yml)
 [![codecov](https://codecov.io/gh/dotkernel/api/graph/badge.svg?token=53FN78G5CK)](https://codecov.io/gh/dotkernel/api)
-[![Qodana](https://github.com/dotkernel/api/actions/workflows/qodana_code_quality.yml/badge.svg?branch=6.0)](https://github.com/dotkernel/api/actions/workflows/qodana_code_quality.yml)
-[![PHPStan](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml/badge.svg?branch=6.0)](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml)
+[![Qodana](https://github.com/dotkernel/api/actions/workflows/qodana_code_quality.yml/badge.svg?branch=7.0)](https://github.com/dotkernel/api/actions/workflows/qodana_code_quality.yml)
+[![PHPStan](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml/badge.svg?branch=7.0)](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml)
 
 ## Getting Started
 

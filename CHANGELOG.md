@@ -1,5 +1,28 @@
 # Changelog
 
+## 7.1.0 - 2026-04-22
+
+### Changed
+
+* Issue [#509](https://github.com/dotkernel/api/issues/509): Bump `PHPUnit` to version `12.5.23` by [@SergiuBota1](https://github.com/SergiuBota1) in [#510](https://github.com/dotkernel/admin/pull/510)
+
+### Added
+
+* Nothing
+
+### Deprecated
+
+* Nothing
+
+### Removed
+
+* Removed PHP `8.2` support
+
+### Fixed
+
+* Fixed PHPUnit notices caused by mock objects without expectations configured
+* Fixed PHPUnit deprecation warnings caused by using `with()` on test stubs
+
 ## 7.0.0 - 2025-11-26
 
 ### Changed

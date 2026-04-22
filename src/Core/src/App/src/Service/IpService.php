@@ -19,7 +19,7 @@ class IpService
      * @phpstan-param array{
      *     HTTP_X_FORWARDED_FOR?: string,
      *     HTTP_CLIENT_IP?: string,
-     *     REMOTE_ADDR?: string,
+     *     REMOTE_ADDR: string,
      * } $server
      */
     public static function getUserIp(array $server): mixed

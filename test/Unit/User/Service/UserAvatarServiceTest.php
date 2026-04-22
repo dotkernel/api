@@ -5,27 +5,27 @@ declare(strict_types=1);
 namespace ApiTest\Unit\User\Service;
 
 use Api\User\Service\UserAvatarService;
-use Api\User\Service\UserAvatarServiceInterface;
 use Core\User\Entity\User;
 use Core\User\Entity\UserAvatar;
 use Core\User\Repository\UserAvatarRepository;
 use Laminas\Diactoros\UploadedFile;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 class UserAvatarServiceTest extends TestCase
 {
-    private UserAvatarServiceInterface&MockObject $subject;
-    private UploadedFile $uploadedFile;
+    private UserAvatarService&MockObject $subject;
+    private UploadedFile&Stub $uploadedFile;
 
     /**
      * @throws Exception
      */
     public function setUp(): void
     {
-        $userAvatarRepository = $this->createMock(UserAvatarRepository::class);
-        $this->uploadedFile   = $this->createMock(UploadedFile::class);
+        $userAvatarRepository = $this->createStub(UserAvatarRepository::class);
+        $this->uploadedFile   = $this->createStub(UploadedFile::class);
         $this->subject        = $this->getMockBuilder(UserAvatarService::class)
             ->setConstructorArgs([
                 $userAvatarRepository,
@@ -46,8 +46,21 @@ class UserAvatarServiceTest extends TestCase
     {
         $fileName = 'file_name';
 
-        $this->subject->method('getUserAvatarDirectoryPath')->willReturn('/test');
-        $this->subject->method('createFileName')->willReturn($fileName);
+        $this->subject->expects($this->once())
+            ->method('getUserAvatarDirectoryPath')
+            ->willReturn('/test/');
+
+        $this->subject->expects($this->once())
+            ->method('ensureDirectoryExists')
+            ->with('/test/');
+
+        $this->subject->expects($this->once())
+            ->method('deleteAvatarFile')
+            ->with('/test/test');
+
+        $this->subject->expects($this->once())
+            ->method('createFileName')
+            ->willReturn($fileName);
 
         $user   = $this->getUser();
         $avatar = $this->subject->saveAvatar($user, $this->uploadedFile);
@@ -59,8 +72,20 @@ class UserAvatarServiceTest extends TestCase
     {
         $fileName = 'file_name';
 
-        $this->subject->method('getUserAvatarDirectoryPath')->willReturn('/test');
-        $this->subject->method('createFileName')->willReturn($fileName);
+        $this->subject->expects($this->once())
+            ->method('getUserAvatarDirectoryPath')
+            ->willReturn('/test/');
+
+        $this->subject->expects($this->once())
+            ->method('ensureDirectoryExists')
+            ->with('/test/');
+
+        $this->subject->expects($this->never())
+            ->method('deleteAvatarFile');
+
+        $this->subject->expects($this->once())
+            ->method('createFileName')
+            ->willReturn($fileName);
 
         $user   = new User();
         $avatar = $this->subject->saveAvatar($user, $this->uploadedFile);

@@ -11,6 +11,7 @@ use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -19,19 +20,19 @@ use Psr\Http\Server\RequestHandlerInterface;
 class AuthenticationMiddlewareTest extends TestCase
 {
     private AuthenticationMiddleware $authenticationMiddleware;
-    private AuthenticationInterface&MockObject $auth;
+    private AuthenticationInterface&Stub $auth;
     private ServerRequestInterface $request;
     private RequestHandlerInterface&MockObject $handler;
-    private ResponseInterface&MockObject $response;
+    private ResponseInterface&Stub $response;
 
     /**
      * @throws Exception
      */
     public function setUp(): void
     {
-        $this->auth     = $this->createMock(AuthenticationInterface::class);
+        $this->auth     = $this->createStub(AuthenticationInterface::class);
         $this->handler  = $this->createMock(RequestHandlerInterface::class);
-        $this->response = $this->createMock(ResponseInterface::class);
+        $this->response = $this->createStub(ResponseInterface::class);
         $this->request  = new ServerRequest();
 
         $this->authenticationMiddleware = new AuthenticationMiddleware($this->auth);

@@ -22,7 +22,7 @@ use Laminas\Diactoros\ServerRequest;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authorization\AuthorizationInterface;
 use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -33,23 +33,23 @@ use function json_decode;
 class AuthorizationMiddlewareTest extends TestCase
 {
     private AuthorizationMiddleware $authorizationMiddleware;
-    private UserRepository&MockObject $userRepository;
-    private AdminRepository&MockObject $adminRepository;
-    private AuthorizationInterface&MockObject $authorization;
+    private UserRepository&Stub $userRepository;
+    private AdminRepository&Stub $adminRepository;
+    private AuthorizationInterface&Stub $authorization;
     private ServerRequestInterface $request;
-    private RequestHandlerInterface&MockObject $handler;
-    private ResponseInterface $response;
+    private RequestHandlerInterface&Stub $handler;
+    private ResponseInterface&Stub $response;
 
     /**
      * @throws Exception
      */
     public function setUp(): void
     {
-        $this->userRepository  = $this->createMock(UserRepository::class);
-        $this->adminRepository = $this->createMock(AdminRepository::class);
-        $this->authorization   = $this->createMock(AuthorizationInterface::class);
-        $this->handler         = $this->createMock(RequestHandlerInterface::class);
-        $this->response        = $this->createMock(ResponseInterface::class);
+        $this->userRepository  = $this->createStub(UserRepository::class);
+        $this->adminRepository = $this->createStub(AdminRepository::class);
+        $this->authorization   = $this->createStub(AuthorizationInterface::class);
+        $this->handler         = $this->createStub(RequestHandlerInterface::class);
+        $this->response        = $this->createStub(ResponseInterface::class);
         $this->request         = new ServerRequest();
 
         $this->authorizationMiddleware = new AuthorizationMiddleware(
@@ -150,6 +150,9 @@ class AuthorizationMiddlewareTest extends TestCase
         );
     }
 
+    /**
+     * @throws Exception
+     */
     public function testAuthorizationAccessGranted(): void
     {
         $user = (new User())
@@ -162,7 +165,8 @@ class AuthorizationMiddlewareTest extends TestCase
         $identity      = new UserIdentity('test@dotkernel.com', ['user'], ['oauth_client_id' => 'frontend']);
         $this->request = $this->request->withAttribute(UserInterface::class, $identity);
 
-        $this->handler
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler
             ->expects($this->once())
             ->method('handle')
             ->willReturnCallback(function (ServerRequestInterface $request) use ($identity) {
@@ -173,6 +177,6 @@ class AuthorizationMiddlewareTest extends TestCase
                 return $this->response;
             });
 
-        $this->authorizationMiddleware->process($this->request, $this->handler);
+        $this->authorizationMiddleware->process($this->request, $handler);
     }
 }

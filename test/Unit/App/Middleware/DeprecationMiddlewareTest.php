@@ -15,7 +15,7 @@ use Mezzio\MiddlewareContainer;
 use Mezzio\Router\Route;
 use Mezzio\Router\RouteResult;
 use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -29,8 +29,8 @@ use function sprintf;
 class DeprecationMiddlewareTest extends TestCase
 {
     private DeprecationMiddleware $deprecationMiddleware;
-    private ServerRequestInterface&MockObject $request;
-    private RequestHandlerInterface&MockObject $handler;
+    private ServerRequestInterface&Stub $request;
+    private RequestHandlerInterface&Stub $handler;
     private ResponseInterface $response;
 
     private const VERSIONING_CONFIG = [
@@ -42,8 +42,8 @@ class DeprecationMiddlewareTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->handler  = $this->createMock(RequestHandlerInterface::class);
-        $this->request  = $this->createMock(ServerRequestInterface::class);
+        $this->handler  = $this->createStub(RequestHandlerInterface::class);
+        $this->request  = $this->createStub(ServerRequestInterface::class);
         $this->response = new EmptyResponse();
 
         $this->deprecationMiddleware = new DeprecationMiddleware(self::VERSIONING_CONFIG);
@@ -69,19 +69,19 @@ class DeprecationMiddlewareTest extends TestCase
             }
         };
 
-        $routeResult           = $this->createMock(RouteResult::class);
-        $route                 = $this->createMock(Route::class);
+        $routeResult           = $this->createStub(RouteResult::class);
+        $route                 = $this->createStub(Route::class);
         $lazyLoadingMiddleware = new LazyLoadingMiddleware(
-            $this->createMock(MiddlewareContainer::class),
+            $this->createStub(MiddlewareContainer::class),
             $handler::class,
         );
 
         $route->method('getMiddleware')->willReturn($lazyLoadingMiddleware);
         $routeResult->method('isFailure')->willReturn(false);
         $routeResult->method('getMatchedRoute')->willReturn($route);
-        $this->request->method('getAttribute')->with(RouteResult::class)->willReturn($routeResult);
+        $this->request->method('getAttribute')->willReturn($routeResult);
         $this->request->method('getMethod')->willReturn(RequestMethodInterface::METHOD_GET);
-        $this->handler->method('handle')->with($this->request)->willReturn($this->response);
+        $this->handler->method('handle')->willReturn($this->response);
 
         $response = $this->deprecationMiddleware->process($this->request, $this->handler);
 
@@ -123,16 +123,16 @@ class DeprecationMiddlewareTest extends TestCase
             }
         };
 
-        $routeResult = $this->createMock(RouteResult::class);
-        $route       = $this->createMock(Route::class);
+        $routeResult = $this->createStub(RouteResult::class);
+        $route       = $this->createStub(Route::class);
 
         $lazyLoadingMiddleware = new LazyLoadingMiddleware(
-            $this->createMock(MiddlewareContainer::class),
+            $this->createStub(MiddlewareContainer::class),
             $middleware::class
         );
 
         $lazyLoadingMiddlewareHandler = new LazyLoadingMiddleware(
-            $this->createMock(MiddlewareContainer::class),
+            $this->createStub(MiddlewareContainer::class),
             $handler::class,
         );
 
@@ -143,9 +143,9 @@ class DeprecationMiddlewareTest extends TestCase
         $route->method('getMiddleware')->willReturn($middlewarePipeline);
         $routeResult->method('isFailure')->willReturn(false);
         $routeResult->method('getMatchedRoute')->willReturn($route);
-        $this->request->method('getAttribute')->with(RouteResult::class)->willReturn($routeResult);
+        $this->request->method('getAttribute')->willReturn($routeResult);
         $this->request->method('getMethod')->willReturn(RequestMethodInterface::METHOD_GET);
-        $this->handler->method('handle')->with($this->request)->willReturn($this->response);
+        $this->handler->method('handle')->willReturn($this->response);
 
         $response = $this->deprecationMiddleware->process($this->request, $this->handler);
 
@@ -172,19 +172,19 @@ class DeprecationMiddlewareTest extends TestCase
             }
         };
 
-        $routeResult           = $this->createMock(RouteResult::class);
-        $route                 = $this->createMock(Route::class);
+        $routeResult           = $this->createStub(RouteResult::class);
+        $route                 = $this->createStub(Route::class);
         $lazyLoadingMiddleware = new LazyLoadingMiddleware(
-            $this->createMock(MiddlewareContainer::class),
+            $this->createStub(MiddlewareContainer::class),
             $handler::class,
         );
 
         $route->method('getMiddleware')->willReturn($lazyLoadingMiddleware);
         $routeResult->method('isFailure')->willReturn(false);
         $routeResult->method('getMatchedRoute')->willReturn($route);
-        $this->request->method('getAttribute')->with(RouteResult::class)->willReturn($routeResult);
+        $this->request->method('getAttribute')->willReturn($routeResult);
         $this->request->method('getMethod')->willReturn(RequestMethodInterface::METHOD_GET);
-        $this->handler->method('handle')->with($this->request)->willReturn($this->response);
+        $this->handler->method('handle')->willReturn($this->response);
 
         $response = $this->deprecationMiddleware->process($this->request, $this->handler);
 
@@ -211,19 +211,19 @@ class DeprecationMiddlewareTest extends TestCase
             }
         };
 
-        $routeResult           = $this->createMock(RouteResult::class);
-        $route                 = $this->createMock(Route::class);
+        $routeResult           = $this->createStub(RouteResult::class);
+        $route                 = $this->createStub(Route::class);
         $lazyLoadingMiddleware = new LazyLoadingMiddleware(
-            $this->createMock(MiddlewareContainer::class),
+            $this->createStub(MiddlewareContainer::class),
             $handler::class,
         );
 
         $route->method('getMiddleware')->willReturn($lazyLoadingMiddleware);
         $routeResult->method('isFailure')->willReturn(false);
         $routeResult->method('getMatchedRoute')->willReturn($route);
-        $this->request->method('getAttribute')->with(RouteResult::class)->willReturn($routeResult);
+        $this->request->method('getAttribute')->willReturn($routeResult);
         $this->request->method('getMethod')->willReturn(RequestMethodInterface::METHOD_GET);
-        $this->handler->method('handle')->with($this->request)->willReturn($this->response);
+        $this->handler->method('handle')->willReturn($this->response);
 
         $response = $this->deprecationMiddleware->process($this->request, $this->handler);
 
@@ -250,19 +250,19 @@ class DeprecationMiddlewareTest extends TestCase
             }
         };
 
-        $routeResult           = $this->createMock(RouteResult::class);
-        $route                 = $this->createMock(Route::class);
+        $routeResult           = $this->createStub(RouteResult::class);
+        $route                 = $this->createStub(Route::class);
         $lazyLoadingMiddleware = new LazyLoadingMiddleware(
-            $this->createMock(MiddlewareContainer::class),
+            $this->createStub(MiddlewareContainer::class),
             $handler::class,
         );
 
         $route->method('getMiddleware')->willReturn($lazyLoadingMiddleware);
         $routeResult->method('isFailure')->willReturn(false);
         $routeResult->method('getMatchedRoute')->willReturn($route);
-        $this->request->method('getAttribute')->with(RouteResult::class)->willReturn($routeResult);
+        $this->request->method('getAttribute')->willReturn($routeResult);
         $this->request->method('getMethod')->willReturn(RequestMethodInterface::METHOD_GET);
-        $this->handler->method('handle')->with($this->request)->willReturn($this->response);
+        $this->handler->method('handle')->willReturn($this->response);
 
         $response = (new DeprecationMiddleware([]))->process($this->request, $this->handler);
 
