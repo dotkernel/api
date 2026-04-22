@@ -23,7 +23,7 @@ class ContentNegotiationMiddlewareTest extends TestCase
     private RequestHandlerInterface $handler;
     private RouteResult $routeResult;
 
-    private const CONFIG
+    private const array CONFIG
         = [
             'test.route' => [
                 'Accept'       => [

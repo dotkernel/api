@@ -33,7 +33,7 @@ class DeprecationMiddlewareTest extends TestCase
     private RequestHandlerInterface&Stub $handler;
     private ResponseInterface $response;
 
-    private const VERSIONING_CONFIG = [
+    private const array VERSIONING_CONFIG = [
         'documentation_url' => 'www.example.com',
     ];
 
