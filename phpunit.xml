@@ -4,7 +4,10 @@
          bootstrap="vendor/autoload.php"
          stopOnError="true"
          stopOnFailure="true"
-         colors="true">
+         colors="true"
+         displayDetailsOnPhpunitNotices="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnPhpunitDeprecations="true">
     <testsuites>
         <testsuite name="UnitTests">
             <directory>./test/Unit</directory>

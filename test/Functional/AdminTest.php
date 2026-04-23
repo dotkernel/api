@@ -406,7 +406,7 @@ class AdminTest extends AbstractFunctionalTest
         $userRole           = $userRoleRepository->findOneBy(['name' => UserRoleEnum::User]);
         $this->assertInstanceOf(UserRole::class, $userRole);
 
-        $mailService = $this->createMock(MailService::class);
+        $mailService = $this->createStub(MailService::class);
         $this->replaceService(MailService::class, $mailService);
 
         $userData = [

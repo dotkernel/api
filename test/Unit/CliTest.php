@@ -20,7 +20,7 @@ class CliTest extends TestCase
     public function testWillListCommandsWhenNoCommandSpecified(): void
     {
         $application = new Application(
-            $this->createMock(FileLockerInterface::class),
+            $this->createStub(FileLockerInterface::class),
             []
         );
         $application->setAutoExit(false);
@@ -41,7 +41,7 @@ class CliTest extends TestCase
     public function testWillListCommands(): void
     {
         $application = new Application(
-            $this->createMock(FileLockerInterface::class),
+            $this->createStub(FileLockerInterface::class),
             []
         );
 

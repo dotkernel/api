@@ -23,7 +23,7 @@ class ContentNegotiationMiddlewareTest extends TestCase
     private RequestHandlerInterface $handler;
     private RouteResult $routeResult;
 
-    private const CONFIG
+    private const array CONFIG
         = [
             'test.route' => [
                 'Accept'       => [
@@ -42,12 +42,12 @@ class ContentNegotiationMiddlewareTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->handler = $this->createMock(RequestHandlerInterface::class);
+        $this->handler = $this->createStub(RequestHandlerInterface::class);
 
         $this->routeResult = RouteResult::fromRoute(
             new Route(
                 '/test-route',
-                $this->createMock(MiddlewareInterface::class),
+                $this->createStub(MiddlewareInterface::class),
                 name: 'test.route'
             )
         );

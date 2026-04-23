@@ -14,7 +14,7 @@ use Core\Admin\Enum\AdminStatusEnum;
 use Core\Admin\Repository\AdminRepository;
 use Core\Admin\Repository\AdminRoleRepository;
 use Exception;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 use function array_merge;
@@ -23,16 +23,16 @@ use function count;
 class AdminServiceTest extends TestCase
 {
     private AdminServiceInterface $adminService;
-    private AdminRepository&MockObject $adminRepository;
-    private AdminRoleRepository&MockObject $adminRoleRepository;
+    private AdminRepository&Stub $adminRepository;
+    private AdminRoleRepository&Stub $adminRoleRepository;
 
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function setUp(): void
     {
-        $this->adminRepository     = $this->createMock(AdminRepository::class);
-        $this->adminRoleRepository = $this->createMock(AdminRoleRepository::class);
+        $this->adminRepository     = $this->createStub(AdminRepository::class);
+        $this->adminRoleRepository = $this->createStub(AdminRoleRepository::class);
         $this->adminService        = new AdminService($this->adminRepository, $this->adminRoleRepository);
     }
 

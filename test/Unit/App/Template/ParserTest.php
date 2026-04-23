@@ -23,7 +23,7 @@ class ParserTest extends TestCase
     public function testWillInitiate(): void
     {
         $parser = new Parser(
-            $this->createMock(UrlHelperInterface::class),
+            $this->createStub(UrlHelperInterface::class),
             []
         );
 
@@ -36,14 +36,14 @@ class ParserTest extends TestCase
     public function testWillSetGlobals(): void
     {
         $parser = new Parser(
-            $this->createMock(UrlHelperInterface::class),
+            $this->createStub(UrlHelperInterface::class),
             []
         );
 
         $this->assertSame([], $parser->getGlobals());
 
         $parser = new Parser(
-            $this->createMock(UrlHelperInterface::class),
+            $this->createStub(UrlHelperInterface::class),
             [
                 RendererInterface::class => [
                     'globals' => [
@@ -56,7 +56,7 @@ class ParserTest extends TestCase
         $this->assertSame(['test' => 'test'], $parser->getGlobals());
 
         $parser = new Parser(
-            $this->createMock(UrlHelperInterface::class),
+            $this->createStub(UrlHelperInterface::class),
             [
                 RendererInterface::class => [
                     'globals' => [
@@ -83,7 +83,7 @@ class ParserTest extends TestCase
     public function testWillParseVariables(): void
     {
         $parser = new Parser(
-            $this->createMock(UrlHelperInterface::class),
+            $this->createStub(UrlHelperInterface::class),
             [
                 'application' => [
                     'foo' => 'Foo',
