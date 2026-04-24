@@ -32,9 +32,9 @@ class Admin extends AbstractEntity implements UserEntityInterface
     use TimestampsTrait;
     use UuidIdentifierTrait;
 
-    /** @var non-empty-string|null $identity */
+    /** @var non-empty-string $identity */
     #[ORM\Column(name: 'identity', type: 'string', length: 191, unique: true)]
-    protected ?string $identity = null;
+    protected string $identity;
 
     #[ORM\Column(name: 'firstName', type: 'string', length: 191, nullable: true)]
     protected ?string $firstName = null;
@@ -43,7 +43,7 @@ class Admin extends AbstractEntity implements UserEntityInterface
     protected ?string $lastName = null;
 
     #[ORM\Column(name: 'password', type: 'string', length: 191)]
-    protected ?string $password = null;
+    protected string $password;
 
     #[ORM\Column(
         type: 'admin_status_enum',
@@ -74,11 +74,6 @@ class Admin extends AbstractEntity implements UserEntityInterface
     public function getIdentity(): ?string
     {
         return $this->identity;
-    }
-
-    public function hasIdentity(): bool
-    {
-        return $this->identity !== null;
     }
 
     /**
@@ -115,7 +110,7 @@ class Admin extends AbstractEntity implements UserEntityInterface
         return $this;
     }
 
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -213,9 +208,12 @@ class Admin extends AbstractEntity implements UserEntityInterface
         return $this->status === AdminStatusEnum::Active;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getIdentifier(): string
     {
-        return (string) $this->identity;
+        return $this->identity;
     }
 
     /**

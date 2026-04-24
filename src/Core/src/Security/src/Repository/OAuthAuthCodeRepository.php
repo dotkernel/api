@@ -24,10 +24,7 @@ class OAuthAuthCodeRepository extends AbstractRepository implements AuthCodeRepo
         $this->getEntityManager()->flush();
     }
 
-    /**
-     * @param string $codeId
-     */
-    public function revokeAuthCode($codeId): void
+    public function revokeAuthCode(string $codeId): void
     {
         $authCodeEntity = $this->find($codeId);
         if ($authCodeEntity instanceof OAuthAuthCode) {
@@ -36,10 +33,7 @@ class OAuthAuthCodeRepository extends AbstractRepository implements AuthCodeRepo
         }
     }
 
-    /**
-     * @param string $codeId
-     */
-    public function isAuthCodeRevoked($codeId): bool
+    public function isAuthCodeRevoked(string $codeId): bool
     {
         $authCodeEntity = $this->find($codeId);
         if ($authCodeEntity instanceof OAuthAuthCode) {

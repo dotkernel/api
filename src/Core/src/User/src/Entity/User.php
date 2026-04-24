@@ -54,9 +54,9 @@ class User extends AbstractEntity implements UserEntityInterface
     #[ORM\InverseJoinColumn(name: 'role_id', referencedColumnName: 'id')]
     protected Collection $roles;
 
-    /** @var non-empty-string|null $identity */
+    /** @var non-empty-string $identity */
     #[ORM\Column(name: 'identity', type: 'string', length: 191, unique: true)]
-    protected ?string $identity = null;
+    protected string $identity;
 
     #[ORM\Column(name: 'password', type: 'string', length: 191)]
     protected ?string $password = null;
@@ -205,11 +205,6 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this->identity;
     }
 
-    public function hasIdentity(): bool
-    {
-        return $this->identity !== null;
-    }
-
     /**
      * @param non-empty-string $identity
      */
@@ -261,7 +256,7 @@ class User extends AbstractEntity implements UserEntityInterface
 
     public function getIdentifier(): string
     {
-        return (string) $this->identity;
+        return $this->identity;
     }
 
     public function activate(): self

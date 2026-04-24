@@ -54,7 +54,7 @@ $files = [
     ],
     [
         'source'      => 'vendor/dotkernel/dot-mail/config/mail.global.php.dist',
-        'destination' => 'config/autoload/mail.global.php',
+        'destination' => 'config/autoload/mail.local.php',
         'environment' => [ENVIRONMENT_DEVELOPMENT, ENVIRONMENT_PRODUCTION],
     ],
 ];

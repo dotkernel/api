@@ -22,8 +22,9 @@ class OAuthScope implements ScopeEntityInterface
     use NumericIdentifierTrait;
     use ScopeTrait;
 
+    /** @var non-empty-string */
     #[ORM\Column(name: 'scope', type: 'string', length: 191)]
-    private string $scope = '';
+    private string $scope;
 
     /** @var Collection<int, AccessTokenEntityInterface> */
     #[ORM\ManyToMany(targetEntity: OAuthAccessToken::class, mappedBy: 'scopes')]
@@ -39,11 +40,13 @@ class OAuthScope implements ScopeEntityInterface
         $this->authCodes    = new ArrayCollection();
     }
 
+    /** @return non-empty-string */
     public function getIdentifier(): string
     {
         return $this->getScope();
     }
 
+    /** @param non-empty-string $scope */
     public function setScope(string $scope): self
     {
         $this->scope = $scope;
@@ -51,6 +54,7 @@ class OAuthScope implements ScopeEntityInterface
         return $this;
     }
 
+    /** @return non-empty-string */
     public function getScope(): string
     {
         return $this->scope;

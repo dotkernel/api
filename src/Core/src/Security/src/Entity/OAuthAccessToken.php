@@ -15,7 +15,7 @@ use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Token;
-use League\OAuth2\Server\CryptKey;
+use League\OAuth2\Server\CryptKeyInterface;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
@@ -33,8 +33,9 @@ class OAuthAccessToken implements AccessTokenEntityInterface
     #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id')]
     private ClientEntityInterface $client;
 
-    #[ORM\Column(name: 'user_id', type: 'string', length: 25, nullable: true)]
-    private ?string $userId = null;
+    /** @var non-empty-string $userId */
+    #[ORM\Column(name: 'user_id', type: 'string', length: 25)]
+    private string $userId;
 
     /** @var non-empty-string $token */
     #[ORM\Column(name: 'token', type: 'string', length: 100)]
@@ -53,7 +54,7 @@ class OAuthAccessToken implements AccessTokenEntityInterface
     #[ORM\Column(name: 'expires_at', type: 'datetime_immutable')]
     private DateTimeImmutable $expiresAt;
 
-    private ?CryptKey $privateKey = null;
+    private ?CryptKeyInterface $privateKey = null;
 
     private ?Configuration $jwtConfiguration = null;
 
@@ -62,11 +63,9 @@ class OAuthAccessToken implements AccessTokenEntityInterface
         $this->scopes = new ArrayCollection();
     }
 
-    public function setClient(ClientEntityInterface $client): self
+    public function setClient(ClientEntityInterface $client): void
     {
         $this->client = $client;
-
-        return $this;
     }
 
     public function getClient(): ClientEntityInterface
@@ -85,11 +84,9 @@ class OAuthAccessToken implements AccessTokenEntityInterface
     /**
      * @param non-empty-string $token
      */
-    public function setToken(string $token): self
+    public function setToken(string $token): void
     {
         $this->token = $token;
-
-        return $this;
     }
 
     public function setIsRevoked(bool $isRevoked): self
@@ -122,37 +119,33 @@ class OAuthAccessToken implements AccessTokenEntityInterface
     /**
      * @param mixed $identifier
      */
-    public function setIdentifier($identifier): self
+    public function setIdentifier($identifier): void
     {
-        return $this->setToken($identifier);
+        $this->setToken($identifier);
     }
 
     /**
-     * @param string|int|null $identifier
+     * @param non-empty-string|int $identifier
      */
-    public function setUserIdentifier($identifier): self
+    public function setUserIdentifier($identifier): void
     {
         if (is_int($identifier)) {
             $identifier = (string) $identifier;
         }
 
         $this->userId = $identifier;
-
-        return $this;
     }
 
-    public function getUserIdentifier(): ?string
+    public function getUserIdentifier(): string
     {
         return $this->userId;
     }
 
-    public function addScope(ScopeEntityInterface $scope): self
+    public function addScope(ScopeEntityInterface $scope): void
     {
         if (! $this->scopes->contains($scope)) {
             $this->scopes->add($scope);
         }
-
-        return $this;
     }
 
     public function removeScope(OAuthScope $scope): self
@@ -178,18 +171,14 @@ class OAuthAccessToken implements AccessTokenEntityInterface
         return $this->expiresAt;
     }
 
-    public function setExpiryDateTime(DateTimeImmutable $dateTime): self
+    public function setExpiryDateTime(DateTimeImmutable $dateTime): void
     {
         $this->expiresAt = $dateTime;
-
-        return $this;
     }
 
-    public function setPrivateKey(CryptKey $privateKey): self
+    public function setPrivateKey(CryptKeyInterface $privateKey): void
     {
         $this->privateKey = $privateKey;
-
-        return $this;
     }
 
     public function initJwtConfiguration(): self
@@ -235,6 +224,11 @@ class OAuthAccessToken implements AccessTokenEntityInterface
     }
 
     public function __toString(): string
+    {
+        return $this->convertToJWT()->toString();
+    }
+
+    public function toString(): string
     {
         return $this->convertToJWT()->toString();
     }

@@ -87,16 +87,13 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
         return $queryBuilder;
     }
 
-    /**
-     * @param string $username
-     * @param string $password
-     * @param string $grantType
+    /** @param non-empty-string $username
      * @throws OAuthServerException
      */
     public function getUserEntityByUserCredentials(
-        $username,
-        $password,
-        $grantType,
+        string $username,
+        string $password,
+        string $grantType,
         ClientEntityInterface $clientEntity
     ): ?UserEntity {
         $qb = $this->getEntityManager()->createQueryBuilder();

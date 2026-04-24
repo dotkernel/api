@@ -67,7 +67,7 @@
         "laminas/laminas-inputfilter": "^2.31.0",
         "laminas/laminas-stdlib": "^3.20.0",
         "mezzio/mezzio": "^3.20.1",
-        "mezzio/mezzio-authentication-oauth2": "^2.11.0",
+        "mezzio/mezzio-authentication-oauth2": "^3.0.1",
         "mezzio/mezzio-authorization-acl": "^1.11.0",
         "mezzio/mezzio-authorization-rbac": "^1.8.0",
         "mezzio/mezzio-cors": "^1.13.0",

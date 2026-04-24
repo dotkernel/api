@@ -93,7 +93,7 @@ class AdminService implements AdminServiceInterface
             $admin = new Admin();
         }
 
-        if (array_key_exists('identity', $data) && $data['identity'] !== null && ! $admin->hasIdentity()) {
+        if (array_key_exists('identity', $data) && $data['identity'] !== null) {
             $admin->setIdentity($data['identity']);
         }
         if (array_key_exists('password', $data) && $data['password'] !== null) {

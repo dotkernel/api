@@ -27,16 +27,12 @@ class OAuthScopeRepository extends AbstractRepository implements ScopeRepository
         return null;
     }
 
-    /**
-     * @param string $grantType
-     * @param null|string $userIdentifier
-     * @return ScopeEntityInterface[]
-     */
     public function finalizeScopes(
         array $scopes,
-        $grantType,
+        string $grantType,
         ClientEntityInterface $clientEntity,
-        $userIdentifier = null
+        string|null $userIdentifier = null,
+        ?string $authCodeId = null
     ): array {
         return $scopes;
     }
