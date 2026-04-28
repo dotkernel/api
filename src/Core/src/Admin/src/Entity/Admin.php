@@ -71,7 +71,7 @@ class Admin extends AbstractEntity implements UserEntityInterface
         $this->settings = new ArrayCollection();
     }
 
-    public function getIdentity(): ?string
+    public function getIdentity(): string
     {
         return $this->identity;
     }
@@ -84,6 +84,11 @@ class Admin extends AbstractEntity implements UserEntityInterface
         $this->identity = $identity;
 
         return $this;
+    }
+
+    public function hasIdentity(): bool
+    {
+        return ! empty($this->identity);
     }
 
     public function getFirstName(): ?string

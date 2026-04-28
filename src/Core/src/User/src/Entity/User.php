@@ -59,7 +59,7 @@ class User extends AbstractEntity implements UserEntityInterface
     protected string $identity;
 
     #[ORM\Column(name: 'password', type: 'string', length: 191)]
-    protected ?string $password = null;
+    protected string $password;
 
     #[ORM\Column(
         type: 'user_status_enum',
@@ -200,7 +200,7 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this;
     }
 
-    public function getIdentity(): ?string
+    public function getIdentity(): string
     {
         return $this->identity;
     }
@@ -215,7 +215,12 @@ class User extends AbstractEntity implements UserEntityInterface
         return $this;
     }
 
-    public function getPassword(): ?string
+    public function hasIdentity(): bool
+    {
+        return ! empty($this->identity);
+    }
+
+    public function getPassword(): string
     {
         return $this->password;
     }
