@@ -11,9 +11,9 @@ trait NumericIdentifierTrait
     #[ORM\Id]
     #[ORM\Column(name: 'id', type: 'integer', options: ['unsigned' => true])]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    protected ?int $id;
+    protected int $id;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }

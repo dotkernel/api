@@ -16,22 +16,19 @@ use function password_verify;
 #[Entity(name: OAuthClient::class)]
 class OAuthClientRepository extends AbstractRepository implements ClientRepositoryInterface
 {
-    private const GRANT_TYPE_CLIENT_CREDENTIALS = 'client_credentials';
-    private const GRANT_TYPE_AUTHORIZATION_CODE = 'authorization_code';
-    private const GRANT_TYPE_REFRESH_TOKEN      = 'refresh_token';
-    private const GRANT_TYPE_PASSWORD           = 'password';
+    private const string GRANT_TYPE_CLIENT_CREDENTIALS = 'client_credentials';
+    private const string GRANT_TYPE_AUTHORIZATION_CODE = 'authorization_code';
+    private const string GRANT_TYPE_REFRESH_TOKEN      = 'refresh_token';
+    private const string GRANT_TYPE_PASSWORD           = 'password';
 
-    private const GRANT_TYPES = [
+    private const array GRANT_TYPES = [
         self::GRANT_TYPE_CLIENT_CREDENTIALS,
         self::GRANT_TYPE_AUTHORIZATION_CODE,
         self::GRANT_TYPE_REFRESH_TOKEN,
         self::GRANT_TYPE_PASSWORD,
     ];
 
-    /**
-     * @param string $clientIdentifier
-     */
-    public function getClientEntity($clientIdentifier): ?ClientEntityInterface
+    public function getClientEntity(string $clientIdentifier): ?ClientEntityInterface
     {
         $client = $this->findOneBy(['name' => $clientIdentifier]);
         if ($client instanceof OAuthClient) {
@@ -41,12 +38,7 @@ class OAuthClientRepository extends AbstractRepository implements ClientReposito
         return null;
     }
 
-    /**
-     * @param string $clientIdentifier
-     * @param null|string $clientSecret
-     * @param null|string $grantType
-     */
-    public function validateClient($clientIdentifier, $clientSecret, $grantType): bool
+    public function validateClient(string $clientIdentifier, ?string $clientSecret, ?string $grantType): bool
     {
         $client = $this->getClientEntity($clientIdentifier);
         if (! $client instanceof OAuthClient) {

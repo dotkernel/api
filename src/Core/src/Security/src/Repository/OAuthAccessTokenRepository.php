@@ -42,7 +42,8 @@ class OAuthAccessTokenRepository extends AbstractRepository implements AccessTok
         array $scopes,
         $userIdentifier = null
     ): OAuthAccessToken {
-        $accessToken = (new OAuthAccessToken())->setClient($clientEntity);
+        $accessToken = new OAuthAccessToken();
+        $accessToken->setClient($clientEntity);
         foreach ($scopes as $scope) {
             $accessToken->addScope($scope);
         }
@@ -71,10 +72,7 @@ class OAuthAccessTokenRepository extends AbstractRepository implements AccessTok
         $this->getEntityManager()->flush();
     }
 
-    /**
-     * @param string $tokenId
-     */
-    public function revokeAccessToken($tokenId): void
+    public function revokeAccessToken(string $tokenId): void
     {
         $accessTokenEntity = $this->findOneBy(['token' => $tokenId]);
         if ($accessTokenEntity instanceof OAuthAccessToken) {
@@ -83,10 +81,7 @@ class OAuthAccessTokenRepository extends AbstractRepository implements AccessTok
         }
     }
 
-    /**
-     * @param string $tokenId
-     */
-    public function isAccessTokenRevoked($tokenId): bool
+    public function isAccessTokenRevoked(string $tokenId): bool
     {
         $accessTokenEntity = $this->findOneBy(['token' => $tokenId]);
         if ($accessTokenEntity instanceof OAuthAccessToken) {

@@ -80,13 +80,12 @@ class AuthenticationTest extends AbstractFunctionalTest
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        $this->assertResponseUnauthorized($response);
+        $this->assertResponseBadRequest($response);
         $this->assertArrayHasKey('error', $data);
         $this->assertArrayHasKey('error_description', $data);
         $this->assertArrayHasKey('hint', $data);
-        $this->assertArrayHasKey('message', $data);
 
-        $this->assertSame('invalid_request', $data['error']);
+        $this->assertSame('invalid_grant', $data['error']);
     }
 
     /**

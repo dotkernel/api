@@ -16,13 +16,14 @@ class OAuthClient implements ClientEntityInterface
 {
     use NumericIdentifierTrait;
 
-    public const NAME_ADMIN    = 'admin';
-    public const NAME_FRONTEND = 'frontend';
+    public const string NAME_ADMIN    = 'admin';
+    public const string NAME_FRONTEND = 'frontend';
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true)]
     private ?User $user = null;
 
+    /** @var non-empty-string */
     #[ORM\Column(name: 'name', type: 'string', length: 40)]
     private string $name;
 
@@ -55,11 +56,15 @@ class OAuthClient implements ClientEntityInterface
         return $this->getName();
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getIdentifier(): string
     {
         return $this->getName();
     }
 
+    /** @param non-empty-string $name */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -67,6 +72,9 @@ class OAuthClient implements ClientEntityInterface
         return $this;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getName(): string
     {
         return $this->name;
@@ -96,7 +104,7 @@ class OAuthClient implements ClientEntityInterface
         return $this->redirect;
     }
 
-    public function getRedirectUri(): ?string
+    public function getRedirectUri(): string
     {
         return $this->getRedirect();
     }

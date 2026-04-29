@@ -24,10 +24,7 @@ class OAuthRefreshTokenRepository extends AbstractRepository implements RefreshT
         $this->getEntityManager()->flush();
     }
 
-    /**
-     * @param string $tokenId
-     */
-    public function revokeRefreshToken($tokenId): void
+    public function revokeRefreshToken(string $tokenId): void
     {
         $refreshTokenEntity = $this->find($tokenId);
         if ($refreshTokenEntity instanceof OAuthRefreshToken) {
@@ -36,10 +33,7 @@ class OAuthRefreshTokenRepository extends AbstractRepository implements RefreshT
         }
     }
 
-    /**
-     * @param string $tokenId
-     */
-    public function isRefreshTokenRevoked($tokenId): bool
+    public function isRefreshTokenRevoked(string $tokenId): bool
     {
         $refreshTokenEntity = $this->find($tokenId);
         if ($refreshTokenEntity instanceof OAuthRefreshToken) {

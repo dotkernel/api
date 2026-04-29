@@ -48,11 +48,9 @@ class OAuthAuthCode implements AuthCodeEntityInterface
         $this->scopes          = new ArrayCollection();
     }
 
-    public function setClient(ClientEntityInterface $client): self
+    public function setClient(ClientEntityInterface $client): void
     {
         $this->client = $client;
-
-        return $this;
     }
 
     public function getClient(): ClientEntityInterface
@@ -68,19 +66,17 @@ class OAuthAuthCode implements AuthCodeEntityInterface
     /**
      * @param mixed $identifier
      */
-    public function setIdentifier($identifier): self
+    public function setIdentifier($identifier): void
     {
         $this->setId($identifier);
-
-        return $this;
     }
 
     /**
      * @param string|int|null $identifier
      */
-    public function setUserIdentifier($identifier): self
+    public function setUserIdentifier($identifier): void
     {
-        return $this;
+        $this->setIdentifier($identifier);
     }
 
     public function getUserIdentifier(): ?string
@@ -114,13 +110,11 @@ class OAuthAuthCode implements AuthCodeEntityInterface
         return $this;
     }
 
-    public function addScope(ScopeEntityInterface $scope): self
+    public function addScope(ScopeEntityInterface $scope): void
     {
         if (! $this->scopes->contains($scope)) {
             $this->scopes->add($scope);
         }
-
-        return $this;
     }
 
     public function removeScope(ScopeEntityInterface $scope): self
@@ -156,8 +150,8 @@ class OAuthAuthCode implements AuthCodeEntityInterface
         return $this->getExpiresDatetime();
     }
 
-    public function setExpiryDateTime(DateTimeImmutable $dateTime): self
+    public function setExpiryDateTime(DateTimeImmutable $dateTime): void
     {
-        return $this->setExpiresDatetime($dateTime);
+        $this->setExpiresDatetime($dateTime);
     }
 }

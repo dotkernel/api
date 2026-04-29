@@ -32,16 +32,13 @@ class OAuthRefreshToken implements RefreshTokenEntityInterface
         return (string) $this->getId();
     }
 
-    public function setIdentifier(mixed $identifier): self
+    public function setIdentifier(mixed $identifier): void
     {
-        return $this;
     }
 
-    public function setAccessToken(AccessTokenEntityInterface $accessToken): self
+    public function setAccessToken(AccessTokenEntityInterface $accessToken): void
     {
         $this->accessToken = $accessToken;
-
-        return $this;
     }
 
     public function getAccessToken(): OAuthAccessToken|AccessTokenEntityInterface
@@ -73,10 +70,8 @@ class OAuthRefreshToken implements RefreshTokenEntityInterface
         return $this->expiresAt;
     }
 
-    public function setExpiryDateTime(DateTimeImmutable $dateTime): self
+    public function setExpiryDateTime(DateTimeImmutable $dateTime): void
     {
         $this->expiresAt = $dateTime;
-
-        return $this;
     }
 }
