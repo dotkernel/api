@@ -204,14 +204,16 @@ class AdminLogin extends AbstractEntity
         return $this;
     }
 
-    public function getIsCrawler(): YesNoEnum
+    public function getIsCrawler(): ?YesNoEnum
     {
         return $this->isCrawler;
     }
 
-    public function setIsCrawler(YesNoEnum $isCrawler): void
+    public function setIsCrawler(YesNoEnum $isCrawler): self
     {
         $this->isCrawler = $isCrawler;
+
+        return $this;
     }
 
     /**
