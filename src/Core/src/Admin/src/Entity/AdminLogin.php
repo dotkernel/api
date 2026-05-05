@@ -39,12 +39,6 @@ class AdminLogin extends AbstractEntity
     #[ORM\Column(name: 'deviceType', type: 'string', length: 191, nullable: true)]
     protected ?string $deviceType = null;
 
-    #[ORM\Column(name: 'deviceBrand', type: 'string', length: 191, nullable: true)]
-    protected ?string $deviceBrand = null;
-
-    #[ORM\Column(name: 'deviceModel', type: 'string', length: 40, nullable: true)]
-    protected ?string $deviceModel = null;
-
     #[ORM\Column(type: 'yes_no_enum', nullable: true, enumType: YesNoEnum::class)]
     protected YesNoEnum $isMobile = YesNoEnum::No;
 
@@ -54,20 +48,14 @@ class AdminLogin extends AbstractEntity
     #[ORM\Column(name: 'osVersion', type: 'string', length: 191, nullable: true)]
     protected ?string $osVersion = null;
 
-    #[ORM\Column(name: 'osPlatform', type: 'string', length: 191, nullable: true)]
-    protected ?string $osPlatform = null;
-
     #[ORM\Column(name: 'clientType', type: 'string', length: 191, nullable: true)]
     protected ?string $clientType = null;
 
     #[ORM\Column(name: 'clientName', type: 'string', length: 191, nullable: true)]
     protected ?string $clientName = null;
 
-    #[ORM\Column(name: 'clientEngine', type: 'string', length: 191, nullable: true)]
-    protected ?string $clientEngine = null;
-
-    #[ORM\Column(name: 'clientVersion', type: 'string', length: 191, nullable: true)]
-    protected ?string $clientVersion = null;
+    #[ORM\Column(type: 'yes_no_enum', nullable: true, enumType: YesNoEnum::class)]
+    protected YesNoEnum $isCrawler = YesNoEnum::No;
 
     #[ORM\Column(type: 'success_failure_enum', nullable: true, enumType: SuccessFailureEnum::class)]
     protected SuccessFailureEnum $loginStatus = SuccessFailureEnum::Fail;
@@ -144,30 +132,6 @@ class AdminLogin extends AbstractEntity
         return $this;
     }
 
-    public function getDeviceBrand(): ?string
-    {
-        return $this->deviceBrand;
-    }
-
-    public function setDeviceBrand(?string $deviceBrand): self
-    {
-        $this->deviceBrand = $deviceBrand;
-
-        return $this;
-    }
-
-    public function getDeviceModel(): ?string
-    {
-        return $this->deviceModel;
-    }
-
-    public function setDeviceModel(?string $deviceModel): self
-    {
-        $this->deviceModel = $deviceModel;
-
-        return $this;
-    }
-
     public function getIsMobile(): ?YesNoEnum
     {
         return $this->isMobile;
@@ -204,18 +168,6 @@ class AdminLogin extends AbstractEntity
         return $this;
     }
 
-    public function getOsPlatform(): ?string
-    {
-        return $this->osPlatform;
-    }
-
-    public function setOsPlatform(?string $osPlatform): self
-    {
-        $this->osPlatform = $osPlatform;
-
-        return $this;
-    }
-
     public function getClientType(): ?string
     {
         return $this->clientType;
@@ -240,30 +192,6 @@ class AdminLogin extends AbstractEntity
         return $this;
     }
 
-    public function getClientEngine(): ?string
-    {
-        return $this->clientEngine;
-    }
-
-    public function setClientEngine(?string $clientEngine): self
-    {
-        $this->clientEngine = $clientEngine;
-
-        return $this;
-    }
-
-    public function getClientVersion(): ?string
-    {
-        return $this->clientVersion;
-    }
-
-    public function setClientVersion(?string $clientVersion): self
-    {
-        $this->clientVersion = $clientVersion;
-
-        return $this;
-    }
-
     public function getLoginStatus(): ?SuccessFailureEnum
     {
         return $this->loginStatus;
@@ -276,6 +204,16 @@ class AdminLogin extends AbstractEntity
         return $this;
     }
 
+    public function getIsCrawler(): YesNoEnum
+    {
+        return $this->isCrawler;
+    }
+
+    public function setIsCrawler(YesNoEnum $isCrawler): void
+    {
+        $this->isCrawler = $isCrawler;
+    }
+
     /**
      * @return array{
      *     id: non-empty-string,
@@ -285,16 +223,12 @@ class AdminLogin extends AbstractEntity
      *     continent: string|null,
      *     organization: string|null,
      *     deviceType: string|null,
-     *     deviceBrand: string|null,
-     *     deviceModel: string|null,
      *     isMobile: string,
      *     osName: string|null,
      *     osVersion: string|null,
-     *     osPlatform: string|null,
      *     clientType: string|null,
      *     clientName: string|null,
-     *     clientEngine: string|null,
-     *     clientVersion: string|null,
+     *     isCrawler: 'no'|'yes',
      *     loginStatus: string,
      *     created: DateTimeImmutable|null,
      *     updated: DateTimeImmutable|null,
@@ -303,26 +237,22 @@ class AdminLogin extends AbstractEntity
     public function getArrayCopy(): array
     {
         return [
-            'id'            => $this->id->toString(),
-            'identity'      => $this->identity,
-            'adminIp'       => $this->adminIp,
-            'country'       => $this->country,
-            'continent'     => $this->continent,
-            'organization'  => $this->organization,
-            'deviceType'    => $this->deviceType,
-            'deviceBrand'   => $this->deviceBrand,
-            'deviceModel'   => $this->deviceModel,
-            'isMobile'      => $this->isMobile->value,
-            'osName'        => $this->osName,
-            'osVersion'     => $this->osVersion,
-            'osPlatform'    => $this->osPlatform,
-            'clientType'    => $this->clientType,
-            'clientName'    => $this->clientName,
-            'clientEngine'  => $this->clientEngine,
-            'clientVersion' => $this->clientVersion,
-            'loginStatus'   => $this->loginStatus->value,
-            'created'       => $this->created,
-            'updated'       => $this->updated,
+            'id'           => $this->id->toString(),
+            'identity'     => $this->identity,
+            'adminIp'      => $this->adminIp,
+            'country'      => $this->country,
+            'continent'    => $this->continent,
+            'organization' => $this->organization,
+            'deviceType'   => $this->deviceType,
+            'isMobile'     => $this->isMobile->value,
+            'osName'       => $this->osName,
+            'osVersion'    => $this->osVersion,
+            'clientType'   => $this->clientType,
+            'clientName'   => $this->clientName,
+            'isCrawler'    => $this->isCrawler->value,
+            'loginStatus'  => $this->loginStatus->value,
+            'created'      => $this->created,
+            'updated'      => $this->updated,
         ];
     }
 }
