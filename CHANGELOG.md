@@ -1,14 +1,36 @@
 # Changelog
 
-## 7.1.0 - 2026-04-22
+## 7.2.0 - 2026-07-21
 
 ### Changed
 
-* Issue [#509](https://github.com/dotkernel/api/issues/509): Bump `PHPUnit` to version `12.5.23` by [@SergiuBota1](https://github.com/SergiuBota1) in [#510](https://github.com/dotkernel/admin/pull/510)
+* Issue [#493](https://github.com/dotkernel/api/issues/493): Bump `dotkernel/dot-maker` to version `2.x` by [@alexmerlin](https://github.com/alexmerlin) in [#494](https://github.com/dotkernel/api/pull/494)
+* Issue [#508](https://github.com/dotkernel/api/issues/508): Upgraded mezzio-oauth2 to version 3 by [@pinclau](https://github.com/pinclau) in [#511](https://github.com/dotkernel/api/pull/511)
+* Issue [#509](https://github.com/dotkernel/api/issues/509): Bump `phpunit/phpunit` to `v12.5.23` by [@SergiuBota1](https://github.com/SergiuBota1) in [#510](https://github.com/dotkernel/api/pull/510)
+* Update PostgreSQL host configuration by [@arhimede](https://github.com/arhimede) in [#465](https://github.com/dotkernel/api/pull/465)
+* Update API version in README example by [@alexmerlin](https://github.com/alexmerlin) in [#473](https://github.com/dotkernel/api/pull/473)
+* Core Sync by [@alexmerlin](https://github.com/alexmerlin) in [#486](https://github.com/dotkernel/api/pull/486)
+* Update branch for `Qodana` workflow to `7.0` by [@alexmerlin](https://github.com/alexmerlin) in [#491](https://github.com/dotkernel/api/pull/491)
+* Update `Qodana` action version to `v2025.3` by [@arhimede](https://github.com/arhimede) in [#500](https://github.com/dotkernel/api/pull/500)
+* Update `actions/cache` action to `v5` by [@renovate](https://github.com/renovate)[bot] in [#517](https://github.com/dotkernel/api/pull/517)
+* Update `actions/checkout` action to `v6` by [@renovate](https://github.com/renovate)[bot] in [#518](https://github.com/dotkernel/api/pull/518)
+* Update `codecov/codecov-action` action to `v6` by [@renovate](https://github.com/renovate)[bot] in [#520](https://github.com/dotkernel/api/pull/520)
+* Update dependency `zircote/swagger-php` to `v6` by [@renovate](https://github.com/renovate)[bot] in [#522](https://github.com/dotkernel/api/pull/522)
+* Update `JetBrains/qodana-action` action to `v2026` by [@renovate](https://github.com/renovate)[bot] in [#523](https://github.com/dotkernel/api/pull/523)
+* Update `codecov/codecov-action` action to `v7` by [@renovate](https://github.com/renovate)[bot] in [#526](https://github.com/dotkernel/api/pull/526)
+* Update `JetBrains/qodana-action` action to `v2026.1.3` by [@renovate](https://github.com/renovate)[bot] in [#527](https://github.com/dotkernel/api/pull/527)
+* Update `actions/checkout` action to `v7` by [@renovate](https://github.com/renovate)[bot] in [#528](https://github.com/dotkernel/api/pull/528)
+* Update `actions/cache` action to `v6` by [@renovate](https://github.com/renovate)[bot] in [#530](https://github.com/dotkernel/api/pull/530)
 
 ### Added
 
-* Nothing
+* Issue [#474](https://github.com/dotkernel/api/issues/474): Throw `BadException` on `MalformedRequestBodyException` by [@alexmerlin](https://github.com/alexmerlin) in [#476](https://github.com/dotkernel/api/pull/476)
+* Issue [#481](https://github.com/dotkernel/api/issues/481): Require `symfony/var-exporter` to keep LazyGhost support by [@alexmerlin](https://github.com/alexmerlin) in [#485](https://github.com/dotkernel/api/pull/485)
+* Issue [#488](https://github.com/dotkernel/api/issues/488): Added security headers by [@alexmerlin](https://github.com/alexmerlin) in [#490](https://github.com/dotkernel/api/pull/490)
+* Issue [#503](https://github.com/dotkernel/api/issues/503): OAuth2 token invalidated on Composer install/update by [@alexmerlin](https://github.com/alexmerlin) in [#506](https://github.com/dotkernel/api/pull/506)
+* Issue [#512](https://github.com/dotkernel/api/issues/512): Implemented `browsecap` by [@SergiuBota1](https://github.com/SergiuBota1) in [#513](https://github.com/dotkernel/api/pull/513)
+* Issue [#514](https://github.com/dotkernel/api/issues/514): Added Bruno collection, updated readme by [@bidi47](https://github.com/bidi47) in [#516](https://github.com/dotkernel/api/pull/516)
+* Configure Renovate by [@renovate](https://github.com/renovate)[bot] in [#515](https://github.com/dotkernel/api/pull/515)
 
 ### Deprecated
 
@@ -16,12 +38,13 @@
 
 ### Removed
 
-* Removed PHP `8.2` support
+* Issue [#497](https://github.com/dotkernel/api/issues/497): Remove `config/autoload/mail.global.php` by [@alexmerlin](https://github.com/alexmerlin) in [#499](https://github.com/dotkernel/api/pull/499)
+* Issue [#509](https://github.com/dotkernel/api/issues/509): Removed PHP `8.2` support by [@SergiuBota1](https://github.com/SergiuBota1) in [#510](https://github.com/dotkernel/api/pull/510)
 
 ### Fixed
 
-* Fixed PHPUnit notices caused by mock objects without expectations configured
-* Fixed PHPUnit deprecation warnings caused by using `with()` on test stubs
+* Issue [#509](https://github.com/dotkernel/api/issues/509): Fixed PHPUnit notices caused by mock objects without expectations configured by [@SergiuBota1](https://github.com/SergiuBota1) in [#510](https://github.com/dotkernel/api/pull/510)
+* Issue [#509](https://github.com/dotkernel/api/issues/509): Fixed PHPUnit deprecation warnings caused by using `with()` on test stubs by [@SergiuBota1](https://github.com/SergiuBota1) in [#510](https://github.com/dotkernel/api/pull/510)
 
 ## 7.0.0 - 2025-11-26
 
