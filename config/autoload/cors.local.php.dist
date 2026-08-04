@@ -11,7 +11,9 @@ return [
              * Leaving this line here makes your application accessible by any origin.
              *
              * To restrict, replace this line with a list of origins that should have access to your application.
-             * Example: 'domain1.com', 'domain2.com'
+             * Respect the protocol and the port, as 'https://www.dotkernel.com' is using a different port then
+             * 'http://www.dotkernel.com' or 'https://www.dotkernel.com:8080'
+             * Example: 'https://www.dotkernel.com', 'https://api.dotkernel.com'
              */
             ConfigurationInterface::ANY_ORIGIN,
         ],
