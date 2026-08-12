@@ -9,7 +9,7 @@ use Core\Setting\Enum\SettingIdentifierEnum;
 
 class SettingIdentifierEnumType extends AbstractEnumType
 {
-    public const NAME = 'setting_enum';
+    public const string NAME = 'setting_enum';
 
     public function getEnumClass(): string
     {

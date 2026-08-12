@@ -9,7 +9,7 @@ use Core\User\Enum\UserRoleEnum;
 
 class UserRoleEnumType extends AbstractEnumType
 {
-    public const NAME = 'user_role_enum';
+    public const string NAME = 'user_role_enum';
 
     public function getEnumClass(): string
     {

@@ -25,7 +25,7 @@ use function sprintf;
 
 class DeprecationMiddleware implements MiddlewareInterface
 {
-    public const RESOURCE_DEPRECATION_ATTRIBUTE = ResourceDeprecation::class;
+    public const string RESOURCE_DEPRECATION_ATTRIBUTE = ResourceDeprecation::class;
 
     /**
      * @param array<non-empty-string, mixed> $config

@@ -24,7 +24,7 @@ use function unlink;
 
 class UserAvatarService implements UserAvatarServiceInterface
 {
-    public const EXTENSIONS = [
+    public const array EXTENSIONS = [
         'image/jpg'  => 'jpg',
         'image/jpeg' => 'jpg',
         'image/png'  => 'png',

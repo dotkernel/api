@@ -13,7 +13,7 @@ use Laminas\Validator\StringLength;
 
 class LastNameInput extends Input
 {
-    public const LASTNAME_MAX_LENGTH = 191;
+    public const int LASTNAME_MAX_LENGTH = 191;
 
     public function __construct(?string $name = null, bool $isRequired = true)
     {

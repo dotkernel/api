@@ -31,7 +31,7 @@ use function usort;
 
 class ContentNegotiationMiddleware implements MiddlewareInterface
 {
-    public const DEFAULT_HEADERS = 'default';
+    public const string DEFAULT_HEADERS = 'default';
 
     /**
      * @param array<non-empty-string, mixed> $config
