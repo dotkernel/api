@@ -9,7 +9,7 @@ use Core\User\Enum\UserResetPasswordStatusEnum;
 
 class UserResetPasswordStatusEnumType extends AbstractEnumType
 {
-    public const NAME = 'user_reset_password_status_enum';
+    public const string NAME = 'user_reset_password_status_enum';
 
     public function getEnumClass(): string
     {

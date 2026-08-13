@@ -8,7 +8,7 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 class UuidType extends \Ramsey\Uuid\Doctrine\UuidType
 {
-    public const NAME = 'uuid';
+    public const string NAME = 'uuid';
 
     public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {

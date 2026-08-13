@@ -13,8 +13,8 @@ use Laminas\Validator\StringLength;
 
 class PasswordInput extends Input
 {
-    public const PASSWORD_MIN_LENGTH = 8;
-    public const PASSWORD_MAX_LENGTH = 150;
+    public const int PASSWORD_MIN_LENGTH = 8;
+    public const int PASSWORD_MAX_LENGTH = 150;
 
     public function __construct(?string $name = null, bool $isRequired = true)
     {

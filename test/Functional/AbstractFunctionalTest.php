@@ -45,7 +45,7 @@ class AbstractFunctionalTest extends TestCase
 
     protected Application $app;
     protected ContainerInterface $container;
-    protected const DEFAULT_PASSWORD = 'dotkernel';
+    protected const string DEFAULT_PASSWORD = 'dotkernel';
 
     /**
      * @throws NotFoundExceptionInterface

@@ -13,8 +13,8 @@ use Laminas\Validator\StringLength;
 
 class IdentityInput extends Input
 {
-    public const IDENTITY_MIN_LENGTH = 3;
-    public const IDENTITY_MAX_LENGTH = 100;
+    public const int IDENTITY_MIN_LENGTH = 3;
+    public const int IDENTITY_MAX_LENGTH = 100;
 
     public function __construct(?string $name = null, bool $isRequired = true)
     {

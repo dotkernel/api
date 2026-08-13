@@ -93,7 +93,8 @@ use function getcwd;
  */
 class ConfigProvider
 {
-    public const REGEXP_UUID = '{id:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}';
+    public const string REGEXP_UUID =
+        '{id:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}}';
 
     /**
      * @return ConfigType

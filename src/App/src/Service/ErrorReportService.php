@@ -27,7 +27,7 @@ use const PHP_URL_HOST;
 
 class ErrorReportService implements ErrorReportServiceInterface
 {
-    private const HEADER_NAME = 'Error-Reporting-Token';
+    private const string HEADER_NAME = 'Error-Reporting-Token';
 
     private Filesystem $fileSystem;
     private ?string $token = null;

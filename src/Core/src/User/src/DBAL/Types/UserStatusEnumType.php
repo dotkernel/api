@@ -9,7 +9,7 @@ use Core\User\Enum\UserStatusEnum;
 
 class UserStatusEnumType extends AbstractEnumType
 {
-    public const NAME = 'user_status_enum';
+    public const string NAME = 'user_status_enum';
 
     public function getEnumClass(): string
     {

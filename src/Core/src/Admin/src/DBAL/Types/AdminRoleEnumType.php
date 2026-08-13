@@ -9,7 +9,7 @@ use Core\App\DBAL\Types\AbstractEnumType;
 
 class AdminRoleEnumType extends AbstractEnumType
 {
-    public const NAME = 'admin_role_enum';
+    public const string NAME = 'admin_role_enum';
 
     public function getEnumClass(): string
     {

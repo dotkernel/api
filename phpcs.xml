@@ -24,4 +24,5 @@
         <exclude name="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName" />
         <exclude-pattern>src/Core/src/App/src/Migration/*</exclude-pattern>
     </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.ClassConstantTypeHint"/>
 </ruleset>

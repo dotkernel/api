@@ -8,7 +8,7 @@ use Core\App\Enum\YesNoEnum;
 
 class YesNoEnumType extends AbstractEnumType
 {
-    public const NAME = 'yes_no_enum';
+    public const string NAME = 'yes_no_enum';
 
     public function getEnumClass(): string
     {

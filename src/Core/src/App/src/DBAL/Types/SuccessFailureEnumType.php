@@ -8,7 +8,7 @@ use Core\App\Enum\SuccessFailureEnum;
 
 class SuccessFailureEnumType extends AbstractEnumType
 {
-    public const NAME = 'success_failure_enum';
+    public const string NAME = 'success_failure_enum';
 
     public function getEnumClass(): string
     {

@@ -14,7 +14,7 @@ use Laminas\Validator\StringLength;
 
 class EmailInput extends Input
 {
-    public const EMAIL_MAX_LENGTH = 191;
+    public const int EMAIL_MAX_LENGTH = 191;
 
     public function __construct(?string $name = null, bool $isRequired = true)
     {
