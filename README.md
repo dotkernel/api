@@ -2,7 +2,7 @@
 
 Dotkernel API is a production-ready REST API application built on the [Mezzio microframework](https://github.com/mezzio) and [Laminas](https://github.com/laminas) components, which implements standards like PSR-3, PSR-4, PSR-7, PSR-11 and PSR-15.
 
-It ships assembled rather than as a starting point: OAuth2 authorisation, role-based access control, HAL responses with RFC 7807 error handling, admin and user management, mail, pagination, and a generated OpenAPI specification are wired together, tested, and maintained as a unit.
+It ships assembled rather than as a starting point: OAuth2 authorization, role-based access control, HAL responses with RFC 7807 error handling, admin and user management, mail, pagination, and a generated OpenAPI specification are wired together, tested, and maintained as a unit.
 
 Dotkernel API is an alternative for legacy Laminas API Tools (formerly Apigility) applications and is based on Enrico Zimuel's [Zend Expressive API - Skeleton example](https://github.com/ezimuel/zend-expressive-api).
 
@@ -10,7 +10,7 @@ Dotkernel API is an alternative for legacy Laminas API Tools (formerly Apigility
 
 ## Documentation
 
-Documentation is available at: https://docs.dotkernel.org/api-documentation/
+Check out the full documentation available at https://docs.dotkernel.org/api-documentation/.
 
 ## Version History
 
@@ -86,7 +86,7 @@ composer development-status
 
 ### Setup database
 
-Use an existing empty one or create a new **MariaDB**/**MySQL** database.
+Use an existing empty database or create a new **MariaDB**/**Postgres** one.
 
 > Recommended collation: `utf8mb4_general_ci`.
 
