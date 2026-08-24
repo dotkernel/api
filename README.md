@@ -120,7 +120,7 @@ Hit `Enter` to confirm the operation.
 
 Fixtures are used to seed the database with initial values and must be executed after migrating the database.
 
-> Before running the fixtures, we strongly recommend updating the initial passwords used for the first Admin and User records, defined in:
+> :warning: **Warning:** Before running the fixtures, we strongly recommend updating the initial passwords used for the first Admin and User records, defined in:
 >
 > * `src/Core/src/App/src/Fixture/AdminLoader.php` and
 > * `src/Core/src/App/src/Fixture/UserLoader.php`.
