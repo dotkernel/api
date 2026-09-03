@@ -78,8 +78,8 @@
         "ramsey/uuid": "^4.5.0",
         "ramsey/uuid-doctrine": "^2.1.0",
         "roave/psr-container-doctrine": "^5.2.2 || ^6.0.0",
-        "symfony/filesystem": "^7.2.0",
-        "symfony/var-exporter": "^6.4 || ^7.4",
+        "symfony/filesystem": "^8.0.0",
+        "symfony/var-exporter": "^6.4 || ^7.4 || ^8.0",
         "zircote/swagger-php": "^6.0.0"
     },
     "require-dev": {
@@ -91,7 +91,7 @@
         "phpstan/phpstan-phpunit": "^2.0.6",
         "phpunit/phpunit": "^12.5.23",
         "roave/security-advisories": "dev-latest",
-        "symfony/var-dumper": "^7.2.3"
+        "symfony/var-dumper": "^8.0.0"
     },
     "autoload": {
         "psr-4": {
