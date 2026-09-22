@@ -925,7 +925,7 @@ use OpenApi\Attributes as OA;
  * @see PostUserAccountRecoverHandler::handle()
  */
 #[OA\Post(
-    path: '/account/recover-identity',
+    path: '/user/account/recover',
     description: 'Unauthenticated user recovers their identity by providing their email',
     summary: 'Unauthenticated user recovers their identity',
     requestBody: new OA\RequestBody(
