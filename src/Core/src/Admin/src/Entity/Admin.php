@@ -241,7 +241,10 @@ class Admin extends AbstractEntity implements UserEntityInterface
             'firstName' => $this->firstName,
             'lastName'  => $this->lastName,
             'status'    => $this->status->value,
-            'roles'     => array_map(fn (RoleInterface $role): array => $role->getArrayCopy(), $this->roles->toArray()),
+            'roles'     => array_map(
+                static fn (RoleInterface $role): array => $role->getArrayCopy(),
+                $this->roles->toArray()
+            ),
             'created'   => $this->created,
             'updated'   => $this->updated,
         ];

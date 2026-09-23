@@ -17,7 +17,7 @@ enum UserRoleEnum: string
      */
     public static function validCases(): array
     {
-        return array_filter(self::cases(), fn (self $value) => $value !== self::Guest);
+        return array_filter(self::cases(), static fn (self $value) => $value !== self::Guest);
     }
 
     /**

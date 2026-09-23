@@ -25,7 +25,7 @@ enum AdminStatusEnum: string
      */
     public static function toArray(): array
     {
-        return array_reduce(self::cases(), function (array $collector, self $enum): array {
+        return array_reduce(self::cases(), static function (array $collector, self $enum): array {
             $collector[$enum->value] = $enum->name;
 
             return $collector;

@@ -35,7 +35,7 @@ enum UserStatusEnum: string
      */
     public static function validCases(): array
     {
-        return array_filter(self::cases(), fn (self $enum) => $enum !== self::Deleted);
+        return array_filter(self::cases(), static fn (self $enum) => $enum !== self::Deleted);
     }
 
     /**
@@ -43,7 +43,7 @@ enum UserStatusEnum: string
      */
     public static function toArray(): array
     {
-        return array_reduce(self::validCases(), function (array $collector, self $enum): array {
+        return array_reduce(self::validCases(), static function (array $collector, self $enum): array {
             $collector[$enum->value] = $enum->name;
 
             return $collector;

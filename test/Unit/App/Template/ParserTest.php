@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Template;
+namespace ApiTest\Unit\App\Template;
 
 use Api\App\Template\Parser;
 use Api\App\Template\ParserInterface;
