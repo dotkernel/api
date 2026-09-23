@@ -21,7 +21,7 @@ return Architecture::define()
         'CoreApp'      => ['CoreUser'],
         'CoreSetting'  => ['+CoreApp', 'CoreAdmin'],
         'CoreAdmin'    => ['+CoreSetting'],
-        'CoreSecurity' => ['+CoreAdmin', 'CoreUser'],
+        'CoreSecurity' => ['+CoreAdmin'],
         'CoreUser'     => ['+CoreSecurity'],
         'CoreFixture'  => ['+CoreUser'],
         'App'          => ['+CoreUser'],
