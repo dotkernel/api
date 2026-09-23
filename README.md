@@ -37,7 +37,6 @@ Check out the full documentation available at https://docs.dotkernel.org/api-doc
 [![codecov](https://codecov.io/gh/dotkernel/api/graph/badge.svg?token=53FN78G5CK)](https://codecov.io/gh/dotkernel/api)
 [![Qodana](https://github.com/dotkernel/api/actions/workflows/qodana_code_quality.yml/badge.svg?branch=7.0)](https://github.com/dotkernel/api/actions/workflows/qodana_code_quality.yml)
 [![PHPStan](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml/badge.svg?branch=7.0)](https://github.com/dotkernel/api/actions/workflows/static-analysis.yml)
-[![StructArmed](https://github.com/dotkernel/api/actions/workflows/static-analysis-structarmed.yml/badge.svg?branch=7.0)](https://github.com/dotkernel/api/actions/workflows/static-analysis-structarmed.yml)
 
 ## Getting Started
 
