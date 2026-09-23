@@ -86,7 +86,8 @@ class DeprecationMiddleware implements MiddlewareInterface
         return array_values(
             array_filter(
                 $attributes,
-                static fn (array $attribute): bool => $attribute['deprecationType'] === self::RESOURCE_DEPRECATION_ATTRIBUTE
+                static fn (array $attribute): bool
+                => $attribute['deprecationType'] === self::RESOURCE_DEPRECATION_ATTRIBUTE
             )
         )[0] ?? null;
     }
