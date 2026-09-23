@@ -26,7 +26,7 @@ abstract class AbstractEnumType extends Type
             return 'TEXT';
         }
 
-        $values = array_map(fn($case) => "'$case->value'", $this->getEnumCases());
+        $values = array_map(static fn($case) => "'$case->value'", $this->getEnumCases());
 
         return sprintf('ENUM(%s)', implode(', ', $values));
     }

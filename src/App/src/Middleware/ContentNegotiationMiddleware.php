@@ -128,7 +128,7 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
         }
 
         // Sort by quality in descending order
-        usort($types, fn ($a, $b) => $b['quality'] <=> $a['quality']);
+        usort($types, static fn ($a, $b) => $b['quality'] <=> $a['quality']);
 
         return $types;
     }

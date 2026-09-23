@@ -41,7 +41,7 @@ class ProblemDetailsDelegatorFactory
         $errorHandler = $container->get(ErrorHandlerInterface::class);
         assert($errorHandler instanceof LogErrorHandler);
 
-        $listener = function (Throwable $throwable, RequestInterface $request) use ($errorHandler) {
+        $listener = static function (Throwable $throwable, RequestInterface $request) use ($errorHandler) {
             assert($request instanceof ServerRequestInterface);
             $errorHandler->handleThrowable($throwable, $request);
         };
