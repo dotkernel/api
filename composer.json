@@ -83,7 +83,7 @@
         "zircote/swagger-php": "^6.0.0"
     },
     "require-dev": {
-        "boundwize/structarmed": "^0.17.12",
+        "boundwize/structarmed": "^0.18.0",
         "dotkernel/dot-maker": "^2.0.0",
         "laminas/laminas-coding-standard": "^3.0.1",
         "laminas/laminas-development-mode": "^3.13.0",
