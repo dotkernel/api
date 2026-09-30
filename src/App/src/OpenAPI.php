@@ -14,26 +14,25 @@ use OpenApi\Attributes as OA;
     servers: [
         new OA\Server(url: 'http://api.dotkernel.localhost', description: 'Local development server'),
     ],
+    externalDocs: new OA\ExternalDocumentation(
+        description: 'Dotkernel API documentation',
+        url: 'https://docs.dotkernel.org/api-documentation/',
+    ),
     components: new OA\Components(
         securitySchemes: [
             new OA\SecurityScheme(
                 securityScheme: 'AuthToken',
                 type: 'http',
-                in: 'header',
                 bearerFormat: 'JWT',
-                scheme: 'bearer'
+                scheme: 'bearer',
             ),
             new OA\SecurityScheme(
                 securityScheme: 'ErrorReportingToken',
                 type: 'apiKey',
                 name: 'Error-Reporting-Token',
-                in: 'header'
+                in: 'header',
             ),
         ],
-    ),
-    externalDocs: new OA\ExternalDocumentation(
-        description: 'Dotkernel API documentation',
-        url: 'https://docs.dotkernel.org/api-documentation/'
     ),
 )]
 
