@@ -9,33 +9,6 @@ use Api\App\Handler\PostErrorReportResourceHandler;
 use Fig\Http\Message\StatusCodeInterface;
 use OpenApi\Attributes as OA;
 
-#[OA\OpenApi(
-    info: new OA\Info(version: '1.0', title: 'Dotkernel API'),
-    servers: [
-        new OA\Server(url: 'http://api.dotkernel.localhost', description: 'Local development server'),
-    ],
-    externalDocs: new OA\ExternalDocumentation(
-        description: 'Dotkernel API documentation',
-        url: 'https://docs.dotkernel.org/api-documentation/',
-    ),
-    components: new OA\Components(
-        securitySchemes: [
-            new OA\SecurityScheme(
-                securityScheme: 'AuthToken',
-                type: 'http',
-                bearerFormat: 'JWT',
-                scheme: 'bearer',
-            ),
-            new OA\SecurityScheme(
-                securityScheme: 'ErrorReportingToken',
-                type: 'apiKey',
-                name: 'Error-Reporting-Token',
-                in: 'header',
-            ),
-        ],
-    ),
-)]
-
 /**
  * @see GetIndexResourceHandler::handle()
  */
@@ -104,7 +77,7 @@ use OpenApi\Attributes as OA;
 #[OA\Schema(
     schema: 'HomeMessage',
     properties: [
-        new OA\Property(property: 'message', type: 'string', default: 'Dotkernel API version 5'),
+        new OA\Property(property: 'message', type: 'string', default: 'Dotkernel API version 7'),
     ],
     type: 'object',
 )]
@@ -133,6 +106,32 @@ use OpenApi\Attributes as OA;
             ],
             type: 'object',
         ),
+    ],
+    type: 'object',
+)]
+
+#[OA\Schema(
+    schema: 'DateTimeObject',
+    title: 'DateTimeObject',
+    description: 'A timestamp as this API puts it on the wire. Entities hand their DateTimeImmutable '
+    . 'straight to the serializer, so a timestamp arrives as PHP\'s own object form rather than as an '
+    . 'ISO-8601 string. `date` carries microsecond precision and no offset; the zone is named '
+    . 'separately in `timezone`.',
+    properties: [
+        new OA\Property(
+            property: 'date',
+            description: 'Local date and time in the named zone, to microseconds',
+            type: 'string',
+            example: '2026-09-08 11:15:09.421498',
+        ),
+        new OA\Property(
+            property: 'timezone_type',
+            description: 'How `timezone` is expressed: 1 offset, 2 abbreviation, 3 identifier',
+            type: 'integer',
+            example: 3,
+            enum: [1, 2, 3],
+        ),
+        new OA\Property(property: 'timezone', type: 'string', example: 'UTC'),
     ],
     type: 'object',
 )]
