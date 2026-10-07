@@ -77,4 +77,7 @@ return [
         ],
     ],
     'userAnonymizeAppend' => '',
+    'openapi'             => [
+        'server_description' => 'Development server',
+    ],
 ];

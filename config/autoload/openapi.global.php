@@ -94,7 +94,6 @@ return [
             'UserAvatar'      => 'User and account avatars.',
             'UserRole'        => 'User role catalogue.',
         ],
-        'server_description' => 'Local development server',
         'security_schemes'   => [
             'AuthToken'           => [
                 'type'          => 'http',
