@@ -42,6 +42,9 @@ return [
             'documentation_url' => 'https://docs.dotkernel.org/api-documentation/v7/tutorials/api-evolution/',
         ],
     ],
+    'openapi'             => [
+        'server_description' => 'Development server',
+    ],
     'authentication'      => [
         'private_key'          => [
             'key_or_path'           => realpath(__DIR__ . '/../../data/oauth/private.key'),
@@ -77,7 +80,4 @@ return [
         ],
     ],
     'userAnonymizeAppend' => '',
-    'openapi'             => [
-        'server_description' => 'Development server',
-    ],
 ];
