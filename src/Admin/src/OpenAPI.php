@@ -19,7 +19,6 @@ use Core\Admin\Entity\Admin;
 use Core\Admin\Entity\AdminRole;
 use Core\Admin\Enum\AdminRoleEnum;
 use Core\Admin\Enum\AdminStatusEnum;
-use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
 use OpenApi\Attributes as OA;
 
@@ -460,8 +459,16 @@ use OpenApi\Attributes as OA;
                 type: 'object',
             ),
         ),
-        new OA\Property(property: 'created', type: 'object', example: new DateTimeImmutable()),
-        new OA\Property(property: 'updated', type: 'object', example: new DateTimeImmutable()),
+        new OA\Property(
+            property: 'created',
+            ref: '#/components/schemas/DateTimeObject',
+            nullable: true,
+        ),
+        new OA\Property(
+            property: 'updated',
+            ref: '#/components/schemas/DateTimeObject',
+            nullable: true,
+        ),
         new OA\Property(
             property: '_links',
             properties: [

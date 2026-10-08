@@ -38,7 +38,6 @@ use Core\User\Entity\UserRole;
 use Core\User\Enum\UserResetPasswordStatusEnum;
 use Core\User\Enum\UserRoleEnum;
 use Core\User\Enum\UserStatusEnum;
-use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
 use OpenApi\Attributes as OA;
 
@@ -1138,8 +1137,16 @@ use OpenApi\Attributes as OA;
                 ref: '#/components/schemas/UserResetPassword',
             ),
         ),
-        new OA\Property(property: 'created', type: 'object', example: new DateTimeImmutable()),
-        new OA\Property(property: 'updated', type: 'object', example: new DateTimeImmutable()),
+        new OA\Property(
+            property: 'created',
+            ref: '#/components/schemas/DateTimeObject',
+            nullable: true,
+        ),
+        new OA\Property(
+            property: 'updated',
+            ref: '#/components/schemas/DateTimeObject',
+            nullable: true,
+        ),
         new OA\Property(
             property: '_links',
             properties: [
@@ -1174,8 +1181,16 @@ use OpenApi\Attributes as OA;
             example: 'https://example.com/uploads/user/1234abcd-abcd-4321-12ab-123456abcdef/'
             . 'avatar-1234abcd-abcd-4321-12ab-123456abcdef.jpg',
         ),
-        new OA\Property(property: 'created', type: 'object', example: new DateTimeImmutable()),
-        new OA\Property(property: 'updated', type: 'object', example: new DateTimeImmutable()),
+        new OA\Property(
+            property: 'created',
+            ref: '#/components/schemas/DateTimeObject',
+            nullable: true,
+        ),
+        new OA\Property(
+            property: 'updated',
+            ref: '#/components/schemas/DateTimeObject',
+            nullable: true,
+        ),
         new OA\Property(
             property: '_links',
             properties: [
@@ -1207,8 +1222,16 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'firstName', type: 'string'),
         new OA\Property(property: 'lastName', type: 'string'),
         new OA\Property(property: 'email', type: 'string'),
-        new OA\Property(property: 'created', type: 'object', example: new DateTimeImmutable()),
-        new OA\Property(property: 'updated', type: 'object', example: new DateTimeImmutable()),
+        new OA\Property(
+            property: 'created',
+            ref: '#/components/schemas/DateTimeObject',
+            nullable: true,
+        ),
+        new OA\Property(
+            property: 'updated',
+            ref: '#/components/schemas/DateTimeObject',
+            nullable: true,
+        ),
     ],
     type: 'object',
 )]
@@ -1220,11 +1243,19 @@ use OpenApi\Attributes as OA;
     schema: 'UserResetPassword',
     properties: [
         new OA\Property(property: 'id', type: 'string', example: '1234abcd-abcd-4321-12ab-123456abcdef'),
-        new OA\Property(property: 'expires', type: 'object', example: new DateTimeImmutable()),
+        new OA\Property(property: 'expires', ref: '#/components/schemas/DateTimeObject'),
         new OA\Property(property: 'hash', type: 'string'),
         new OA\Property(property: 'status', type: 'string', example: UserResetPasswordStatusEnum::Requested),
-        new OA\Property(property: 'created', type: 'object', example: new DateTimeImmutable()),
-        new OA\Property(property: 'updated', type: 'object', example: new DateTimeImmutable()),
+        new OA\Property(
+            property: 'created',
+            ref: '#/components/schemas/DateTimeObject',
+            nullable: true,
+        ),
+        new OA\Property(
+            property: 'updated',
+            ref: '#/components/schemas/DateTimeObject',
+            nullable: true,
+        ),
         new OA\Property(
             property: '_links',
             properties: [

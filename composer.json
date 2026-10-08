@@ -129,6 +129,7 @@
         "development-disable": "laminas-development-mode disable",
         "development-enable": "laminas-development-mode enable",
         "development-status": "laminas-development-mode status",
+        "openapi": "php bin/generate-openapi.php",
         "post-update-cmd": [
             "php ./bin/generate-oauth2-keys.php",
             "php ./bin/composer-post-install-script.php"
