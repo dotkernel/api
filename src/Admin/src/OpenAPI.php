@@ -27,6 +27,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Get(
     path: '/admin',
+    operationId: 'getAdminCollection',
     description: 'Authenticated (super)admin fetches a list of admin accounts',
     summary: 'Admin lists admin accounts',
     security: [['AuthToken' => []]],
@@ -98,6 +99,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Post(
     path: '/admin',
+    operationId: 'postAdminResource',
     description: 'Authenticated (super)admin creates a new admin account',
     summary: 'Admin creates an admin account',
     security: [['AuthToken' => []]],
@@ -157,6 +159,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Delete(
     path: '/admin/{id}',
+    operationId: 'deleteAdminResource',
     description: 'Authenticated (super)admin deletes an admin account identified by its id',
     summary: 'Admin deletes an admin account',
     security: [['AuthToken' => []]],
@@ -187,6 +190,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Get(
     path: '/admin/{id}',
+    operationId: 'getAdminResource',
     description: 'Authenticated (super)admin fetches an admin account identified by its id',
     summary: 'Admin fetches an admin account',
     security: [['AuthToken' => []]],
@@ -218,6 +222,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Patch(
     path: '/admin/{id}',
+    operationId: 'patchAdminResource',
     description: 'Authenticated (super)admin updates an existing admin account',
     summary: 'Admin updates an admin account',
     security: [['AuthToken' => []]],
@@ -284,6 +289,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Get(
     path: '/admin/role',
+    operationId: 'getAdminRoleCollection',
     description: 'Authenticated (super)admin fetches a list of admin roles',
     summary: 'Admin lists admin roles',
     security: [['AuthToken' => []]],
@@ -352,6 +358,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Get(
     path: '/admin/role/{id}',
+    operationId: 'getAdminRoleResource',
     description: 'Authenticated (super)admin fetches an admin role identified by its id',
     summary: 'Admin fetches an admin role',
     security: [['AuthToken' => []]],
@@ -383,6 +390,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Get(
     path: '/admin/account',
+    operationId: 'getAdminAccountResource',
     description: 'Authenticated (super)admin fetches their own account data',
     summary: 'Admin fetches their own account',
     security: [['AuthToken' => []]],
@@ -401,6 +409,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Patch(
     path: '/admin/account',
+    operationId: 'patchAdminAccountResource',
     description: 'Authenticated (super)admin updates their own account data',
     summary: 'Admin updates their own account',
     security: [['AuthToken' => []]],

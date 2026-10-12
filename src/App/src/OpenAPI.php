@@ -14,6 +14,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Get(
     path: '/',
+    operationId: 'getIndexResource',
     description: 'API home page outputting default message',
     summary: 'API home page',
     tags: ['Home'],
@@ -35,6 +36,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Post(
     path: '/error-report',
+    operationId: 'postErrorReportResource',
     description: 'Third-party application reports an error to the API',
     summary: 'Report an error to the API',
     security: [['ErrorReportingToken' => []]],

@@ -46,6 +46,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Get(
     path: '/user',
+    operationId: 'getUserCollection',
     description: 'Authenticated (super)admin fetches a list of user accounts',
     summary: 'Admin lists user accounts',
     security: [['AuthToken' => []]],
@@ -115,6 +116,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Post(
     path: '/user',
+    operationId: 'postUserResource',
     description: 'Authenticated (super)admin creates a new user account',
     summary: 'Admin creates user account',
     security: [['AuthToken' => []]],
@@ -187,6 +189,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Delete(
     path: '/user/{id}',
+    operationId: 'deleteUserResource',
     description: 'Authenticated (super)admin deletes (anonymizes) a user account identified by its id',
     summary: 'Admin deletes (anonymizes) user account',
     security: [['AuthToken' => []]],
@@ -217,6 +220,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Get(
     path: '/user/{id}',
+    operationId: 'getUserResource',
     description: 'Authenticated (super)admin fetches a user account identified by its id',
     summary: 'Admin views user account',
     security: [['AuthToken' => []]],
@@ -248,6 +252,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Patch(
     path: '/user/{id}',
+    operationId: 'patchUserResource',
     description: 'Authenticated (super)admin updates an existing user account',
     summary: 'Admin updates user account',
     security: [['AuthToken' => []]],
@@ -322,6 +327,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Delete(
     path: '/user/{id}/avatar',
+    operationId: 'deleteUserAvatarResource',
     description: 'Authenticated (super)admin deletes a user avatar identified by user id',
     summary: 'Admin deletes user avatar',
     security: [['AuthToken' => []]],
@@ -352,6 +358,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Get(
     path: '/user/{id}/avatar',
+    operationId: 'getUserAvatarResource',
     description: 'Authenticated (super)admin fetches a user avatar identified by user id',
     summary: 'Admin views user avatar',
     security: [['AuthToken' => []]],
@@ -383,6 +390,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Post(
     path: '/user/{id}/avatar',
+    operationId: 'postUserAvatarResource',
     description: 'Authenticated (super)admin creates user avatar for user identified by user id',
     summary: 'Admin creates user avatar',
     security: [['AuthToken' => []]],
@@ -434,6 +442,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Get(
     path: '/user/role',
+    operationId: 'getUserRoleCollection',
     description: 'Authenticated (super)admin fetches a list of user roles',
     summary: 'Admin lists user roles',
     security: [['AuthToken' => []]],
@@ -502,6 +511,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Get(
     path: '/user/role/{id}',
+    operationId: 'getUserRoleResource',
     description: 'Authenticated (super)admin fetches a user role identified by its id',
     summary: 'Admin views user role',
     security: [['AuthToken' => []]],
@@ -533,6 +543,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Patch(
     path: '/user/{id}/activate',
+    operationId: 'patchUserActivate',
     description: 'Authenticated (super)admin activates an existing user account',
     summary: 'Admin activates user account',
     security: [['AuthToken' => []]],
@@ -575,6 +586,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Patch(
     path: '/user/{id}/deactivate',
+    operationId: 'patchUserDeactivate',
     description: 'Authenticated (super)admin deactivates an existing user account',
     summary: 'Admin deactivates user account',
     security: [['AuthToken' => []]],
@@ -612,6 +624,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Delete(
     path: '/user/account',
+    operationId: 'deleteUserAccountResource',
     description: 'Authenticated user deletes (anonymizes) their own account',
     summary: 'User deletes (anonymizes) their own account',
     security: [['AuthToken' => []]],
@@ -633,6 +646,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Get(
     path: '/user/account',
+    operationId: 'getUserAccountResource',
     description: 'Authenticated user fetches their own account data',
     summary: 'User fetches their own account',
     security: [['AuthToken' => []]],
@@ -651,6 +665,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Patch(
     path: '/user/account',
+    operationId: 'patchUserAccountResource',
     description: 'Authenticated user updates their own account data',
     summary: 'User updates their own account',
     security: [['AuthToken' => []]],
@@ -704,6 +719,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Post(
     path: '/user/account',
+    operationId: 'postUserAccountResource',
     description: 'Register user account',
     summary: 'Unauthenticated user registers new user account',
     requestBody: new OA\RequestBody(
@@ -764,6 +780,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Delete(
     path: '/user/account/avatar',
+    operationId: 'deleteUserAccountAvatarResource',
     description: 'Authenticated user deletes their user avatar',
     summary: 'User deletes their own avatar',
     security: [['AuthToken' => []]],
@@ -785,6 +802,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Get(
     path: '/user/account/avatar',
+    operationId: 'getUserAccountAvatarResource',
     description: 'Authenticated user fetches their own avatar',
     summary: 'User fetches their own avatar',
     security: [['AuthToken' => []]],
@@ -807,6 +825,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Post(
     path: '/user/account/avatar',
+    operationId: 'postUserAccountAvatarResource',
     description: 'Authenticated user creates their own avatar',
     summary: 'User creates their own avatar',
     security: [['AuthToken' => []]],
@@ -844,6 +863,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Patch(
     path: '/user/account/activate/{hash}',
+    operationId: 'patchUserAccountActivate',
     description: 'Unauthenticated user activates their account using the hash from an activation link',
     summary: 'Unauthenticated user activates their account',
     tags: ['ActivateUser'],
@@ -879,6 +899,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Post(
     path: '/user/account/activate',
+    operationId: 'postUserAccountActivate',
     description: 'Unauthenticated user requests an account activation link by providing their email',
     summary: 'Unauthenticated user requests to activate account',
     requestBody: new OA\RequestBody(
@@ -925,6 +946,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Post(
     path: '/user/account/recover',
+    operationId: 'postUserAccountRecover',
     description: 'Unauthenticated user recovers their identity by providing their email',
     summary: 'Unauthenticated user recovers their identity',
     requestBody: new OA\RequestBody(
@@ -966,6 +988,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Get(
     path: '/user/account/reset-password/{hash}',
+    operationId: 'getUserAccountResetPasswordResource',
     description: 'Unauthenticated user fetches a reset password by its hash',
     summary: 'Unauthenticated user fetches reset password',
     tags: ['ResetPassword'],
@@ -1000,6 +1023,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Patch(
     path: '/user/account/reset-password/{hash}',
+    operationId: 'patchUserAccountResetPasswordResource',
     description: 'Unauthenticated user modifies their password using a reset password identified by its hash',
     summary: 'Unauthenticated user modifies their password',
     requestBody: new OA\RequestBody(
@@ -1061,6 +1085,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Post(
     path: '/user/account/reset-password',
+    operationId: 'postUserAccountResetPasswordResource',
     description: 'Unauthenticated user requests to reset their password by providing their email/identity',
     summary: 'Unauthenticated user requests to modify their password',
     requestBody: new OA\RequestBody(

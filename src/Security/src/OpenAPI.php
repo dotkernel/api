@@ -13,6 +13,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Post(
     path: '/security/generate-token',
+    operationId: 'postGenerateToken',
     description: 'Client generates access token using username and password',
     summary: 'Generate access token',
     requestBody: new OA\RequestBody(
@@ -50,6 +51,7 @@ use OpenApi\Attributes as OA;
  */
 #[OA\Post(
     path: '/security/refresh-token',
+    operationId: 'postRefreshToken',
     description: 'Client refreshes access token using refresh token',
     summary: 'Refresh access token',
     requestBody: new OA\RequestBody(
