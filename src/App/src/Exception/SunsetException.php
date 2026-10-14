@@ -23,7 +23,7 @@ class SunsetException extends Exception implements ProblemDetailsExceptionInterf
 
         $exception->type       = $type;
         $exception->detail     = $detail;
-        $exception->status     = StatusCodeInterface::STATUS_UNAUTHORIZED;
+        $exception->status     = StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR;
         $exception->title      = $title;
         $exception->additional = $additional;
 

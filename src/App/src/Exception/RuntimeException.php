@@ -22,7 +22,7 @@ class RuntimeException extends \RuntimeException implements ProblemDetailsExcept
 
         $exception->type       = $type;
         $exception->detail     = $detail;
-        $exception->status     = StatusCodeInterface::STATUS_BAD_REQUEST;
+        $exception->status     = StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR;
         $exception->title      = $title;
         $exception->additional = $additional;
 
