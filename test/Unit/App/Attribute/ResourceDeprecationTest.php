@@ -7,6 +7,8 @@ namespace ApiTest\Unit\App\Attribute;
 use Api\App\Attribute\ResourceDeprecation;
 use Api\App\Exception\SunsetException;
 use Api\App\Middleware\DeprecationMiddleware;
+use Core\App\Message;
+use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
@@ -14,19 +16,17 @@ class ResourceDeprecationTest extends TestCase
 {
     public function testInvalidDateThrowsException(): void
     {
-        $class = new #[ResourceDeprecation(
-            sunset: 'invalid-01-01',
-            link: 'test-link',
-            deprecationReason: 'test-deprecation-reason',
-        )] class {
-        };
-
-        $reflectionClass = new ReflectionClass($class);
-        $attributes      = $reflectionClass->getAttributes(ResourceDeprecation::class);
-
-        $this->expectException(SunsetException::class);
-
-        $attributes[0]->newInstance();
+        try {
+            new ResourceDeprecation(
+                sunset: 'invalid-01-01',
+                link: 'test-link',
+                deprecationReason: 'test-deprecation-reason',
+            );
+            $this->fail('SunsetException was not thrown');
+        } catch (SunsetException $exception) {
+            $this->assertSame(Message::invalidValue('sunset'), $exception->getDetail());
+            $this->assertSame(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR, $exception->getStatus());
+        }
     }
 
     public function testValidDatePassesValidation(): void

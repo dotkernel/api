@@ -116,6 +116,7 @@ class ErrorReportService implements ErrorReportServiceInterface
     }
 
     /**
+     * @throws ForbiddenException
      * @throws RuntimeException
      */
     private function validateConfigs(): void
@@ -127,7 +128,7 @@ class ErrorReportService implements ErrorReportServiceInterface
         }
 
         if ($this->config['enabled'] !== true) {
-            throw RuntimeException::create(Message::ERROR_REPORT_NOT_ENABLED);
+            throw ForbiddenException::create(Message::ERROR_REPORT_NOT_ENABLED);
         }
 
         if (! array_key_exists('path', $this->config)) {
