@@ -43,6 +43,11 @@ function getEnvironment(): string
  */
 $files = [
     [
+        'source'      => 'config/autoload/cors.local.php.dist',
+        'destination' => 'config/autoload/cors.local.php',
+        'environment' => [ENVIRONMENT_DEVELOPMENT, ENVIRONMENT_PRODUCTION],
+    ],
+    [
         'source'      => 'config/autoload/local.php.dist',
         'destination' => 'config/autoload/local.php',
         'environment' => [ENVIRONMENT_DEVELOPMENT, ENVIRONMENT_PRODUCTION],
