@@ -56,7 +56,7 @@
         "dotkernel/dot-cli": "^3.11.1",
         "dotkernel/dot-data-fixtures": "^1.5.0",
         "dotkernel/dot-dependency-injection": "^1.4.1",
-        "dotkernel/dot-errorhandler": "^4.4.2",
+        "dotkernel/dot-errorhandler": "^5.0.0",
         "dotkernel/dot-mail": "^5.4.3",
         "dotkernel/dot-response-header": "^3.6.0",
         "dotkernel/dot-router": "^1.1.0",
@@ -79,21 +79,21 @@
         "ramsey/uuid": "^4.9.4",
         "ramsey/uuid-doctrine": "^2.1.0",
         "roave/psr-container-doctrine": "^5.2.2 || ^6.2.0",
-        "symfony/filesystem": "^7.4.18",
+        "symfony/filesystem": "^7.4.21",
         "symfony/var-exporter": "^6.4 || ^7.4.18",
-        "zircote/swagger-php": "^6.13.0"
+        "zircote/swagger-php": "^6.17.0"
     },
     "require-dev": {
-        "boundwize/structarmed": "^0.19.4",
+        "boundwize/structarmed": "^0.19.5",
         "dotkernel/dot-maker": "^2.1.0",
         "laminas/laminas-coding-standard": "^3.1.0",
         "laminas/laminas-development-mode": "^3.15.0",
         "phpstan/phpstan": "^2.3.1",
         "phpstan/phpstan-doctrine": "^2.0.28",
         "phpstan/phpstan-phpunit": "^2.1.1",
-        "phpunit/phpunit": "^12.5.39",
+        "phpunit/phpunit": "^12.5.40",
         "roave/security-advisories": "dev-latest",
-        "symfony/var-dumper": "^7.4.18"
+        "symfony/var-dumper": "^7.4.21"
     },
     "autoload": {
         "psr-4": {
