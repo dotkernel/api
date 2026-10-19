@@ -6,8 +6,10 @@ namespace ApiTest\Unit\App\Middleware;
 
 use Api\App\Attribute\ResourceDeprecation;
 use Api\App\Exception\ConflictException;
+use Api\App\Exception\ExpiredException;
 use Api\App\Middleware\DeprecationMiddleware;
 use Fig\Http\Message\RequestMethodInterface;
+use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Laminas\Stratigility\MiddlewarePipe;
 use Mezzio\Middleware\LazyLoadingMiddleware;
@@ -270,6 +272,100 @@ class DeprecationMiddlewareTest extends TestCase
         $this->assertTrue($response->hasHeader('sunset'));
 
         $this->assertSame('2038-01-01', $response->getHeader('sunset')[0]);
+    }
+
+    /**
+     * @throws Exception
+     * @throws ReflectionException
+     */
+    public function testPastSunsetThrowsExpiredExceptionWithoutRunningHandler(): void
+    {
+        $deprecated = new #[ResourceDeprecation(sunset: '2000-01-01', link: 'test-link')]
+        class implements RequestHandlerInterface {
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                return new EmptyResponse();
+            }
+        };
+
+        $this->routeRequestTo($deprecated);
+
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects($this->never())->method('handle');
+
+        $this->expectException(ExpiredException::class);
+
+        $this->deprecationMiddleware->process($this->request, $handler);
+    }
+
+    /**
+     * @throws Exception
+     * @throws ReflectionException
+     */
+    public function testExpiredExceptionCarriesStatusMessageAndLink(): void
+    {
+        $deprecated = new #[ResourceDeprecation(sunset: '2000-01-01', link: 'test-link')]
+        class implements RequestHandlerInterface {
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                return new EmptyResponse();
+            }
+        };
+
+        $this->routeRequestTo($deprecated);
+
+        try {
+            $this->deprecationMiddleware->process($this->request, $this->handler);
+            $this->fail('ExpiredException was not thrown');
+        } catch (ExpiredException $exception) {
+            $this->assertSame(StatusCodeInterface::STATUS_GONE, $exception->getStatus());
+            $this->assertSame('This resource is no longer available (sunset on 2000-01-01).', $exception->getDetail());
+            $this->assertSame('test-link', $exception->getType());
+        }
+    }
+
+    /**
+     * @throws Exception
+     * @throws ReflectionException
+     */
+    public function testExpiredExceptionFallsBackToConfiguredDocumentationUrl(): void
+    {
+        $deprecated = new #[ResourceDeprecation(sunset: '2000-01-01')]
+        class implements RequestHandlerInterface {
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                return new EmptyResponse();
+            }
+        };
+
+        $this->routeRequestTo($deprecated);
+
+        try {
+            $this->deprecationMiddleware->process($this->request, $this->handler);
+            $this->fail('ExpiredException was not thrown');
+        } catch (ExpiredException $exception) {
+            $this->assertSame(self::VERSIONING_CONFIG['documentation_url'], $exception->getType());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function routeRequestTo(RequestHandlerInterface $deprecated): void
+    {
+        $routeResult           = $this->createStub(RouteResult::class);
+        $route                 = $this->createStub(Route::class);
+        $lazyLoadingMiddleware = new LazyLoadingMiddleware(
+            $this->createStub(MiddlewareContainer::class),
+            $deprecated::class,
+        );
+
+        $route->method('getMiddleware')->willReturn($lazyLoadingMiddleware);
+        $routeResult->method('isFailure')->willReturn(false);
+        $routeResult->method('getMatchedRoute')->willReturn($route);
+        $this->request->method('getAttribute')->willReturn($routeResult);
+        $this->request->method('getMethod')->willReturn(RequestMethodInterface::METHOD_GET);
+        $this->handler->method('handle')->willReturn($this->response);
     }
 
     /**

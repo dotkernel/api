@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Api\App\Middleware;
 
 use Api\App\Attribute\ResourceDeprecation;
-use Api\App\Exception\ConflictException;
+use Api\App\Exception\ExpiredException;
 use Api\App\Exception\RuntimeException;
 use Api\App\Service\HandlerService;
+use DateTimeImmutable;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -39,7 +40,7 @@ class DeprecationMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @throws ConflictException
+     * @throws ExpiredException
      * @throws ReflectionException
      * @throws RuntimeException
      */
@@ -47,34 +48,62 @@ class DeprecationMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
-        $response = $handler->handle($request);
-
         $reflectionHandler = HandlerService::getReflectionHandler($request);
         if (! $reflectionHandler instanceof ReflectionClass) {
-            return $response;
+            return $handler->handle($request);
         }
 
         $attributes = $this->getReflectionAttributes($reflectionHandler);
         if (empty($attributes)) {
-            return $response;
+            return $handler->handle($request);
         }
 
         $attribute = $this->getAttribute($attributes);
         if (null === $attribute) {
-            return $response;
+            return $handler->handle($request);
         }
+
+        $documentationUrl = $this->getDocumentationUrl($attribute);
+
+        if ($this->isSunsetReached($attribute['sunset'])) {
+            throw ExpiredException::create(
+                detail: sprintf('This resource is no longer available (sunset on %s).', $attribute['sunset']),
+                type: $documentationUrl ?? '',
+            );
+        }
+
+        $response = $handler->handle($request);
 
         if (! empty($attribute['sunset'])) {
             $response = $response->withHeader('sunset', $attribute['sunset']);
         }
 
-        /** @var non-empty-string $baseUrl */
-        $baseUrl = $attribute['link'] ?? $this->config['documentation_url'] ?? null;
-        if (is_string($baseUrl)) {
-            $response = $response->withHeader('link', $this->formatLink($baseUrl, $attribute));
+        if (null !== $documentationUrl) {
+            $response = $response->withHeader('link', $this->formatLink($documentationUrl, $attribute));
         }
 
         return $response;
+    }
+
+    /**
+     * @param array<non-empty-string, mixed> $attribute
+     * @return non-empty-string|null
+     */
+    private function getDocumentationUrl(array $attribute): ?string
+    {
+        /** @var non-empty-string|null $url */
+        $url = $attribute['link'] ?? $this->config['documentation_url'] ?? null;
+
+        return is_string($url) ? $url : null;
+    }
+
+    private function isSunsetReached(?string $sunset): bool
+    {
+        if (empty($sunset)) {
+            return false;
+        }
+
+        return new DateTimeImmutable() >= new DateTimeImmutable($sunset);
     }
 
     /**
