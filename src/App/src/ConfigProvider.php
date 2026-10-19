@@ -9,6 +9,7 @@ use Api\App\Factory\HandlerDelegatorFactory;
 use Api\App\Factory\ProblemDetailsDelegatorFactory;
 use Api\App\Handler\GetIndexResourceHandler;
 use Api\App\Handler\PostErrorReportResourceHandler;
+use Api\App\InputFilter\ErrorReportInputFilter;
 use Api\App\Middleware\AuthenticationMiddleware;
 use Api\App\Middleware\AuthorizationMiddleware;
 use Api\App\Middleware\ContentNegotiationMiddleware;
@@ -23,6 +24,7 @@ use Api\App\Template\Renderer;
 use Api\App\Template\RendererInterface;
 use Dot\DependencyInjection\Factory\AttributedServiceFactory;
 use Laminas\Hydrator\ArraySerializableHydrator;
+use Laminas\InputFilter\InputFilterFactory;
 use Mezzio\Application;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\OAuth2\OAuth2Adapter;
@@ -79,6 +81,7 @@ class ConfigProvider
                 ProblemDetailsMiddleware::class       => [ProblemDetailsDelegatorFactory::class],
             ],
             'factories'  => [
+                ErrorReportInputFilter::class          => InputFilterFactory::class,
                 AuthenticationMiddleware::class        => AttributedServiceFactory::class,
                 AuthorizationMiddleware::class         => AttributedServiceFactory::class,
                 ContentNegotiationMiddleware::class    => AttributedServiceFactory::class,

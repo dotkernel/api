@@ -8,25 +8,43 @@ use Core\App\Message;
 use Core\User\Enum\UserStatusEnum;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
-use Laminas\InputFilter\Input;
+use Laminas\InputFilter\InputFilterInterface;
 use Laminas\Validator\InArray;
 
-class StatusInput extends Input
+/**
+ * @phpstan-import-type InputSpecification from InputFilterInterface
+ */
+final class StatusInput
 {
-    public function __construct(?string $name = null, bool $isRequired = true)
+    private function __construct()
     {
-        parent::__construct($name);
+    }
 
-        $this->setRequired($isRequired);
-
-        $this->getFilterChain()
-            ->attachByName(StringTrim::class)
-            ->attachByName(StripTags::class);
-
-        $this->getValidatorChain()
-            ->attachByName(InArray::class, [
-                'haystack' => UserStatusEnum::validValues(),
-                'message'  => Message::invalidValue('status'),
-            ], true);
+    /**
+     * @param non-empty-string $name
+     * @return InputSpecification
+     */
+    public static function spec(string $name, bool $isRequired = true): array
+    {
+        return [
+            'name'       => $name,
+            'required'   => $isRequired,
+            'filters'    => [
+                ['name' => StringTrim::class],
+                ['name' => StripTags::class],
+            ],
+            'validators' => [
+                [
+                    'name'                   => InArray::class,
+                    'options'                => [
+                        'haystack' => UserStatusEnum::validValues(),
+                        'messages' => [
+                            InArray::NOT_IN_ARRAY => Message::invalidValue('status'),
+                        ],
+                    ],
+                    'break_chain_on_failure' => true,
+                ],
+            ],
+        ];
     }
 }

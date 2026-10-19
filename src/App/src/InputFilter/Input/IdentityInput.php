@@ -7,33 +7,61 @@ namespace Api\App\InputFilter\Input;
 use Core\App\Message;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
-use Laminas\InputFilter\Input;
+use Laminas\InputFilter\InputFilterInterface;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\StringLength;
 
-class IdentityInput extends Input
+/**
+ * @phpstan-import-type InputSpecification from InputFilterInterface
+ */
+final class IdentityInput
 {
     public const int IDENTITY_MIN_LENGTH = 3;
     public const int IDENTITY_MAX_LENGTH = 100;
 
-    public function __construct(?string $name = null, bool $isRequired = true)
+    private function __construct()
     {
-        parent::__construct($name);
+    }
 
-        $this->setRequired($isRequired);
+    /**
+     * @param non-empty-string $name
+     * @return InputSpecification
+     */
+    public static function spec(string $name, bool $isRequired = true): array
+    {
+        $lengthMessage = Message::validatorLengthMinMax(self::IDENTITY_MIN_LENGTH, self::IDENTITY_MAX_LENGTH);
 
-        $this->getFilterChain()
-            ->attachByName(StringTrim::class)
-            ->attachByName(StripTags::class);
-
-        $this->getValidatorChain()
-            ->attachByName(NotEmpty::class, [
-                'message' => Message::VALIDATOR_REQUIRED_FIELD,
-            ], true)
-            ->attachByName(StringLength::class, [
-                'min'     => self::IDENTITY_MIN_LENGTH,
-                'max'     => self::IDENTITY_MAX_LENGTH,
-                'message' => Message::validatorLengthMinMax(self::IDENTITY_MIN_LENGTH, self::IDENTITY_MAX_LENGTH),
-            ], true);
+        return [
+            'name'       => $name,
+            'required'   => $isRequired,
+            'filters'    => [
+                ['name' => StringTrim::class],
+                ['name' => StripTags::class],
+            ],
+            'validators' => [
+                [
+                    'name'                   => NotEmpty::class,
+                    'options'                => [
+                        'messages' => [
+                            NotEmpty::IS_EMPTY => Message::VALIDATOR_REQUIRED_FIELD,
+                        ],
+                    ],
+                    'break_chain_on_failure' => true,
+                ],
+                [
+                    'name'                   => StringLength::class,
+                    'options'                => [
+                        'min'      => self::IDENTITY_MIN_LENGTH,
+                        'max'      => self::IDENTITY_MAX_LENGTH,
+                        'messages' => [
+                            StringLength::INVALID   => $lengthMessage,
+                            StringLength::TOO_SHORT => $lengthMessage,
+                            StringLength::TOO_LONG  => $lengthMessage,
+                        ],
+                    ],
+                    'break_chain_on_failure' => true,
+                ],
+            ],
+        ];
     }
 }

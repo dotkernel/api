@@ -6,6 +6,7 @@ namespace Api\User\InputFilter;
 
 use Api\App\InputFilter\Input\EmailInput;
 use Core\App\InputFilter\AbstractInputFilter;
+use Laminas\InputFilter\Factory;
 
 /**
  * @phpstan-type ActivateAccountDataType array{
@@ -15,8 +16,10 @@ use Core\App\InputFilter\AbstractInputFilter;
  */
 class ActivateAccountInputFilter extends AbstractInputFilter
 {
-    public function __construct()
+    public function __construct(Factory $factory)
     {
-        $this->add(new EmailInput('email'));
+        parent::__construct($factory);
+
+        $this->add(EmailInput::spec('email'));
     }
 }

@@ -7,31 +7,56 @@ namespace Api\App\InputFilter\Input;
 use Core\App\Message;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
-use Laminas\InputFilter\Input;
+use Laminas\InputFilter\InputFilterInterface;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\StringLength;
 
-class LastNameInput extends Input
+/**
+ * @phpstan-import-type InputSpecification from InputFilterInterface
+ */
+final class LastNameInput
 {
     public const int LASTNAME_MAX_LENGTH = 191;
 
-    public function __construct(?string $name = null, bool $isRequired = true)
+    private function __construct()
     {
-        parent::__construct($name);
+    }
 
-        $this->setRequired($isRequired);
-
-        $this->getFilterChain()
-            ->attachByName(StringTrim::class)
-            ->attachByName(StripTags::class);
-
-        $this->getValidatorChain()
-            ->attachByName(NotEmpty::class, [
-                'message' => Message::VALIDATOR_REQUIRED_FIELD,
-            ], true)
-            ->attachByName(StringLength::class, [
-                'max'     => self::LASTNAME_MAX_LENGTH,
-                'message' => Message::validatorLengthMax(self::LASTNAME_MAX_LENGTH),
-            ], true);
+    /**
+     * @param non-empty-string $name
+     * @return InputSpecification
+     */
+    public static function spec(string $name, bool $isRequired = true): array
+    {
+        return [
+            'name'       => $name,
+            'required'   => $isRequired,
+            'filters'    => [
+                ['name' => StringTrim::class],
+                ['name' => StripTags::class],
+            ],
+            'validators' => [
+                [
+                    'name'                   => NotEmpty::class,
+                    'options'                => [
+                        'messages' => [
+                            NotEmpty::IS_EMPTY => Message::VALIDATOR_REQUIRED_FIELD,
+                        ],
+                    ],
+                    'break_chain_on_failure' => true,
+                ],
+                [
+                    'name'                   => StringLength::class,
+                    'options'                => [
+                        'max'      => self::LASTNAME_MAX_LENGTH,
+                        'messages' => [
+                            StringLength::INVALID  => Message::validatorLengthMax(self::LASTNAME_MAX_LENGTH),
+                            StringLength::TOO_LONG => Message::validatorLengthMax(self::LASTNAME_MAX_LENGTH),
+                        ],
+                    ],
+                    'break_chain_on_failure' => true,
+                ],
+            ],
+        ];
     }
 }

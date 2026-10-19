@@ -7,33 +7,71 @@ namespace Api\App\InputFilter\Input;
 use Core\App\Message;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
-use Laminas\InputFilter\Input;
+use Laminas\InputFilter\InputFilterInterface;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\StringLength;
+use Laminas\Validator\ValidatorChain;
 
-class PasswordInput extends Input
+/**
+ * @phpstan-import-type InputSpecification from InputFilterInterface
+ * @phpstan-import-type ValidatorSpecification from ValidatorChain
+ */
+final class PasswordInput
 {
     public const int PASSWORD_MIN_LENGTH = 8;
     public const int PASSWORD_MAX_LENGTH = 150;
 
-    public function __construct(?string $name = null, bool $isRequired = true)
+    private function __construct()
     {
-        parent::__construct($name);
+    }
 
-        $this->setRequired($isRequired);
+    /**
+     * @param non-empty-string $name
+     * @return InputSpecification
+     */
+    public static function spec(string $name, bool $isRequired = true): array
+    {
+        return [
+            'name'       => $name,
+            'required'   => $isRequired,
+            'filters'    => [
+                ['name' => StringTrim::class],
+                ['name' => StripTags::class],
+            ],
+            'validators' => self::validators(),
+        ];
+    }
 
-        $this->getFilterChain()
-            ->attachByName(StringTrim::class)
-            ->attachByName(StripTags::class);
+    /**
+     * @return list<ValidatorSpecification>
+     */
+    public static function validators(): array
+    {
+        $lengthMessage = Message::validatorLengthMinMax(self::PASSWORD_MIN_LENGTH, self::PASSWORD_MAX_LENGTH);
 
-        $this->getValidatorChain()
-            ->attachByName(NotEmpty::class, [
-                'message' => Message::VALIDATOR_REQUIRED_FIELD,
-            ], true)
-            ->attachByName(StringLength::class, [
-                'min'     => self::PASSWORD_MIN_LENGTH,
-                'max'     => self::PASSWORD_MAX_LENGTH,
-                'message' => Message::validatorLengthMinMax(self::PASSWORD_MIN_LENGTH, self::PASSWORD_MAX_LENGTH),
-            ], true);
+        return [
+            [
+                'name'                   => NotEmpty::class,
+                'options'                => [
+                    'messages' => [
+                        NotEmpty::IS_EMPTY => Message::VALIDATOR_REQUIRED_FIELD,
+                    ],
+                ],
+                'break_chain_on_failure' => true,
+            ],
+            [
+                'name'                   => StringLength::class,
+                'options'                => [
+                    'min'      => self::PASSWORD_MIN_LENGTH,
+                    'max'      => self::PASSWORD_MAX_LENGTH,
+                    'messages' => [
+                        StringLength::INVALID   => $lengthMessage,
+                        StringLength::TOO_SHORT => $lengthMessage,
+                        StringLength::TOO_LONG  => $lengthMessage,
+                    ],
+                ],
+                'break_chain_on_failure' => true,
+            ],
+        ];
     }
 }

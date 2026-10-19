@@ -7,6 +7,7 @@ namespace Api\User\InputFilter;
 use Api\App\InputFilter\Input\EmailInput;
 use Api\App\InputFilter\Input\IdentityInput;
 use Core\App\InputFilter\AbstractInputFilter;
+use Laminas\InputFilter\Factory;
 
 /**
  * @phpstan-type ResetPasswordDataType array{
@@ -17,10 +18,12 @@ use Core\App\InputFilter\AbstractInputFilter;
  */
 class ResetPasswordInputFilter extends AbstractInputFilter
 {
-    public function __construct()
+    public function __construct(Factory $factory)
     {
+        parent::__construct($factory);
+
         $this
-            ->add(new EmailInput('email', false))
-            ->add(new IdentityInput('identity', false));
+            ->add(EmailInput::spec('email', false))
+            ->add(IdentityInput::spec('identity', false));
     }
 }

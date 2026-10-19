@@ -32,15 +32,12 @@ class PostErrorReportResourceHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->inputFilter->setData((array) $request->getParsedBody());
-        if (! $this->inputFilter->isValid()) {
-            throw BadRequestException::create(
-                detail: Message::VALIDATOR_INVALID_DATA,
-                additional: ['errors' => $this->inputFilter->getMessages()]
-            );
+        $result = $this->inputFilter->validate((array) $request->getParsedBody());
+        if (! $result->valid()) {
+            throw BadRequestException::fromValidationResult($result);
         }
 
-        $this->errorReportService->appendMessage($this->inputFilter->getValue('message'));
+        $this->errorReportService->appendMessage($result->value()['message']);
 
         return $this->infoResponse(Message::ERROR_REPORT_OK, StatusCodeInterface::STATUS_CREATED);
     }

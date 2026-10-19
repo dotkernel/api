@@ -11,6 +11,7 @@ use Api\App\InputFilter\Input\PasswordConfirmInput;
 use Api\App\InputFilter\Input\PasswordInput;
 use Core\App\InputFilter\AbstractInputFilter;
 use Laminas\InputFilter\CollectionInputFilter;
+use Laminas\InputFilter\Factory;
 
 /**
  * @phpstan-import-type AdminRoleDataType from AdminRoleInputFilter
@@ -26,18 +27,22 @@ use Laminas\InputFilter\CollectionInputFilter;
  */
 class UpdateAdminInputFilter extends AbstractInputFilter
 {
-    public function __construct()
+    public function __construct(Factory $factory)
     {
-        $roles = (new CollectionInputFilter())
-            ->setInputFilter(new AdminRoleInputFilter())
-            ->setIsRequired(false);
+        parent::__construct($factory);
+
+        $roles = [
+            'type'         => CollectionInputFilter::class,
+            'input_filter' => new AdminRoleInputFilter($factory),
+            'required'     => false,
+        ];
 
         $this
-            ->add(new PasswordInput('password', false))
-            ->add(new PasswordConfirmInput('passwordConfirm', false))
-            ->add(new FirstNameInput('firstName', false))
-            ->add(new LastNameInput('lastName', false))
-            ->add(new StatusInput('status', false))
+            ->add(PasswordInput::spec('password', false))
+            ->add(PasswordConfirmInput::spec('passwordConfirm', false))
+            ->add(FirstNameInput::spec('firstName', false))
+            ->add(LastNameInput::spec('lastName', false))
+            ->add(StatusInput::spec('status', false))
             ->add($roles, 'roles');
     }
 }

@@ -16,6 +16,8 @@ use Api\Admin\Handler\Admin\PatchAdminResourceHandler;
 use Api\Admin\Handler\Admin\PostAdminResourceHandler;
 use Api\Admin\Handler\Admin\Role\GetAdminRoleCollectionHandler;
 use Api\Admin\Handler\Admin\Role\GetAdminRoleResourceHandler;
+use Api\Admin\InputFilter\CreateAdminInputFilter;
+use Api\Admin\InputFilter\UpdateAdminInputFilter;
 use Api\Admin\Service\AdminRoleService;
 use Api\Admin\Service\AdminRoleServiceInterface;
 use Api\Admin\Service\AdminService;
@@ -25,6 +27,7 @@ use Api\App\Factory\HandlerDelegatorFactory;
 use Core\Admin\Entity\Admin;
 use Core\Admin\Entity\AdminRole;
 use Dot\DependencyInjection\Factory\AttributedServiceFactory;
+use Laminas\InputFilter\InputFilterFactory;
 use Mezzio\Application;
 use Mezzio\Hal\Metadata\MetadataMap;
 
@@ -71,6 +74,8 @@ class ConfigProvider
                 PostAdminResourceHandler::class         => [HandlerDelegatorFactory::class],
             ],
             'factories'  => [
+                CreateAdminInputFilter::class           => InputFilterFactory::class,
+                UpdateAdminInputFilter::class           => InputFilterFactory::class,
                 AdminCreateCommand::class               => AttributedServiceFactory::class,
                 DeleteAdminResourceHandler::class       => AttributedServiceFactory::class,
                 GetAdminAccountResourceHandler::class   => AttributedServiceFactory::class,
