@@ -7,6 +7,7 @@ namespace Api\User\InputFilter;
 use Api\App\InputFilter\Input\PasswordConfirmInput;
 use Api\App\InputFilter\Input\PasswordInput;
 use Core\App\InputFilter\AbstractInputFilter;
+use Laminas\InputFilter\Factory;
 
 /**
  * @phpstan-type UpdatePasswordDataType array{
@@ -17,10 +18,12 @@ use Core\App\InputFilter\AbstractInputFilter;
  */
 class UpdatePasswordInputFilter extends AbstractInputFilter
 {
-    public function __construct()
+    public function __construct(Factory $factory)
     {
+        parent::__construct($factory);
+
         $this
-            ->add(new PasswordInput('password'))
-            ->add(new PasswordConfirmInput('passwordConfirm'));
+            ->add(PasswordInput::spec('password'))
+            ->add(PasswordConfirmInput::spec('passwordConfirm'));
     }
 }

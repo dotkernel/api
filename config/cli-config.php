@@ -9,8 +9,8 @@ use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
 use Doctrine\Migrations\DependencyFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Events;
-use Dot\Log\LoggerInterface;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Log\LoggerInterface;
 
 $container = require 'config/container.php';
 
@@ -29,7 +29,7 @@ try {
     try {
         /** @var LoggerInterface $logger */
         $logger = $container->get('dot-log.default_logger');
-        $logger->err($exception->getMessage());
+        $logger->error($exception->getMessage());
     } catch (ContainerExceptionInterface $exception) {
         error_log($exception->getMessage());
     }

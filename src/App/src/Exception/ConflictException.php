@@ -19,7 +19,7 @@ class ConflictException extends Exception implements ProblemDetailsExceptionInte
      */
     public static function create(string $detail, string $type = '', string $title = '', array $additional = []): self
     {
-        $exception = new self();
+        $exception = new self($detail);
 
         $exception->type       = $type;
         $exception->detail     = $detail;

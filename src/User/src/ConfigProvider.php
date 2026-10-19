@@ -33,6 +33,15 @@ use Api\User\Handler\User\PatchUserResourceHandler;
 use Api\User\Handler\User\PostUserResourceHandler;
 use Api\User\Handler\User\Role\GetUserRoleCollectionHandler;
 use Api\User\Handler\User\Role\GetUserRoleResourceHandler;
+use Api\User\InputFilter\ActivateAccountInputFilter;
+use Api\User\InputFilter\CreateUserAccountInputFilter;
+use Api\User\InputFilter\CreateUserInputFilter;
+use Api\User\InputFilter\RecoverIdentityInputFilter;
+use Api\User\InputFilter\ResetPasswordInputFilter;
+use Api\User\InputFilter\UpdateAvatarInputFilter;
+use Api\User\InputFilter\UpdatePasswordInputFilter;
+use Api\User\InputFilter\UpdateUserAccountInputFilter;
+use Api\User\InputFilter\UpdateUserInputFilter;
 use Api\User\Service\UserAvatarService;
 use Api\User\Service\UserAvatarServiceInterface;
 use Api\User\Service\UserResetPasswordService;
@@ -45,6 +54,7 @@ use Core\User\Entity\User;
 use Core\User\Entity\UserAvatar;
 use Core\User\Entity\UserRole;
 use Dot\DependencyInjection\Factory\AttributedServiceFactory;
+use Laminas\InputFilter\InputFilterFactory;
 use Mezzio\Application;
 use Mezzio\Hal\Metadata\MetadataMap;
 
@@ -109,6 +119,15 @@ class ConfigProvider
                 PostUserResourceHandler::class                      => [HandlerDelegatorFactory::class],
             ],
             'factories'  => [
+                ActivateAccountInputFilter::class                   => InputFilterFactory::class,
+                CreateUserAccountInputFilter::class                 => InputFilterFactory::class,
+                CreateUserInputFilter::class                        => InputFilterFactory::class,
+                RecoverIdentityInputFilter::class                   => InputFilterFactory::class,
+                ResetPasswordInputFilter::class                     => InputFilterFactory::class,
+                UpdateAvatarInputFilter::class                      => InputFilterFactory::class,
+                UpdatePasswordInputFilter::class                    => InputFilterFactory::class,
+                UpdateUserAccountInputFilter::class                 => InputFilterFactory::class,
+                UpdateUserInputFilter::class                        => InputFilterFactory::class,
                 DeleteUserAccountAvatarResourceHandler::class       => AttributedServiceFactory::class,
                 DeleteUserAccountResourceHandler::class             => AttributedServiceFactory::class,
                 DeleteUserAvatarResourceHandler::class              => AttributedServiceFactory::class,

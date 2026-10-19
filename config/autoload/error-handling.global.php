@@ -3,29 +3,59 @@
 declare(strict_types=1);
 
 use Api\App\Service\ErrorReportServiceInterface;
+use Dot\ErrorHandler\Extra\ExtraProvider;
+use Dot\ErrorHandler\Extra\Processor\RequestProcessor;
+use Dot\ErrorHandler\Extra\Processor\TraceProcessor;
+use Dot\ErrorHandler\Extra\Provider\RequestProvider;
+use Dot\ErrorHandler\Extra\Provider\TraceProvider;
+use Dot\ErrorHandler\Extra\ReplacementStrategy;
 use Dot\Log\Formatter\Json;
 use Dot\Log\Logger;
 
 return [
     'dot-errorhandler' => [
-        'loggerEnabled' => true,
-        'logger'        => 'dot-log.default_logger',
+        'loggerEnabled'           => true,
+        'logger'                  => 'dot-log.default_logger',
+        ExtraProvider::CONFIG_KEY => [
+            TraceProvider::class => [
+                'enabled'   => true,
+                'processor' => [
+                    'class' => TraceProcessor::class,
+                ],
+            ],
+            /**
+             * Logs the parsed request body. Keys containing any of the sensitiveParameters are masked,
+             * but other personal data (emails, names etc.) is logged as-is.
+             */
+            RequestProvider::class => [
+                'enabled'   => false,
+                'processor' => [
+                    'class'               => RequestProcessor::class,
+                    'replacementStrategy' => ReplacementStrategy::Full,
+                    'sensitiveParameters' => [
+                        'password',
+                        'token',
+                        'secret',
+                    ],
+                ],
+            ],
+        ],
     ],
     'dot_log'          => [
         'loggers' => [
             'default_logger' => [
                 'writers' => [
                     'FileWriter' => [
-                        'name'     => 'stream',
-                        'priority' => Logger::ALERT,
-                        'options'  => [
+                        'name'    => 'stream',
+                        'level'   => Logger::ALERT,
+                        'options' => [
                             'stream'    => __DIR__ . '/../../log/error-log-{Y}-{m}-{d}.log',
                             'filters'   => [
                                 'allMessages' => [
-                                    'name'    => 'priority',
+                                    'name'    => 'level',
                                     'options' => [
                                         'operator' => '>=',
-                                        'priority' => Logger::EMERG,
+                                        'level'    => Logger::EMERG,
                                     ],
                                 ],
                             ],

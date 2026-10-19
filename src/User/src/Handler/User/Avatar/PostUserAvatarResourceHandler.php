@@ -9,7 +9,6 @@ use Api\App\Exception\BadRequestException;
 use Api\App\Handler\AbstractHandler;
 use Api\User\InputFilter\UpdateAvatarInputFilter;
 use Api\User\Service\UserAvatarServiceInterface;
-use Core\App\Message;
 use Core\User\Entity\User;
 use Dot\DependencyInjection\Attribute\Inject;
 use Psr\Http\Message\ResponseInterface;
@@ -33,19 +32,16 @@ class PostUserAvatarResourceHandler extends AbstractHandler
     #[Resource(entity: User::class)]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->inputFilter->setData($request->getUploadedFiles());
-        if (! $this->inputFilter->isValid()) {
-            throw BadRequestException::create(
-                detail: Message::VALIDATOR_INVALID_DATA,
-                additional: ['errors' => $this->inputFilter->getMessages()]
-            );
+        $result = $this->inputFilter->validate($request->getUploadedFiles());
+        if (! $result->valid()) {
+            throw BadRequestException::fromValidationResult($result);
         }
 
         return $this->createdResponse(
             $request,
             $this->userAvatarService->saveAvatar(
                 $request->getAttribute(User::class),
-                $this->inputFilter->getValue('avatar')
+                $result->value()['avatar']
             )
         );
     }

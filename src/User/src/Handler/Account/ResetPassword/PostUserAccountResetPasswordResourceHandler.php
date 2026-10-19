@@ -44,18 +44,16 @@ class PostUserAccountResetPasswordResourceHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->inputFilter->setData((array) $request->getParsedBody());
-        if (! $this->inputFilter->isValid()) {
-            throw BadRequestException::create(
-                detail: Message::VALIDATOR_INVALID_DATA,
-                additional: ['errors' => $this->inputFilter->getMessages()]
-            );
+        $result = $this->inputFilter->validate((array) $request->getParsedBody());
+        if (! $result->valid()) {
+            throw BadRequestException::fromValidationResult($result);
         }
 
-        if (! empty($this->inputFilter->getValue('email'))) {
-            $user = $this->userService->findByEmail($this->inputFilter->getValue('email'));
-        } elseif (! empty($this->inputFilter->getValue('identity'))) {
-            $user = $this->userService->findByIdentity($this->inputFilter->getValue('identity'));
+        $data = $result->value();
+        if (! empty($data['email'])) {
+            $user = $this->userService->findByEmail($data['email']);
+        } elseif (! empty($data['identity'])) {
+            $user = $this->userService->findByIdentity($data['identity']);
         } else {
             throw NotFoundException::create(Message::USER_NOT_FOUND);
         }

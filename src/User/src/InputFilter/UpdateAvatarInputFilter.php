@@ -6,6 +6,7 @@ namespace Api\User\InputFilter;
 
 use Api\App\InputFilter\Input\ImageInput;
 use Core\App\InputFilter\AbstractInputFilter;
+use Laminas\InputFilter\Factory;
 
 /**
  * @phpstan-type UpdateAvatarDataType array{
@@ -15,8 +16,10 @@ use Core\App\InputFilter\AbstractInputFilter;
  */
 class UpdateAvatarInputFilter extends AbstractInputFilter
 {
-    public function __construct()
+    public function __construct(Factory $factory)
     {
-        $this->add(new ImageInput('avatar'));
+        parent::__construct($factory);
+
+        $this->add(ImageInput::spec('avatar'));
     }
 }

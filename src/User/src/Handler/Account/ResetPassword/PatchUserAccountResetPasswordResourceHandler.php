@@ -47,12 +47,9 @@ class PatchUserAccountResetPasswordResourceHandler extends AbstractHandler
     #[Resource(entity: UserResetPassword::class, identifier: 'hash', placeholder: 'hash')]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->inputFilter->setData((array) $request->getParsedBody());
-        if (! $this->inputFilter->isValid()) {
-            throw BadRequestException::create(
-                detail: Message::VALIDATOR_INVALID_DATA,
-                additional: ['errors' => $this->inputFilter->getMessages()]
-            );
+        $result = $this->inputFilter->validate((array) $request->getParsedBody());
+        if (! $result->valid()) {
+            throw BadRequestException::fromValidationResult($result);
         }
 
         $userResetPassword = $request->getAttribute(UserResetPassword::class);
@@ -64,7 +61,7 @@ class PatchUserAccountResetPasswordResourceHandler extends AbstractHandler
         }
 
         /** @var non-empty-array<non-empty-string, mixed> $data */
-        $data = (array) $this->inputFilter->getValues();
+        $data = $result->value();
 
         $this->userService->saveUser($data, $userResetPassword->markAsCompleted()->getUser());
 

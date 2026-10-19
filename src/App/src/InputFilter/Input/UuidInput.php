@@ -7,24 +7,42 @@ namespace Api\App\InputFilter\Input;
 use Core\App\Message;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
-use Laminas\InputFilter\Input;
+use Laminas\InputFilter\InputFilterInterface;
 use Laminas\Validator\NotEmpty;
 
-class UuidInput extends Input
+/**
+ * @phpstan-import-type InputSpecification from InputFilterInterface
+ */
+final class UuidInput
 {
-    public function __construct(?string $name = null, bool $isRequired = true)
+    private function __construct()
     {
-        parent::__construct($name);
+    }
 
-        $this->setRequired($isRequired);
-
-        $this->getFilterChain()
-            ->attachByName(StringTrim::class)
-            ->attachByName(StripTags::class);
-
-        $this->getValidatorChain()
-            ->attachByName(NotEmpty::class, [
-                'message' => Message::VALIDATOR_REQUIRED_FIELD,
-            ], true);
+    /**
+     * @param non-empty-string $name
+     * @return InputSpecification
+     */
+    public static function spec(string $name, bool $isRequired = true): array
+    {
+        return [
+            'name'       => $name,
+            'required'   => $isRequired,
+            'filters'    => [
+                ['name' => StringTrim::class],
+                ['name' => StripTags::class],
+            ],
+            'validators' => [
+                [
+                    'name'                   => NotEmpty::class,
+                    'options'                => [
+                        'messages' => [
+                            NotEmpty::IS_EMPTY => Message::VALIDATOR_REQUIRED_FIELD,
+                        ],
+                    ],
+                    'break_chain_on_failure' => true,
+                ],
+            ],
+        ];
     }
 }

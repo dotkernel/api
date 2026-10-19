@@ -9,9 +9,8 @@ use Api\App\Exception\ConflictException;
 use Api\App\Exception\NotFoundException;
 use Api\App\Handler\AbstractHandler;
 use Api\App\Template\RendererInterface;
-use Api\User\InputFilter\CreateUserInputFilter;
+use Api\User\InputFilter\CreateUserAccountInputFilter;
 use Api\User\Service\UserServiceInterface;
-use Core\App\Message;
 use Core\App\Service\MailService;
 use Dot\DependencyInjection\Attribute\Inject;
 use Dot\Mail\Exception\MailException;
@@ -23,13 +22,13 @@ class PostUserAccountResourceHandler extends AbstractHandler
     #[Inject(
         MailService::class,
         UserServiceInterface::class,
-        CreateUserInputFilter::class,
+        CreateUserAccountInputFilter::class,
         RendererInterface::class,
     )]
     public function __construct(
         protected MailService $mailService,
         protected UserServiceInterface $userService,
-        protected CreateUserInputFilter $inputFilter,
+        protected CreateUserAccountInputFilter $inputFilter,
         protected RendererInterface $renderer,
     ) {
     }
@@ -42,18 +41,13 @@ class PostUserAccountResourceHandler extends AbstractHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->inputFilter
-            ->setValidationGroup(['identity', 'password', 'passwordConfirm', 'detail'])
-            ->setData((array) $request->getParsedBody());
-        if (! $this->inputFilter->isValid()) {
-            throw BadRequestException::create(
-                detail: Message::VALIDATOR_INVALID_DATA,
-                additional: ['errors' => $this->inputFilter->getMessages()]
-            );
+        $result = $this->inputFilter->validate((array) $request->getParsedBody());
+        if (! $result->valid()) {
+            throw BadRequestException::fromValidationResult($result);
         }
 
         /** @var non-empty-array<non-empty-string, mixed> $data */
-        $data = (array) $this->inputFilter->getValues();
+        $data = $result->value();
 
         $user = $this->userService->saveUser($data);
         $this->mailService->sendActivationMail(

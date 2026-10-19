@@ -10,6 +10,7 @@ use Api\App\InputFilter\Input\PasswordInput;
 use Api\User\InputFilter\Input\StatusInput;
 use Core\App\InputFilter\AbstractInputFilter;
 use Laminas\InputFilter\CollectionInputFilter;
+use Laminas\InputFilter\Factory;
 
 /**
  * @phpstan-import-type UpdateUserDetailDataType from UpdateUserDetailInputFilter
@@ -26,18 +27,22 @@ use Laminas\InputFilter\CollectionInputFilter;
  */
 class UpdateUserInputFilter extends AbstractInputFilter
 {
-    public function __construct()
+    public function __construct(Factory $factory)
     {
-        $roles = (new CollectionInputFilter())
-            ->setInputFilter(new UserRoleInputFilter())
-            ->setIsRequired(false);
+        parent::__construct($factory);
+
+        $roles = [
+            'type'         => CollectionInputFilter::class,
+            'input_filter' => new UserRoleInputFilter($factory),
+            'required'     => false,
+        ];
 
         $this
-            ->add(new IdentityInput('identity', false))
-            ->add(new PasswordInput('password', false))
-            ->add(new PasswordConfirmInput('passwordConfirm', false))
-            ->add(new StatusInput('status', false))
-            ->add(new UpdateUserDetailInputFilter(), 'detail')
+            ->add(IdentityInput::spec('identity', false))
+            ->add(PasswordInput::spec('password', false))
+            ->add(PasswordConfirmInput::spec('passwordConfirm', false))
+            ->add(StatusInput::spec('status', false))
+            ->add(new UpdateUserDetailInputFilter($factory), 'detail')
             ->add($roles, 'roles');
     }
 }

@@ -13,6 +13,7 @@ use Api\App\Exception\NotFoundException;
 use Core\Admin\Entity\AdminRole;
 use Core\Admin\Enum\AdminRoleEnum;
 use Core\Admin\Enum\AdminStatusEnum;
+use Core\App\InputFilter\ValidationErrors;
 use Core\App\Message;
 use Dot\DependencyInjection\Attribute\Inject;
 use Exception;
@@ -41,10 +42,12 @@ class AdminCreateCommand extends Command
     #[Inject(
         AdminServiceInterface::class,
         AdminRoleServiceInterface::class,
+        CreateAdminInputFilter::class,
     )]
     public function __construct(
         protected AdminServiceInterface $adminService,
         protected AdminRoleServiceInterface $adminRoleService,
+        protected CreateAdminInputFilter $inputFilter,
     ) {
         parent::__construct(self::$defaultName);
     }
@@ -71,10 +74,10 @@ class AdminCreateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $inputFilter = (new CreateAdminInputFilter())->setData($this->getData($input));
-        if (! $inputFilter->isValid()) {
+        $result = $this->inputFilter->validate($this->getData($input));
+        if (! $result->valid()) {
             $messages = [];
-            foreach ($inputFilter->getMessages() as $field => $errors) {
+            foreach (ValidationErrors::fromResult($result) as $field => $errors) {
                 foreach ($errors as $error) {
                     /** @var scalar $error */
                     $messages[] = sprintf('%s: %s', $field, $error);
@@ -84,7 +87,10 @@ class AdminCreateCommand extends Command
             throw new Exception(implode(PHP_EOL, $messages));
         }
 
-        $this->adminService->saveAdmin($inputFilter->getValues());
+        /** @var non-empty-array<non-empty-string, mixed> $data */
+        $data = $result->value();
+
+        $this->adminService->saveAdmin($data);
 
         (new SymfonyStyle($input, $output))->info(Message::ADMIN_CREATED);
 
