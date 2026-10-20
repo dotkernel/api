@@ -21,7 +21,6 @@ use function array_filter;
 use function array_merge;
 use function array_values;
 use function implode;
-use function is_string;
 use function sprintf;
 
 class DeprecationMiddleware implements MiddlewareInterface
@@ -29,7 +28,7 @@ class DeprecationMiddleware implements MiddlewareInterface
     public const string RESOURCE_DEPRECATION_ATTRIBUTE = ResourceDeprecation::class;
 
     /**
-     * @param array<non-empty-string, mixed> $config
+     * @param array{documentation_url?: non-empty-string} $config
      */
     #[Inject(
         'config.application.versioning',
@@ -91,10 +90,7 @@ class DeprecationMiddleware implements MiddlewareInterface
      */
     private function getDocumentationUrl(array $attribute): ?string
     {
-        /** @var non-empty-string|null $url */
-        $url = $attribute['link'] ?? $this->config['documentation_url'] ?? null;
-
-        return is_string($url) ? $url : null;
+        return $attribute['link'] ?? $this->config['documentation_url'] ?? null;
     }
 
     private function isSunsetReached(?string $sunset): bool
