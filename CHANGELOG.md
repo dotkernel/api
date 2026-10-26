@@ -1,6 +1,61 @@
 # Changelog
 
-## 7.2.0 - 2026-07-21
+## 7.2.0 - 2026-10-22
+
+### Changed
+
+* Issue [#543](https://github.com/dotkernel/api/issues/543): `RuntimeException` and `SunsetException` return `500` instead of `400` and `401`, and `ErrorReportService` throws `ForbiddenException` (`403`) when error reporting is not enabled by [@bidi47](https://github.com/bidi47) in [#567](https://github.com/dotkernel/api/pull/567)
+* Issue [#556](https://github.com/dotkernel/api/issues/556): A resource whose `ResourceDeprecation` sunset date has been reached returns `410 Gone` instead of being executed by [@bidi47](https://github.com/bidi47) in [#570](https://github.com/dotkernel/api/pull/570)
+
+### Added
+
+* Issue [#564](https://github.com/dotkernel/api/issues/564): Added an explicit `operationId` to every OpenAPI operation and a test that fails on a missing or duplicate id; requires `zircote/swagger-php` `^6.4.0` by [@bidi47](https://github.com/bidi47) in [#566](https://github.com/dotkernel/api/pull/566)
+
+### Deprecated
+
+* Nothing
+
+### Removed
+
+* Issue [#561](https://github.com/dotkernel/api/issues/561): Removed the `ResourceDeprecation` attribute from `GetIndexResourceHandler`, so `GET /` no longer returns the `Sunset` and `Link` headers by [@alexmerlin](https://github.com/alexmerlin) in [#565](https://github.com/dotkernel/api/pull/565)
+
+### Fixed
+
+* Nothing
+
+## 7.1.1 - 2026-10-08
+
+### Changed
+
+* Update `JetBrains/qodana-action` action to `v2026.2.0` by [@renovate\[bot\]](https://github.com/apps/renovate) in [#532](https://github.com/dotkernel/api/pull/532)
+* Clarify in `config/autoload/cors.local.php.dist` how to restrict the allowed origins by [@arhimede](https://github.com/arhimede) in [#536](https://github.com/dotkernel/api/pull/536)
+* Issue [#535](https://github.com/dotkernel/api/issues/535): Added class constant type declarations and the `SlevomatCodingStandard.TypeHints.ClassConstantTypeHint` rule by [@SergiuBota1](https://github.com/SergiuBota1) in [#537](https://github.com/dotkernel/api/pull/537)
+* Issue [#538](https://github.com/dotkernel/api/issues/538): Updated README with a password warning for the fixtures by [@bidi47](https://github.com/bidi47) in [#540](https://github.com/dotkernel/api/pull/540)
+* Updated README to reflect the application purpose by [@bidi47](https://github.com/bidi47) in [#541](https://github.com/dotkernel/api/pull/541)
+* Update `JetBrains/qodana-action` action to `v2026.2.1` by [@renovate\[bot\]](https://github.com/apps/renovate) in [#542](https://github.com/dotkernel/api/pull/542)
+* Issue [#545](https://github.com/dotkernel/api/issues/545): Moved the OpenAPI root attributes into `OA\OpenApi` by [@dq042000](https://github.com/dq042000) in [#551](https://github.com/dotkernel/api/pull/551)
+* Update dependency `boundwize/structarmed` to `^0.18.0` by [@renovate\[bot\]](https://github.com/apps/renovate) in [#554](https://github.com/dotkernel/api/pull/554)
+* Update `JetBrains/qodana-action` action to `v2026.2.2` by [@renovate\[bot\]](https://github.com/apps/renovate) in [#557](https://github.com/dotkernel/api/pull/557)
+* Update dependency `boundwize/structarmed` to `^0.19.0` by [@renovate\[bot\]](https://github.com/apps/renovate) in [#562](https://github.com/dotkernel/api/pull/562)
+
+### Added
+
+* Use `boundwize/structarmed` for architecture checks on QA, with the `structarmed.php` architecture file by [@samsonasik](https://github.com/samsonasik) in [#553](https://github.com/dotkernel/api/pull/553)
+* Issue [#558](https://github.com/dotkernel/api/issues/558): Added `bin/generate-openapi.php`, the `composer openapi` script and `config/autoload/openapi.global.php` to generate the OpenAPI document from configuration by [@alexmerlin](https://github.com/alexmerlin) in [#560](https://github.com/dotkernel/api/pull/560)
+
+### Deprecated
+
+* Nothing
+
+### Removed
+
+* Nothing
+
+### Fixed
+
+* Issue [#546](https://github.com/dotkernel/api/issues/546): Documented the recover-account endpoint at its registered path `/user/account/recover` by [@dq042000](https://github.com/dq042000) in [#550](https://github.com/dotkernel/api/pull/550)
+
+## 7.1.0 - 2026-07-21
 
 ### Changed
 
@@ -12,15 +67,15 @@
 * Core Sync by [@alexmerlin](https://github.com/alexmerlin) in [#486](https://github.com/dotkernel/api/pull/486)
 * Update branch for `Qodana` workflow to `7.0` by [@alexmerlin](https://github.com/alexmerlin) in [#491](https://github.com/dotkernel/api/pull/491)
 * Update `Qodana` action version to `v2025.3` by [@arhimede](https://github.com/arhimede) in [#500](https://github.com/dotkernel/api/pull/500)
-* Update `actions/cache` action to `v5` by [@renovate](https://github.com/renovate)[bot] in [#517](https://github.com/dotkernel/api/pull/517)
-* Update `actions/checkout` action to `v6` by [@renovate](https://github.com/renovate)[bot] in [#518](https://github.com/dotkernel/api/pull/518)
-* Update `codecov/codecov-action` action to `v6` by [@renovate](https://github.com/renovate)[bot] in [#520](https://github.com/dotkernel/api/pull/520)
-* Update dependency `zircote/swagger-php` to `v6` by [@renovate](https://github.com/renovate)[bot] in [#522](https://github.com/dotkernel/api/pull/522)
-* Update `JetBrains/qodana-action` action to `v2026` by [@renovate](https://github.com/renovate)[bot] in [#523](https://github.com/dotkernel/api/pull/523)
-* Update `codecov/codecov-action` action to `v7` by [@renovate](https://github.com/renovate)[bot] in [#526](https://github.com/dotkernel/api/pull/526)
-* Update `JetBrains/qodana-action` action to `v2026.1.3` by [@renovate](https://github.com/renovate)[bot] in [#527](https://github.com/dotkernel/api/pull/527)
-* Update `actions/checkout` action to `v7` by [@renovate](https://github.com/renovate)[bot] in [#528](https://github.com/dotkernel/api/pull/528)
-* Update `actions/cache` action to `v6` by [@renovate](https://github.com/renovate)[bot] in [#530](https://github.com/dotkernel/api/pull/530)
+* Update `actions/cache` action to `v5` by [@renovate\[bot\]](https://github.com/apps/renovate) in [#517](https://github.com/dotkernel/api/pull/517)
+* Update `actions/checkout` action to `v6` by [@renovate\[bot\]](https://github.com/apps/renovate) in [#518](https://github.com/dotkernel/api/pull/518)
+* Update `codecov/codecov-action` action to `v6` by [@renovate\[bot\]](https://github.com/apps/renovate) in [#520](https://github.com/dotkernel/api/pull/520)
+* Update dependency `zircote/swagger-php` to `v6` by [@renovate\[bot\]](https://github.com/apps/renovate) in [#522](https://github.com/dotkernel/api/pull/522)
+* Update `JetBrains/qodana-action` action to `v2026` by [@renovate\[bot\]](https://github.com/apps/renovate) in [#523](https://github.com/dotkernel/api/pull/523)
+* Update `codecov/codecov-action` action to `v7` by [@renovate\[bot\]](https://github.com/apps/renovate) in [#526](https://github.com/dotkernel/api/pull/526)
+* Update `JetBrains/qodana-action` action to `v2026.1.3` by [@renovate\[bot\]](https://github.com/apps/renovate) in [#527](https://github.com/dotkernel/api/pull/527)
+* Update `actions/checkout` action to `v7` by [@renovate\[bot\]](https://github.com/apps/renovate) in [#528](https://github.com/dotkernel/api/pull/528)
+* Update `actions/cache` action to `v6` by [@renovate\[bot\]](https://github.com/apps/renovate) in [#530](https://github.com/dotkernel/api/pull/530)
 
 ### Added
 
@@ -30,7 +85,7 @@
 * Issue [#503](https://github.com/dotkernel/api/issues/503): OAuth2 token invalidated on Composer install/update by [@alexmerlin](https://github.com/alexmerlin) in [#506](https://github.com/dotkernel/api/pull/506)
 * Issue [#512](https://github.com/dotkernel/api/issues/512): Implemented `browsecap` by [@SergiuBota1](https://github.com/SergiuBota1) in [#513](https://github.com/dotkernel/api/pull/513)
 * Issue [#514](https://github.com/dotkernel/api/issues/514): Added Bruno collection, updated readme by [@bidi47](https://github.com/bidi47) in [#516](https://github.com/dotkernel/api/pull/516)
-* Configure Renovate by [@renovate](https://github.com/renovate)[bot] in [#515](https://github.com/dotkernel/api/pull/515)
+* Configure Renovate by [@renovate\[bot\]](https://github.com/apps/renovate) in [#515](https://github.com/dotkernel/api/pull/515)
 
 ### Deprecated
 
