@@ -63,7 +63,7 @@
         "laminas/laminas-authentication": "^2.18",
         "laminas/laminas-component-installer": "^3.5.0",
         "laminas/laminas-config-aggregator": "^1.18.0",
-        "laminas/laminas-hydrator": "^4.16.0",
+        "laminas/laminas-hydrator": "^5.0.0",
         "laminas/laminas-inputfilter": "^2.31.0",
         "laminas/laminas-stdlib": "^3.20.0",
         "mezzio/mezzio": "^3.20.1",
