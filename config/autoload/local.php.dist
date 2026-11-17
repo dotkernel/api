@@ -4,13 +4,6 @@ declare(strict_types=1);
 
 $baseUrl = 'http://localhost:8080';
 
-/**
- * Doctrine ORM second-level cache.
- * Starting with doctrine/orm 3.8, the second-level cache requires the doctrine/orm-plugin-second-level-cache package.
- * To enable it, run `composer require doctrine/orm-plugin-second-level-cache` and set this flag to true.
- */
-$enableSecondLevelCache = false;
-
 $databases = [
     /**
      * You can add more database connections to this array.
@@ -62,8 +55,12 @@ return [
         ],
         'configuration' => [
             'orm_default' => [
+                /**
+                 * Starting with doctrine/orm 3.8, the second-level cache requires the doctrine/orm-plugin-second-level-cache package.
+                 * To enable it, run `composer require doctrine/orm-plugin-second-level-cache` and set 'enabled' to true.
+                 */
                 'second_level_cache' => [
-                    'enabled' => $enableSecondLevelCache,
+                    'enabled' => false,
                 ],
             ],
         ],
