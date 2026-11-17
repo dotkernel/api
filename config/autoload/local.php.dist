@@ -54,7 +54,7 @@ return [
     ],
     'databases'           => $databases,
     'doctrine'            => [
-        'connection' => [
+        'connection'    => [
             'orm_default' => [
                 'params' => $databases['mariadb'],
 //                'params' => $databases['postgresql'],
