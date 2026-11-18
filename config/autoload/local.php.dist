@@ -10,6 +10,7 @@ $databases = [
      * Only one active connection is allowed at a time.
      * By default, the application uses the 'mariadb' connection.
      * You can switch to another connection by activating it under doctrine->connection->orm_default-->params.
+     * Set 'persistent' to true to reuse database connections across requests (supported by pdo_mysql and pdo_pgsql).
      */
     'mariadb'    => [
         'host'         => 'localhost',
@@ -18,6 +19,7 @@ $databases = [
         'password'     => '',
         'port'         => 3306,
         'driver'       => 'pdo_mysql',
+        'persistent'   => false,
         'collation'    => 'utf8mb4_general_ci',
         'table_prefix' => '',
     ],
@@ -28,6 +30,7 @@ $databases = [
         'password'     => '',
         'port'         => 5432,
         'driver'       => 'pdo_pgsql',
+        'persistent'   => false,
         'collation'    => 'utf8mb4_general_ci',
         'table_prefix' => '',
     ],
@@ -47,10 +50,23 @@ return [
     ],
     'databases'           => $databases,
     'doctrine'            => [
-        'connection' => [
+        'connection'    => [
             'orm_default' => [
                 'params' => $databases['mariadb'],
 //                'params' => $databases['postgresql'],
+            ],
+        ],
+        'configuration' => [
+            'orm_default' => [
+                /**
+                 * Starting with doctrine/orm 3.8, the second-level cache requires
+                 * the doctrine/orm-plugin-second-level-cache package.
+                 * To enable it, run `composer require doctrine/orm-plugin-second-level-cache`
+                 * and set 'enabled' to true.
+                 */
+                'second_level_cache' => [
+                    'enabled' => false,
+                ],
             ],
         ],
     ],
