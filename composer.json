@@ -58,7 +58,7 @@
         "dotkernel/dot-dependency-injection": "^1.2",
         "dotkernel/dot-errorhandler": "^4.0.0",
         "dotkernel/dot-mail": "^5.3.0",
-        "dotkernel/dot-response-header": "^3.5.0",
+        "dotkernel/dot-response-header": "^4.0.0",
         "dotkernel/dot-router": "^1.0.5",
         "laminas/laminas-authentication": "^2.18",
         "laminas/laminas-component-installer": "^3.5.0",
