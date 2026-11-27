@@ -52,7 +52,7 @@
         "php": "~8.3.0 || ~8.4.0 || ~8.5.0",
         "ext-gd": "*",
         "ext-json": "*",
-        "dotkernel/dot-cache": "^4.3",
+        "dotkernel/dot-cache": "^5.0",
         "dotkernel/dot-cli": "^3.9.0",
         "dotkernel/dot-data-fixtures": "^1.4.0",
         "dotkernel/dot-dependency-injection": "^1.2",
