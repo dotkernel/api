@@ -53,7 +53,7 @@
         "ext-gd": "*",
         "ext-json": "*",
         "dotkernel/dot-cache": "^4.3",
-        "dotkernel/dot-cli": "^3.9.0",
+        "dotkernel/dot-cli": "^4.0.0",
         "dotkernel/dot-data-fixtures": "^1.4.0",
         "dotkernel/dot-dependency-injection": "^1.2",
         "dotkernel/dot-errorhandler": "^4.0.0",
